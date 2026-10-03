@@ -14,8 +14,8 @@
 ## Current Status
 
 - **Active Phase:** Phase A0 — Platform Foundations
-- **Next Task to Execute:** `A0.6 Platform Services: Audit, Sequence, Outbox, Idempotency, Storage`
-- **Tasks complete:** 5 / 88 (P2 cards excluded)
+- **Next Task to Execute:** `A0.7 Ports & Adapters Skeleton, Outbox Dispatcher, Worker Entrypoint`
+- **Tasks complete:** 6 / 88 (P2 cards excluded)
 - **Blockers:** None
 - **Owner action items before/while coding:**
   - Copy the new `task.md` (v6) into `agent/task.md`.
@@ -26,25 +26,25 @@
 
 ## Sign-off Register (owner answers are recorded here)
 
-| ID         | Question                                              | Gates       | Answer                                | Date       |
-| ---------- | ----------------------------------------------------- | ----------- | ------------------------------------- | ---------- |
-| D-06       | `packages/app-core` separate from `ui`                | A0.1        | Confirmed (default: separate package) | 2026-10-03 |
-| D-05       | NestJS Express adapter                                | A0.3        | Confirmed (default: Express adapter)  | 2026-10-03 |
-| D-09       | Separate system realm for Super Admin                 | A0.5, A1.5  | Confirmed (default: system realm)     | 2026-10-03 |
-| D-07       | Idempotency row inside the business transaction       | A0.6        | _pending_                             |            |
-| D-11       | Monthly partitions for audit/outbox/notification logs | A0.6        | _pending_                             |            |
-| D-10       | App-level encryption + blind index (NID, bank no.)    | A0.12, A3.3 | _pending_                             |            |
-| D-04       | Vertical slices (golden module first)                 | A2.1        | _pending_                             |            |
-| D-13       | Additive-only `/v1`, `X-Client-Version`, 426          | A2.3, A9.7  | _pending_                             |            |
-| D-08       | `APPROVAL_REQUIRED` = HTTP 409                        | A4.4        | _pending_                             |            |
-| D-14       | `events/` renamed `realtime/`                         | A9.1        | _pending_                             |            |
-| D-01/02/03 | Bundled PostgreSQL / bundled Chromium / Node sidecar  | A10.1, B9   | _pending_                             |            |
-| D-12       | Local→Cloud import design                             | A10.4       | _pending_                             |            |
-| D-15       | Licence transfer limit, fingerprint tolerance         | A1.5, B10   | _pending_                             |            |
-| OQ-04      | In-transaction `PaymentPostedHook`                    | A7.2        | _pending_                             |            |
-| OQ-06      | `ON_HANDOVER` posting treatment                       | A6.4        | _pending (accountant)_                |            |
-| OQ-07      | CAPTCHA provider (default Turnstile)                  | A0.12       | _pending_                             |            |
-| OQ-09      | No Super Admin UI in v1                               | B8          | _pending_                             |            |
+| ID         | Question                                              | Gates       | Answer                                 | Date       |
+| ---------- | ----------------------------------------------------- | ----------- | -------------------------------------- | ---------- |
+| D-06       | `packages/app-core` separate from `ui`                | A0.1        | Confirmed (default: separate package)  | 2026-10-03 |
+| D-05       | NestJS Express adapter                                | A0.3        | Confirmed (default: Express adapter)   | 2026-10-03 |
+| D-09       | Separate system realm for Super Admin                 | A0.5, A1.5  | Confirmed (default: system realm)      | 2026-10-03 |
+| D-07       | Idempotency row inside the business transaction       | A0.6        | Confirmed (default: inside tx)         | 2026-10-03 |
+| D-11       | Monthly partitions for audit/outbox/notification logs | A0.6        | Confirmed (default: monthly partition) | 2026-10-03 |
+| D-10       | App-level encryption + blind index (NID, bank no.)    | A0.12, A3.3 | _pending_                              |            |
+| D-04       | Vertical slices (golden module first)                 | A2.1        | _pending_                              |            |
+| D-13       | Additive-only `/v1`, `X-Client-Version`, 426          | A2.3, A9.7  | _pending_                              |            |
+| D-08       | `APPROVAL_REQUIRED` = HTTP 409                        | A4.4        | _pending_                              |            |
+| D-14       | `events/` renamed `realtime/`                         | A9.1        | _pending_                              |            |
+| D-01/02/03 | Bundled PostgreSQL / bundled Chromium / Node sidecar  | A10.1, B9   | _pending_                              |            |
+| D-12       | Local→Cloud import design                             | A10.4       | _pending_                              |            |
+| D-15       | Licence transfer limit, fingerprint tolerance         | A1.5, B10   | _pending_                              |            |
+| OQ-04      | In-transaction `PaymentPostedHook`                    | A7.2        | _pending_                              |            |
+| OQ-06      | `ON_HANDOVER` posting treatment                       | A6.4        | _pending (accountant)_                 |            |
+| OQ-07      | CAPTCHA provider (default Turnstile)                  | A0.12       | _pending_                              |            |
+| OQ-09      | No Super Admin UI in v1                               | B8          | _pending_                              |            |
 
 ---
 
@@ -59,7 +59,7 @@ Tick a box only after the verification rules above are met. Dependencies are def
 - [x] `A0.3` Backend Foundations: NestJS 12 ESM, Config, Envelope
 - [x] `A0.4` Database: Docker Compose & Prisma 7 Multi-File Schema
 - [x] `A0.5` Multi-Tenancy: RLS, DB Roles, TenantPrisma, SystemPrisma
-- [ ] `A0.6` Platform Services: Audit, Sequence, Outbox, Idempotency, Storage
+- [x] `A0.6` Platform Services: Audit, Sequence, Outbox, Idempotency, Storage
 - [ ] `A0.7` Ports & Adapters Skeleton, Outbox Dispatcher, Worker Entrypoint
 - [ ] `A0.8` Authentication, Sessions, Invitations
 - [ ] `A0.9` Permissions, RBAC, Data Scopes, Mandatory 2FA
@@ -245,3 +245,11 @@ Tick a box only after the verification rules above are met. Dependencies are def
 3. Verification command & result: prisma migrate deploy (all migrations applied); vitest tenant-context (3/3 passed); vitest tenant-transaction (3/3 passed); vitest system-prisma (3/3 passed); vitest tenant-isolation (12/12 passed); monorepo lint, typecheck, and all 54 tests passed with 0 errors
 4. Open questions: None (Gate D-09 confirmed: default system realm for platform operations)
 5. Next task ID: A0.6
+
+### [2026-10-03] A0.6 Platform Services: Audit, Sequence, Outbox, Idempotency, Storage
+
+1. Task ID & status: A0.6 [x]
+2. Files created / modified: apps/backend/prisma/schema/platform.prisma, apps/backend/prisma/migrations/20261003000001_platform_services/migration.sql, apps/backend/src/platform/**, apps/backend/test/platform/**, apps/backend/test/tenant-isolation/tenant-isolation.spec.ts, apps/backend/package.json, pnpm-lock.yaml, agent/PROGRESS.md
+3. Verification command & result: prisma migrate deploy (applied); pnpm test audit-outbox (7/7 passed); pnpm test sequence (5/5 passed); pnpm test idempotency (5/5 passed); pnpm test storage (3/3 passed); monorepo lint, typecheck, and all 74 tests passed with 0 errors
+4. Open questions: None (Gates D-07 [idempotency inside tx] and D-11 [monthly partitions] recorded in Sign-off Register)
+5. Next task ID: A0.7

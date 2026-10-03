@@ -1,0 +1,86 @@
+// Platform schemas: Audit, Outbox, Notification logs, Sequences, Idempotency
+
+model AuditLog {
+  id         String   @default(uuid(7)) @db.Uuid
+  companyId  String   @map("company_id") @db.Uuid
+  actorId    String?  @map("actor_id") @db.Uuid
+  module     String   @db.VarChar(64)
+  recordType String   @map("record_type") @db.VarChar(64)
+  recordId   String   @map("record_id") @db.Uuid
+  action     String   @db.VarChar(64)
+  oldValue   Json?    @map("old_value")
+  newValue   Json?    @map("new_value")
+  reason     String?  @db.Text
+  ipAddress  String?  @map("ip_address") @db.VarChar(64)
+  requestId  String   @map("request_id") @db.VarChar(128)
+  createdAt  DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+  @@id([id, createdAt])
+  @@index([companyId])
+  @@index([recordType, recordId])
+  @@map("audit_logs")
+}
+
+model OutboxEvent {
+  id          String    @default(uuid(7)) @db.Uuid
+  companyId   String    @map("company_id") @db.Uuid
+  eventName   String    @map("event_name") @db.VarChar(128)
+  payload     Json
+  status      String    @default("PENDING") @db.VarChar(32)
+  attempts    Int       @default(0)
+  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  processedAt DateTime? @map("processed_at") @db.Timestamptz
+
+  @@id([id, createdAt])
+  @@index([companyId])
+  @@index([status])
+  @@map("outbox_events")
+}
+
+model NotificationLog {
+  id          String    @default(uuid(7)) @db.Uuid
+  companyId   String    @map("company_id") @db.Uuid
+  recipientId String?   @map("recipient_id") @db.Uuid
+  templateId  String?   @map("template_id") @db.VarChar(128)
+  channel     String    @db.VarChar(32)
+  status      String    @default("PENDING") @db.VarChar(32)
+  payload     Json?
+  error       String?   @db.Text
+  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  sentAt      DateTime? @map("sent_at") @db.Timestamptz
+
+  @@id([id, createdAt])
+  @@index([companyId])
+  @@map("notification_logs")
+}
+
+model DocumentSequence {
+  id         String   @id @default(uuid(7)) @db.Uuid
+  companyId  String   @map("company_id") @db.Uuid
+  type       String   @db.VarChar(64)
+  fiscalYear String   @map("fiscal_year") @db.VarChar(32)
+  scopeKey   String   @default("ALL") @map("scope_key") @db.VarChar(64)
+  lastValue  BigInt   @default(0) @map("last_value")
+  updatedAt  DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz
+
+  @@unique([companyId, type, fiscalYear, scopeKey])
+  @@map("document_sequences")
+}
+
+model IdempotencyKey {
+  id             String    @id @default(uuid(7)) @db.Uuid
+  companyId      String    @map("company_id") @db.Uuid
+  userId         String    @map("user_id") @db.Uuid
+  method         String    @db.VarChar(16)
+  routePattern   String    @map("route_pattern") @db.VarChar(255)
+  key            String    @db.VarChar(255)
+  requestHash    String    @map("request_hash") @db.VarChar(64)
+  responseStatus Int?      @map("response_status")
+  responseBody   Json?     @map("response_body")
+  createdAt      DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  expiresAt      DateTime  @map("expires_at") @db.Timestamptz
+
+  @@unique([companyId, userId, method, routePattern, key])
+  @@index([expiresAt])
+  @@map("idempotency_keys")
+}

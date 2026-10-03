@@ -207,7 +207,8 @@ describe('S5: Isolation Suite & RLS-Coverage Test', () => {
         FROM pg_class c
         JOIN pg_namespace n ON n.oid = c.relnamespace
         WHERE n.nspname = 'public'
-          AND c.relkind = 'r'
+          AND c.relkind IN ('r', 'p')
+          AND NOT c.relispartition
         ORDER BY c.relname ASC;
       `);
 
