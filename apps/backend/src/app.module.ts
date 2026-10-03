@@ -8,7 +8,9 @@ import { EmployeeModule } from './modules/employee/employee.module.js';
 import { HealthModule } from './modules/health/health.module.js';
 import { LandModule } from './modules/land/land.module.js';
 import { ProjectModule } from './modules/project/project.module.js';
+import { LicenseModule } from './modules/license/license.module.js';
 import { SettingsModule } from './modules/settings/settings.module.js';
+import { SystemAdminModule } from './modules/system-admin/system-admin.module.js';
 
 @Module({
   imports: [
@@ -22,8 +24,10 @@ import { SettingsModule } from './modules/settings/settings.module.js';
     CompanyModule,
     EmployeeModule,
     LandModule,
+    LicenseModule,
     ProjectModule,
     SettingsModule,
+    SystemAdminModule,
   ],
 })
 export class AppModule implements NestModule {

@@ -1,0 +1,33 @@
+// System Realm models (Task A1.5 - Platform Admin & System Realm)
+// Global tables outside the tenant realm, accessed via SystemPrisma
+
+model SystemAdmin {
+  id                 String          @id @default(uuid(7)) @db.Uuid
+  email              String          @unique @db.VarChar(255)
+  fullName           String          @map("full_name") @db.VarChar(255)
+  passwordHash       String          @map("password_hash") @db.Text
+  isTwoFactorEnabled Boolean         @default(false) @map("is_two_factor_enabled")
+  twoFactorSecret    String?         @map("two_factor_secret") @db.Text
+  status             String          @default("ACTIVE") @db.VarChar(32)
+  createdAt          DateTime        @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt          DateTime        @updatedAt @map("updated_at") @db.Timestamptz
+
+  sessions           SystemSession[]
+
+  @@map("system_admins")
+}
+
+model SystemSession {
+  id        String      @id @default(uuid(7)) @db.Uuid
+  adminId   String      @map("admin_id") @db.Uuid
+  familyId  String      @map("family_id") @db.Uuid
+  ipAddress String?     @map("ip_address") @db.VarChar(64)
+  userAgent String?     @map("user_agent") @db.Text
+  expiresAt DateTime    @map("expires_at") @db.Timestamptz
+  createdAt DateTime    @default(now()) @map("created_at") @db.Timestamptz
+
+  admin     SystemAdmin @relation(fields: [adminId], references: [id], onDelete: Cascade)
+
+  @@index([adminId])
+  @@map("system_sessions")
+}

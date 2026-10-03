@@ -482,7 +482,7 @@ These are applied as defaults in `architecture.md` v4 but are still **"Needs sig
 
 #### A1.5 — Platform Admin: System Realm, Tenant Onboarding & Licensing (backend)
 
-- **Status:** [ ] · **Tier:** 1 · **Size:** XL (5 steps) · **Priority:** P0 · 🔒 D-09, D-15
+- **Status:** [x] · **Tier:** 1 · **Size:** XL (5 steps) · **Priority:** P0 · 🔒 D-09, D-15
 - **Depends:** A0.10, A0.12, A1.1
 - **Reads:** `architecture.md` §5.6, §12.8, §7 (`license/`, `system-admin/`); `prd.md` MOD-PLATFORM, FLOW-01, §19 (AT-30, AT-31), BR-13, BR-20; `security.md` §17; `permissions-matrix.md` §3 (Super Admin).
 - **Touches:** `apps/backend/src/modules/system-admin/**`, `apps/backend/src/modules/license/**`, `apps/backend/prisma/schema/{system,license}.prisma`, `apps/backend/src/common/guards/**`.

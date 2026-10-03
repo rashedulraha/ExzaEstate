@@ -14,8 +14,8 @@
 ## Current Status
 
 - **Active Phase:** Phase A1 — Master Data, Platform Admin & Foundation Modules
-- **Next Task to Execute:** `A1.5 Platform Admin: System Realm, Tenant Onboarding & Licensing (backend)`
-- **Tasks complete:** 16 / 88 (P2 cards excluded)
+- **Next Task to Execute:** `A1.6 Documents Module (Presigned Upload & Versioning)`
+- **Tasks complete:** 17 / 88 (P2 cards excluded)
 - **Blockers:** None
 - **Owner action items before/while coding:**
   - Copy the new `task.md` (v6) into `agent/task.md`.
@@ -40,7 +40,7 @@
 | D-14       | `events/` renamed `realtime/`                         | A9.1        | _pending_                                               |            |
 | D-01/02/03 | Bundled PostgreSQL / bundled Chromium / Node sidecar  | A10.1, B9   | _pending_                                               |            |
 | D-12       | Local→Cloud import design                             | A10.4       | _pending_                                               |            |
-| D-15       | Licence transfer limit, fingerprint tolerance         | A1.5, B10   | _pending_                                               |            |
+| D-15       | Licence transfer limit, fingerprint tolerance         | A1.5, B10   | Confirmed (default: limit 2/yr, fingerprint >= 2 of 3)  | 2026-10-04 |
 | OQ-04      | In-transaction `PaymentPostedHook`                    | A7.2        | _pending_                                               |            |
 | OQ-06      | `ON_HANDOVER` posting treatment                       | A6.4        | _pending (accountant)_                                  |            |
 | OQ-07      | CAPTCHA provider (default Turnstile)                  | A0.12       | _pending_                                               |            |
@@ -73,7 +73,7 @@ Tick a box only after the verification rules above are met. Dependencies are def
 - [x] `A1.2` Roles, Users, Invitations, Employees & Hierarchy
 - [x] `A1.3` Land Master & Bangladeshi Area Conversion
 - [x] `A1.4` Project & Cost Center Management
-- [ ] `A1.5` Platform Admin: System Realm, Tenant Onboarding & Licensing (backend)
+- [x] `A1.5` Platform Admin: System Realm, Tenant Onboarding & Licensing (backend)
 - [ ] `A1.6` Documents Module (Presigned Upload & Versioning)
 - [ ] `A1.7` Audit Query API & Security-Event Viewer
 - [ ] `A1.8` Notification Engine Core (in-app)
@@ -333,3 +333,11 @@ Tick a box only after the verification rules above are met. Dependencies are def
 3. Verification command & result: pnpm --filter @exzaestate/backend test test/project/ (15/15 passed across project.spec.ts and cost-center.spec.ts); pnpm --filter @exzaestate/backend test test/platform/seed-demo.spec.ts (1/1 passed); full backend test suite (218/218 passed across 48 files); pnpm check:all (all 24 tenant tables verified with RLS, 75 routes with permission decorators); oxlint (0 errors, 0 warnings), dependency-cruiser (0 violations), zero cycles, turbo typecheck (9 packages clean), prettier format clean
 4. Open questions: None (Zero gated decisions for A1.4; D-09, D-15 pending for A1.5)
 5. Next task ID: A1.5
+
+### [2026-10-04] A1.5 Platform Admin: System Realm, Tenant Onboarding & Licensing (backend)
+
+1. Task ID & status: A1.5 [x]
+2. Files created / modified: apps/backend/prisma/schema/{system,license}.prisma, apps/backend/prisma/migrations/20261004000005_system_admin_and_licensing/**, apps/backend/src/modules/system-admin/**, apps/backend/src/modules/license/**, apps/backend/src/common/guards/jwt-auth.guard.ts, apps/backend/src/database/global-tables.ts, apps/backend/src/app.module.ts, apps/backend/test/system-admin/**, apps/backend/test/license/\*\*, agent/PROGRESS.md, agent/task.md
+3. Verification command & result: pnpm --filter @exzaestate/backend test test/system-admin/ test/license/ (29/29 passed across 6 test suites); full backend test suite (247/247 passed across 54 files); pnpm check:all (all 26 tenant tables verified with RLS, 88 routes with permission decorators); oxlint (0 errors, 0 warnings), dependency-cruiser (0 violations), zero cycles, turbo typecheck (9 packages clean)
+4. Open questions: None (Gate D-09 [Separate system realm] and D-15 [License transfer limit 2/yr, fingerprint tolerance >= 2 of 3] applied and recorded in Sign-off Register)
+5. Next task ID: A1.6

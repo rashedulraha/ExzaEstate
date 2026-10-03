@@ -18,6 +18,9 @@ export const GLOBAL_TABLES = [
   'bank_branches',
   'system_permissions',
   'notification_event_catalog',
+  // System realm tables (ARCH-SYSTEM-SCOPE):
+  'system_admins',
+  'system_sessions',
 ] as const;
 
 export type GlobalTableName = (typeof GLOBAL_TABLES)[number];
