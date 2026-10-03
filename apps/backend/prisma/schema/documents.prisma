@@ -1,0 +1,50 @@
+// Documents and Versioning models (Task A1.6 - Documents Module)
+
+model Document {
+  id                 String            @id @default(uuid(7)) @db.Uuid
+  companyId          String            @map("company_id") @db.Uuid
+  title              String            @db.VarChar(255)
+  description        String?           @db.Text
+  entityType         String            @map("entity_type") @db.VarChar(64)
+  entityId           String            @map("entity_id") @db.Uuid
+  category           String?           @db.VarChar(64)
+  isPrivate          Boolean           @default(false) @map("is_private")
+  requiredPermission String?           @map("required_permission") @db.VarChar(128)
+  currentVersion     Int               @default(1) @map("current_version")
+  expiresAt          DateTime?         @map("expires_at") @db.Timestamptz
+  isExpired          Boolean           @default(false) @map("is_expired")
+  status             String            @default("ACTIVE") @db.VarChar(32)
+  createdById        String?           @map("created_by_id") @db.Uuid
+  deletedAt          DateTime?         @map("deleted_at") @db.Timestamptz
+  createdAt          DateTime          @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt          DateTime          @updatedAt @map("updated_at") @db.Timestamptz
+
+  versions           DocumentVersion[]
+
+  @@index([companyId])
+  @@index([companyId, entityType, entityId])
+  @@index([companyId, status])
+  @@index([companyId, expiresAt])
+  @@map("documents")
+}
+
+model DocumentVersion {
+  id           String   @id @default(uuid(7)) @db.Uuid
+  companyId    String   @map("company_id") @db.Uuid
+  documentId   String   @map("document_id") @db.Uuid
+  version      Int
+  fileKey      String   @map("file_key") @db.VarChar(512)
+  fileName     String   @map("file_name") @db.VarChar(255)
+  mimeType     String   @map("mime_type") @db.VarChar(128)
+  sizeBytes    BigInt   @map("size_bytes") @db.BigInt
+  checksum     String?  @db.VarChar(64)
+  metadata     Json?    @db.JsonB
+  uploadedById String?  @map("uploaded_by_id") @db.Uuid
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+  document     Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+  @@unique([companyId, documentId, version])
+  @@index([companyId, documentId])
+  @@map("document_versions")
+}

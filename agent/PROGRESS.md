@@ -14,8 +14,8 @@
 ## Current Status
 
 - **Active Phase:** Phase A1 — Master Data, Platform Admin & Foundation Modules
-- **Next Task to Execute:** `A1.6 Documents Module (Presigned Upload & Versioning)`
-- **Tasks complete:** 17 / 88 (P2 cards excluded)
+- **Next Task to Execute:** `A1.7 Audit Query API & Security-Event Viewer`
+- **Tasks complete:** 18 / 88 (P2 cards excluded)
 - **Blockers:** None
 - **Owner action items before/while coding:**
   - Copy the new `task.md` (v6) into `agent/task.md`.
@@ -74,7 +74,7 @@ Tick a box only after the verification rules above are met. Dependencies are def
 - [x] `A1.3` Land Master & Bangladeshi Area Conversion
 - [x] `A1.4` Project & Cost Center Management
 - [x] `A1.5` Platform Admin: System Realm, Tenant Onboarding & Licensing (backend)
-- [ ] `A1.6` Documents Module (Presigned Upload & Versioning)
+- [x] `A1.6` Documents Module (Presigned Upload & Versioning)
 - [ ] `A1.7` Audit Query API & Security-Event Viewer
 - [ ] `A1.8` Notification Engine Core (in-app)
 
@@ -341,3 +341,11 @@ Tick a box only after the verification rules above are met. Dependencies are def
 3. Verification command & result: pnpm --filter @exzaestate/backend test test/system-admin/ test/license/ (29/29 passed across 6 test suites); full backend test suite (247/247 passed across 54 files); pnpm check:all (all 26 tenant tables verified with RLS, 88 routes with permission decorators); oxlint (0 errors, 0 warnings), dependency-cruiser (0 violations), zero cycles, turbo typecheck (9 packages clean)
 4. Open questions: None (Gate D-09 [Separate system realm] and D-15 [License transfer limit 2/yr, fingerprint tolerance >= 2 of 3] applied and recorded in Sign-off Register)
 5. Next task ID: A1.6
+
+### [2026-10-04] A1.6 Documents Module (Presigned Upload & Versioning)
+
+1. Task ID & status: A1.6 [x]
+2. Files created / modified: apps/backend/prisma/schema/documents.prisma, apps/backend/prisma/migrations/20261004000006_documents_and_versioning/**, apps/backend/src/modules/documents/**, apps/backend/src/jobs/queues.ts, apps/backend/src/app.module.ts, apps/backend/test/documents/\*\*, agent/PROGRESS.md, agent/task.md
+3. Verification command & result: pnpm --filter @exzaestate/backend test test/documents/ (12/12 passed across document-upload.spec.ts and document-version-expiry.spec.ts); full backend test suite (259/259 passed across 55 files); pnpm check:all (all 28 tenant tables verified with RLS, 95 routes decorated); oxlint (0 errors, 0 warnings), dependency-cruiser (0 violations), zero cycles, turbo typecheck (9 packages clean), prettier format clean
+4. Open questions: None (Zero gated decisions for A1.6)
+5. Next task ID: A1.7

@@ -498,7 +498,7 @@ These are applied as defaults in `architecture.md` v4 but are still **"Needs sig
 
 #### A1.6 — Documents Module (Presigned Upload & Versioning)
 
-- **Status:** [ ] · **Tier:** 2 · **Size:** M (3 steps) · **Priority:** P0
+- **Status:** [x] · **Tier:** 2 · **Size:** M (3 steps) · **Priority:** P0
 - **Depends:** A0.6, A1.1
 - **Reads:** `architecture.md` §15; `prd.md` MOD-DOCS; `security.md` §4, §5, §6.
 - **Touches:** `apps/backend/src/modules/documents/**`, `apps/backend/prisma/schema/documents.prisma`, `apps/backend/src/jobs/**` (document-expiry job registration).

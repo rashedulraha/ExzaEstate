@@ -5,6 +5,7 @@ import { ConfigModule } from './config/config.module.js';
 import { AuthModule } from './modules/auth/auth.module.js';
 import { CompanyModule } from './modules/company/company.module.js';
 import { EmployeeModule } from './modules/employee/employee.module.js';
+import { DocumentsModule } from './modules/documents/documents.module.js';
 import { HealthModule } from './modules/health/health.module.js';
 import { LandModule } from './modules/land/land.module.js';
 import { ProjectModule } from './modules/project/project.module.js';
@@ -22,6 +23,7 @@ import { SystemAdminModule } from './modules/system-admin/system-admin.module.js
     HealthModule,
     AuthModule,
     CompanyModule,
+    DocumentsModule,
     EmployeeModule,
     LandModule,
     LicenseModule,
