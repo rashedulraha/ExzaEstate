@@ -1,0 +1,41 @@
+{
+  "name": "exzaestate",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "pnpm@12.8.2",
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "scripts": {
+    "build": "turbo run build",
+    "lint": "oxlint -c packages/config/oxlint.json && depcruise --config packages/config/.dependency-cruiser.cjs apps packages && node packages/config/check-cycles.mjs",
+    "lint:oxlint": "oxlint -c packages/config/oxlint.json",
+    "lint:boundaries": "depcruise --config packages/config/.dependency-cruiser.cjs apps packages",
+    "lint:cycles": "node packages/config/check-cycles.mjs",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "typecheck": "turbo run typecheck",
+    "test": "turbo run test",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "@swc/core": "^1.16.13",
+    "dependency-cruiser": "18.5.0",
+    "husky": "9.1.7",
+    "lint-staged": "15.4.3",
+    "madge": "8.0.0",
+    "oxlint": "1.86.0",
+    "prettier": "3.5.3",
+    "turbo": "2.11.5",
+    "typescript": "7.0.2"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx}": [
+      "oxlint -c packages/config/oxlint.json",
+      "prettier --write"
+    ],
+    "*.{json,md,yml,yaml}": [
+      "prettier --write"
+    ]
+  }
+}

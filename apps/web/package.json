@@ -1,0 +1,16 @@
+{
+  "name": "@exzaestate/web",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc --noEmit",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@exzaestate/app-core": "workspace:*",
+    "@exzaestate/features": "workspace:*",
+    "@exzaestate/shared": "workspace:*",
+    "@exzaestate/ui": "workspace:*"
+  }
+}

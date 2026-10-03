@@ -1,0 +1,11 @@
+{
+  "name": "@exzaestate/config",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./tsconfig.base.json": "./tsconfig.base.json",
+    "./oxlint.json": "./oxlint.json",
+    "./.dependency-cruiser.cjs": "./.dependency-cruiser.cjs"
+  }
+}

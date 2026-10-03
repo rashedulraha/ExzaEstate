@@ -1,0 +1,17 @@
+{
+  "name": "@exzaestate/app-core",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@exzaestate/api-client": "workspace:*",
+    "@exzaestate/shared": "workspace:*",
+    "@exzaestate/ui": "workspace:*"
+  }
+}
