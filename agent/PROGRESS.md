@@ -14,8 +14,8 @@
 ## Current Status
 
 - **Active Phase:** Phase A1 — Master Data, Platform Admin & Foundation Modules
-- **Next Task to Execute:** `A1.4 Project & Cost Center Management`
-- **Tasks complete:** 15 / 88 (P2 cards excluded)
+- **Next Task to Execute:** `A1.5 Platform Admin: System Realm, Tenant Onboarding & Licensing (backend)`
+- **Tasks complete:** 16 / 88 (P2 cards excluded)
 - **Blockers:** None
 - **Owner action items before/while coding:**
   - Copy the new `task.md` (v6) into `agent/task.md`.
@@ -72,7 +72,7 @@ Tick a box only after the verification rules above are met. Dependencies are def
 - [x] `A1.1` Company, Branch, Department, Settings & Numbering
 - [x] `A1.2` Roles, Users, Invitations, Employees & Hierarchy
 - [x] `A1.3` Land Master & Bangladeshi Area Conversion
-- [ ] `A1.4` Project & Cost Center Management
+- [x] `A1.4` Project & Cost Center Management
 - [ ] `A1.5` Platform Admin: System Realm, Tenant Onboarding & Licensing (backend)
 - [ ] `A1.6` Documents Module (Presigned Upload & Versioning)
 - [ ] `A1.7` Audit Query API & Security-Event Viewer
@@ -325,3 +325,11 @@ Tick a box only after the verification rules above are met. Dependencies are def
 3. Verification command & result: pnpm --filter @exzaestate/shared test src/area.spec.ts (10/10 passed); pnpm --filter @exzaestate/backend test test/land/land.spec.ts (8/8 passed); pnpm --filter @exzaestate/backend test test/land/land-factors.spec.ts (5/5 passed, AT-27 verified); full backend test suite (203/203 passed across 46 files); pnpm check:all (all architectural gates passed); oxlint (0 errors, 0 warnings), dependency-cruiser (0 violations), zero cycles, turbo typecheck (9 packages clean), prettier format clean
 4. Open questions: None (Zero gated decisions for A1.3)
 5. Next task ID: A1.4
+
+### [2026-10-04] A1.4 Project & Cost Center Management
+
+1. Task ID & status: A1.4 [x]
+2. Files created / modified: apps/backend/prisma/schema/project.prisma, apps/backend/prisma/migrations/20261004000004_project_and_cost_center/**, apps/backend/src/modules/project/**, apps/backend/src/platform/tenant-provisioning/demo-seed/steps/demo-project.step.ts, apps/backend/src/platform/tenant-provisioning/demo-seed/demo-seed.service.ts, apps/backend/src/platform/tenant-provisioning/tenant-provisioning.module.ts, apps/backend/src/app.module.ts, apps/backend/test/project/\*\*, apps/backend/test/platform/seed-demo.spec.ts, agent/PROGRESS.md, agent/task.md
+3. Verification command & result: pnpm --filter @exzaestate/backend test test/project/ (15/15 passed across project.spec.ts and cost-center.spec.ts); pnpm --filter @exzaestate/backend test test/platform/seed-demo.spec.ts (1/1 passed); full backend test suite (218/218 passed across 48 files); pnpm check:all (all 24 tenant tables verified with RLS, 75 routes with permission decorators); oxlint (0 errors, 0 warnings), dependency-cruiser (0 violations), zero cycles, turbo typecheck (9 packages clean), prettier format clean
+4. Open questions: None (Zero gated decisions for A1.4; D-09, D-15 pending for A1.5)
+5. Next task ID: A1.5

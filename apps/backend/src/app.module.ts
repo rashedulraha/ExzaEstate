@@ -7,6 +7,7 @@ import { CompanyModule } from './modules/company/company.module.js';
 import { EmployeeModule } from './modules/employee/employee.module.js';
 import { HealthModule } from './modules/health/health.module.js';
 import { LandModule } from './modules/land/land.module.js';
+import { ProjectModule } from './modules/project/project.module.js';
 import { SettingsModule } from './modules/settings/settings.module.js';
 
 @Module({
@@ -21,6 +22,7 @@ import { SettingsModule } from './modules/settings/settings.module.js';
     CompanyModule,
     EmployeeModule,
     LandModule,
+    ProjectModule,
     SettingsModule,
   ],
 })

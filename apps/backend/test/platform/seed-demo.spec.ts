@@ -132,6 +132,23 @@ describe('S3: Demo Seed Registry & Bangla Fixtures', () => {
       expect(lands[0]!.areaSqft.toFixed(4)).toBe('7200.0000');
       expect(lands[1]!.code).toBe('LND-PUR-001');
       expect(lands[1]!.areaSqft.toFixed(4)).toBe('4906.8000');
+
+      // Verify demo projects exist with linked cost centers and land parcels
+      const projects = await client.project.findMany({
+        where: { companyId: result.companyId },
+        orderBy: { code: 'asc' },
+        include: { costCenter: true },
+      });
+      expect(projects.length).toBe(2);
+      expect(projects[0]!.code).toBe('PRJ-BRV-002');
+      expect(projects[0]!.landId).toBe(lands[0]!.id);
+      expect(projects[0]!.costCenter).toBeDefined();
+      expect(projects[0]!.costCenter!.code).toBe('CC-BRV-002');
+
+      expect(projects[1]!.code).toBe('PRJ-PUR-001');
+      expect(projects[1]!.landId).toBe(lands[1]!.id);
+      expect(projects[1]!.costCenter).toBeDefined();
+      expect(projects[1]!.costCenter!.code).toBe('CC-PUR-001');
     });
   });
 });

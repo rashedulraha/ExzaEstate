@@ -472,7 +472,7 @@ These are applied as defaults in `architecture.md` v4 but are still **"Needs sig
 
 #### A1.4 — Project & Cost Center Management
 
-- **Status:** [ ] · **Tier:** 2 · **Size:** M (3 steps) · **Priority:** P0
+- **Status:** [x] · **Tier:** 2 · **Size:** M (3 steps) · **Priority:** P0
 - **Depends:** A1.1, A1.3
 - **Reads:** `prd.md` MOD-PROJECT, FLOW-04; `architecture.md` §7, §11; `accounting-rules.md` §1 (cost centers by project).
 - **Touches:** `apps/backend/src/modules/project/**`, `apps/backend/prisma/schema/project.prisma`, demo-seed step.

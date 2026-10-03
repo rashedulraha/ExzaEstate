@@ -9,6 +9,7 @@ import { DefaultNumberingStep } from './steps/default-numbering.step.js';
 import { TenantProvisioningService } from './tenant-provisioning.service.js';
 import { DemoStaffStep } from './demo-seed/steps/demo-staff.step.js';
 import { DemoLandStep } from './demo-seed/steps/demo-land.step.js';
+import { DemoProjectStep } from './demo-seed/steps/demo-project.step.js';
 import { DemoSeedService } from './demo-seed/demo-seed.service.js';
 
 @Module({
@@ -23,6 +24,7 @@ import { DemoSeedService } from './demo-seed/demo-seed.service.js';
     TenantProvisioningService,
     DemoStaffStep,
     DemoLandStep,
+    DemoProjectStep,
     DemoSeedService,
   ],
   exports: [
@@ -35,6 +37,7 @@ import { DemoSeedService } from './demo-seed/demo-seed.service.js';
     DefaultNumberingStep,
     DemoStaffStep,
     DemoLandStep,
+    DemoProjectStep,
     DemoSeedService,
   ],
 })
