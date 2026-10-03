@@ -1,0 +1,42 @@
+// Land model (Task A1.3 - Land Master & Bangladeshi Area Conversion)
+
+model Land {
+  id                   String    @id @default(uuid(7)) @db.Uuid
+  companyId            String    @map("company_id") @db.Uuid
+  name                 String    @db.VarChar(255)
+  code                 String    @db.VarChar(64)
+  district             String    @db.VarChar(128)
+  upazila              String    @db.VarChar(128)
+  mouza                String    @db.VarChar(128)
+  jlNumber             String?   @map("jl_number") @db.VarChar(64)
+  khatianNumber        String?   @map("khatian_number") @db.VarChar(128)
+  dagNumber            String?   @map("dag_number") @db.VarChar(128)
+  deedNumber           String?   @map("deed_number") @db.VarChar(128)
+  deedDate             DateTime? @map("deed_date") @db.Date
+  recordedOwners       String?   @map("recorded_owners") @db.Text
+  areaSqft             Decimal   @map("area_sqft") @db.Decimal(18, 4)
+  enteredArea          Decimal?  @map("entered_area") @db.Decimal(18, 4)
+  enteredUnit          String?   @map("entered_unit") @db.VarChar(32)
+  purchasePricePaisa   BigInt?   @map("purchase_price_paisa") @db.BigInt
+  legalCostPaisa       BigInt?   @map("legal_cost_paisa") @db.BigInt
+  developmentCostPaisa BigInt?   @map("development_cost_paisa") @db.BigInt
+  mutationStatus       String?   @map("mutation_status") @db.VarChar(64)
+  taxStatus            String?   @map("tax_status") @db.VarChar(64)
+  ownershipStatus      String?   @map("ownership_status") @db.VarChar(64)
+  status               String    @default("ACTIVE") @db.VarChar(32)
+  latitude             Decimal?  @db.Decimal(10, 7)
+  longitude            Decimal?  @db.Decimal(10, 7)
+  remarks              String?   @db.Text
+  deletedAt            DateTime? @map("deleted_at") @db.Timestamptz
+  createdAt            DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt            DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+  createdById          String?   @map("created_by_id") @db.Uuid
+  updatedById          String?   @map("updated_by_id") @db.Uuid
+
+  @@unique([companyId, code])
+  @@index([companyId])
+  @@index([companyId, code])
+  @@index([companyId, status])
+  @@index([companyId, district, upazila])
+  @@map("lands")
+}

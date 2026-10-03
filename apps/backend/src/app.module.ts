@@ -6,6 +6,7 @@ import { AuthModule } from './modules/auth/auth.module.js';
 import { CompanyModule } from './modules/company/company.module.js';
 import { EmployeeModule } from './modules/employee/employee.module.js';
 import { HealthModule } from './modules/health/health.module.js';
+import { LandModule } from './modules/land/land.module.js';
 import { SettingsModule } from './modules/settings/settings.module.js';
 
 @Module({
@@ -19,6 +20,7 @@ import { SettingsModule } from './modules/settings/settings.module.js';
     AuthModule,
     CompanyModule,
     EmployeeModule,
+    LandModule,
     SettingsModule,
   ],
 })

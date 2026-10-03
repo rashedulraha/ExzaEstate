@@ -458,7 +458,7 @@ These are applied as defaults in `architecture.md` v4 but are still **"Needs sig
 
 #### A1.3 — Land Master & Bangladeshi Area Conversion
 
-- **Status:** [ ] · **Tier:** 2 · **Size:** M (3 steps) · **Priority:** P0
+- **Status:** [x] · **Tier:** 2 · **Size:** M (3 steps) · **Priority:** P0
 - **Depends:** A1.1
 - **Reads:** `prd.md` MOD-LAND, FLOW-04, §10, §17 (`land_unit_factors`); `architecture.md` §9.1, §11.
 - **Touches:** `packages/shared/src/area.ts` (+ tests), `apps/backend/src/modules/land/**`, `apps/backend/prisma/schema/land.prisma`, provisioning step (land factors), demo-seed step.

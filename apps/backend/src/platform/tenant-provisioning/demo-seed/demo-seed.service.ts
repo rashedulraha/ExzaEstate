@@ -7,6 +7,7 @@ import {
 } from '../tenant-provisioning.service.js';
 import { DemoSeedContext, DemoSeedStep } from './demo-seed-step.interface.js';
 import { DemoStaffStep } from './steps/demo-staff.step.js';
+import { DemoLandStep } from './steps/demo-land.step.js';
 
 export * from './demo-seed-step.interface.js';
 
@@ -19,12 +20,15 @@ export class DemoSeedService implements OnModuleInit {
     private readonly tenantDb: TenantDb,
     private readonly provisioningService: TenantProvisioningService,
     private readonly demoStaffStep: DemoStaffStep,
+    private readonly demoLandStep: DemoLandStep,
   ) {
     this.registerStep(this.demoStaffStep);
+    this.registerStep(this.demoLandStep);
   }
 
   onModuleInit(): void {
     this.registerStep(this.demoStaffStep);
+    this.registerStep(this.demoLandStep);
   }
 
   registerStep(step: DemoSeedStep): void {

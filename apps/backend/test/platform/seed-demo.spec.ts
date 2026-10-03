@@ -121,6 +121,17 @@ describe('S3: Demo Seed Registry & Bangla Fixtures', () => {
       expect(mdUser).toBeDefined();
       expect(mdUser!.fullName).toContain('আনোয়ার হোসেন');
       expect(mdUser!.status).toBe('ACTIVE');
+
+      // Verify demo land parcels exist with exact area conversions
+      const lands = await client.land.findMany({
+        where: { companyId: result.companyId },
+        orderBy: { code: 'asc' },
+      });
+      expect(lands.length).toBe(2);
+      expect(lands[0]!.code).toBe('LND-BRV-002');
+      expect(lands[0]!.areaSqft.toFixed(4)).toBe('7200.0000');
+      expect(lands[1]!.code).toBe('LND-PUR-001');
+      expect(lands[1]!.areaSqft.toFixed(4)).toBe('4906.8000');
     });
   });
 });
