@@ -1,0 +1,16 @@
+{
+  "app.name": "ExzaEstate",
+  "greeting": "Hello {name}",
+  "common.save": "Save",
+  "common.cancel": "Cancel",
+  "common.confirm": "Confirm",
+  "common.delete": "Delete",
+  "common.edit": "Edit",
+  "common.view": "View",
+  "common.loading": "Loading...",
+  "common.error": "An error occurred",
+  "common.notFound": "Not found",
+  "common.success": "Success",
+  "currency.bdt": "BDT",
+  "currency.symbol": "৳"
+}

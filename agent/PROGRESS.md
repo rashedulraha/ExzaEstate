@@ -14,8 +14,8 @@
 ## Current Status
 
 - **Active Phase:** Phase A0 — Platform Foundations
-- **Next Task to Execute:** `A0.2 Shared Package: Constants, Types, Money, Localisation`
-- **Tasks complete:** 1 / 88 (P2 cards excluded)
+- **Next Task to Execute:** `A0.3 Backend Foundations: NestJS 12 ESM, Config, Envelope`
+- **Tasks complete:** 2 / 88 (P2 cards excluded)
 - **Blockers:** None
 - **Owner action items before/while coding:**
   - Copy the new `task.md` (v6) into `agent/task.md`.
@@ -55,7 +55,7 @@ Tick a box only after the verification rules above are met. Dependencies are def
 ### Phase A0 — Platform Foundations
 
 - [x] `A0.1` Monorepo & Tooling Foundation
-- [ ] `A0.2` Shared Package: Constants, Types, Money, Localisation
+- [x] `A0.2` Shared Package: Constants, Types, Money, Localisation
 - [ ] `A0.3` Backend Foundations: NestJS 12 ESM, Config, Envelope
 - [ ] `A0.4` Database: Docker Compose & Prisma 7 Multi-File Schema
 - [ ] `A0.5` Multi-Tenancy: RLS, DB Roles, TenantPrisma, SystemPrisma
@@ -213,3 +213,11 @@ Tick a box only after the verification rules above are met. Dependencies are def
 3. Verification command & result: pnpm install, pnpm lint, pnpm typecheck, pnpm build (all clean with 0 errors; deliberate circular import and modules/_ -> adapters/_ imports verified failing)
 4. Open questions: None
 5. Next task ID: A0.2
+
+### [2026-10-03] A0.2 Shared Package: Constants, Types, Money, Localisation
+
+1. Task ID & status: A0.2 [x]
+2. Files created / modified: packages/config/tsconfig.base.json, packages/shared/package.json, packages/shared/src/index.ts, packages/shared/src/permissions.ts, packages/shared/src/error-codes.ts, packages/shared/src/events.ts, packages/shared/src/statuses.ts, packages/shared/src/money.ts, packages/shared/src/money.spec.ts, packages/shared/src/format.ts, packages/shared/src/format.spec.ts, packages/shared/src/permissions.spec.ts, packages/shared/src/i18n/en.json, packages/shared/src/i18n/t.ts, agent/PROGRESS.md
+3. Verification command & result: pnpm --filter @exzaestate/shared build && pnpm --filter @exzaestate/shared test (27/27 tests passed across 3 test suites, property-based tests verified with fast-check; monorepo lint, typecheck, and build clean with 0 errors)
+4. Open questions: None
+5. Next task ID: A0.3
