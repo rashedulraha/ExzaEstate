@@ -29,6 +29,8 @@ import { ForgotPasswordDto } from './dto/forgot-password.dto.js';
 import { LoginDto } from './dto/login.dto.js';
 import { RefreshTokenDto } from './dto/refresh.dto.js';
 import { ResetPasswordDto } from './dto/reset-password.dto.js';
+import { Disable2FaDto, Enable2FaDto, StepUpDto } from './dto/two-factor.dto.js';
+import { TwoFactorService } from './two-factor.service.js';
 
 @Controller('auth')
 @UseGuards(JwtAuthGuard)
@@ -36,6 +38,7 @@ export class AuthController {
   constructor(
     private readonly authService: AuthService,
     private readonly configService: ConfigService,
+    private readonly twoFactorService: TwoFactorService,
   ) {}
 
   private validateWebCsrf(origin?: string): void {
@@ -215,5 +218,34 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   async resetPassword(@Body() dto: ResetPasswordDto) {
     return this.authService.resetPassword(dto);
+  }
+
+  @Post('2fa/generate')
+  @HttpCode(HttpStatus.OK)
+  async generate2Fa(@CurrentUser() user: AuthenticatedUser) {
+    return this.twoFactorService.generate(user.userId, user.companyId);
+  }
+
+  @Post('2fa/enable')
+  @HttpCode(HttpStatus.OK)
+  async enable2Fa(@CurrentUser() user: AuthenticatedUser, @Body() dto: Enable2FaDto) {
+    return this.twoFactorService.enable(user.userId, user.companyId, dto.secret, dto.token);
+  }
+
+  @Post('2fa/disable')
+  @HttpCode(HttpStatus.OK)
+  async disable2Fa(@CurrentUser() user: AuthenticatedUser, @Body() dto: Disable2FaDto) {
+    return this.twoFactorService.disable(user.userId, user.companyId, dto.token);
+  }
+
+  @Post('step-up')
+  @HttpCode(HttpStatus.OK)
+  async stepUp(@CurrentUser() user: AuthenticatedUser, @Body() dto: StepUpDto) {
+    return this.twoFactorService.verifyStepUp(
+      user.userId,
+      user.companyId,
+      user.sessionId,
+      dto.token,
+    );
   }
 }
