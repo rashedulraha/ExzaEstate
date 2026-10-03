@@ -14,8 +14,8 @@
 ## Current Status
 
 - **Active Phase:** Phase A0 — Platform Foundations
-- **Next Task to Execute:** `A0.5 Multi-Tenancy: RLS, DB Roles, TenantPrisma, SystemPrisma`
-- **Tasks complete:** 4 / 88 (P2 cards excluded)
+- **Next Task to Execute:** `A0.6 Platform Services: Audit, Sequence, Outbox, Idempotency, Storage`
+- **Tasks complete:** 5 / 88 (P2 cards excluded)
 - **Blockers:** None
 - **Owner action items before/while coding:**
   - Copy the new `task.md` (v6) into `agent/task.md`.
@@ -30,7 +30,7 @@
 | ---------- | ----------------------------------------------------- | ----------- | ------------------------------------- | ---------- |
 | D-06       | `packages/app-core` separate from `ui`                | A0.1        | Confirmed (default: separate package) | 2026-10-03 |
 | D-05       | NestJS Express adapter                                | A0.3        | Confirmed (default: Express adapter)  | 2026-10-03 |
-| D-09       | Separate system realm for Super Admin                 | A0.5, A1.5  | _pending_                             |            |
+| D-09       | Separate system realm for Super Admin                 | A0.5, A1.5  | Confirmed (default: system realm)     | 2026-10-03 |
 | D-07       | Idempotency row inside the business transaction       | A0.6        | _pending_                             |            |
 | D-11       | Monthly partitions for audit/outbox/notification logs | A0.6        | _pending_                             |            |
 | D-10       | App-level encryption + blind index (NID, bank no.)    | A0.12, A3.3 | _pending_                             |            |
@@ -58,7 +58,7 @@ Tick a box only after the verification rules above are met. Dependencies are def
 - [x] `A0.2` Shared Package: Constants, Types, Money, Localisation
 - [x] `A0.3` Backend Foundations: NestJS 12 ESM, Config, Envelope
 - [x] `A0.4` Database: Docker Compose & Prisma 7 Multi-File Schema
-- [ ] `A0.5` Multi-Tenancy: RLS, DB Roles, TenantPrisma, SystemPrisma
+- [x] `A0.5` Multi-Tenancy: RLS, DB Roles, TenantPrisma, SystemPrisma
 - [ ] `A0.6` Platform Services: Audit, Sequence, Outbox, Idempotency, Storage
 - [ ] `A0.7` Ports & Adapters Skeleton, Outbox Dispatcher, Worker Entrypoint
 - [ ] `A0.8` Authentication, Sessions, Invitations
@@ -237,3 +237,11 @@ Tick a box only after the verification rules above are met. Dependencies are def
 3. Verification command & result: docker compose up -d && docker compose ps (all 4 containers up and healthy); pnpm --filter @exzaestate/backend exec prisma validate (valid schema); pnpm --filter @exzaestate/backend test db-connection (2/2 tests passed: SELECT 1 and PostgreSQL 18.x version verified); curl check (MinIO console :9001 and Mailpit UI :8025 both HTTP 200 OK); 42/42 tests pass across monorepo, lint and typecheck clean with 0 errors
 4. Open questions: None (Zero gated decisions for A0.4; D-09 pending for A0.5)
 5. Next task ID: A0.5
+
+### [2026-10-03] A0.5 Multi-Tenancy: RLS, DB Roles, TenantPrisma, SystemPrisma
+
+1. Task ID & status: A0.5 [x]
+2. Files created / modified: apps/backend/prisma/migrations/20261003000000_init_roles_and_rls/migration.sql, apps/backend/src/common/context/**, apps/backend/src/database/**, apps/backend/test/tenant-isolation/\*\*, agent/PROGRESS.md
+3. Verification command & result: prisma migrate deploy (all migrations applied); vitest tenant-context (3/3 passed); vitest tenant-transaction (3/3 passed); vitest system-prisma (3/3 passed); vitest tenant-isolation (12/12 passed); monorepo lint, typecheck, and all 54 tests passed with 0 errors
+4. Open questions: None (Gate D-09 confirmed: default system realm for platform operations)
+5. Next task ID: A0.6
