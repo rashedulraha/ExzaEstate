@@ -35,6 +35,16 @@ export class RolesPermissionsStep implements ProvisioningStep {
 
       // Seed role permissions idempotently
       for (const perm of roleDef.permissions) {
+        await tx.systemPermission.upsert({
+          where: { code: perm.code },
+          update: {},
+          create: {
+            code: perm.code,
+            module: perm.code.split(':')[0] || 'general',
+            description: `${perm.code} permission`,
+          },
+        });
+
         await tx.rolePermission.upsert({
           where: {
             companyId_roleId_permissionCode: {

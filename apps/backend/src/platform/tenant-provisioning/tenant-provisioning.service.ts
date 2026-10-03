@@ -14,6 +14,7 @@ import { ManagingDirectorStep } from './steps/managing-director.step.js';
 import { DefaultDepartmentsStep } from './steps/default-departments.step.js';
 import { DefaultSettingsStep } from './steps/default-settings.step.js';
 import { DefaultNumberingStep } from './steps/default-numbering.step.js';
+import { DefaultTemplatesStep } from './steps/default-templates.step.js';
 
 export * from './provisioning-step.interface.js';
 
@@ -31,6 +32,7 @@ export class TenantProvisioningService implements OnModuleInit {
     private readonly defaultDepartmentsStep: DefaultDepartmentsStep,
     private readonly defaultSettingsStep: DefaultSettingsStep,
     private readonly defaultNumberingStep: DefaultNumberingStep,
+    private readonly defaultTemplatesStep: DefaultTemplatesStep,
   ) {
     this.registerStep(this.companyBranchStep);
     this.registerStep(this.rolesPermissionsStep);
@@ -38,6 +40,7 @@ export class TenantProvisioningService implements OnModuleInit {
     this.registerStep(this.managingDirectorStep);
     this.registerStep(this.defaultSettingsStep);
     this.registerStep(this.defaultNumberingStep);
+    this.registerStep(this.defaultTemplatesStep);
   }
 
   onModuleInit(): void {
@@ -48,6 +51,7 @@ export class TenantProvisioningService implements OnModuleInit {
     this.registerStep(this.managingDirectorStep);
     this.registerStep(this.defaultSettingsStep);
     this.registerStep(this.defaultNumberingStep);
+    this.registerStep(this.defaultTemplatesStep);
   }
 
   /**

@@ -1,0 +1,64 @@
+// Notifications schemas: Event Catalog, Templates, In-App Inbox, and Preferences
+
+model NotificationEventCatalog {
+  code            String                 @id @db.VarChar(64)
+  name            String                 @db.VarChar(128)
+  module          String                 @db.VarChar(64)
+  description     String?                @db.Text
+  defaultChannels String[]               @map("default_channels")
+  createdAt       DateTime               @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt       DateTime               @updatedAt @map("updated_at") @db.Timestamptz
+  templates       NotificationTemplate[]
+
+  @@map("notification_event_catalog")
+}
+
+model NotificationTemplate {
+  id        String                   @id @default(uuid(7)) @db.Uuid
+  companyId String                   @map("company_id") @db.Uuid
+  eventCode String                   @map("event_code") @db.VarChar(64)
+  channel   String                   @db.VarChar(32)
+  title     String                   @db.VarChar(255)
+  body      String                   @db.Text
+  isActive  Boolean                  @default(true) @map("is_active")
+  createdAt DateTime                 @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt DateTime                 @updatedAt @map("updated_at") @db.Timestamptz
+  event     NotificationEventCatalog @relation(fields: [eventCode], references: [code])
+
+  @@unique([companyId, eventCode, channel])
+  @@index([companyId])
+  @@map("notification_templates")
+}
+
+model InAppNotification {
+  id        String    @id @default(uuid(7)) @db.Uuid
+  companyId String    @map("company_id") @db.Uuid
+  userId    String    @map("user_id") @db.Uuid
+  eventCode String    @map("event_code") @db.VarChar(64)
+  title     String    @db.VarChar(255)
+  body      String    @db.Text
+  data      Json?
+  isRead    Boolean   @default(false) @map("is_read")
+  readAt    DateTime? @map("read_at") @db.Timestamptz
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+
+  @@index([companyId, userId, isRead])
+  @@index([companyId, createdAt])
+  @@map("in_app_notifications")
+}
+
+model NotificationPreference {
+  id        String   @id @default(uuid(7)) @db.Uuid
+  companyId String   @map("company_id") @db.Uuid
+  userId    String   @map("user_id") @db.Uuid
+  eventCode String   @map("event_code") @db.VarChar(64)
+  channel   String   @db.VarChar(32)
+  enabled   Boolean  @default(true)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz
+
+  @@unique([companyId, userId, eventCode, channel])
+  @@index([companyId, userId])
+  @@map("notification_preferences")
+}

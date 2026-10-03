@@ -13,9 +13,9 @@
 
 ## Current Status
 
-- **Active Phase:** Phase A1 — Master Data, Platform Admin & Foundation Modules
-- **Next Task to Execute:** `A1.7 Audit Query API & Security-Event Viewer`
-- **Tasks complete:** 18 / 88 (P2 cards excluded)
+- **Active Phase:** Phase A2 + B1 — Golden Vertical Slice (Property)
+- **Next Task to Execute:** `A2.1 Property Data Model, Hierarchy & RLS`
+- **Tasks complete:** 20 / 88 (P2 cards excluded)
 - **Blockers:** None
 - **Owner action items before/while coding:**
   - Copy the new `task.md` (v6) into `agent/task.md`.
@@ -75,8 +75,8 @@ Tick a box only after the verification rules above are met. Dependencies are def
 - [x] `A1.4` Project & Cost Center Management
 - [x] `A1.5` Platform Admin: System Realm, Tenant Onboarding & Licensing (backend)
 - [x] `A1.6` Documents Module (Presigned Upload & Versioning)
-- [ ] `A1.7` Audit Query API & Security-Event Viewer
-- [ ] `A1.8` Notification Engine Core (in-app)
+- [x] `A1.7` Audit Query API & Security-Event Viewer
+- [x] `A1.8` Notification Engine Core (in-app)
 
 ### Phase A2 + B1 — Golden Vertical Slice (Property)
 
@@ -349,3 +349,19 @@ Tick a box only after the verification rules above are met. Dependencies are def
 3. Verification command & result: pnpm --filter @exzaestate/backend test test/documents/ (12/12 passed across document-upload.spec.ts and document-version-expiry.spec.ts); full backend test suite (259/259 passed across 55 files); pnpm check:all (all 28 tenant tables verified with RLS, 95 routes decorated); oxlint (0 errors, 0 warnings), dependency-cruiser (0 violations), zero cycles, turbo typecheck (9 packages clean), prettier format clean
 4. Open questions: None (Zero gated decisions for A1.6)
 5. Next task ID: A1.7
+
+### [2026-10-04] A1.7 Audit Query API & Security-Event Viewer
+
+1. Task ID & status: A1.7 [x]
+2. Files created / modified: packages/shared/src/permissions.ts, apps/backend/src/platform/tenant-provisioning/steps/{md-gm-roles.data,roles-permissions.step}.ts, apps/backend/src/modules/audit/**, apps/backend/src/app.module.ts, apps/backend/test/audit/**, agent/PROGRESS.md, agent/task.md
+3. Verification command & result: pnpm --filter @exzaestate/backend test test/audit/ (9/9 passed across audit-query.spec.ts); full backend test suite (268/268 passed across 57 files); pnpm check:all (all 28 tenant tables verified with RLS, 99 routes decorated); oxlint (0 errors, 0 warnings), dependency-cruiser (0 violations), zero cycles, turbo typecheck (9 packages clean), prettier format clean
+4. Open questions: None (Zero gated decisions for A1.7)
+5. Next task ID: A1.8
+
+### [2026-10-04] A1.8 Notification Engine Core (in-app)
+
+1. Task ID & status: A1.8 [x]
+2. Files created / modified: apps/backend/prisma/schema/notifications.prisma, apps/backend/prisma/migrations/20261004000007_notifications_core/migration.sql, apps/backend/src/modules/notifications/**, apps/backend/src/platform/tenant-provisioning/steps/default-templates.{data,step}.ts, apps/backend/src/platform/tenant-provisioning/tenant-provisioning.{module,service}.ts, apps/backend/src/app.module.ts, apps/backend/test/notifications/**, agent/PROGRESS.md, agent/task.md
+3. Verification command & result: pnpm --filter @exzaestate/backend test test/notifications/ (13/13 passed across notifications.spec.ts); full backend test suite (281/281 passed across 58 files); pnpm check:all (all 31 tenant tables verified with RLS, 105 routes decorated); oxlint (0 errors, 0 warnings), dependency-cruiser (0 violations), zero cycles, turbo typecheck (9 packages clean), prettier format clean
+4. Open questions: None (Zero gated decisions for A1.8; Phase A1 complete)
+5. Next task ID: A2.1

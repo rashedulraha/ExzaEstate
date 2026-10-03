@@ -508,7 +508,7 @@ These are applied as defaults in `architecture.md` v4 but are still **"Needs sig
 
 #### A1.7 — Audit Query API & Security-Event Viewer
 
-- **Status:** [ ] · **Tier:** 2 · **Size:** S (2 steps) · **Priority:** P0
+- **Status:** [x] · **Tier:** 2 · **Size:** S (2 steps) · **Priority:** P0
 - **Depends:** A0.6, A0.12
 - **Reads:** `architecture.md` §7.5; `prd.md` MOD-AUDIT; `security.md` §11, §15.
 - **Touches:** `apps/backend/src/modules/audit/**`.
@@ -518,7 +518,7 @@ These are applied as defaults in `architecture.md` v4 but are still **"Needs sig
 
 #### A1.8 — Notification Engine Core (in-app)
 
-- **Status:** [ ] · **Tier:** 2 · **Size:** M (3 steps) · **Priority:** P0 (SMS/email channels in A9.2)
+- **Status:** [x] · **Tier:** 2 · **Size:** M (3 steps) · **Priority:** P0 (SMS/email channels in A9.2)
 - **Depends:** A0.7, A1.1
 - **Reads:** `architecture.md` §7.4, §8; `prd.md` MOD-NOTIFY.
 - **Touches:** `apps/backend/src/modules/notifications/**`, `apps/backend/prisma/schema/notifications.prisma`.

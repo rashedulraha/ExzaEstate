@@ -31,6 +31,7 @@ export const PERMISSIONS = {
 
   AUDIT_VIEW: 'audit:view',
   AUDIT_VIEW_SENSITIVE: 'audit:view-sensitive',
+  AUDIT_EXPORT: 'audit:export',
 
   APPROVAL_OVERRIDE: 'approval:override',
 

@@ -6,6 +6,7 @@ import { ManagingDirectorStep } from './steps/managing-director.step.js';
 import { DefaultDepartmentsStep } from './steps/default-departments.step.js';
 import { DefaultSettingsStep } from './steps/default-settings.step.js';
 import { DefaultNumberingStep } from './steps/default-numbering.step.js';
+import { DefaultTemplatesStep } from './steps/default-templates.step.js';
 import { TenantProvisioningService } from './tenant-provisioning.service.js';
 import { DemoStaffStep } from './demo-seed/steps/demo-staff.step.js';
 import { DemoLandStep } from './demo-seed/steps/demo-land.step.js';
@@ -21,6 +22,7 @@ import { DemoSeedService } from './demo-seed/demo-seed.service.js';
     DefaultDepartmentsStep,
     DefaultSettingsStep,
     DefaultNumberingStep,
+    DefaultTemplatesStep,
     TenantProvisioningService,
     DemoStaffStep,
     DemoLandStep,
@@ -35,6 +37,7 @@ import { DemoSeedService } from './demo-seed/demo-seed.service.js';
     DefaultDepartmentsStep,
     DefaultSettingsStep,
     DefaultNumberingStep,
+    DefaultTemplatesStep,
     DemoStaffStep,
     DemoLandStep,
     DemoProjectStep,
