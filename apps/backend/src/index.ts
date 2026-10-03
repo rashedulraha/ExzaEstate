@@ -10,5 +10,7 @@ export * from './config/config.module.js';
 export * from './config/config.service.js';
 export * from './config/env.schema.js';
 export * from './config/swagger.config.js';
+export * from './database/database.module.js';
+export * from './database/prisma.service.js';
 export * from './modules/health/health.controller.js';
 export * from './modules/health/health.module.js';

@@ -14,8 +14,8 @@
 ## Current Status
 
 - **Active Phase:** Phase A0 — Platform Foundations
-- **Next Task to Execute:** `A0.4 Database: Docker Compose & Prisma 7 Multi-File Schema`
-- **Tasks complete:** 3 / 88 (P2 cards excluded)
+- **Next Task to Execute:** `A0.5 Multi-Tenancy: RLS, DB Roles, TenantPrisma, SystemPrisma`
+- **Tasks complete:** 4 / 88 (P2 cards excluded)
 - **Blockers:** None
 - **Owner action items before/while coding:**
   - Copy the new `task.md` (v6) into `agent/task.md`.
@@ -57,7 +57,7 @@ Tick a box only after the verification rules above are met. Dependencies are def
 - [x] `A0.1` Monorepo & Tooling Foundation
 - [x] `A0.2` Shared Package: Constants, Types, Money, Localisation
 - [x] `A0.3` Backend Foundations: NestJS 12 ESM, Config, Envelope
-- [ ] `A0.4` Database: Docker Compose & Prisma 7 Multi-File Schema
+- [x] `A0.4` Database: Docker Compose & Prisma 7 Multi-File Schema
 - [ ] `A0.5` Multi-Tenancy: RLS, DB Roles, TenantPrisma, SystemPrisma
 - [ ] `A0.6` Platform Services: Audit, Sequence, Outbox, Idempotency, Storage
 - [ ] `A0.7` Ports & Adapters Skeleton, Outbox Dispatcher, Worker Entrypoint
@@ -229,3 +229,11 @@ Tick a box only after the verification rules above are met. Dependencies are def
 3. Verification command & result: pnpm --filter @exzaestate/backend build && pnpm --filter @exzaestate/backend test config && pnpm --filter @exzaestate/backend test envelope (all 13 tests passed in backend, 40/40 tests across monorepo passed; oxlint, depcruise, cycle-check, typecheck, build clean)
 4. Open questions: None (Gate D-05 confirmed with default Express adapter)
 5. Next task ID: A0.4
+
+### [2026-10-03] A0.4 Database: Docker Compose & Prisma 7 Multi-File Schema
+
+1. Task ID & status: A0.4 [x]
+2. Files created / modified: docker-compose.yml, docker/postgres-init/01-init-roles.sql, .env.example, apps/backend/package.json, apps/backend/prisma.config.ts, apps/backend/prisma/schema/base.prisma, apps/backend/src/database/\*\*, apps/backend/src/index.ts, apps/backend/test/db-connection.spec.ts, pnpm-lock.yaml, pnpm-workspace.yaml, agent/PROGRESS.md
+3. Verification command & result: docker compose up -d && docker compose ps (all 4 containers up and healthy); pnpm --filter @exzaestate/backend exec prisma validate (valid schema); pnpm --filter @exzaestate/backend test db-connection (2/2 tests passed: SELECT 1 and PostgreSQL 18.x version verified); curl check (MinIO console :9001 and Mailpit UI :8025 both HTTP 200 OK); 42/42 tests pass across monorepo, lint and typecheck clean with 0 errors
+4. Open questions: None (Zero gated decisions for A0.4; D-09 pending for A0.5)
+5. Next task ID: A0.5

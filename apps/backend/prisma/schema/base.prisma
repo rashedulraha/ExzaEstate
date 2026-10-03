@@ -1,0 +1,9 @@
+// Generator and datasource provider only. Zero connection strings (configured via prisma.config.ts).
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
