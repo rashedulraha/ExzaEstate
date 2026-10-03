@@ -1,35 +1,71 @@
-// Company and Branch models (minimal baseline for A0.8, expanded in A1.1)
+// Company, Branch and Department models (Task A1.1)
 
 model Company {
-  id        String   @default(uuid(7)) @id @db.Uuid
-  companyId String   @default(uuid(7)) @map("company_id") @db.Uuid
-  name      String   @db.VarChar(255)
-  code      String   @unique @db.VarChar(64)
-  timezone  String   @default("Asia/Dhaka") @db.VarChar(64)
-  isActive  Boolean  @default(true) @map("is_active")
-  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
-  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz
+  id            String    @id @default(uuid(7)) @db.Uuid
+  companyId     String    @default(uuid(7)) @map("company_id") @db.Uuid
+  name          String    @db.VarChar(255)
+  code          String    @unique @db.VarChar(64)
+  timezone      String    @default("Asia/Dhaka") @db.VarChar(64)
+  logoUrl       String?   @map("logo_url") @db.VarChar(512)
+  address       String?   @db.Text
+  contactPhone  String?   @map("contact_phone") @db.VarChar(64)
+  contactEmail  String?   @map("contact_email") @db.VarChar(255)
+  taxNumber     String?   @map("tax_number") @db.VarChar(64)
+  binNumber     String?   @map("bin_number") @db.VarChar(64)
+  receiptFooter String?   @map("receipt_footer") @db.Text
+  isActive      Boolean   @default(true) @map("is_active")
+  deletedAt     DateTime? @map("deleted_at") @db.Timestamptz
+  createdAt     DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt     DateTime  @updatedAt @map("updated_at") @db.Timestamptz
 
-  branches  Branch[]
-  users     User[]
+  branches          Branch[]
+  departments       Department[]
+  companySettings   CompanySetting[]
+  numberingPatterns NumberingPattern[]
+  users             User[]
 
   @@index([companyId])
   @@map("companies")
 }
 
 model Branch {
-  id           String   @default(uuid(7)) @id @db.Uuid
-  companyId    String   @map("company_id") @db.Uuid
-  name         String   @db.VarChar(255)
-  code         String   @db.VarChar(64)
-  isHeadOffice Boolean  @default(false) @map("is_head_office")
-  isActive     Boolean  @default(true) @map("is_active")
-  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz
-  updatedAt    DateTime @updatedAt @map("updated_at") @db.Timestamptz
+  id           String        @id @default(uuid(7)) @db.Uuid
+  companyId    String        @map("company_id") @db.Uuid
+  name         String        @db.VarChar(255)
+  code         String        @db.VarChar(64)
+  address      String?       @db.Text
+  phone        String?       @db.VarChar(64)
+  email        String?       @db.VarChar(255)
+  isHeadOffice Boolean       @default(false) @map("is_head_office")
+  isActive     Boolean       @default(true) @map("is_active")
+  deletedAt    DateTime?     @map("deleted_at") @db.Timestamptz
+  createdAt    DateTime      @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt    DateTime      @updatedAt @map("updated_at") @db.Timestamptz
 
-  company      Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  company      Company       @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  departments  Department[]
 
   @@unique([companyId, code])
   @@index([companyId])
   @@map("branches")
+}
+
+model Department {
+  id        String    @id @default(uuid(7)) @db.Uuid
+  companyId String    @map("company_id") @db.Uuid
+  branchId  String?   @map("branch_id") @db.Uuid
+  name      String    @db.VarChar(255)
+  code      String    @db.VarChar(64)
+  isActive  Boolean   @default(true) @map("is_active")
+  deletedAt DateTime? @map("deleted_at") @db.Timestamptz
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+
+  company   Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  branch    Branch?   @relation(fields: [branchId], references: [id], onDelete: SetNull)
+
+  @@unique([companyId, code])
+  @@index([companyId])
+  @@index([branchId])
+  @@map("departments")
 }

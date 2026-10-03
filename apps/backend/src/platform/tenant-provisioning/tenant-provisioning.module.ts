@@ -3,6 +3,9 @@ import { DatabaseModule } from '../../database/database.module.js';
 import { CompanyBranchStep } from './steps/company-branch.step.js';
 import { RolesPermissionsStep } from './steps/roles-permissions.step.js';
 import { ManagingDirectorStep } from './steps/managing-director.step.js';
+import { DefaultDepartmentsStep } from './steps/default-departments.step.js';
+import { DefaultSettingsStep } from './steps/default-settings.step.js';
+import { DefaultNumberingStep } from './steps/default-numbering.step.js';
 import { TenantProvisioningService } from './tenant-provisioning.service.js';
 import { DemoStaffStep } from './demo-seed/steps/demo-staff.step.js';
 import { DemoSeedService } from './demo-seed/demo-seed.service.js';
@@ -13,6 +16,9 @@ import { DemoSeedService } from './demo-seed/demo-seed.service.js';
     CompanyBranchStep,
     RolesPermissionsStep,
     ManagingDirectorStep,
+    DefaultDepartmentsStep,
+    DefaultSettingsStep,
+    DefaultNumberingStep,
     TenantProvisioningService,
     DemoStaffStep,
     DemoSeedService,
@@ -22,6 +28,9 @@ import { DemoSeedService } from './demo-seed/demo-seed.service.js';
     CompanyBranchStep,
     RolesPermissionsStep,
     ManagingDirectorStep,
+    DefaultDepartmentsStep,
+    DefaultSettingsStep,
+    DefaultNumberingStep,
     DemoStaffStep,
     DemoSeedService,
   ],

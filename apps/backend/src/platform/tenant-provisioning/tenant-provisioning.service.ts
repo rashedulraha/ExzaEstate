@@ -11,6 +11,9 @@ import {
 import { CompanyBranchStep } from './steps/company-branch.step.js';
 import { RolesPermissionsStep } from './steps/roles-permissions.step.js';
 import { ManagingDirectorStep } from './steps/managing-director.step.js';
+import { DefaultDepartmentsStep } from './steps/default-departments.step.js';
+import { DefaultSettingsStep } from './steps/default-settings.step.js';
+import { DefaultNumberingStep } from './steps/default-numbering.step.js';
 
 export * from './provisioning-step.interface.js';
 
@@ -25,17 +28,26 @@ export class TenantProvisioningService implements OnModuleInit {
     private readonly companyBranchStep: CompanyBranchStep,
     private readonly rolesPermissionsStep: RolesPermissionsStep,
     private readonly managingDirectorStep: ManagingDirectorStep,
+    private readonly defaultDepartmentsStep: DefaultDepartmentsStep,
+    private readonly defaultSettingsStep: DefaultSettingsStep,
+    private readonly defaultNumberingStep: DefaultNumberingStep,
   ) {
     this.registerStep(this.companyBranchStep);
     this.registerStep(this.rolesPermissionsStep);
+    this.registerStep(this.defaultDepartmentsStep);
     this.registerStep(this.managingDirectorStep);
+    this.registerStep(this.defaultSettingsStep);
+    this.registerStep(this.defaultNumberingStep);
   }
 
   onModuleInit(): void {
     // Re-verify registration of built-in steps on Nest lifecycle
     this.registerStep(this.companyBranchStep);
     this.registerStep(this.rolesPermissionsStep);
+    this.registerStep(this.defaultDepartmentsStep);
     this.registerStep(this.managingDirectorStep);
+    this.registerStep(this.defaultSettingsStep);
+    this.registerStep(this.defaultNumberingStep);
   }
 
   /**

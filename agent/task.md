@@ -428,7 +428,7 @@ These are applied as defaults in `architecture.md` v4 but are still **"Needs sig
 
 #### A1.1 — Company, Branch, Department, Settings & Numbering
 
-- **Status:** [ ] · **Tier:** 2 · **Size:** L (4 steps) · **Priority:** P0
+- **Status:** [x] · **Tier:** 2 · **Size:** L (4 steps) · **Priority:** P0
 - **Depends:** A0.9, A0.10
 - **Reads:** `prd.md` MOD-ORG, MOD-NUMBERING, FLOW-02, §17 (configuration catalogue); `architecture.md` §7, §9.2, §11; `accounting-rules.md` §2; `permissions-matrix.md` (company/branch/department/settings, `numbering`).
 - **Touches:** `apps/backend/src/modules/company/**`, `apps/backend/src/modules/settings/**`, `apps/backend/prisma/schema/{company,settings}.prisma`, provisioning step, demo-seed step.

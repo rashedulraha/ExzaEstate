@@ -14,8 +14,8 @@
 ## Current Status
 
 - **Active Phase:** Phase A0 — Platform Foundations (Complete) -> Phase A1
-- **Next Task to Execute:** `A1.1 Company, Branch, Department, Settings & Numbering`
-- **Tasks complete:** 12 / 88 (P2 cards excluded)
+- **Next Task to Execute:** `A1.2 Roles, Users, Invitations, Employees & Hierarchy`
+- **Tasks complete:** 13 / 88 (P2 cards excluded)
 - **Blockers:** None
 - **Owner action items before/while coding:**
   - Copy the new `task.md` (v6) into `agent/task.md`.
@@ -69,7 +69,7 @@ Tick a box only after the verification rules above are met. Dependencies are def
 
 ### Phase A1 — Master Data, Platform Admin & Foundation Modules
 
-- [ ] `A1.1` Company, Branch, Department, Settings & Numbering
+- [x] `A1.1` Company, Branch, Department, Settings & Numbering
 - [ ] `A1.2` Roles, Users, Invitations, Employees & Hierarchy
 - [ ] `A1.3` Land Master & Bangladeshi Area Conversion
 - [ ] `A1.4` Project & Cost Center Management
@@ -301,3 +301,11 @@ Tick a box only after the verification rules above are met. Dependencies are def
 3. Verification command & result: pnpm test sessions (4/4 passed); pnpm test auth-progressive-lockout (3/3 passed); pnpm test field-crypto security-events (6/6 passed); pnpm test health (4/4 passed); pnpm check:all (7/7 gates passed); full backend test suite (139/139 passed across 33 files); oxlint (0 errors, 0 warnings), turbo typecheck (9 packages clean), prettier format:check clean
 4. Open questions: None (Gate D-10 [FieldCrypto + blind index] Confirmed in Sign-off Register; OQ-07 default Turnstile adapter wired)
 5. Next task ID: A1.1
+
+### [2026-10-04] A1.1 Company, Branch, Department, Settings & Numbering
+
+1. Task ID & status: A1.1 [x]
+2. Files created / modified: apps/backend/prisma/schema/{company,settings}.prisma, apps/backend/prisma/migrations/20261004000001_org_settings_numbering/**, apps/backend/src/modules/company/**, apps/backend/src/modules/settings/**, apps/backend/src/platform/tenant-provisioning/steps/**, apps/backend/src/app.module.ts, apps/backend/test/company/**, apps/backend/test/settings/**, agent/PROGRESS.md, agent/task.md
+3. Verification command & result: pnpm --filter @exzaestate/backend test company (8/8 passed); pnpm --filter @exzaestate/backend test settings (16/16 passed across numbering, settings, and setup-checklist); pnpm --filter @exzaestate/backend test provisioning (2/2 passed); full backend test suite (163/163 passed across 39 files); pnpm check:all (7/7 architectural gates passed); oxlint (0 errors, 0 warnings), dependency-cruiser (0 violations), zero cycles, turbo typecheck (9 packages clean), prettier format:check clean
+4. Open questions: None (Zero gated decisions for A1.1)
+5. Next task ID: A1.2

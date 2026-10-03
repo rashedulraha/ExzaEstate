@@ -1,0 +1,35 @@
+// Settings and Numbering models (Task A1.1)
+
+model CompanySetting {
+  id        String   @id @default(uuid(7)) @db.Uuid
+  companyId String   @map("company_id") @db.Uuid
+  key       String   @db.VarChar(128)
+  value     Json     @db.JsonB
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz
+
+  company   Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@unique([companyId, key])
+  @@index([companyId])
+  @@map("company_settings")
+}
+
+model NumberingPattern {
+  id              String   @id @default(uuid(7)) @db.Uuid
+  companyId       String   @map("company_id") @db.Uuid
+  documentType    String   @map("document_type") @db.VarChar(64)
+  prefix          String   @db.VarChar(32)
+  pattern         String   @db.VarChar(128)
+  resetRule       String   @default("NEVER") @map("reset_rule") @db.VarChar(32)
+  currentSequence Int      @default(0) @map("current_sequence")
+  isActive        Boolean  @default(true) @map("is_active")
+  createdAt       DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt       DateTime @updatedAt @map("updated_at") @db.Timestamptz
+
+  company         Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@unique([companyId, documentType])
+  @@index([companyId])
+  @@map("numbering_patterns")
+}
