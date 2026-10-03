@@ -18,6 +18,7 @@
     "test": "turbo run test",
     "db:seed": "pnpm --filter @exzaestate/backend seed",
     "db:seed:demo": "pnpm --filter @exzaestate/backend seed:demo",
+    "check:all": "node scripts/check-all.mjs",
     "prepare": "husky"
   },
   "devDependencies": {

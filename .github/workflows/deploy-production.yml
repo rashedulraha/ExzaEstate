@@ -1,0 +1,19 @@
+name: Deploy to Production (Stub)
+
+# Completed in Part C (Task C3)
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version tag (e.g. v1.0.0)'
+        required: true
+
+jobs:
+  deploy-production:
+    name: Production Deployment Stub
+    runs-on: ubuntu-latest
+    steps:
+      - name: Production Deploy Notice
+        run: |
+          echo "Production deployment pipeline stub. Deployment target will be configured in Task C3."
+          echo "Target Release: ${{ github.event.inputs.version }}"

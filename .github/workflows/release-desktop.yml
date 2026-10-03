@@ -1,0 +1,20 @@
+name: Release Desktop App (Stub)
+
+# Completed in Part B (Task B11)
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Desktop release version tag (e.g. v1.0.0)'
+        required: true
+
+jobs:
+  release-desktop:
+    name: Desktop Release Build Stub
+    runs-on: ubuntu-latest
+    steps:
+      - name: Desktop Release Notice
+        run: |
+          echo "Desktop release pipeline stub for Tauri v2 cross-compilation & code-signing."
+          echo "Target Release: ${{ github.event.inputs.version }}"
+          echo "Implementation finalized in Task B11."

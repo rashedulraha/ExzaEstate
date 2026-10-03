@@ -1,0 +1,20 @@
+name: Deploy to Staging (Stub)
+
+# Completed in Part C (Task C3)
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version tag or commit SHA to deploy'
+        required: true
+        default: 'dev'
+
+jobs:
+  deploy-staging:
+    name: Staging Deployment Stub
+    runs-on: ubuntu-latest
+    steps:
+      - name: Staging Deploy Notice
+        run: |
+          echo "Staging deployment pipeline stub. Deployment target will be configured in Task C3."
+          echo "Target Version: ${{ github.event.inputs.version }}"

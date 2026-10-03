@@ -1,0 +1,29 @@
+# Gitleaks Configuration for ExzaEstate
+title = "ExzaEstate Gitleaks Configuration"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Global allowlist for example files, documentation, and test fixtures"
+paths = [
+  '''^\.env\.example$''',
+  '''^agent/''',
+  '''\.spec\.ts$''',
+  '''\.test\.ts$''',
+  '''\.test\.tsx$''',
+  '''^apps/backend/test/''',
+  '''^packages/shared/src/i18n/''',
+  '''^pnpm-lock\.yaml$''',
+]
+
+regexes = [
+  '''exza_app_secret''',
+  '''exza_worker_secret''',
+  '''exza_system_secret''',
+  '''exza_migrator_secret''',
+  '''exza_admin_secret''',
+  '''minioadmin''',
+  '''super_secret_jwt_.*''',
+  '''ExzaEstate@2026!''',
+]

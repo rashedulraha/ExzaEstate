@@ -14,8 +14,8 @@
 ## Current Status
 
 - **Active Phase:** Phase A0 — Platform Foundations
-- **Next Task to Execute:** `A0.11 CI/CD, Docker Images & Quality Gates`
-- **Tasks complete:** 10 / 88 (P2 cards excluded)
+- **Next Task to Execute:** `A0.12 Security Hardening & Observability`
+- **Tasks complete:** 11 / 88 (P2 cards excluded)
 - **Blockers:** None
 - **Owner action items before/while coding:**
   - Copy the new `task.md` (v6) into `agent/task.md`.
@@ -64,7 +64,7 @@ Tick a box only after the verification rules above are met. Dependencies are def
 - [x] `A0.8` Authentication, Sessions, Invitations
 - [x] `A0.9` Permissions, RBAC, Data Scopes, Mandatory 2FA
 - [x] `A0.10` Tenant Provisioning Registry & Baseline Seed
-- [ ] `A0.11` CI/CD, Docker Images & Quality Gates
+- [x] `A0.11` CI/CD, Docker Images & Quality Gates
 - [ ] `A0.12` Security Hardening & Observability
 
 ### Phase A1 — Master Data, Platform Admin & Foundation Modules
@@ -285,3 +285,11 @@ Tick a box only after the verification rules above are met. Dependencies are def
 3. Verification command & result: pnpm --filter @exzaestate/backend test provisioning (2/2 passed); pnpm --filter @exzaestate/backend exec prisma db seed (baseline seed exit 0); pnpm db:seed:demo (Bangla fixtures demo seed exit 0); pnpm --filter @exzaestate/backend test seed-idempotency (3/3 passed); node scripts/check-permission-decorators.mjs (11/11 decorated); monorepo lint, typecheck, format, and all 122 backend + 27 shared tests passed with 0 errors
 4. Open questions: None (Zero gated decisions for A0.10)
 5. Next task ID: A0.11
+
+### [2026-10-03] A0.11 CI/CD, Docker Images & Quality Gates
+
+1. Task ID & status: A0.11 [x]
+2. Files created / modified: .github/workflows/**, docker/Dockerfile, Dockerfile, scripts/**, .husky/pre-commit, .gitleaks.toml, renovate.json, package.json, agent/PROGRESS.md
+3. Verification command & result: pnpm check:all (all 7 architectural gates passed; verified failure on seeded violations); docker build --target api . (exit 0); docker build --target worker . (exit 0); pnpm lint (0 errors, 0 cycles, 0 boundary violations); pnpm typecheck (9 packages clean); pnpm format:check (clean); full backend (122/122) and shared (27/27) tests passed with 0 errors
+4. Open questions: None (Zero gated decisions for A0.11; D-10 pending for A0.12)
+5. Next task ID: A0.12

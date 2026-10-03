@@ -1,0 +1,25 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended"],
+  "schedule": ["before 6am on monday"],
+  "timezone": "Asia/Dhaka",
+  "labels": ["dependencies"],
+  "rangeStrategy": "pin",
+  "packageRules": [
+    {
+      "description": "Group core framework dependencies together",
+      "matchPackagePatterns": ["^@nestjs/"],
+      "groupName": "nestjs packages"
+    },
+    {
+      "description": "Group Prisma packages together",
+      "matchPackagePatterns": ["^@prisma/", "^prisma$"],
+      "groupName": "prisma packages"
+    },
+    {
+      "description": "Group React ecosystem packages together",
+      "matchPackagePatterns": ["^react", "^@types/react"],
+      "groupName": "react ecosystem"
+    }
+  ]
+}
