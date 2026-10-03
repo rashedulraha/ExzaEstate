@@ -8,6 +8,7 @@ model User {
   fullName               String         @map("full_name") @db.VarChar(255)
   phone                  String?        @db.VarChar(32)
   status                 String         @default("ACTIVE") @db.VarChar(32)
+  mustChangePassword     Boolean        @default(false) @map("must_change_password")
   isTwoFactorEnabled     Boolean        @default(false) @map("is_two_factor_enabled")
   twoFactorSecret        String?        @map("two_factor_secret") @db.VarChar(255)
   twoFactorRecoveryCodes String[]       @default([]) @map("two_factor_recovery_codes")
@@ -23,6 +24,7 @@ model User {
   refreshTokens          RefreshToken[]
   roles                  UserRole[]
   branches               UserBranch[]
+  employee               Employee?
 
   @@index([companyId])
   @@index([email])

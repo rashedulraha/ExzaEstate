@@ -4,6 +4,7 @@ import { RequestLoggingMiddleware } from './common/logging/request-logging.middl
 import { ConfigModule } from './config/config.module.js';
 import { AuthModule } from './modules/auth/auth.module.js';
 import { CompanyModule } from './modules/company/company.module.js';
+import { EmployeeModule } from './modules/employee/employee.module.js';
 import { HealthModule } from './modules/health/health.module.js';
 import { SettingsModule } from './modules/settings/settings.module.js';
 
@@ -17,6 +18,7 @@ import { SettingsModule } from './modules/settings/settings.module.js';
     HealthModule,
     AuthModule,
     CompanyModule,
+    EmployeeModule,
     SettingsModule,
   ],
 })

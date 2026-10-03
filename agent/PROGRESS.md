@@ -13,9 +13,9 @@
 
 ## Current Status
 
-- **Active Phase:** Phase A0 — Platform Foundations (Complete) -> Phase A1
-- **Next Task to Execute:** `A1.2 Roles, Users, Invitations, Employees & Hierarchy`
-- **Tasks complete:** 13 / 88 (P2 cards excluded)
+- **Active Phase:** Phase A1 — Master Data, Platform Admin & Foundation Modules
+- **Next Task to Execute:** `A1.3 Land Master & Bangladeshi Area Conversion`
+- **Tasks complete:** 14 / 88 (P2 cards excluded)
 - **Blockers:** None
 - **Owner action items before/while coding:**
   - Copy the new `task.md` (v6) into `agent/task.md`.
@@ -70,7 +70,7 @@ Tick a box only after the verification rules above are met. Dependencies are def
 ### Phase A1 — Master Data, Platform Admin & Foundation Modules
 
 - [x] `A1.1` Company, Branch, Department, Settings & Numbering
-- [ ] `A1.2` Roles, Users, Invitations, Employees & Hierarchy
+- [x] `A1.2` Roles, Users, Invitations, Employees & Hierarchy
 - [ ] `A1.3` Land Master & Bangladeshi Area Conversion
 - [ ] `A1.4` Project & Cost Center Management
 - [ ] `A1.5` Platform Admin: System Realm, Tenant Onboarding & Licensing (backend)
@@ -309,3 +309,11 @@ Tick a box only after the verification rules above are met. Dependencies are def
 3. Verification command & result: pnpm --filter @exzaestate/backend test company (8/8 passed); pnpm --filter @exzaestate/backend test settings (16/16 passed across numbering, settings, and setup-checklist); pnpm --filter @exzaestate/backend test provisioning (2/2 passed); full backend test suite (163/163 passed across 39 files); pnpm check:all (7/7 architectural gates passed); oxlint (0 errors, 0 warnings), dependency-cruiser (0 violations), zero cycles, turbo typecheck (9 packages clean), prettier format:check clean
 4. Open questions: None (Zero gated decisions for A1.1)
 5. Next task ID: A1.2
+
+### [2026-10-04] A1.2 Roles, Users, Invitations, Employees & Hierarchy
+
+1. Task ID & status: A1.2 [x]
+2. Files created / modified: apps/backend/prisma/schema/{auth,company,employee}.prisma, apps/backend/prisma/migrations/20261004000002_user_password_change_and_employees/**, apps/backend/src/modules/auth/**, apps/backend/src/modules/employee/\*\*, apps/backend/src/platform/tenant-provisioning/demo-seed/steps/demo-staff.step.ts, apps/backend/src/app.module.ts, apps/backend/test/auth/{roles,users,2fa-reset}.spec.ts, apps/backend/test/employee/employee-hierarchy.spec.ts, agent/PROGRESS.md, agent/task.md
+3. Verification command & result: pnpm test roles (9/9 passed); pnpm test users (8/8 passed); pnpm test 2fa-reset (3/3 passed); pnpm test employee-hierarchy (6/6 passed); full backend test suite (190/190 passed across 44 files); pnpm check:all (7/7 architectural gates passed); oxlint (0 errors, 0 warnings), dependency-cruiser (0 violations), zero cycles, turbo typecheck (9 packages clean), prettier format:check clean
+4. Open questions: None (Zero gated decisions for A1.2)
+5. Next task ID: A1.3

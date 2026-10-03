@@ -1,6 +1,7 @@
 import { Inject, Injectable, Optional } from '@nestjs/common';
 import { DATA_SCOPES, DataScope } from '@exzaestate/shared';
 import { TenantDb } from '../../database/tenant-db.service.js';
+import type { TenantPrisma } from '../../database/tenant-prisma.js';
 import { CACHE_STORE, type CacheStore } from '../../ports/index.js';
 
 export interface ResolvedPermissions {
@@ -49,15 +50,7 @@ export class PermissionService {
       });
 
       if (!user) {
-        return {
-          permissions: [],
-          scopes: {},
-          branchIds: [],
-          defaultBranchId: null,
-          teamUserIds: [],
-          isTwoFactorEnabled: false,
-          status: 'INACTIVE',
-        };
+        return createInactivePermissions();
       }
 
       const userBranches = await tx.userBranch.findMany({
@@ -74,34 +67,15 @@ export class PermissionService {
       });
 
       const roleIds = userRoles.map((ur) => ur.roleId);
-
-      const scopes: Record<string, DataScope> = {};
-      const permissionsSet = new Set<string>();
-
-      if (roleIds.length > 0) {
-        const rolePermissions = await tx.rolePermission.findMany({
-          where: { companyId, roleId: { in: roleIds } },
-          select: { permissionCode: true, scope: true },
-        });
-
-        for (const rp of rolePermissions) {
-          permissionsSet.add(rp.permissionCode);
-          if (rp.scope) {
-            const currentScope = scopes[rp.permissionCode];
-            const newScope = rp.scope as DataScope;
-            if (!currentScope || SCOPE_RANK[newScope] > SCOPE_RANK[currentScope]) {
-              scopes[rp.permissionCode] = newScope;
-            }
-          }
-        }
-      }
+      const { permissions, scopes } = await this.loadMergedPermissions(tx, companyId, roleIds);
+      const teamUserIds = await resolveTeamUserIds(tx, companyId, userId);
 
       const result: ResolvedPermissions = {
-        permissions: Array.from(permissionsSet),
+        permissions,
         scopes,
         branchIds,
         defaultBranchId: defaultBranch,
-        teamUserIds: [userId],
+        teamUserIds,
         isTwoFactorEnabled: user.isTwoFactorEnabled,
         status: user.status,
       };
@@ -114,6 +88,37 @@ export class PermissionService {
     }
 
     return resolved;
+  }
+
+  private async loadMergedPermissions(
+    tx: TenantPrisma,
+    companyId: string,
+    roleIds: string[],
+  ): Promise<{ permissions: string[]; scopes: Record<string, DataScope> }> {
+    if (roleIds.length === 0) {
+      return { permissions: [], scopes: {} };
+    }
+
+    const rolePermissions = await tx.rolePermission.findMany({
+      where: { companyId, roleId: { in: roleIds } },
+      select: { permissionCode: true, scope: true },
+    });
+
+    const permissionsSet = new Set<string>();
+    const scopes: Record<string, DataScope> = {};
+
+    for (const rp of rolePermissions) {
+      permissionsSet.add(rp.permissionCode);
+      if (rp.scope) {
+        const currentScope = scopes[rp.permissionCode];
+        const newScope = rp.scope as DataScope;
+        if (!currentScope || SCOPE_RANK[newScope] > SCOPE_RANK[currentScope]) {
+          scopes[rp.permissionCode] = newScope;
+        }
+      }
+    }
+
+    return { permissions: Array.from(permissionsSet), scopes };
   }
 
   async invalidateUserPermissions(companyId: string, userId: string): Promise<void> {
@@ -144,4 +149,60 @@ export class PermissionService {
 
     await Promise.all(users.map((u) => this.invalidateUserPermissions(companyId, u.id)));
   }
+}
+
+function createInactivePermissions(): ResolvedPermissions {
+  return {
+    permissions: [],
+    scopes: {},
+    branchIds: [],
+    defaultBranchId: null,
+    teamUserIds: [],
+    isTwoFactorEnabled: false,
+    status: 'INACTIVE',
+  };
+}
+
+async function resolveTeamUserIds(
+  tx: TenantPrisma,
+  companyId: string,
+  userId: string,
+): Promise<string[]> {
+  const teamUserIds = [userId];
+  const employee = await tx.employee.findFirst({
+    where: { companyId, userId, deletedAt: null },
+    select: { id: true },
+  });
+
+  if (!employee) {
+    return teamUserIds;
+  }
+
+  const visitedEmployeeIds = new Set<string>([employee.id]);
+  let currentSupervisorEmployeeIds = [employee.id];
+
+  while (currentSupervisorEmployeeIds.length > 0) {
+    const subordinates = await tx.employee.findMany({
+      where: {
+        companyId,
+        supervisorId: { in: currentSupervisorEmployeeIds },
+        deletedAt: null,
+      },
+      select: { id: true, userId: true },
+    });
+
+    const nextIds: string[] = [];
+    for (const sub of subordinates) {
+      if (!visitedEmployeeIds.has(sub.id)) {
+        visitedEmployeeIds.add(sub.id);
+        nextIds.push(sub.id);
+        if (!teamUserIds.includes(sub.userId)) {
+          teamUserIds.push(sub.userId);
+        }
+      }
+    }
+    currentSupervisorEmployeeIds = nextIds;
+  }
+
+  return teamUserIds;
 }

@@ -5,7 +5,6 @@ import { TenantDb } from '../../database/tenant-db.service.js';
 import type { TenantPrisma } from '../../database/tenant-prisma.js';
 import { AuditService } from '../../platform/audit/audit.service.js';
 import { SequenceService } from '../../platform/sequence/sequence.service.js';
-import { SettingsService } from './settings.service.js';
 import { UpdateNumberingPatternDto } from './dto/numbering.dto.js';
 import {
   DEFAULT_NUMBERING_PATTERNS,
@@ -45,7 +44,6 @@ export class NumberingService {
     private readonly tenantDb: TenantDb,
     private readonly auditService: AuditService,
     private readonly sequenceService: SequenceService,
-    private readonly settingsService: SettingsService,
   ) {}
 
   /**

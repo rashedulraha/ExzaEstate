@@ -8,6 +8,9 @@ interface DemoStaffTemplate {
   fullName: string;
   phone: string;
   roleCode: string;
+  employeeCode: string;
+  designation: string;
+  supervisorPrefix?: string;
 }
 
 const DEMO_STAFF_TEMPLATES: DemoStaffTemplate[] = [
@@ -16,24 +19,35 @@ const DEMO_STAFF_TEMPLATES: DemoStaffTemplate[] = [
     fullName: 'মোহাম্মদ রফিক (Mohammad Rafiq)',
     phone: '+8801700000002',
     roleCode: 'GENERAL_MANAGER',
+    employeeCode: 'EMP-002',
+    designation: 'General Manager',
   },
   {
     prefix: 'accountant',
     fullName: 'ফারহানা হক (Farhana Haque)',
     phone: '+8801700000003',
     roleCode: 'ACCOUNTANT',
+    employeeCode: 'EMP-003',
+    designation: 'Senior Accountant',
+    supervisorPrefix: 'gm',
   },
   {
     prefix: 'executive',
     fullName: 'তানভীর আহমেদ (Tanveer Ahmed)',
     phone: '+8801700000004',
     roleCode: 'EXECUTIVE',
+    employeeCode: 'EMP-004',
+    designation: 'Sales Executive',
+    supervisorPrefix: 'gm',
   },
   {
     prefix: 'executive2',
     fullName: 'নুসরাত জাহান (Nusrat Jahan)',
     phone: '+8801700000005',
     roleCode: 'EXECUTIVE',
+    employeeCode: 'EMP-005',
+    designation: 'Senior Sales Executive',
+    supervisorPrefix: 'gm',
   },
 ];
 
@@ -54,6 +68,8 @@ export class DemoStaffStep implements DemoSeedStep {
 
     const emailDomain =
       ctx.companyCode === 'EXZA' ? 'exzaestate.com' : `${ctx.companyCode.toLowerCase()}.test`;
+
+    const prefixToEmployeeId = new Map<string, string>();
 
     for (const template of DEMO_STAFF_TEMPLATES) {
       const email = `${template.prefix}@${emailDomain}`.toLowerCase();
@@ -129,7 +145,45 @@ export class DemoStaffStep implements DemoSeedStep {
         },
       });
 
+      // Upsert Employee profile
+      const employeeCode = `${ctx.companyCode}-${template.employeeCode}`;
+      const employee = await tx.employee.upsert({
+        where: { userId: user.id },
+        update: {
+          employeeCode,
+          designation: template.designation,
+          branchId: ctx.branchId,
+          phone: template.phone,
+          isActive: true,
+        },
+        create: {
+          companyId: ctx.companyId,
+          userId: user.id,
+          employeeCode,
+          designation: template.designation,
+          branchId: ctx.branchId,
+          phone: template.phone,
+          isActive: true,
+        },
+      });
+
+      prefixToEmployeeId.set(template.prefix, employee.id);
       ctx.state.set(`demoUserId:${template.roleCode}:${email}`, user.id);
+      ctx.state.set(`demoEmployeeId:${template.roleCode}:${email}`, employee.id);
+    }
+
+    // Link supervisor hierarchy
+    for (const template of DEMO_STAFF_TEMPLATES) {
+      if (template.supervisorPrefix) {
+        const supervisorEmployeeId = prefixToEmployeeId.get(template.supervisorPrefix);
+        const employeeId = prefixToEmployeeId.get(template.prefix);
+        if (supervisorEmployeeId && employeeId) {
+          await tx.employee.update({
+            where: { id: employeeId },
+            data: { supervisorId: supervisorEmployeeId },
+          });
+        }
+      }
     }
   }
 }

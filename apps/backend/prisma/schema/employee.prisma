@@ -1,0 +1,31 @@
+// Employee and Hierarchy models (Task A1.2 - S4)
+
+model Employee {
+  id           String    @id @default(uuid(7)) @db.Uuid
+  companyId    String    @map("company_id") @db.Uuid
+  userId       String    @unique @map("user_id") @db.Uuid
+  employeeCode String    @map("employee_code") @db.VarChar(64)
+  designation  String    @db.VarChar(128)
+  departmentId String?   @map("department_id") @db.Uuid
+  branchId     String?   @map("branch_id") @db.Uuid
+  supervisorId String?   @map("supervisor_id") @db.Uuid
+  joiningDate  DateTime? @map("joining_date") @db.Date
+  phone        String?   @db.VarChar(32)
+  isActive     Boolean   @default(true) @map("is_active")
+  deletedAt    DateTime? @map("deleted_at") @db.Timestamptz
+  createdAt    DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt    DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+
+  user         User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  branch       Branch?     @relation(fields: [branchId], references: [id], onDelete: SetNull)
+  department   Department? @relation(fields: [departmentId], references: [id], onDelete: SetNull)
+  supervisor   Employee?   @relation("EmployeeHierarchy", fields: [supervisorId], references: [id], onDelete: SetNull)
+  subordinates Employee[]  @relation("EmployeeHierarchy")
+
+  @@unique([companyId, employeeCode])
+  @@index([companyId])
+  @@index([supervisorId])
+  @@index([branchId])
+  @@index([departmentId])
+  @@map("employees")
+}

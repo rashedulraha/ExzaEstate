@@ -443,7 +443,7 @@ These are applied as defaults in `architecture.md` v4 but are still **"Needs sig
 
 #### A1.2 — Roles, Users, Invitations, Employees & Hierarchy
 
-- **Status:** [ ] · **Tier:** 1 · **Size:** L (4 steps) · **Priority:** P0 (employee profile P1 fields optional)
+- **Status:** [x] · **Tier:** 1 · **Size:** L (4 steps) · **Priority:** P0 (employee profile P1 fields optional)
 - **Depends:** A1.1
 - **Reads:** `permissions-matrix.md` §1–§4; `architecture.md` §4.4, §4.5, §4.6; `prd.md` §5, MOD-EMPLOYEE; `security.md` §2, §15.
 - **Touches:** `apps/backend/src/modules/auth/**` (admin endpoints only), `apps/backend/src/modules/employee/**`, `apps/backend/prisma/schema/employee.prisma`, demo-seed step.

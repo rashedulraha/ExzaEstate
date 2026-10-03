@@ -28,6 +28,36 @@ export class InvitationService {
   ) {}
 
   /**
+   * Creates an invitation for a new user.
+   */
+  async createInvitation(companyId: string, email: string, roleId?: string, invitedById?: string) {
+    const rawToken = crypto.randomBytes(32).toString('hex');
+    const tokenHash = crypto.createHash('sha256').update(rawToken).digest('hex');
+    const expiresAt = new Date(Date.now() + 72 * 60 * 60 * 1000);
+
+    const invitation = await this.tenantDb.withCompany(companyId, async (tx) => {
+      return tx.invitation.create({
+        data: {
+          companyId,
+          email: email.toLowerCase().trim(),
+          tokenHash,
+          roleId: roleId ?? null,
+          invitedById: invitedById ?? null,
+          expiresAt,
+        },
+      });
+    });
+
+    return {
+      id: invitation.id,
+      email: invitation.email,
+      roleId: invitation.roleId,
+      expiresAt: invitation.expiresAt,
+      token: rawToken,
+    };
+  }
+
+  /**
    * Accepts invitation and creates user record (S5).
    */
   async acceptInvitation(dto: AcceptInvitationDto): Promise<AcceptInvitationResult> {

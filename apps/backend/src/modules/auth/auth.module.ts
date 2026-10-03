@@ -9,13 +9,18 @@ import { AuthService } from './auth.service.js';
 import { InvitationService } from './invitation.service.js';
 import { PasswordResetService } from './password-reset.service.js';
 import { PermissionService } from './permission.service.js';
+import { RoleController } from './role.controller.js';
+import { RoleService } from './role.service.js';
 import { SessionService } from './session.service.js';
 import { TokenService } from './token.service.js';
 import { TwoFactorService } from './two-factor.service.js';
+import { UserAdminController } from './user-admin.controller.js';
+import { UserAdminService } from './user-admin.service.js';
+import { UserLifecycleService } from './user-lifecycle.service.js';
 
 @Module({
   imports: [DatabaseModule, PlatformModule],
-  controllers: [AuthController],
+  controllers: [AuthController, RoleController, UserAdminController],
   providers: [
     AuthService,
     SessionService,
@@ -25,6 +30,9 @@ import { TwoFactorService } from './two-factor.service.js';
     PasswordResetService,
     PermissionService,
     TwoFactorService,
+    RoleService,
+    UserAdminService,
+    UserLifecycleService,
     {
       provide: PERMISSION_RESOLVER,
       useExisting: PermissionService,
@@ -41,6 +49,9 @@ import { TwoFactorService } from './two-factor.service.js';
     PasswordResetService,
     PermissionService,
     TwoFactorService,
+    RoleService,
+    UserAdminService,
+    UserLifecycleService,
     PERMISSION_RESOLVER,
     JwtAuthGuard,
     PermissionsGuard,
