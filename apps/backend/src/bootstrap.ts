@@ -1,0 +1,43 @@
+import { INestApplication, ValidationPipe } from '@nestjs/common';
+import helmet from 'helmet';
+import { HttpExceptionFilter } from './common/filters/http-exception.filter.js';
+import { ResponseEnvelopeInterceptor } from './common/interceptors/response-envelope.interceptor.js';
+import { requestIdMiddleware } from './common/logging/request-logging.middleware.js';
+import { ConfigService } from './config/config.service.js';
+import { setupSwagger } from './config/swagger.config.js';
+
+export function configureApp(app: INestApplication, configService: ConfigService): void {
+  // Request ID and logging middleware
+  app.use(requestIdMiddleware);
+
+  // Security headers via Helmet
+  app.use(
+    helmet({
+      contentSecurityPolicy: configService.isProduction ? undefined : false,
+      crossOriginEmbedderPolicy: false,
+    }),
+  );
+
+  // Global REST API prefix: /api/v1
+  app.setGlobalPrefix('api/v1', {
+    exclude: ['api/docs', 'api/docs/(.*)'],
+  });
+
+  // Global response envelope: { success: true, data, meta }
+  app.useGlobalInterceptors(new ResponseEnvelopeInterceptor());
+
+  // Global exception filter mapping error codes to envelope: { success: false, error: { code, message, details } }
+  app.useGlobalFilters(new HttpExceptionFilter(configService));
+
+  // Global validation pipe for DTO validation
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      transform: true,
+      forbidNonWhitelisted: true,
+    }),
+  );
+
+  // OpenAPI Swagger configuration with production gating
+  setupSwagger(app, configService);
+}

@@ -14,8 +14,8 @@
 ## Current Status
 
 - **Active Phase:** Phase A0 — Platform Foundations
-- **Next Task to Execute:** `A0.3 Backend Foundations: NestJS 12 ESM, Config, Envelope`
-- **Tasks complete:** 2 / 88 (P2 cards excluded)
+- **Next Task to Execute:** `A0.4 Database: Docker Compose & Prisma 7 Multi-File Schema`
+- **Tasks complete:** 3 / 88 (P2 cards excluded)
 - **Blockers:** None
 - **Owner action items before/while coding:**
   - Copy the new `task.md` (v6) into `agent/task.md`.
@@ -29,7 +29,7 @@
 | ID         | Question                                              | Gates       | Answer                                | Date       |
 | ---------- | ----------------------------------------------------- | ----------- | ------------------------------------- | ---------- |
 | D-06       | `packages/app-core` separate from `ui`                | A0.1        | Confirmed (default: separate package) | 2026-10-03 |
-| D-05       | NestJS Express adapter                                | A0.3        | _pending_                             |            |
+| D-05       | NestJS Express adapter                                | A0.3        | Confirmed (default: Express adapter)  | 2026-10-03 |
 | D-09       | Separate system realm for Super Admin                 | A0.5, A1.5  | _pending_                             |            |
 | D-07       | Idempotency row inside the business transaction       | A0.6        | _pending_                             |            |
 | D-11       | Monthly partitions for audit/outbox/notification logs | A0.6        | _pending_                             |            |
@@ -56,7 +56,7 @@ Tick a box only after the verification rules above are met. Dependencies are def
 
 - [x] `A0.1` Monorepo & Tooling Foundation
 - [x] `A0.2` Shared Package: Constants, Types, Money, Localisation
-- [ ] `A0.3` Backend Foundations: NestJS 12 ESM, Config, Envelope
+- [x] `A0.3` Backend Foundations: NestJS 12 ESM, Config, Envelope
 - [ ] `A0.4` Database: Docker Compose & Prisma 7 Multi-File Schema
 - [ ] `A0.5` Multi-Tenancy: RLS, DB Roles, TenantPrisma, SystemPrisma
 - [ ] `A0.6` Platform Services: Audit, Sequence, Outbox, Idempotency, Storage
@@ -221,3 +221,11 @@ Tick a box only after the verification rules above are met. Dependencies are def
 3. Verification command & result: pnpm --filter @exzaestate/shared build && pnpm --filter @exzaestate/shared test (27/27 tests passed across 3 test suites, property-based tests verified with fast-check; monorepo lint, typecheck, and build clean with 0 errors)
 4. Open questions: None
 5. Next task ID: A0.3
+
+### [2026-10-03] A0.3 Backend Foundations: NestJS 12 ESM, Config, Envelope
+
+1. Task ID & status: A0.3 [x]
+2. Files created / modified: .env.example, apps/backend/package.json, apps/backend/tsconfig.json, apps/backend/vitest.config.ts, apps/backend/src/main.ts, apps/backend/src/bootstrap.ts, apps/backend/src/app.module.ts, apps/backend/src/index.ts, apps/backend/src/config/**, apps/backend/src/common/**, apps/backend/src/modules/health/\*\*, apps/backend/test/envelope.spec.ts, pnpm-workspace.yaml, agent/PROGRESS.md
+3. Verification command & result: pnpm --filter @exzaestate/backend build && pnpm --filter @exzaestate/backend test config && pnpm --filter @exzaestate/backend test envelope (all 13 tests passed in backend, 40/40 tests across monorepo passed; oxlint, depcruise, cycle-check, typecheck, build clean)
+4. Open questions: None (Gate D-05 confirmed with default Express adapter)
+5. Next task ID: A0.4
