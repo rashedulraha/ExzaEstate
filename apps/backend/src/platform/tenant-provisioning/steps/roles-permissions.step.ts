@@ -1,0 +1,59 @@
+import { Injectable } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
+import { ProvisioningContext, ProvisioningStep } from '../provisioning-step.interface.js';
+import { DEFAULT_TENANT_ROLES } from './default-roles.data.js';
+
+@Injectable()
+export class RolesPermissionsStep implements ProvisioningStep {
+  readonly name = 'RolesPermissionsStep';
+  readonly order = 20;
+
+  async execute(ctx: ProvisioningContext, tx: Prisma.TransactionClient): Promise<void> {
+    for (const roleDef of DEFAULT_TENANT_ROLES) {
+      const role = await tx.role.upsert({
+        where: {
+          companyId_code: {
+            companyId: ctx.companyId,
+            code: roleDef.code,
+          },
+        },
+        update: {
+          name: roleDef.name,
+          description: roleDef.description,
+          isSystem: true,
+        },
+        create: {
+          companyId: ctx.companyId,
+          code: roleDef.code,
+          name: roleDef.name,
+          description: roleDef.description,
+          isSystem: true,
+        },
+      });
+
+      ctx.state.set(`role:${roleDef.code}`, role.id);
+
+      // Seed role permissions idempotently
+      for (const perm of roleDef.permissions) {
+        await tx.rolePermission.upsert({
+          where: {
+            companyId_roleId_permissionCode: {
+              companyId: ctx.companyId,
+              roleId: role.id,
+              permissionCode: perm.code,
+            },
+          },
+          update: {
+            scope: perm.scope ?? null,
+          },
+          create: {
+            companyId: ctx.companyId,
+            roleId: role.id,
+            permissionCode: perm.code,
+            scope: perm.scope ?? null,
+          },
+        });
+      }
+    }
+  }
+}
