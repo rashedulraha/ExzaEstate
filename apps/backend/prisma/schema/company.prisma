@@ -1,0 +1,35 @@
+// Company and Branch models (minimal baseline for A0.8, expanded in A1.1)
+
+model Company {
+  id        String   @default(uuid(7)) @id @db.Uuid
+  companyId String   @default(uuid(7)) @map("company_id") @db.Uuid
+  name      String   @db.VarChar(255)
+  code      String   @unique @db.VarChar(64)
+  timezone  String   @default("Asia/Dhaka") @db.VarChar(64)
+  isActive  Boolean  @default(true) @map("is_active")
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz
+
+  branches  Branch[]
+  users     User[]
+
+  @@index([companyId])
+  @@map("companies")
+}
+
+model Branch {
+  id           String   @default(uuid(7)) @id @db.Uuid
+  companyId    String   @map("company_id") @db.Uuid
+  name         String   @db.VarChar(255)
+  code         String   @db.VarChar(64)
+  isHeadOffice Boolean  @default(false) @map("is_head_office")
+  isActive     Boolean  @default(true) @map("is_active")
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt    DateTime @updatedAt @map("updated_at") @db.Timestamptz
+
+  company      Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@unique([companyId, code])
+  @@index([companyId])
+  @@map("branches")
+}
