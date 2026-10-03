@@ -11,7 +11,7 @@ import type { Request } from 'express';
 import jwt from 'jsonwebtoken';
 import { ClsService } from 'nestjs-cls';
 import { ConfigService } from '../../config/config.service.js';
-import { PrismaService } from '../../database/prisma.service.js';
+import { TenantDb } from '../../database/tenant-db.service.js';
 import { CACHE_STORE, type CacheStore } from '../../ports/index.js';
 import { IS_PUBLIC_KEY } from '../decorators/public.decorator.js';
 import { UnauthorizedException } from '../exceptions/app.exception.js';
@@ -30,7 +30,7 @@ export class JwtAuthGuard implements CanActivate {
     private readonly reflector: Reflector,
     private readonly configService: ConfigService,
     private readonly clsService: ClsService,
-    private readonly prismaService: PrismaService,
+    private readonly tenantDb: TenantDb,
     @Optional() @Inject(CACHE_STORE) private readonly cacheStore?: CacheStore,
   ) {}
 
@@ -104,8 +104,7 @@ export class JwtAuthGuard implements CanActivate {
       }
     }
 
-    const sessionRows = await this.prismaService.$transaction(async (tx) => {
-      await tx.$executeRaw`SELECT set_config('app.current_company_id', ${payload.companyId}, true)`;
+    const sessionRows = await this.tenantDb.withCompany(payload.companyId, async (tx) => {
       return tx.$queryRawUnsafe<Array<{ revoked_at: Date | null; status: string }>>(
         `SELECT s.revoked_at, u.status
          FROM sessions s

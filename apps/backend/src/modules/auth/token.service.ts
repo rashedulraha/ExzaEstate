@@ -3,7 +3,7 @@ import { Inject, Injectable, Logger, Optional } from '@nestjs/common';
 import jwt from 'jsonwebtoken';
 import { UnauthorizedException } from '../../common/exceptions/app.exception.js';
 import { ConfigService } from '../../config/config.service.js';
-import { PrismaService } from '../../database/prisma.service.js';
+import { TenantDb } from '../../database/tenant-db.service.js';
 import type { TenantPrisma } from '../../database/tenant-prisma.js';
 import { CACHE_STORE, type CacheStore } from '../../ports/index.js';
 
@@ -32,7 +32,7 @@ export class TokenService {
 
   constructor(
     private readonly configService: ConfigService,
-    private readonly prismaService: PrismaService,
+    private readonly tenantDb: TenantDb,
     @Optional() @Inject(CACHE_STORE) private readonly cacheStore?: CacheStore,
   ) {}
 
@@ -150,17 +150,16 @@ export class TokenService {
       );
 
       // Persist revocation and audit record in a dedicated transaction so it is preserved even when this call throws
-      await this.prismaService.$transaction(async (dbTx) => {
-        await dbTx.$executeRaw`SELECT set_config('app.current_company_id', ${found.company_id}, true)`;
-        await dbTx.$executeRawUnsafe(
+      await this.tenantDb.withCompany(found.company_id, async (tx) => {
+        await tx.$executeRawUnsafe(
           `UPDATE refresh_tokens SET revoked_at = now() WHERE family_id = $1::uuid AND revoked_at IS NULL`,
           found.family_id,
         );
-        await dbTx.$executeRawUnsafe(
+        await tx.$executeRawUnsafe(
           `UPDATE sessions SET revoked_at = now() WHERE family_id = $1::uuid AND revoked_at IS NULL`,
           found.family_id,
         );
-        await dbTx.$executeRawUnsafe(
+        await tx.$executeRawUnsafe(
           `INSERT INTO audit_logs (id, company_id, module, record_type, record_id, action, reason, ip_address, request_id, created_at)
            VALUES ($1::uuid, $2::uuid, 'auth', 'RefreshToken', $3::uuid, 'REFRESH_TOKEN_REUSE', 'Refresh token reuse detected — entire family revoked', $4, $5, now())`,
           crypto.randomUUID(),
