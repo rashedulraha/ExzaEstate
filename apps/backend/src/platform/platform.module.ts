@@ -3,6 +3,8 @@ import { AuditService } from './audit/audit.service.js';
 import { IdempotencyService } from './idempotency/idempotency.service.js';
 import { OutboxDispatcher } from './outbox/outbox.dispatcher.js';
 import { OutboxService } from './outbox/outbox.service.js';
+import { FieldCryptoService } from './security/field-crypto.service.js';
+import { SecurityEventsService } from './security/security-events.service.js';
 import { SequenceService } from './sequence/sequence.service.js';
 import { StorageService } from './storage/storage.service.js';
 
@@ -15,6 +17,8 @@ import { StorageService } from './storage/storage.service.js';
     SequenceService,
     IdempotencyService,
     StorageService,
+    FieldCryptoService,
+    SecurityEventsService,
   ],
   exports: [
     AuditService,
@@ -23,6 +27,8 @@ import { StorageService } from './storage/storage.service.js';
     SequenceService,
     IdempotencyService,
     StorageService,
+    FieldCryptoService,
+    SecurityEventsService,
   ],
 })
 export class PlatformModule {}

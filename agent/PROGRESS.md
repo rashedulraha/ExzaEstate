@@ -13,9 +13,9 @@
 
 ## Current Status
 
-- **Active Phase:** Phase A0 — Platform Foundations
-- **Next Task to Execute:** `A0.12 Security Hardening & Observability`
-- **Tasks complete:** 11 / 88 (P2 cards excluded)
+- **Active Phase:** Phase A0 — Platform Foundations (Complete) -> Phase A1
+- **Next Task to Execute:** `A1.1 Company, Branch, Department, Settings & Numbering`
+- **Tasks complete:** 12 / 88 (P2 cards excluded)
 - **Blockers:** None
 - **Owner action items before/while coding:**
   - Copy the new `task.md` (v6) into `agent/task.md`.
@@ -26,25 +26,25 @@
 
 ## Sign-off Register (owner answers are recorded here)
 
-| ID         | Question                                              | Gates       | Answer                                 | Date       |
-| ---------- | ----------------------------------------------------- | ----------- | -------------------------------------- | ---------- |
-| D-06       | `packages/app-core` separate from `ui`                | A0.1        | Confirmed (default: separate package)  | 2026-10-03 |
-| D-05       | NestJS Express adapter                                | A0.3        | Confirmed (default: Express adapter)   | 2026-10-03 |
-| D-09       | Separate system realm for Super Admin                 | A0.5, A1.5  | Confirmed (default: system realm)      | 2026-10-03 |
-| D-07       | Idempotency row inside the business transaction       | A0.6        | Confirmed (default: inside tx)         | 2026-10-03 |
-| D-11       | Monthly partitions for audit/outbox/notification logs | A0.6        | Confirmed (default: monthly partition) | 2026-10-03 |
-| D-10       | App-level encryption + blind index (NID, bank no.)    | A0.12, A3.3 | _pending_                              |            |
-| D-04       | Vertical slices (golden module first)                 | A2.1        | _pending_                              |            |
-| D-13       | Additive-only `/v1`, `X-Client-Version`, 426          | A2.3, A9.7  | _pending_                              |            |
-| D-08       | `APPROVAL_REQUIRED` = HTTP 409                        | A4.4        | _pending_                              |            |
-| D-14       | `events/` renamed `realtime/`                         | A9.1        | _pending_                              |            |
-| D-01/02/03 | Bundled PostgreSQL / bundled Chromium / Node sidecar  | A10.1, B9   | _pending_                              |            |
-| D-12       | Local→Cloud import design                             | A10.4       | _pending_                              |            |
-| D-15       | Licence transfer limit, fingerprint tolerance         | A1.5, B10   | _pending_                              |            |
-| OQ-04      | In-transaction `PaymentPostedHook`                    | A7.2        | _pending_                              |            |
-| OQ-06      | `ON_HANDOVER` posting treatment                       | A6.4        | _pending (accountant)_                 |            |
-| OQ-07      | CAPTCHA provider (default Turnstile)                  | A0.12       | _pending_                              |            |
-| OQ-09      | No Super Admin UI in v1                               | B8          | _pending_                              |            |
+| ID         | Question                                              | Gates       | Answer                                                  | Date       |
+| ---------- | ----------------------------------------------------- | ----------- | ------------------------------------------------------- | ---------- |
+| D-06       | `packages/app-core` separate from `ui`                | A0.1        | Confirmed (default: separate package)                   | 2026-10-03 |
+| D-05       | NestJS Express adapter                                | A0.3        | Confirmed (default: Express adapter)                    | 2026-10-03 |
+| D-09       | Separate system realm for Super Admin                 | A0.5, A1.5  | Confirmed (default: system realm)                       | 2026-10-03 |
+| D-07       | Idempotency row inside the business transaction       | A0.6        | Confirmed (default: inside tx)                          | 2026-10-03 |
+| D-11       | Monthly partitions for audit/outbox/notification logs | A0.6        | Confirmed (default: monthly partition)                  | 2026-10-03 |
+| D-10       | App-level encryption + blind index (NID, bank no.)    | A0.12, A3.3 | Confirmed (default: app-level encryption + blind index) | 2026-10-03 |
+| D-04       | Vertical slices (golden module first)                 | A2.1        | _pending_                                               |            |
+| D-13       | Additive-only `/v1`, `X-Client-Version`, 426          | A2.3, A9.7  | _pending_                                               |            |
+| D-08       | `APPROVAL_REQUIRED` = HTTP 409                        | A4.4        | _pending_                                               |            |
+| D-14       | `events/` renamed `realtime/`                         | A9.1        | _pending_                                               |            |
+| D-01/02/03 | Bundled PostgreSQL / bundled Chromium / Node sidecar  | A10.1, B9   | _pending_                                               |            |
+| D-12       | Local→Cloud import design                             | A10.4       | _pending_                                               |            |
+| D-15       | Licence transfer limit, fingerprint tolerance         | A1.5, B10   | _pending_                                               |            |
+| OQ-04      | In-transaction `PaymentPostedHook`                    | A7.2        | _pending_                                               |            |
+| OQ-06      | `ON_HANDOVER` posting treatment                       | A6.4        | _pending (accountant)_                                  |            |
+| OQ-07      | CAPTCHA provider (default Turnstile)                  | A0.12       | _pending_                                               |            |
+| OQ-09      | No Super Admin UI in v1                               | B8          | _pending_                                               |            |
 
 ---
 
@@ -65,7 +65,7 @@ Tick a box only after the verification rules above are met. Dependencies are def
 - [x] `A0.9` Permissions, RBAC, Data Scopes, Mandatory 2FA
 - [x] `A0.10` Tenant Provisioning Registry & Baseline Seed
 - [x] `A0.11` CI/CD, Docker Images & Quality Gates
-- [ ] `A0.12` Security Hardening & Observability
+- [x] `A0.12` Security Hardening & Observability
 
 ### Phase A1 — Master Data, Platform Admin & Foundation Modules
 
@@ -293,3 +293,11 @@ Tick a box only after the verification rules above are met. Dependencies are def
 3. Verification command & result: pnpm check:all (all 7 architectural gates passed; verified failure on seeded violations); docker build --target api . (exit 0); docker build --target worker . (exit 0); pnpm lint (0 errors, 0 cycles, 0 boundary violations); pnpm typecheck (9 packages clean); pnpm format:check (clean); full backend (122/122) and shared (27/27) tests passed with 0 errors
 4. Open questions: None (Zero gated decisions for A0.11; D-10 pending for A0.12)
 5. Next task ID: A0.12
+
+### [2026-10-03] A0.12 Security Hardening & Observability
+
+1. Task ID & status: A0.12 [x]
+2. Files created / modified: apps/backend/prisma/schema/security.prisma, apps/backend/prisma/migrations/20261003000004_security_events/migration.sql, apps/backend/src/ports/captcha-verifier.port.ts, apps/backend/src/adapters/**, apps/backend/src/platform/security/**, apps/backend/src/modules/health/**, apps/backend/src/modules/auth/**, apps/backend/test/auth/sessions.spec.ts, apps/backend/test/auth/auth-progressive-lockout.spec.ts, apps/backend/test/platform/field-crypto.spec.ts, apps/backend/test/platform/security-events.spec.ts, apps/backend/test/health.spec.ts, agent/PROGRESS.md
+3. Verification command & result: pnpm test sessions (4/4 passed); pnpm test auth-progressive-lockout (3/3 passed); pnpm test field-crypto security-events (6/6 passed); pnpm test health (4/4 passed); pnpm check:all (7/7 gates passed); full backend test suite (139/139 passed across 33 files); oxlint (0 errors, 0 warnings), turbo typecheck (9 packages clean), prettier format:check clean
+4. Open questions: None (Gate D-10 [FieldCrypto + blind index] Confirmed in Sign-off Register; OQ-07 default Turnstile adapter wired)
+5. Next task ID: A1.1

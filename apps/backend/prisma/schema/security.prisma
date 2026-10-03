@@ -1,0 +1,20 @@
+// Security events log (Task A0.12 S3)
+// Insert-only table tracking security-relevant events separate from audit_logs.
+
+model SecurityEvent {
+  id        String   @default(uuid(7)) @id @db.Uuid
+  companyId String   @map("company_id") @db.Uuid
+  userId    String?  @map("user_id") @db.Uuid
+  eventType String   @map("event_type") @db.VarChar(64)
+  severity  String   @default("INFO") @db.VarChar(32)
+  details   Json?
+  ipAddress String?  @map("ip_address") @db.VarChar(64)
+  userAgent String?  @map("user_agent") @db.VarChar(512)
+  requestId String?  @map("request_id") @db.VarChar(128)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+  @@index([companyId])
+  @@index([eventType])
+  @@index([createdAt])
+  @@map("security_events")
+}

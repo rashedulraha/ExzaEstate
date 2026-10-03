@@ -28,6 +28,13 @@ export class InMemoryCacheStore implements CacheStore {
   }
 
   async del(key: string): Promise<void> {
+    if (key.includes('*')) {
+      const regex = new RegExp(`^${key.replace(/\*/g, '.*')}$`);
+      for (const k of this.store.keys()) {
+        if (regex.test(k)) this.store.delete(k);
+      }
+      return;
+    }
     this.store.delete(key);
   }
 

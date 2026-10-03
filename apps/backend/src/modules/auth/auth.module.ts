@@ -6,8 +6,10 @@ import { PlatformModule } from '../../platform/platform.module.js';
 import { AuthController } from './auth.controller.js';
 import { AuthLockoutService } from './auth-lockout.service.js';
 import { AuthService } from './auth.service.js';
+import { InvitationService } from './invitation.service.js';
 import { PasswordResetService } from './password-reset.service.js';
 import { PermissionService } from './permission.service.js';
+import { SessionService } from './session.service.js';
 import { TokenService } from './token.service.js';
 import { TwoFactorService } from './two-factor.service.js';
 
@@ -16,6 +18,8 @@ import { TwoFactorService } from './two-factor.service.js';
   controllers: [AuthController],
   providers: [
     AuthService,
+    SessionService,
+    InvitationService,
     TokenService,
     AuthLockoutService,
     PasswordResetService,
@@ -30,6 +34,8 @@ import { TwoFactorService } from './two-factor.service.js';
   ],
   exports: [
     AuthService,
+    SessionService,
+    InvitationService,
     TokenService,
     AuthLockoutService,
     PasswordResetService,

@@ -5,4 +5,5 @@ export * from './pdf-renderer.port.js';
 export * from './pub-sub.port.js';
 export * from './queue-driver.port.js';
 export * from './sms-provider.port.js';
+export * from './captcha-verifier.port.js';
 export * from './tokens.js';

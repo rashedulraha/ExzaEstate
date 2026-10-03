@@ -9,3 +9,4 @@ export const OBJECT_STORAGE = Symbol('OBJECT_STORAGE');
 export const PDF_RENDERER = Symbol('PDF_RENDERER');
 export const SMS_PROVIDER = Symbol('SMS_PROVIDER');
 export const EMAIL_PROVIDER = Symbol('EMAIL_PROVIDER');
+export const CAPTCHA_VERIFIER = Symbol('CAPTCHA_VERIFIER');

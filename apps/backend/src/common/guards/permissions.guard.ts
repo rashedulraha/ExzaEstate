@@ -1,8 +1,9 @@
-import { CanActivate, ExecutionContext, Inject, Injectable } from '@nestjs/common';
+import { CanActivate, ExecutionContext, Inject, Injectable, Optional } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { ClsService } from 'nestjs-cls';
 import { type DataScope, ERROR_CODES, MANDATORY_2FA_PERMISSIONS } from '@exzaestate/shared';
 import { TenantDb } from '../../database/tenant-db.service.js';
+import { SecurityEventsService } from '../../platform/security/security-events.service.js';
 import { IS_PUBLIC_KEY } from '../decorators/public.decorator.js';
 import { REQUIRE_PERMISSIONS_KEY } from '../decorators/require-permission.decorator.js';
 import { STEP_UP_KEY } from '../decorators/step-up.decorator.js';
@@ -35,6 +36,7 @@ export class PermissionsGuard implements CanActivate {
     private readonly clsService: ClsService,
     @Inject(PERMISSION_RESOLVER) private readonly permissionResolver: PermissionResolver,
     private readonly tenantDb: TenantDb,
+    @Optional() private readonly securityEventsService?: SecurityEventsService,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -58,11 +60,12 @@ export class PermissionsGuard implements CanActivate {
     const resolved = await this.permissionResolver.resolvePermissions(companyId, userId);
 
     if (resolved.status !== 'ACTIVE') {
+      await this.recordForbiddenEvent(context, companyId, userId, 'User account is not active');
       throw new ForbiddenException('User account is not active');
     }
 
     this.checkMandatory2Fa(resolved);
-    this.checkRequiredPermissions(context, resolved);
+    await this.checkRequiredPermissions(context, resolved, companyId, userId);
     await this.checkStepUp(context, companyId, sessionId);
 
     this.clsService.set('permissions', resolved.permissions);
@@ -89,7 +92,12 @@ export class PermissionsGuard implements CanActivate {
     }
   }
 
-  private checkRequiredPermissions(context: ExecutionContext, resolved: ResolvedPermissions): void {
+  private async checkRequiredPermissions(
+    context: ExecutionContext,
+    resolved: ResolvedPermissions,
+    companyId: string,
+    userId: string,
+  ): Promise<void> {
     const required = this.reflector.getAllAndOverride<string[]>(REQUIRE_PERMISSIONS_KEY, [
       context.getHandler(),
       context.getClass(),
@@ -101,10 +109,57 @@ export class PermissionsGuard implements CanActivate {
 
     for (const permission of required) {
       if (!resolved.permissions.includes(permission)) {
+        await this.recordForbiddenEvent(
+          context,
+          companyId,
+          userId,
+          `Access denied: insufficient permissions (missing ${permission})`,
+          permission,
+        );
         throw new ForbiddenException('Access denied: insufficient permissions', {
           requiredPermission: permission,
         });
       }
+    }
+  }
+
+  private async recordForbiddenEvent(
+    context: ExecutionContext,
+    companyId: string,
+    userId: string,
+    reason: string,
+    requiredPermission?: string,
+  ): Promise<void> {
+    const service = this.securityEventsService;
+    if (!service) return;
+
+    try {
+      const req = context.switchToHttp().getRequest<{
+        ip?: string;
+        socket?: { remoteAddress?: string };
+        headers?: Record<string, string | undefined>;
+        originalUrl?: string;
+        url?: string;
+      }>();
+      const ipAddress = req.ip ?? req.socket?.remoteAddress;
+      const userAgent = req.headers?.['user-agent'];
+      const route = req.originalUrl ?? req.url;
+
+      await service.record({
+        companyId,
+        userId,
+        eventType: 'FORBIDDEN',
+        severity: 'WARN',
+        details: {
+          reason,
+          requiredPermission,
+          route,
+        },
+        ipAddress,
+        userAgent,
+      });
+    } catch {
+      // Security event logging must not mask authorization failure
     }
   }
 

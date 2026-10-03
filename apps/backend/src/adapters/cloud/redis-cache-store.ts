@@ -33,6 +33,13 @@ export class RedisCacheStore implements CacheStore {
   }
 
   async del(key: string): Promise<void> {
+    if (key.includes('*')) {
+      const keys = await this.redis.keys(key);
+      if (keys.length > 0) {
+        await this.redis.del(...keys);
+      }
+      return;
+    }
     await this.redis.del(key);
   }
 

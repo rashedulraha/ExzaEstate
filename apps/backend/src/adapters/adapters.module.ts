@@ -1,6 +1,7 @@
 import { type DynamicModule, Global, Module, type Provider } from '@nestjs/common';
 import {
   CACHE_STORE,
+  CAPTCHA_VERIFIER,
   EMAIL_PROVIDER,
   OBJECT_STORAGE,
   PDF_RENDERER,
@@ -16,12 +17,14 @@ import {
   S3ObjectStorage,
   SmsStubProvider,
   SmtpEmailProvider,
+  TurnstileCaptchaVerifier,
 } from './cloud/index.js';
 import {
   EventEmitterPubSub,
   FsObjectStorage,
   InMemoryCacheStore,
   InMemoryQueueDriver,
+  LocalCaptchaVerifier,
   LocalEmailProvider,
   LocalPdfRenderer,
   LocalSmsProvider,
@@ -42,6 +45,7 @@ export class AdaptersModule {
           { provide: PDF_RENDERER, useClass: LocalPdfRenderer },
           { provide: SMS_PROVIDER, useClass: LocalSmsProvider },
           { provide: EMAIL_PROVIDER, useClass: LocalEmailProvider },
+          { provide: CAPTCHA_VERIFIER, useClass: LocalCaptchaVerifier },
         ]
       : [
           { provide: QUEUE_DRIVER, useClass: BullMqQueueDriver },
@@ -51,10 +55,12 @@ export class AdaptersModule {
           { provide: PDF_RENDERER, useClass: ChromiumPdfRenderer },
           { provide: SMS_PROVIDER, useClass: SmsStubProvider },
           { provide: EMAIL_PROVIDER, useClass: SmtpEmailProvider },
+          { provide: CAPTCHA_VERIFIER, useClass: TurnstileCaptchaVerifier },
         ];
 
     return {
       module: AdaptersModule,
+      global: true,
       providers,
       exports: [
         QUEUE_DRIVER,
@@ -64,6 +70,7 @@ export class AdaptersModule {
         PDF_RENDERER,
         SMS_PROVIDER,
         EMAIL_PROVIDER,
+        CAPTCHA_VERIFIER,
       ],
     };
   }

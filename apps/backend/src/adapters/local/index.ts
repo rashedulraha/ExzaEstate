@@ -5,3 +5,4 @@ export * from './in-memory-queue-driver.js';
 export * from './local-email-provider.js';
 export * from './local-pdf-renderer.js';
 export * from './local-sms-provider.js';
+export * from './local-captcha.adapter.js';

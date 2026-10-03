@@ -95,7 +95,7 @@ export class JwtAuthGuard implements CanActivate {
         const revoked = await this.cacheStore.get(
           `session-revoked:${payload.companyId}:${payload.sid}`,
         );
-        if (revoked === '1') {
+        if (revoked === '1' || (revoked as unknown) === 1) {
           throw new UnauthorizedException('Session has been revoked');
         }
       } catch (err) {

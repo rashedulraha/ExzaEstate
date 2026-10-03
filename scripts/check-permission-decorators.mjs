@@ -21,6 +21,9 @@ const BACKEND_SRC_DIR = path.resolve(ROOT_DIR, 'apps/backend/src');
 // Exempt identity session routes (inherent to any authenticated user, no specific business role permission)
 const EXEMPT_SESSION_ROUTES = new Set([
   'AuthController.logout',
+  'AuthController.logoutAll',
+  'AuthController.listSessions',
+  'AuthController.revokeSession',
   'AuthController.getMe',
   'AuthController.stepUp',
   'AuthController.generate2Fa',

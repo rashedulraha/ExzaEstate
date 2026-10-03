@@ -1,11 +1,13 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Headers,
   HttpCode,
   HttpStatus,
   Ip,
+  Param,
   Post,
   Req,
   Res,
@@ -30,6 +32,7 @@ import { LoginDto } from './dto/login.dto.js';
 import { RefreshTokenDto } from './dto/refresh.dto.js';
 import { ResetPasswordDto } from './dto/reset-password.dto.js';
 import { Disable2FaDto, Enable2FaDto, StepUpDto } from './dto/two-factor.dto.js';
+import { RequestUnlockDto, UnlockDto } from './dto/unlock.dto.js';
 import { TwoFactorService } from './two-factor.service.js';
 
 @Controller('auth')
@@ -168,6 +171,34 @@ export class AuthController {
     return { message: 'Logged out successfully' };
   }
 
+  @Post('logout-all')
+  @HttpCode(HttpStatus.OK)
+  async logoutAll(
+    @CurrentUser() user: AuthenticatedUser,
+    @Headers('x-client') xClient: string = 'desktop',
+    @Headers('origin') origin: string | undefined,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const isWeb = xClient.toLowerCase() === 'web';
+    if (isWeb) {
+      this.validateWebCsrf(origin);
+      res.clearCookie('refresh_token', { path: '/api/v1/auth' });
+    }
+
+    return this.authService.logoutAll(user.userId, user.companyId);
+  }
+
+  @Get('sessions')
+  async listSessions(@CurrentUser() user: AuthenticatedUser) {
+    return this.authService.listSessions(user.userId, user.companyId, user.sessionId);
+  }
+
+  @Delete('sessions/:id')
+  @HttpCode(HttpStatus.OK)
+  async revokeSession(@CurrentUser() user: AuthenticatedUser, @Param('id') sessionId: string) {
+    return this.authService.revokeSession(user.userId, user.companyId, sessionId);
+  }
+
   @Get('me')
   async getMe(@CurrentUser() user: AuthenticatedUser) {
     return this.authService.getMe(user.userId, user.companyId);
@@ -218,6 +249,20 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   async resetPassword(@Body() dto: ResetPasswordDto) {
     return this.authService.resetPassword(dto);
+  }
+
+  @Public()
+  @Post('request-unlock')
+  @HttpCode(HttpStatus.OK)
+  async requestUnlock(@Body() dto: RequestUnlockDto) {
+    return this.authService.requestUnlock(dto.email);
+  }
+
+  @Public()
+  @Post('unlock')
+  @HttpCode(HttpStatus.OK)
+  async unlock(@Body() dto: UnlockDto) {
+    return this.authService.unlock(dto);
   }
 
   @Post('2fa/generate')

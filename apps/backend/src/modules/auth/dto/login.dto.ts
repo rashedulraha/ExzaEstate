@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class LoginDto {
   @IsEmail({}, { message: 'A valid email address is required' })
@@ -8,4 +8,8 @@ export class LoginDto {
   @IsString({ message: 'Password must be a string' })
   @IsNotEmpty({ message: 'Password cannot be empty' })
   password!: string;
+
+  @IsOptional()
+  @IsString({ message: 'CAPTCHA token must be a string' })
+  captchaToken?: string;
 }
