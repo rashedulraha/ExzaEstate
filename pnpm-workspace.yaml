@@ -6,6 +6,7 @@ allowBuilds:
   '@scarf/scarf': false
   '@swc/core': true
   esbuild: true
+  msgpackr-extract: false
   prisma: true
 minimumReleaseAgeExclude:
   - pino@10.4.0

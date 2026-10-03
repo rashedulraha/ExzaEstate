@@ -14,8 +14,8 @@
 ## Current Status
 
 - **Active Phase:** Phase A0 — Platform Foundations
-- **Next Task to Execute:** `A0.7 Ports & Adapters Skeleton, Outbox Dispatcher, Worker Entrypoint`
-- **Tasks complete:** 6 / 88 (P2 cards excluded)
+- **Next Task to Execute:** `A0.8 Authentication, Sessions, Invitations`
+- **Tasks complete:** 7 / 88 (P2 cards excluded)
 - **Blockers:** None
 - **Owner action items before/while coding:**
   - Copy the new `task.md` (v6) into `agent/task.md`.
@@ -60,7 +60,7 @@ Tick a box only after the verification rules above are met. Dependencies are def
 - [x] `A0.4` Database: Docker Compose & Prisma 7 Multi-File Schema
 - [x] `A0.5` Multi-Tenancy: RLS, DB Roles, TenantPrisma, SystemPrisma
 - [x] `A0.6` Platform Services: Audit, Sequence, Outbox, Idempotency, Storage
-- [ ] `A0.7` Ports & Adapters Skeleton, Outbox Dispatcher, Worker Entrypoint
+- [x] `A0.7` Ports & Adapters Skeleton, Outbox Dispatcher, Worker Entrypoint
 - [ ] `A0.8` Authentication, Sessions, Invitations
 - [ ] `A0.9` Permissions, RBAC, Data Scopes, Mandatory 2FA
 - [ ] `A0.10` Tenant Provisioning Registry & Baseline Seed
@@ -253,3 +253,11 @@ Tick a box only after the verification rules above are met. Dependencies are def
 3. Verification command & result: prisma migrate deploy (applied); pnpm test audit-outbox (7/7 passed); pnpm test sequence (5/5 passed); pnpm test idempotency (5/5 passed); pnpm test storage (3/3 passed); monorepo lint, typecheck, and all 74 tests passed with 0 errors
 4. Open questions: None (Gates D-07 [idempotency inside tx] and D-11 [monthly partitions] recorded in Sign-off Register)
 5. Next task ID: A0.7
+
+### [2026-10-03] A0.7 Ports & Adapters Skeleton, Outbox Dispatcher, Worker Entrypoint
+
+1. Task ID & status: A0.7 [x]
+2. Files created / modified: apps/backend/src/ports/**, apps/backend/src/adapters/**, apps/backend/src/platform/outbox/**, apps/backend/src/platform/platform.module.ts, apps/backend/src/jobs/**, apps/backend/src/main.worker.ts, apps/backend/test/adapters/\*\*, apps/backend/test/platform/outbox-dispatcher.spec.ts, apps/backend/package.json, package.json, pnpm-lock.yaml, pnpm-workspace.yaml, agent/PROGRESS.md
+3. Verification command & result: pnpm --filter @exzaestate/backend build (0 errors); pnpm test adapters-cloud (7/7 passed); pnpm test adapters-contract (14/14 passed); pnpm test outbox-dispatcher (4/4 passed); full workspace tests (72/72 passed); oxlint, dependency-cruiser, and cycle checks clean with 0 errors
+4. Open questions: None (Zero gated decisions for A0.7; D-10 pending for A0.12)
+5. Next task ID: A0.8
