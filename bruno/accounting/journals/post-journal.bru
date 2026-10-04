@@ -1,0 +1,38 @@
+meta {
+  name: Create and Post Journal
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/api/v1/accounting/journals/post
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "postingDate": "2026-10-04",
+    "type": "GENERAL",
+    "narration": "Utility accruals for current month",
+    "reference": "ACC-OCT-01",
+    "lines": [
+      {
+        "accountId": "{{adminExpenseAccountId}}",
+        "debitPaisa": "1200000",
+        "creditPaisa": "0",
+        "description": "Monthly utility bill"
+      },
+      {
+        "accountId": "{{bankAccountId}}",
+        "debitPaisa": "0",
+        "creditPaisa": "1200000",
+        "description": "Direct debit from bank"
+      }
+    ]
+  }
+}

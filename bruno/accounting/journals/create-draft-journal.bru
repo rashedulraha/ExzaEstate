@@ -1,0 +1,38 @@
+meta {
+  name: Create Draft Journal
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/api/v1/accounting/journals/draft
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "postingDate": "2026-10-04",
+    "type": "GENERAL",
+    "narration": "Office stationery and supply purchase",
+    "reference": "BILL-1042",
+    "lines": [
+      {
+        "accountId": "{{officeSuppliesAccountId}}",
+        "debitPaisa": "500000",
+        "creditPaisa": "0",
+        "description": "Stationery supplies"
+      },
+      {
+        "accountId": "{{cashAccountId}}",
+        "debitPaisa": "0",
+        "creditPaisa": "500000",
+        "description": "Paid by cash"
+      }
+    ]
+  }
+}

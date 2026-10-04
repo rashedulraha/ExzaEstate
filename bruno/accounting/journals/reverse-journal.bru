@@ -1,0 +1,25 @@
+meta {
+  name: Reverse Posted Journal
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{baseUrl}}/api/v1/accounting/journals/:id/reverse
+  body: json
+  auth: bearer
+}
+
+params:path {
+  id: 
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "reason": "Reversing incorrect expense categorization per audit note"
+  }
+}

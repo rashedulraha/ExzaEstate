@@ -1,0 +1,23 @@
+meta {
+  name: List Journals
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/api/v1/accounting/journals
+  body: none
+  auth: bearer
+}
+
+params:query {
+  ~status: Posted
+  ~type: GENERAL
+  ~startDate: 2026-07-01
+  ~endDate: 2027-06-30
+  ~search: JV
+}
+
+auth:bearer {
+  token: {{token}}
+}
