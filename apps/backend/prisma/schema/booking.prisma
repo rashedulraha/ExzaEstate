@@ -63,6 +63,7 @@ model Booking {
   statusHistory              BookingStatusHistory[]
   payments                   Payment[]
   agreements                 Agreement[]
+  installments               Installment[]
 
   @@unique([companyId, bookingNumber])
   @@index([companyId])

@@ -3418,6 +3418,222 @@
         "tags": ["Collection - Payments"]
       }
     },
+    "/api/v1/collection/installments": {
+      "get": {
+        "operationId": "InstallmentController_query",
+        "parameters": [
+          {
+            "name": "bookingId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "paymentState",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": ["Unpaid", "Partially Paid", "Paid", "Waived", "Cancelled"]
+            }
+          },
+          {
+            "name": "timingState",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": ["Upcoming", "Due Today", "Overdue"]
+            }
+          },
+          {
+            "name": "dueDateFrom",
+            "required": false,
+            "in": "query",
+            "description": "YYYY-MM-DD",
+            "schema": {
+              "example": "2026-10-01",
+              "type": "string"
+            }
+          },
+          {
+            "name": "dueDateTo",
+            "required": false,
+            "in": "query",
+            "description": "YYYY-MM-DD",
+            "schema": {
+              "example": "2026-12-31",
+              "type": "string"
+            }
+          },
+          {
+            "name": "referenceDate",
+            "required": false,
+            "in": "query",
+            "description": "Reference date YYYY-MM-DD for timing derivation",
+            "schema": {
+              "example": "2026-10-15",
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 50,
+              "type": "number"
+            }
+          },
+          {
+            "name": "offset",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 0,
+              "default": 0,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Filtered installments list"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Query installments with pagination, filters, and dynamic timing states",
+        "tags": ["Collection - Installments"]
+      }
+    },
+    "/api/v1/collection/installments/booking/{bookingId}": {
+      "get": {
+        "operationId": "InstallmentController_findByBookingId",
+        "parameters": [
+          {
+            "name": "bookingId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "referenceDate",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InstallmentScheduleSummaryDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get installment schedule summary for a booking",
+        "tags": ["Collection - Installments"]
+      }
+    },
+    "/api/v1/collection/installments/{id}": {
+      "get": {
+        "operationId": "InstallmentController_findById",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "referenceDate",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InstallmentResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get single installment details by ID",
+        "tags": ["Collection - Installments"]
+      }
+    },
+    "/api/v1/collection/installments/generate": {
+      "post": {
+        "operationId": "InstallmentController_generateSchedule",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GenerateScheduleDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InstallmentScheduleSummaryDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Generate and persist installment schedule for a booking",
+        "tags": ["Collection - Installments"]
+      }
+    },
     "/api/v1/company/profile": {
       "get": {
         "operationId": "CompanyController_getProfile",
@@ -10296,6 +10512,264 @@
         },
         "required": ["items"]
       },
+      "InstallmentResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "companyId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "bookingId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "installmentNumber": {
+            "type": "number",
+            "example": 1
+          },
+          "name": {
+            "type": "string",
+            "example": "Installment 1"
+          },
+          "type": {
+            "type": "string",
+            "example": "REGULAR",
+            "enum": [
+              "REGULAR",
+              "BOOKING_AMOUNT",
+              "DOWN_PAYMENT",
+              "MILESTONE",
+              "FINAL_SETTLEMENT",
+              "SPECIAL"
+            ]
+          },
+          "dueDate": {
+            "type": "string",
+            "example": "2026-11-01",
+            "description": "Business date YYYY-MM-DD"
+          },
+          "amountPaisa": {
+            "type": "string",
+            "example": "30000000",
+            "description": "BigInt paisa as string"
+          },
+          "amountFormatted": {
+            "type": "string",
+            "example": "৳3,00,000.00"
+          },
+          "paidAmountPaisa": {
+            "type": "string",
+            "example": "10000000",
+            "description": "BigInt paisa as string"
+          },
+          "paidAmountFormatted": {
+            "type": "string",
+            "example": "৳1,00,000.00"
+          },
+          "remainingAmountPaisa": {
+            "type": "string",
+            "example": "20000000",
+            "description": "BigInt paisa as string"
+          },
+          "remainingAmountFormatted": {
+            "type": "string",
+            "example": "৳2,00,000.00"
+          },
+          "waivedAmountPaisa": {
+            "type": "string",
+            "example": "0",
+            "description": "BigInt paisa as string"
+          },
+          "lateFeePaisa": {
+            "type": "string",
+            "example": "0",
+            "description": "BigInt paisa as string"
+          },
+          "paymentState": {
+            "type": "string",
+            "example": "Partially Paid",
+            "enum": ["Unpaid", "Partially Paid", "Paid", "Waived", "Cancelled"]
+          },
+          "timingState": {
+            "type": "string",
+            "example": "Upcoming",
+            "enum": ["Upcoming", "Due Today", "Overdue"],
+            "nullable": true
+          },
+          "overdueDays": {
+            "type": "number",
+            "example": 0
+          },
+          "statusLabel": {
+            "type": "string",
+            "example": "Partially Paid · Upcoming"
+          },
+          "milestoneEvent": {
+            "type": "object",
+            "example": "ROOF_CASTING",
+            "nullable": true
+          },
+          "milestoneCompleted": {
+            "type": "boolean",
+            "example": false
+          },
+          "milestoneCompletedAt": {
+            "type": "object",
+            "nullable": true
+          },
+          "notes": {
+            "type": "object",
+            "nullable": true
+          },
+          "createdAt": {
+            "type": "string"
+          },
+          "updatedAt": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "companyId",
+          "bookingId",
+          "installmentNumber",
+          "name",
+          "type",
+          "dueDate",
+          "amountPaisa",
+          "amountFormatted",
+          "paidAmountPaisa",
+          "paidAmountFormatted",
+          "remainingAmountPaisa",
+          "remainingAmountFormatted",
+          "waivedAmountPaisa",
+          "lateFeePaisa",
+          "paymentState",
+          "overdueDays",
+          "statusLabel",
+          "milestoneCompleted",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "InstallmentScheduleSummaryDto": {
+        "type": "object",
+        "properties": {
+          "bookingId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "totalInstallments": {
+            "type": "number",
+            "example": 24
+          },
+          "totalScheduledPaisa": {
+            "type": "string",
+            "example": "720000000",
+            "description": "BigInt paisa as string"
+          },
+          "totalScheduledFormatted": {
+            "type": "string",
+            "example": "৳72,00,000.00"
+          },
+          "totalPaidPaisa": {
+            "type": "string",
+            "example": "10000000"
+          },
+          "totalPaidFormatted": {
+            "type": "string",
+            "example": "৳1,00,000.00"
+          },
+          "totalRemainingPaisa": {
+            "type": "string",
+            "example": "710000000"
+          },
+          "totalRemainingFormatted": {
+            "type": "string",
+            "example": "৳71,00,000.00"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InstallmentResponseDto"
+            }
+          }
+        },
+        "required": [
+          "bookingId",
+          "totalInstallments",
+          "totalScheduledPaisa",
+          "totalScheduledFormatted",
+          "totalPaidPaisa",
+          "totalPaidFormatted",
+          "totalRemainingPaisa",
+          "totalRemainingFormatted",
+          "items"
+        ]
+      },
+      "CustomMilestoneDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Roof Casting Complete"
+          },
+          "amountPaisa": {
+            "type": "string",
+            "example": "50000000",
+            "description": "Paisa amount as string"
+          },
+          "percentage": {
+            "type": "number",
+            "example": 10,
+            "description": "Percentage of remaining amount"
+          },
+          "dueDate": {
+            "type": "string",
+            "example": "2026-12-15"
+          },
+          "milestoneEvent": {
+            "type": "string",
+            "example": "ROOF_CASTING"
+          }
+        },
+        "required": ["name"]
+      },
+      "GenerateScheduleDto": {
+        "type": "object",
+        "properties": {
+          "bookingId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "firstDueDate": {
+            "type": "string",
+            "example": "2026-11-01",
+            "description": "First installment due date (YYYY-MM-DD)"
+          },
+          "installmentCount": {
+            "type": "number",
+            "example": 24,
+            "default": 24
+          },
+          "frequency": {
+            "type": "string",
+            "enum": ["MONTHLY", "QUARTERLY", "HALF_YEARLY", "YEARLY", "CUSTOM"],
+            "default": "MONTHLY"
+          },
+          "customMilestones": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CustomMilestoneDto"
+            }
+          }
+        },
+        "required": ["bookingId", "firstDueDate"]
+      },
       "UpdateCompanyProfileDto": {
         "type": "object",
         "properties": {}
@@ -12937,32 +13411,6 @@
           "netProfitFormatted",
           "netProfitMarginPct"
         ]
-      },
-      "CustomMilestoneDto": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
-            "description": "Milestone name",
-            "example": "Piling Completion"
-          },
-          "amountPaisa": {
-            "type": "string",
-            "description": "Exact milestone amount in paisa (integer string)",
-            "example": "50000000"
-          },
-          "percentage": {
-            "type": "number",
-            "description": "Milestone percentage of remaining balance (e.g. 20 for 20%)",
-            "example": 20
-          },
-          "dueDate": {
-            "type": "string",
-            "description": "Specific milestone due date in YYYY-MM-DD format",
-            "example": "2026-06-15"
-          }
-        },
-        "required": ["name"]
       },
       "PreviewScheduleDto": {
         "type": "object",

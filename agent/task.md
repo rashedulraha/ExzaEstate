@@ -811,7 +811,7 @@ These are applied as defaults in `architecture.md` v4 but are still **"Needs sig
 
 #### A7.1 — Installment Schedule Persistence & Timing State
 
-- **Status:** [ ] · **Tier:** 1 · **Size:** M (3 steps) · **Priority:** P0
+- **Status:** [x] · **Tier:** 1 · **Size:** M (3 steps) · **Priority:** P0
 - **Depends:** A5.2, A4.1, A6.4
 - **Reads:** `prd.md` MOD-INSTALLMENT, §9.3; `accounting-rules.md` §5.
 - **Touches:** `apps/backend/src/modules/collection/installment/**`, `apps/backend/prisma/schema/collection.prisma`, demo-seed step.

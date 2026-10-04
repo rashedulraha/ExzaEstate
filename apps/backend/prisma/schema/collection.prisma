@@ -53,6 +53,7 @@ model Payment {
   // Relations
   booking              Booking?               @relation(fields: [bookingId], references: [id])
   customer             Customer               @relation(fields: [customerId], references: [id])
+  targetInstallment    Installment?           @relation(fields: [targetInstallmentId], references: [id])
   statusHistory        PaymentStatusHistory[]
   reversals            PaymentReversal[]
 
@@ -62,6 +63,40 @@ model Payment {
   @@index([companyId, customerId])
   @@index([companyId, paymentDate])
   @@map("payments")
+}
+
+model Installment {
+  id                   String                 @id @default(uuid(7)) @db.Uuid
+  companyId            String                 @map("company_id") @db.Uuid
+  bookingId            String                 @map("booking_id") @db.Uuid
+  installmentNumber    Int                    @map("installment_number")
+  name                 String                 @db.VarChar(128)
+  type                 String                 @default("REGULAR") @db.VarChar(32) // REGULAR, BOOKING_AMOUNT, DOWN_PAYMENT, MILESTONE, FINAL_SETTLEMENT, SPECIAL
+  dueDate              DateTime               @map("due_date") @db.Date // Business date YYYY-MM-DD
+  amountPaisa          BigInt                 @map("amount_paisa") @db.BigInt
+  paidAmountPaisa      BigInt                 @default(0) @map("paid_amount_paisa") @db.BigInt
+  remainingAmountPaisa BigInt                 @map("remaining_amount_paisa") @db.BigInt
+  paymentState         String                 @default("Unpaid") @map("payment_state") @db.VarChar(32) // Unpaid, Partially Paid, Paid, Waived, Cancelled
+  waivedAmountPaisa    BigInt                 @default(0) @map("waived_amount_paisa") @db.BigInt
+  lateFeePaisa         BigInt                 @default(0) @map("late_fee_paisa") @db.BigInt
+  milestoneEvent       String?                @map("milestone_event") @db.VarChar(128)
+  milestoneCompleted   Boolean                @default(false) @map("milestone_completed")
+  milestoneCompletedAt DateTime?              @map("milestone_completed_at") @db.Timestamptz
+  notes                String?                @db.Text
+  createdAt            DateTime               @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt            DateTime               @updatedAt @map("updated_at") @db.Timestamptz
+  createdById          String?                @map("created_by_id") @db.Uuid
+  updatedById          String?                @map("updated_by_id") @db.Uuid
+
+  booking              Booking                @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  payments             Payment[]
+
+  @@unique([companyId, bookingId, installmentNumber])
+  @@index([companyId])
+  @@index([companyId, bookingId])
+  @@index([companyId, dueDate])
+  @@index([companyId, paymentState])
+  @@map("installments")
 }
 
 model PaymentStatusHistory {

@@ -13,9 +13,9 @@
 
 ## Current Status
 
-- **Active Phase:** Phase A6 Complete (Ready for Phase A7 upon authorization)
-- **Next Task to Execute:** `A7.1 Installment Schedule Persistence & Timing State`
-- **Tasks complete:** 42 / 88 (P2 cards excluded)
+- **Active Phase:** Phase A7 (In Progress)
+- **Next Task to Execute:** `A7.2 Payment Posting, Allocation & Booking Confirmation`
+- **Tasks complete:** 43 / 88 (P2 cards excluded)
 - **Blockers:** None
 - **Owner action items before/while coding:**
   - Copy the new `task.md` (v6) into `agent/task.md`.
@@ -118,7 +118,7 @@ Tick a box only after the verification rules above are met. Dependencies are def
 
 ### Phase A7 — Payments & Collection
 
-- [ ] `A7.1` Installment Schedule Persistence & Timing State
+- [x] `A7.1` Installment Schedule Persistence & Timing State
 - [ ] `A7.2` Payment Posting, Allocation & Booking Confirmation
 - [ ] `A7.3` Cheque Lifecycle (`cheque_events`)
 - [ ] `A7.4` Immutable Receipts, Voids & Payment Reversals
@@ -564,4 +564,12 @@ Tick a box only after the verification rules above are met. Dependencies are def
 2. Files created / modified: apps/backend/src/modules/accounting/ledger/** (ledger.service.ts, ledger.controller.ts, ledger.helper.ts, dto/**), apps/backend/src/modules/reports/** (reports.service.ts, reports.controller.ts, reports.module.ts, queries/**, dto/**), apps/backend/src/modules/accounting/{accounting.module.ts,index.ts}, apps/backend/src/app.module.ts, bruno/accounting/ledger/**, bruno/reports/**, apps/backend/test/accounting/{accounting-test.fixture.ts,financial-reports.spec.ts}, packages/api-client/**, agent/task.md, agent/PROGRESS.md
 3. Verification command & result: pnpm --filter @exzaestate/backend test test/accounting (65/65 tests passed across 7 test suites including 12/12 in financial-reports.spec.ts: S1 general ledger with running balance, date range opening balance, account code filter, keyset cursor pagination, 202 Accepted export job; S2 trial balance with exact debits == credits balance verification and 202 Accepted export; S3 balance sheet verifying Assets = Liabilities + Equity with current period net profit incorporated into Equity and 202 export, income statement with revenues, COGS, operating expenses, and margins with 202 export; AT-09 Executive gets 403 Forbidden on /accounting/ledger; multi-tenant RLS isolation); pnpm check:all (all 7 architectural quality gates passed: 69 RLS tables, 227 decorated routes, zero api-client drift, zero raw transactions); pnpm lint (0 errors, 0 warnings across 1032 files, all files strictly < 300 lines with cyclomatic complexity <= 10, zero circular dependencies); turbo typecheck (clean across all 9 packages)
 4. Open questions: None (Double-entry balance identity mathematically guaranteed across all reports; asynchronous BullMQ export jobs return 202 Accepted + jobId; read queries strictly enforce multi-tenant RLS boundaries)
-5. Next task ID: A7.1 (Awaiting user authorization before starting Phase A7)
+5. Next task ID: A7.1
+
+### [2026-10-05] A7.1 Installment Schedule Persistence & Timing State
+
+1. Task ID & status: A7.1 [x]
+2. Files created / modified: apps/backend/prisma/schema/booking.prisma, apps/backend/prisma/schema/collection.prisma, apps/backend/prisma/migrations/20261005000024_collection_installments/migration.sql, apps/backend/src/modules/collection/installment/domain/{installment-state.ts,installment-state.spec.ts,schedule-generator.ts}, apps/backend/src/modules/collection/installment/dto/{installment-response.dto.ts,query-installments.dto.ts,create-installment-schedule.dto.ts,index.ts}, apps/backend/src/modules/collection/installment/{installment.service.ts,installment.controller.ts,installment.mapper.ts}, apps/backend/src/modules/collection/{collection.module.ts,index.ts}, apps/backend/test/collection/{collection-test.fixture.ts,installment.spec.ts}, packages/api-client/\*\*, agent/task.md, agent/PROGRESS.md
+3. Verification command & result: pnpm --filter @exzaestate/backend test test/collection (28/28 tests passed across 4 suites: 11/11 in installment-state.spec.ts unit tests, 4/4 in installment.spec.ts integration tests, 7/7 in payment-draft.spec.ts, 6/6 in payment-immutability.spec.ts: S1 installments table with tenant RLS isolation and role grants; S2 domain state engine deriving payment state [Unpaid, Partially Paid, Paid, Waived, Cancelled] and timing state [Upcoming, Due Today, Overdue] vs Asia/Dhaka reference date; S3 schedule generation service and REST endpoints; AT-05 verified: ৳3,00,000 installment with ৳1,00,000 paid before due derives Partially Paid · Upcoming, remaining ৳2,00,000; AT-28 overdue days computation); pnpm check:all (all 7 architectural quality gates passed: 70 RLS tables, 230 decorated routes, zero api drift, zero raw transactions); pnpm lint (0 errors, 0 warnings across 1060 files, all files strictly < 300 lines with cyclomatic complexity <= 10, zero circular dependencies); turbo typecheck (clean across all 9 packages)
+4. Open questions: None (AT-05 acceptance criterion strictly fulfilled; pure domain logic decoupled from external frameworks; largest-remainder distribution via Money.allocate guarantees exact zero-remainder schedules)
+5. Next task ID: A7.2

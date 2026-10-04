@@ -28,6 +28,8 @@ import type {
   HealthControllerCheck200,
   InAppNotificationResponseDto,
   IncomeStatementReportDto,
+  InstallmentResponseDto,
+  InstallmentScheduleSummaryDto,
   JournalResponseDto,
   LedgerReportDto,
   NotificationPreferenceResponseDto,
@@ -1661,6 +1663,176 @@ export const getCashBankControllerCompleteReconciliationResponseMock = (
   ]),
   createdAt: faker.string.alpha({ length: { min: 10, max: 20 } }),
   updatedAt: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  ...overrideResponse,
+});
+
+export const getInstallmentControllerFindByBookingIdResponseMock = (
+  overrideResponse: Partial<InstallmentScheduleSummaryDto> = {},
+): InstallmentScheduleSummaryDto => ({
+  bookingId: faker.string.uuid(),
+  totalInstallments: faker.number.float({ min: undefined, max: undefined, fractionDigits: 2 }),
+  totalScheduledPaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  totalScheduledFormatted: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  totalPaidPaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  totalPaidFormatted: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  totalRemainingPaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  totalRemainingFormatted: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  items: Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({
+    id: faker.string.uuid(),
+    companyId: faker.string.uuid(),
+    bookingId: faker.string.uuid(),
+    installmentNumber: faker.number.float({ min: undefined, max: undefined, fractionDigits: 2 }),
+    name: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    type: faker.helpers.arrayElement([
+      'REGULAR',
+      'BOOKING_AMOUNT',
+      'DOWN_PAYMENT',
+      'MILESTONE',
+      'FINAL_SETTLEMENT',
+      'SPECIAL',
+    ] as const),
+    dueDate: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    amountPaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    amountFormatted: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    paidAmountPaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    paidAmountFormatted: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    remainingAmountPaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    remainingAmountFormatted: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    waivedAmountPaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    lateFeePaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    paymentState: faker.helpers.arrayElement([
+      'Unpaid',
+      'Partially Paid',
+      'Paid',
+      'Waived',
+      'Cancelled',
+    ] as const),
+    timingState: faker.helpers.arrayElement([
+      faker.helpers.arrayElement([
+        faker.helpers.arrayElement(['Upcoming', 'Due Today', 'Overdue'] as const),
+        null,
+      ]),
+      undefined,
+    ]),
+    overdueDays: faker.number.float({ min: undefined, max: undefined, fractionDigits: 2 }),
+    statusLabel: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    milestoneEvent: faker.helpers.arrayElement([{}, undefined]),
+    milestoneCompleted: faker.datatype.boolean(),
+    milestoneCompletedAt: faker.helpers.arrayElement([{}, undefined]),
+    notes: faker.helpers.arrayElement([{}, undefined]),
+    createdAt: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    updatedAt: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  })),
+  ...overrideResponse,
+});
+
+export const getInstallmentControllerFindByIdResponseMock = (
+  overrideResponse: Partial<InstallmentResponseDto> = {},
+): InstallmentResponseDto => ({
+  id: faker.string.uuid(),
+  companyId: faker.string.uuid(),
+  bookingId: faker.string.uuid(),
+  installmentNumber: faker.number.float({ min: undefined, max: undefined, fractionDigits: 2 }),
+  name: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  type: faker.helpers.arrayElement([
+    'REGULAR',
+    'BOOKING_AMOUNT',
+    'DOWN_PAYMENT',
+    'MILESTONE',
+    'FINAL_SETTLEMENT',
+    'SPECIAL',
+  ] as const),
+  dueDate: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  amountPaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  amountFormatted: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  paidAmountPaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  paidAmountFormatted: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  remainingAmountPaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  remainingAmountFormatted: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  waivedAmountPaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  lateFeePaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  paymentState: faker.helpers.arrayElement([
+    'Unpaid',
+    'Partially Paid',
+    'Paid',
+    'Waived',
+    'Cancelled',
+  ] as const),
+  timingState: faker.helpers.arrayElement([
+    faker.helpers.arrayElement([
+      faker.helpers.arrayElement(['Upcoming', 'Due Today', 'Overdue'] as const),
+      null,
+    ]),
+    undefined,
+  ]),
+  overdueDays: faker.number.float({ min: undefined, max: undefined, fractionDigits: 2 }),
+  statusLabel: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  milestoneEvent: faker.helpers.arrayElement([{}, undefined]),
+  milestoneCompleted: faker.datatype.boolean(),
+  milestoneCompletedAt: faker.helpers.arrayElement([{}, undefined]),
+  notes: faker.helpers.arrayElement([{}, undefined]),
+  createdAt: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  updatedAt: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  ...overrideResponse,
+});
+
+export const getInstallmentControllerGenerateScheduleResponseMock = (
+  overrideResponse: Partial<InstallmentScheduleSummaryDto> = {},
+): InstallmentScheduleSummaryDto => ({
+  bookingId: faker.string.uuid(),
+  totalInstallments: faker.number.float({ min: undefined, max: undefined, fractionDigits: 2 }),
+  totalScheduledPaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  totalScheduledFormatted: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  totalPaidPaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  totalPaidFormatted: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  totalRemainingPaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  totalRemainingFormatted: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  items: Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({
+    id: faker.string.uuid(),
+    companyId: faker.string.uuid(),
+    bookingId: faker.string.uuid(),
+    installmentNumber: faker.number.float({ min: undefined, max: undefined, fractionDigits: 2 }),
+    name: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    type: faker.helpers.arrayElement([
+      'REGULAR',
+      'BOOKING_AMOUNT',
+      'DOWN_PAYMENT',
+      'MILESTONE',
+      'FINAL_SETTLEMENT',
+      'SPECIAL',
+    ] as const),
+    dueDate: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    amountPaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    amountFormatted: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    paidAmountPaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    paidAmountFormatted: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    remainingAmountPaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    remainingAmountFormatted: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    waivedAmountPaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    lateFeePaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    paymentState: faker.helpers.arrayElement([
+      'Unpaid',
+      'Partially Paid',
+      'Paid',
+      'Waived',
+      'Cancelled',
+    ] as const),
+    timingState: faker.helpers.arrayElement([
+      faker.helpers.arrayElement([
+        faker.helpers.arrayElement(['Upcoming', 'Due Today', 'Overdue'] as const),
+        null,
+      ]),
+      undefined,
+    ]),
+    overdueDays: faker.number.float({ min: undefined, max: undefined, fractionDigits: 2 }),
+    statusLabel: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    milestoneEvent: faker.helpers.arrayElement([{}, undefined]),
+    milestoneCompleted: faker.datatype.boolean(),
+    milestoneCompletedAt: faker.helpers.arrayElement([{}, undefined]),
+    notes: faker.helpers.arrayElement([{}, undefined]),
+    createdAt: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    updatedAt: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  })),
   ...overrideResponse,
 });
 
@@ -4224,6 +4396,109 @@ export const getPaymentControllerGetPaymentByIdMockHandler = (
         await overrideResponse(info);
       }
       return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getInstallmentControllerQueryMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/collection/installments',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getInstallmentControllerFindByBookingIdMockHandler = (
+  overrideResponse?:
+    | InstallmentScheduleSummaryDto
+    | ((
+        info: Parameters<Parameters<typeof http.get>[1]>[0],
+      ) => Promise<InstallmentScheduleSummaryDto> | InstallmentScheduleSummaryDto),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/collection/installments/booking/:bookingId',
+    async (info) => {
+      await delay(1000);
+
+      return new HttpResponse(
+        JSON.stringify(
+          overrideResponse !== undefined
+            ? typeof overrideResponse === 'function'
+              ? await overrideResponse(info)
+              : overrideResponse
+            : getInstallmentControllerFindByBookingIdResponseMock(),
+        ),
+        { status: 200, headers: { 'Content-Type': 'application/json' } },
+      );
+    },
+    options,
+  );
+};
+
+export const getInstallmentControllerFindByIdMockHandler = (
+  overrideResponse?:
+    | InstallmentResponseDto
+    | ((
+        info: Parameters<Parameters<typeof http.get>[1]>[0],
+      ) => Promise<InstallmentResponseDto> | InstallmentResponseDto),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/collection/installments/:id',
+    async (info) => {
+      await delay(1000);
+
+      return new HttpResponse(
+        JSON.stringify(
+          overrideResponse !== undefined
+            ? typeof overrideResponse === 'function'
+              ? await overrideResponse(info)
+              : overrideResponse
+            : getInstallmentControllerFindByIdResponseMock(),
+        ),
+        { status: 200, headers: { 'Content-Type': 'application/json' } },
+      );
+    },
+    options,
+  );
+};
+
+export const getInstallmentControllerGenerateScheduleMockHandler = (
+  overrideResponse?:
+    | InstallmentScheduleSummaryDto
+    | ((
+        info: Parameters<Parameters<typeof http.post>[1]>[0],
+      ) => Promise<InstallmentScheduleSummaryDto> | InstallmentScheduleSummaryDto),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/collection/installments/generate',
+    async (info) => {
+      await delay(1000);
+
+      return new HttpResponse(
+        JSON.stringify(
+          overrideResponse !== undefined
+            ? typeof overrideResponse === 'function'
+              ? await overrideResponse(info)
+              : overrideResponse
+            : getInstallmentControllerGenerateScheduleResponseMock(),
+        ),
+        { status: 201, headers: { 'Content-Type': 'application/json' } },
+      );
     },
     options,
   );
@@ -7366,6 +7641,10 @@ export const getExzaEstateEnterpriseAPIMock = () => [
   getPaymentControllerPostPaymentMockHandler(),
   getPaymentControllerListPaymentsMockHandler(),
   getPaymentControllerGetPaymentByIdMockHandler(),
+  getInstallmentControllerQueryMockHandler(),
+  getInstallmentControllerFindByBookingIdMockHandler(),
+  getInstallmentControllerFindByIdMockHandler(),
+  getInstallmentControllerGenerateScheduleMockHandler(),
   getCompanyControllerGetProfileMockHandler(),
   getCompanyControllerUpdateProfileMockHandler(),
   getCompanyControllerListBranchesMockHandler(),

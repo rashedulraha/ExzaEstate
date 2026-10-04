@@ -95,6 +95,10 @@ export async function setupCollectionTestContext(): Promise<CollectionTestContex
   const mdUserId = provA.managingDirectorUserId;
 
   const mdSession = await tenantDb.withCompany(companyAId, async (tx) => {
+    await tx.user.update({
+      where: { id: mdUserId },
+      data: { isTwoFactorEnabled: true, twoFactorEnrolledAt: new Date() },
+    });
     return tx.session.create({
       data: { companyId: companyAId, userId: mdUserId, familyId: crypto.randomUUID() },
     });

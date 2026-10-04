@@ -101,11 +101,17 @@ import type {
   FollowUpControllerListFollowUpsParams,
   ForgotPasswordDto,
   GenerateAgreementDto,
+  GenerateScheduleDto,
   HealthControllerCheck200,
   HoldPropertyDto,
   InAppNotificationResponseDto,
   IncomeStatementReportDto,
   InitialAdminRegisterDto,
+  InstallmentControllerFindByBookingIdParams,
+  InstallmentControllerFindByIdParams,
+  InstallmentControllerQueryParams,
+  InstallmentResponseDto,
+  InstallmentScheduleSummaryDto,
   InviteUserDto,
   JournalControllerGetJournalsParams,
   JournalResponseDto,
@@ -10010,6 +10016,541 @@ export function usePaymentControllerGetPaymentById<
 
   return query;
 }
+
+/**
+ * @summary Query installments with pagination, filters, and dynamic timing states
+ */
+export const installmentControllerQuery = (
+  params?: InstallmentControllerQueryParams,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>(
+    { url: `/api/v1/collection/installments`, method: 'GET', params, signal },
+    options,
+  );
+};
+
+export const getInstallmentControllerQueryQueryKey = (
+  params?: InstallmentControllerQueryParams,
+) => {
+  return [`/api/v1/collection/installments`, ...(params ? [params] : [])] as const;
+};
+
+export const getInstallmentControllerQueryQueryOptions = <
+  TData = Awaited<ReturnType<typeof installmentControllerQuery>>,
+  TError = unknown,
+>(
+  params?: InstallmentControllerQueryParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof installmentControllerQuery>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getInstallmentControllerQueryQueryKey(params);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof installmentControllerQuery>>> = ({
+    signal,
+  }) => installmentControllerQuery(params, requestOptions, signal);
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof installmentControllerQuery>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type InstallmentControllerQueryQueryResult = NonNullable<
+  Awaited<ReturnType<typeof installmentControllerQuery>>
+>;
+export type InstallmentControllerQueryQueryError = unknown;
+
+export function useInstallmentControllerQuery<
+  TData = Awaited<ReturnType<typeof installmentControllerQuery>>,
+  TError = unknown,
+>(
+  params: undefined | InstallmentControllerQueryParams,
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof installmentControllerQuery>>, TError, TData>
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof installmentControllerQuery>>,
+          TError,
+          Awaited<ReturnType<typeof installmentControllerQuery>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useInstallmentControllerQuery<
+  TData = Awaited<ReturnType<typeof installmentControllerQuery>>,
+  TError = unknown,
+>(
+  params?: InstallmentControllerQueryParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof installmentControllerQuery>>, TError, TData>
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof installmentControllerQuery>>,
+          TError,
+          Awaited<ReturnType<typeof installmentControllerQuery>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useInstallmentControllerQuery<
+  TData = Awaited<ReturnType<typeof installmentControllerQuery>>,
+  TError = unknown,
+>(
+  params?: InstallmentControllerQueryParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof installmentControllerQuery>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary Query installments with pagination, filters, and dynamic timing states
+ */
+
+export function useInstallmentControllerQuery<
+  TData = Awaited<ReturnType<typeof installmentControllerQuery>>,
+  TError = unknown,
+>(
+  params?: InstallmentControllerQueryParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof installmentControllerQuery>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getInstallmentControllerQueryQueryOptions(params, options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+/**
+ * @summary Get installment schedule summary for a booking
+ */
+export const installmentControllerFindByBookingId = (
+  bookingId: string,
+  params: InstallmentControllerFindByBookingIdParams,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<InstallmentScheduleSummaryDto>(
+    { url: `/api/v1/collection/installments/booking/${bookingId}`, method: 'GET', params, signal },
+    options,
+  );
+};
+
+export const getInstallmentControllerFindByBookingIdQueryKey = (
+  bookingId?: string,
+  params?: InstallmentControllerFindByBookingIdParams,
+) => {
+  return [
+    `/api/v1/collection/installments/booking/${bookingId}`,
+    ...(params ? [params] : []),
+  ] as const;
+};
+
+export const getInstallmentControllerFindByBookingIdQueryOptions = <
+  TData = Awaited<ReturnType<typeof installmentControllerFindByBookingId>>,
+  TError = unknown,
+>(
+  bookingId: string,
+  params: InstallmentControllerFindByBookingIdParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof installmentControllerFindByBookingId>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ?? getInstallmentControllerFindByBookingIdQueryKey(bookingId, params);
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof installmentControllerFindByBookingId>>
+  > = ({ signal }) =>
+    installmentControllerFindByBookingId(bookingId, params, requestOptions, signal);
+
+  return { queryKey, queryFn, enabled: !!bookingId, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof installmentControllerFindByBookingId>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type InstallmentControllerFindByBookingIdQueryResult = NonNullable<
+  Awaited<ReturnType<typeof installmentControllerFindByBookingId>>
+>;
+export type InstallmentControllerFindByBookingIdQueryError = unknown;
+
+export function useInstallmentControllerFindByBookingId<
+  TData = Awaited<ReturnType<typeof installmentControllerFindByBookingId>>,
+  TError = unknown,
+>(
+  bookingId: string,
+  params: InstallmentControllerFindByBookingIdParams,
+  options: {
+    query: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof installmentControllerFindByBookingId>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof installmentControllerFindByBookingId>>,
+          TError,
+          Awaited<ReturnType<typeof installmentControllerFindByBookingId>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useInstallmentControllerFindByBookingId<
+  TData = Awaited<ReturnType<typeof installmentControllerFindByBookingId>>,
+  TError = unknown,
+>(
+  bookingId: string,
+  params: InstallmentControllerFindByBookingIdParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof installmentControllerFindByBookingId>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof installmentControllerFindByBookingId>>,
+          TError,
+          Awaited<ReturnType<typeof installmentControllerFindByBookingId>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useInstallmentControllerFindByBookingId<
+  TData = Awaited<ReturnType<typeof installmentControllerFindByBookingId>>,
+  TError = unknown,
+>(
+  bookingId: string,
+  params: InstallmentControllerFindByBookingIdParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof installmentControllerFindByBookingId>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary Get installment schedule summary for a booking
+ */
+
+export function useInstallmentControllerFindByBookingId<
+  TData = Awaited<ReturnType<typeof installmentControllerFindByBookingId>>,
+  TError = unknown,
+>(
+  bookingId: string,
+  params: InstallmentControllerFindByBookingIdParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof installmentControllerFindByBookingId>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getInstallmentControllerFindByBookingIdQueryOptions(
+    bookingId,
+    params,
+    options,
+  );
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+/**
+ * @summary Get single installment details by ID
+ */
+export const installmentControllerFindById = (
+  id: string,
+  params: InstallmentControllerFindByIdParams,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<InstallmentResponseDto>(
+    { url: `/api/v1/collection/installments/${id}`, method: 'GET', params, signal },
+    options,
+  );
+};
+
+export const getInstallmentControllerFindByIdQueryKey = (
+  id?: string,
+  params?: InstallmentControllerFindByIdParams,
+) => {
+  return [`/api/v1/collection/installments/${id}`, ...(params ? [params] : [])] as const;
+};
+
+export const getInstallmentControllerFindByIdQueryOptions = <
+  TData = Awaited<ReturnType<typeof installmentControllerFindById>>,
+  TError = unknown,
+>(
+  id: string,
+  params: InstallmentControllerFindByIdParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof installmentControllerFindById>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getInstallmentControllerFindByIdQueryKey(id, params);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof installmentControllerFindById>>> = ({
+    signal,
+  }) => installmentControllerFindById(id, params, requestOptions, signal);
+
+  return { queryKey, queryFn, enabled: !!id, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof installmentControllerFindById>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type InstallmentControllerFindByIdQueryResult = NonNullable<
+  Awaited<ReturnType<typeof installmentControllerFindById>>
+>;
+export type InstallmentControllerFindByIdQueryError = unknown;
+
+export function useInstallmentControllerFindById<
+  TData = Awaited<ReturnType<typeof installmentControllerFindById>>,
+  TError = unknown,
+>(
+  id: string,
+  params: InstallmentControllerFindByIdParams,
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof installmentControllerFindById>>, TError, TData>
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof installmentControllerFindById>>,
+          TError,
+          Awaited<ReturnType<typeof installmentControllerFindById>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useInstallmentControllerFindById<
+  TData = Awaited<ReturnType<typeof installmentControllerFindById>>,
+  TError = unknown,
+>(
+  id: string,
+  params: InstallmentControllerFindByIdParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof installmentControllerFindById>>, TError, TData>
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof installmentControllerFindById>>,
+          TError,
+          Awaited<ReturnType<typeof installmentControllerFindById>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useInstallmentControllerFindById<
+  TData = Awaited<ReturnType<typeof installmentControllerFindById>>,
+  TError = unknown,
+>(
+  id: string,
+  params: InstallmentControllerFindByIdParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof installmentControllerFindById>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary Get single installment details by ID
+ */
+
+export function useInstallmentControllerFindById<
+  TData = Awaited<ReturnType<typeof installmentControllerFindById>>,
+  TError = unknown,
+>(
+  id: string,
+  params: InstallmentControllerFindByIdParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof installmentControllerFindById>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getInstallmentControllerFindByIdQueryOptions(id, params, options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+/**
+ * @summary Generate and persist installment schedule for a booking
+ */
+export const installmentControllerGenerateSchedule = (
+  generateScheduleDto: GenerateScheduleDto,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<InstallmentScheduleSummaryDto>(
+    {
+      url: `/api/v1/collection/installments/generate`,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      data: generateScheduleDto,
+      signal,
+    },
+    options,
+  );
+};
+
+export const getInstallmentControllerGenerateScheduleMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof installmentControllerGenerateSchedule>>,
+    TError,
+    { data: GenerateScheduleDto },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof installmentControllerGenerateSchedule>>,
+  TError,
+  { data: GenerateScheduleDto },
+  TContext
+> => {
+  const mutationKey = ['installmentControllerGenerateSchedule'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof installmentControllerGenerateSchedule>>,
+    { data: GenerateScheduleDto }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return installmentControllerGenerateSchedule(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type InstallmentControllerGenerateScheduleMutationResult = NonNullable<
+  Awaited<ReturnType<typeof installmentControllerGenerateSchedule>>
+>;
+export type InstallmentControllerGenerateScheduleMutationBody = GenerateScheduleDto;
+export type InstallmentControllerGenerateScheduleMutationError = unknown;
+
+/**
+ * @summary Generate and persist installment schedule for a booking
+ */
+export const useInstallmentControllerGenerateSchedule = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof installmentControllerGenerateSchedule>>,
+      TError,
+      { data: GenerateScheduleDto },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof installmentControllerGenerateSchedule>>,
+  TError,
+  { data: GenerateScheduleDto },
+  TContext
+> => {
+  const mutationOptions = getInstallmentControllerGenerateScheduleMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
 
 export const companyControllerGetProfile = (
   options?: SecondParameter<typeof customInstance>,

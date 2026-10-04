@@ -8,12 +8,11 @@
  */
 
 export interface CustomMilestoneDto {
-  /** Milestone name */
   name: string;
-  /** Exact milestone amount in paisa (integer string) */
+  /** Paisa amount as string */
   amountPaisa?: string;
-  /** Milestone percentage of remaining balance (e.g. 20 for 20%) */
+  /** Percentage of remaining amount */
   percentage?: number;
-  /** Specific milestone due date in YYYY-MM-DD format */
   dueDate?: string;
+  milestoneEvent?: string;
 }
