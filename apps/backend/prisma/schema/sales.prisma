@@ -1,0 +1,128 @@
+// Sales & Payment Plans (Task A4.1 - Payment Plan Templates & Installment Calculation Engine)
+// PRD MOD-PAYPLAN, MOD-INSTALLMENT, AT-23; architecture.md §9.1, §11
+
+model PaymentPlanTemplate {
+  id               String    @id @default(uuid(7)) @db.Uuid
+  companyId        String    @map("company_id") @db.Uuid
+  code             String    @db.VarChar(64)
+  name             String    @db.VarChar(255)
+  description      String?   @db.Text
+  planType         String    @default("EQUAL_INSTALLMENTS") @map("plan_type") @db.VarChar(32) // EQUAL_INSTALLMENTS | MILESTONE_BASED | CUSTOM
+  frequency        String    @default("MONTHLY") @db.VarChar(32) // MONTHLY | QUARTERLY | HALF_YEARLY | YEARLY | CUSTOM
+  installmentCount Int       @default(24) @map("installment_count") @db.Integer
+  minBookingPct    Decimal   @default(10.00) @map("min_booking_pct") @db.Decimal(5, 2)
+  downPaymentPct   Decimal   @default(0.00) @map("down_payment_pct") @db.Decimal(5, 2)
+  milestoneConfig  Json?     @map("milestone_config") @db.JsonB
+  isActive         Boolean   @default(true) @map("is_active")
+  isDefault        Boolean   @default(false) @map("is_default")
+  createdById      String?   @map("created_by_id") @db.Uuid
+  updatedById      String?   @map("updated_by_id") @db.Uuid
+  deletedAt        DateTime? @map("deleted_at") @db.Timestamptz
+  createdAt        DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt        DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+
+  @@unique([companyId, code])
+  @@index([companyId])
+  @@index([companyId, isActive])
+  @@index([companyId, isDefault])
+  @@index([companyId, createdAt])
+  @@map("sales_payment_plan_templates")
+}
+
+// Charge Types Catalogue (Task A4.2 - Charge Types & Fees Catalogue)
+// PRD MOD-CHARGES, §17; accounting-rules.md §2
+
+model ChargeType {
+  id                   String    @id @default(uuid(7)) @db.Uuid
+  companyId            String    @map("company_id") @db.Uuid
+  code                 String    @db.VarChar(64)
+  name                 String    @db.VarChar(255)
+  description          String?   @db.Text
+  calculationType      String    @default("FIXED") @map("calculation_type") @db.VarChar(32) // FIXED | PERCENTAGE
+  defaultAmountPaisa   BigInt?   @map("default_amount_paisa") @db.BigInt
+  defaultRatePct       Decimal?  @map("default_rate_pct") @db.Decimal(7, 4)
+  isIncludedInNetPrice Boolean   @default(false) @map("is_included_in_net_price")
+  payableStage         String    @default("AT_BOOKING") @map("payable_stage") @db.VarChar(32) // AT_BOOKING | IN_SCHEDULE | AT_HANDOVER | ON_DEMAND
+  vatRatePct           Decimal   @default(0.0000) @map("vat_rate_pct") @db.Decimal(7, 4)
+  accountCode          String?   @map("account_code") @db.VarChar(32)
+  isActive             Boolean   @default(true) @map("is_active")
+  createdById          String?   @map("created_by_id") @db.Uuid
+  updatedById          String?   @map("updated_by_id") @db.Uuid
+  deletedAt            DateTime? @map("deleted_at") @db.Timestamptz
+  createdAt            DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt            DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+
+  @@unique([companyId, code])
+  @@index([companyId])
+  @@index([companyId, isActive])
+  @@index([companyId, payableStage])
+  @@index([companyId, createdAt])
+  @@map("sales_charge_types")
+}
+
+// Quotation Management (Task A4.3 - Quotation Generation & Branded PDF)
+// PRD MOD-QUOTATION, §9.5; design.md §12; architecture.md §15, §20.2
+
+model Quotation {
+  id                    String  @id @default(uuid(7)) @db.Uuid
+  companyId             String  @map("company_id") @db.Uuid
+  branchId              String? @map("branch_id") @db.Uuid
+  quotationNumber       String  @map("quotation_number") @db.VarChar(64)
+  status                String  @default("Draft") @db.VarChar(32) // Draft, Pending Approval, Approved, Sent, Converted, Expired, Rejected
+  customerId            String? @map("customer_id") @db.Uuid
+  leadId                String? @map("lead_id") @db.Uuid
+  propertyId            String  @map("property_id") @db.Uuid
+  paymentPlanTemplateId String? @map("payment_plan_template_id") @db.Uuid
+
+  quotationDate DateTime @default(now()) @map("quotation_date") @db.Timestamptz
+  validUntil    DateTime @map("valid_until") @db.Timestamptz
+
+  // Price breakdown
+  basePricePaisa      BigInt  @map("base_price_paisa") @db.BigInt
+  premiumAmountPaisa  BigInt  @default(0) @map("premium_amount_paisa") @db.BigInt
+  discountAmountPaisa BigInt  @default(0) @map("discount_amount_paisa") @db.BigInt
+  discountPct         Decimal @default(0.00) @map("discount_pct") @db.Decimal(5, 2)
+  netPricePaisa       BigInt  @map("net_price_paisa") @db.BigInt
+
+  // Charges & VAT totals
+  totalIncludedChargesPaisa   BigInt @default(0) @map("total_included_charges_paisa") @db.BigInt
+  totalAdditionalChargesPaisa BigInt @default(0) @map("total_additional_charges_paisa") @db.BigInt
+  totalVatPaisa               BigInt @default(0) @map("total_vat_paisa") @db.BigInt
+  grandTotalPaisa             BigInt @map("grand_total_paisa") @db.BigInt
+
+  // Snapshots for audit & reproducibility
+  chargesSnapshot      Json? @default("[]") @map("charges_snapshot") @db.JsonB
+  installmentsSnapshot Json? @default("[]") @map("installments_snapshot") @db.JsonB
+  pricingSnapshot      Json? @default("{}") @map("pricing_snapshot") @db.JsonB
+
+  // Discount approval flow
+  requiresApproval Boolean   @default(false) @map("requires_approval")
+  approvalStatus   String?   @map("approval_status") @db.VarChar(32) // PENDING, APPROVED, REJECTED, AUTO_APPROVED
+  approvedById     String?   @map("approved_by_id") @db.Uuid
+  approvedAt       DateTime? @map("approved_at") @db.Timestamptz
+  rejectionReason  String?   @map("rejection_reason") @db.Text
+
+  // Booking conversion linkage
+  convertedAt DateTime? @map("converted_at") @db.Timestamptz
+  bookingId   String?   @map("booking_id") @db.Uuid
+
+  notes          String? @db.Text
+  terms          String? @db.Text
+  pdfStoragePath String? @map("pdf_storage_path") @db.VarChar(512)
+
+  createdById String?   @map("created_by_id") @db.Uuid
+  updatedById String?   @map("updated_by_id") @db.Uuid
+  deletedAt   DateTime? @map("deleted_at") @db.Timestamptz
+  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt   DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+
+  @@unique([companyId, quotationNumber])
+  @@index([companyId])
+  @@index([companyId, status])
+  @@index([companyId, propertyId])
+  @@index([companyId, customerId])
+  @@index([companyId, leadId])
+  @@index([companyId, validUntil])
+  @@index([companyId, createdAt])
+  @@map("sales_quotations")
+}

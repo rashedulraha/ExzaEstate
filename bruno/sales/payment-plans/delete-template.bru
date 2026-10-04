@@ -1,0 +1,15 @@
+meta {
+  name: Delete Payment Plan Template
+  type: http
+  seq: 6
+}
+
+delete {
+  url: {{baseUrl}}/sales/payment-plans/{{templateId}}
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}

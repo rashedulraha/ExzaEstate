@@ -1,0 +1,22 @@
+meta {
+  name: Update Payment Plan Template
+  type: http
+  seq: 5
+}
+
+patch {
+  url: {{baseUrl}}/sales/payment-plans/{{templateId}}
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+body:json {
+  {
+    "name": "Updated 24-Month Installment Scheme",
+    "isActive": true
+  }
+}

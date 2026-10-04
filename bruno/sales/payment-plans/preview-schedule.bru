@@ -1,0 +1,25 @@
+meta {
+  name: Preview Installment Schedule
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/sales/payment-plans/preview
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+body:json {
+  {
+    "netPricePaisa": "500000000",
+    "installmentCount": 24,
+    "firstDueDate": "2026-03-01",
+    "frequency": "MONTHLY",
+    "minBookingPct": 10
+  }
+}

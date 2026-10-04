@@ -1,0 +1,30 @@
+meta {
+  name: Create Payment Plan Template
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/sales/payment-plans
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+body:json {
+  {
+    "code": "CUSTOM-24M",
+    "name": "Custom 24-Month Installment Scheme",
+    "description": "Tailored scheme with 15% booking and 24 monthly installments",
+    "planType": "EQUAL_INSTALLMENTS",
+    "frequency": "MONTHLY",
+    "installmentCount": 24,
+    "minBookingPct": 15,
+    "downPaymentPct": 5,
+    "isActive": true,
+    "isDefault": false
+  }
+}

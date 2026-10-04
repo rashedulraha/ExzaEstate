@@ -1,0 +1,15 @@
+meta {
+  name: Get Payment Plan Template
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/sales/payment-plans/{{templateId}}
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
