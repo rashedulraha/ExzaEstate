@@ -23,6 +23,10 @@
                         "status": {
                           "type": "string",
                           "example": "ok"
+                        },
+                        "minSupportedClientVersion": {
+                          "type": "string",
+                          "example": "0.1.0"
                         }
                       }
                     }
@@ -3357,6 +3361,22 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "idempotency-key",
+            "required": true,
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -3632,6 +3652,702 @@
         ],
         "summary": "Generate and persist installment schedule for a booking",
         "tags": ["Collection - Installments"]
+      }
+    },
+    "/api/v1/collection/cheques/{paymentId}/clear": {
+      "post": {
+        "operationId": "ChequeController_clearCheque",
+        "parameters": [
+          {
+            "name": "paymentId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClearChequeDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Clear a received cheque, post accounting, issue receipt",
+        "tags": ["Collection - Cheques"]
+      }
+    },
+    "/api/v1/collection/cheques/{paymentId}/bounce": {
+      "post": {
+        "operationId": "ChequeController_bounceCheque",
+        "parameters": [
+          {
+            "name": "paymentId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BounceChequeDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Mark a cheque payment as bounced and cancel the payment",
+        "tags": ["Collection - Cheques"]
+      }
+    },
+    "/api/v1/collection/cheques/{paymentId}/events": {
+      "get": {
+        "operationId": "ChequeController_getChequeEvents",
+        "parameters": [
+          {
+            "name": "paymentId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get audit history of cheque events for a payment",
+        "tags": ["Collection - Cheques"]
+      }
+    },
+    "/api/v1/collection/receipts": {
+      "get": {
+        "operationId": "ReceiptController_listReceipts",
+        "parameters": [
+          {
+            "name": "bookingId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "customerId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "isVoid",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 20,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "List and query money receipts",
+        "tags": ["Collection - Receipts"]
+      }
+    },
+    "/api/v1/collection/receipts/{id}": {
+      "get": {
+        "operationId": "ReceiptController_getReceiptById",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get receipt by ID",
+        "tags": ["Collection - Receipts"]
+      }
+    },
+    "/api/v1/collection/receipts/{id}/pdf": {
+      "get": {
+        "operationId": "ReceiptController_downloadReceiptPdf",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "lang",
+            "required": false,
+            "in": "query",
+            "description": "Language: en (default) or bn",
+            "schema": {
+              "enum": ["en", "bn"],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Receipt PDF buffer"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Generate Money Receipt PDF in English or Bengali (AT-39)",
+        "tags": ["Collection - Receipts"]
+      }
+    },
+    "/api/v1/collection/receipts/{id}/reprint": {
+      "post": {
+        "operationId": "ReceiptController_reprintReceipt",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Reprint receipt with Duplicate copy tracking",
+        "tags": ["Collection - Receipts"]
+      }
+    },
+    "/api/v1/collection/payments/{id}/reverse": {
+      "post": {
+        "operationId": "ReversalController_reversePayment",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReversePaymentDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Reverse a posted payment, void receipt and re-open installments",
+        "tags": ["Collection - Reversals"]
+      }
+    },
+    "/api/v1/collection/statements/customer/{customerId}": {
+      "get": {
+        "operationId": "StatementController_getCustomerStatement",
+        "parameters": [
+          {
+            "name": "customerId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "fromDate",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "example": "2026-01-01",
+              "type": "string"
+            }
+          },
+          {
+            "name": "toDate",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "example": "2026-12-31",
+              "type": "string"
+            }
+          },
+          {
+            "name": "bookingId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Generate customer statement of account",
+        "tags": ["Collection - Customer Statements & AR Reconciliation"]
+      }
+    },
+    "/api/v1/collection/statements/customer/{customerId}/pdf": {
+      "get": {
+        "operationId": "StatementController_getCustomerStatementPdf",
+        "parameters": [
+          {
+            "name": "customerId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "fromDate",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "example": "2026-01-01",
+              "type": "string"
+            }
+          },
+          {
+            "name": "toDate",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "example": "2026-12-31",
+              "type": "string"
+            }
+          },
+          {
+            "name": "bookingId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Export customer statement as PDF",
+        "tags": ["Collection - Customer Statements & AR Reconciliation"]
+      }
+    },
+    "/api/v1/collection/statements/customer/{customerId}/reconciliation": {
+      "get": {
+        "operationId": "StatementController_getArReconciliation",
+        "parameters": [
+          {
+            "name": "customerId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Reconcile customer statement against AR ledger and AR aging",
+        "tags": ["Collection - Customer Statements & AR Reconciliation"]
+      }
+    },
+    "/api/v1/collection/refunds": {
+      "get": {
+        "operationId": "RefundController_listRefunds",
+        "parameters": [
+          {
+            "name": "bookingId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "customerId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": ["Requested", "Approved", "Paid", "Rejected"]
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "example": 1,
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "example": 20,
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "List and query refunds",
+        "tags": ["Collection - Refunds"]
+      }
+    },
+    "/api/v1/collection/refunds/{id}": {
+      "get": {
+        "operationId": "RefundController_getRefundById",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get refund by ID",
+        "tags": ["Collection - Refunds"]
+      }
+    },
+    "/api/v1/collection/refunds/{id}/pay": {
+      "post": {
+        "operationId": "RefundController_payRefund",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PayRefundDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Disburse refund payment (posts REFUND_PAID journal)",
+        "tags": ["Collection - Refunds"]
+      }
+    },
+    "/api/v1/collection/late-fees/installments/{installmentId}/charge": {
+      "post": {
+        "operationId": "LateFeeController_chargeLateFee",
+        "parameters": [
+          {
+            "name": "installmentId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChargeLateFeeDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Calculate and charge late fee for an overdue installment",
+        "tags": ["Collection - Late Fees"]
+      }
+    },
+    "/api/v1/collection/late-fees/{id}/waive": {
+      "post": {
+        "operationId": "LateFeeController_waiveLateFee",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WaiveLateFeeDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Waive charged late fee",
+        "tags": ["Collection - Late Fees"]
+      }
+    },
+    "/api/v1/collection/waivers/installments/{installmentId}/waive": {
+      "post": {
+        "operationId": "WaiverController_waiveInstallment",
+        "parameters": [
+          {
+            "name": "installmentId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestWaiverDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Waive installment principal with adjustment posting",
+        "tags": ["Collection - Installment Waivers"]
+      }
+    },
+    "/api/v1/collection/aging": {
+      "get": {
+        "operationId": "AgingController_getAgingReport",
+        "parameters": [
+          {
+            "name": "asOfDate",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "example": "2026-03-31",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get AR aging report with 1–7, 8–30, 31–60, 61–90, 90+ buckets",
+        "tags": ["Collection - AR Aging"]
       }
     },
     "/api/v1/company/profile": {
@@ -7207,6 +7923,286 @@
         "tags": ["Reports - Financial"]
       }
     },
+    "/api/v1/reports/profitability": {
+      "get": {
+        "operationId": "ReportsController_getProjectProfitability",
+        "parameters": [
+          {
+            "name": "projectId",
+            "required": false,
+            "in": "query",
+            "description": "Filter by specific project ID (UUID)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "startDate",
+            "required": false,
+            "in": "query",
+            "description": "Start date for revenue/cost recognition (ISO string)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "endDate",
+            "required": false,
+            "in": "query",
+            "description": "End date for revenue/cost recognition (ISO string)",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectProfitabilityReportDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Generate Project Profitability report",
+        "tags": ["Reports - Financial"]
+      }
+    },
+    "/api/v1/reports/profitability/export": {
+      "post": {
+        "operationId": "ReportsController_exportProfitability",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExportReportDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportExportJobResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Queue asynchronous export of Project Profitability report",
+        "tags": ["Reports - Financial"]
+      }
+    },
+    "/api/v1/reports/sales": {
+      "get": {
+        "operationId": "ReportsController_getSalesReport",
+        "parameters": [
+          {
+            "name": "startDate",
+            "required": false,
+            "in": "query",
+            "description": "Filter by start date (ISO string)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "endDate",
+            "required": false,
+            "in": "query",
+            "description": "Filter by end date (ISO string)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "projectId",
+            "required": false,
+            "in": "query",
+            "description": "Filter by specific project UUID",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "branchId",
+            "required": false,
+            "in": "query",
+            "description": "Filter by branch UUID",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "salesExecutiveId",
+            "required": false,
+            "in": "query",
+            "description": "Filter by sales executive UUID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Generate Sales Report",
+        "tags": ["Reports - Financial"]
+      }
+    },
+    "/api/v1/reports/collection": {
+      "get": {
+        "operationId": "ReportsController_getCollectionReport",
+        "parameters": [
+          {
+            "name": "startDate",
+            "required": false,
+            "in": "query",
+            "description": "Filter by start date (ISO string)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "endDate",
+            "required": false,
+            "in": "query",
+            "description": "Filter by end date (ISO string)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "projectId",
+            "required": false,
+            "in": "query",
+            "description": "Filter by specific project UUID",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "branchId",
+            "required": false,
+            "in": "query",
+            "description": "Filter by branch UUID",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "salesExecutiveId",
+            "required": false,
+            "in": "query",
+            "description": "Filter by sales executive UUID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Generate Collection Report",
+        "tags": ["Reports - Financial"]
+      }
+    },
+    "/api/v1/reports/inventory": {
+      "get": {
+        "operationId": "ReportsController_getInventoryReport",
+        "parameters": [
+          {
+            "name": "startDate",
+            "required": false,
+            "in": "query",
+            "description": "Filter by start date (ISO string)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "endDate",
+            "required": false,
+            "in": "query",
+            "description": "Filter by end date (ISO string)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "projectId",
+            "required": false,
+            "in": "query",
+            "description": "Filter by specific project UUID",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "branchId",
+            "required": false,
+            "in": "query",
+            "description": "Filter by branch UUID",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "salesExecutiveId",
+            "required": false,
+            "in": "query",
+            "description": "Filter by sales executive UUID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Generate Property Inventory Status Report",
+        "tags": ["Reports - Financial"]
+      }
+    },
     "/api/v1/sales/payment-plans/preview": {
       "post": {
         "operationId": "PaymentPlanController_previewSchedule",
@@ -8389,6 +9385,114 @@
         "tags": ["Sales - Agreements"]
       }
     },
+    "/api/v1/sales/bookings/{bookingId}/cancellation/preview": {
+      "get": {
+        "operationId": "CancellationController_previewCancellation",
+        "parameters": [
+          {
+            "name": "bookingId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "deductionRatePct",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "deductionPaisa",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Preview booking cancellation deduction and refund amounts",
+        "tags": ["Sales - Booking Cancellation"]
+      }
+    },
+    "/api/v1/sales/bookings/{bookingId}/cancellation": {
+      "post": {
+        "operationId": "CancellationController_cancelBooking",
+        "parameters": [
+          {
+            "name": "bookingId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestCancellationDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Execute booking cancellation (reverses sale, posts deduction, creates refund)",
+        "tags": ["Sales - Booking Cancellation"]
+      }
+    },
+    "/api/v1/sales/transfers": {
+      "post": {
+        "operationId": "BookingTransferController_executeTransfer",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestTransferDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Execute booking transfer (name transfer) to new customer",
+        "tags": ["Sales: Booking Transfers"]
+      }
+    },
     "/api/v1/settings": {
       "get": {
         "operationId": "SettingsController_getAllSettings",
@@ -8779,6 +9883,1418 @@
           }
         },
         "tags": ["SystemHealth"]
+      }
+    },
+    "/api/v1/tenant/import": {
+      "post": {
+        "operationId": "TenantImportController_importTenant",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Import a local standalone .exzaexport bundle into Cloud platform (Task A10.4 / AT-34)",
+        "tags": ["Tenant Import (Local to Cloud Pipeline)"]
+      }
+    },
+    "/api/v1/migration/batches": {
+      "post": {
+        "operationId": "MigrationController_createBatch",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateMigrationBatchDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Create a new go-live migration batch",
+        "tags": ["Operations - Go-Live Migration"]
+      }
+    },
+    "/api/v1/migration/batches/{batchId}/opening-balance": {
+      "post": {
+        "operationId": "MigrationController_postOpeningBalance",
+        "parameters": [
+          {
+            "name": "batchId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PostOpeningBalanceDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Post opening balance journal for the batch",
+        "tags": ["Operations - Go-Live Migration"]
+      }
+    },
+    "/api/v1/migration/batches/{batchId}/legacy-bookings": {
+      "post": {
+        "operationId": "MigrationController_addLegacyBooking",
+        "parameters": [
+          {
+            "name": "batchId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddLegacyBookingDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Add a legacy booking record to the migration batch",
+        "tags": ["Operations - Go-Live Migration"]
+      }
+    },
+    "/api/v1/migration/batches/{batchId}/reconciliation": {
+      "get": {
+        "operationId": "MigrationController_getReconciliationGate",
+        "parameters": [
+          {
+            "name": "batchId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Evaluate reconciliation gate (Opening AR vs Σ Legacy Outstanding)",
+        "tags": ["Operations - Go-Live Migration"]
+      }
+    },
+    "/api/v1/migration/batches/{batchId}/finalize": {
+      "post": {
+        "operationId": "MigrationController_finalizeBatch",
+        "parameters": [
+          {
+            "name": "batchId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FinalizeMigrationBatchDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Finalize and lock the migration batch (enforces reconciliation gate)",
+        "tags": ["Operations - Go-Live Migration"]
+      }
+    },
+    "/api/v1/migration/csv/template/{entity}": {
+      "get": {
+        "operationId": "CsvMigrationController_getTemplate",
+        "parameters": [
+          {
+            "name": "entity",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": ["CsvMigration"]
+      }
+    },
+    "/api/v1/migration/csv/validate/{entity}": {
+      "post": {
+        "operationId": "CsvMigrationController_validate",
+        "parameters": [
+          {
+            "name": "entity",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CsvPayloadDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": ["CsvMigration"]
+      }
+    },
+    "/api/v1/migration/csv/import/{entity}": {
+      "post": {
+        "operationId": "CsvMigrationController_import",
+        "parameters": [
+          {
+            "name": "entity",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CsvPayloadDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": ["CsvMigration"]
+      }
+    },
+    "/api/v1/expenses/categories": {
+      "post": {
+        "operationId": "ExpenseController_createCategory",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCategoryDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Create an expense category",
+        "tags": ["Expenses"]
+      },
+      "get": {
+        "operationId": "ExpenseController_listCategories",
+        "parameters": [
+          {
+            "name": "activeOnly",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "List active expense categories",
+        "tags": ["Expenses"]
+      }
+    },
+    "/api/v1/expenses/vouchers": {
+      "post": {
+        "operationId": "ExpenseController_createVoucher",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateExpenseDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Create a new expense voucher (draft)",
+        "tags": ["Expenses"]
+      }
+    },
+    "/api/v1/expenses/vouchers/{id}": {
+      "get": {
+        "operationId": "ExpenseController_getVoucher",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get an expense voucher by ID",
+        "tags": ["Expenses"]
+      }
+    },
+    "/api/v1/expenses/vouchers/{id}/submit": {
+      "post": {
+        "operationId": "ExpenseController_submitVoucher",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Submit expense voucher for approval",
+        "tags": ["Expenses"]
+      }
+    },
+    "/api/v1/expenses/vouchers/{id}/approve": {
+      "post": {
+        "operationId": "ExpenseController_approveVoucher",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Approve expense voucher (GM or MD based on threshold)",
+        "tags": ["Expenses"]
+      }
+    },
+    "/api/v1/expenses/vouchers/{id}/verify": {
+      "post": {
+        "operationId": "ExpenseController_verifyVoucher",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Accounts verification of approved expense voucher",
+        "tags": ["Expenses"]
+      }
+    },
+    "/api/v1/expenses/vouchers/{id}/pay": {
+      "post": {
+        "operationId": "ExpenseController_payVoucher",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PayExpenseDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Disburse payment and post EXPENSE_APPROVED_PAID journal",
+        "tags": ["Expenses"]
+      }
+    },
+    "/api/v1/expenses/vouchers/{id}/reject": {
+      "post": {
+        "operationId": "ExpenseController_rejectVoucher",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RejectExpenseDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Reject an expense voucher",
+        "tags": ["Expenses"]
+      }
+    },
+    "/api/v1/expenses/projects/{projectId}/rollup": {
+      "get": {
+        "operationId": "ExpenseController_getProjectRollup",
+        "parameters": [
+          {
+            "name": "projectId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get total paid expense rollup for a project",
+        "tags": ["Expenses"]
+      }
+    },
+    "/api/v1/budgets": {
+      "post": {
+        "operationId": "BudgetController_createBudget",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBudgetDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Create project or category budget",
+        "tags": ["Budgets"]
+      },
+      "get": {
+        "operationId": "BudgetController_listBudgets",
+        "parameters": [
+          {
+            "name": "fiscalYear",
+            "required": false,
+            "in": "query",
+            "description": "Filter by fiscal year",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "projectId",
+            "required": false,
+            "in": "query",
+            "description": "Filter by project ID",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "categoryId",
+            "required": false,
+            "in": "query",
+            "description": "Filter by category ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "List budgets with spend metrics",
+        "tags": ["Budgets"]
+      }
+    },
+    "/api/v1/vendors": {
+      "post": {
+        "operationId": "VendorController_createVendor",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateVendorDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Create a new vendor",
+        "tags": ["Vendors"]
+      },
+      "get": {
+        "operationId": "VendorController_listVendors",
+        "parameters": [
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "description": "Search by name, phone, trade license",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "isActive",
+            "required": false,
+            "in": "query",
+            "description": "Filter by active status",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "List vendors with optional search filter",
+        "tags": ["Vendors"]
+      }
+    },
+    "/api/v1/vendors/{id}": {
+      "get": {
+        "operationId": "VendorController_getVendor",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get vendor details by ID",
+        "tags": ["Vendors"]
+      },
+      "patch": {
+        "operationId": "VendorController_updateVendor",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateVendorDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Update vendor profile",
+        "tags": ["Vendors"]
+      }
+    },
+    "/api/v1/vendor-bills": {
+      "post": {
+        "operationId": "VendorBillController_createBill",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateVendorBillDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Create and optionally post a vendor bill",
+        "tags": ["Vendor Bills"]
+      }
+    },
+    "/api/v1/vendor-bills/{id}": {
+      "get": {
+        "operationId": "VendorBillController_getBill",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get vendor bill details by ID",
+        "tags": ["Vendor Bills"]
+      }
+    },
+    "/api/v1/vendor-bills/{id}/post": {
+      "post": {
+        "operationId": "VendorBillController_postBill",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Post a draft vendor bill to accounts payable",
+        "tags": ["Vendor Bills"]
+      }
+    },
+    "/api/v1/vendor-payments": {
+      "post": {
+        "operationId": "VendorPaymentController_createPayment",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateVendorPaymentDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Disburse payment to vendor and post AP settlement journal",
+        "tags": ["Vendor Payments"]
+      }
+    },
+    "/api/v1/arap/vendors/{id}/balance": {
+      "get": {
+        "operationId": "VendorApController_getBalance",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get vendor AP balance reconciled with Account 2100",
+        "tags": ["Accounts Payable"]
+      }
+    },
+    "/api/v1/arap/vendors/aging": {
+      "get": {
+        "operationId": "VendorApController_getAging",
+        "parameters": [
+          {
+            "name": "asOfDate",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get Accounts Payable aging report",
+        "tags": ["Accounts Payable"]
+      }
+    },
+    "/api/v1/arap/vendors/{id}/ledger": {
+      "get": {
+        "operationId": "VendorApController_getLedger",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get vendor AP journal ledger",
+        "tags": ["Accounts Payable"]
+      }
+    },
+    "/api/v1/commissions/brokers": {
+      "post": {
+        "operationId": "CommissionController_createBroker",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBrokerDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Register a new broker",
+        "tags": ["Commissions & Brokers"]
+      }
+    },
+    "/api/v1/commissions/rules": {
+      "post": {
+        "operationId": "CommissionController_createRule",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCommissionRuleDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Create a commission rule",
+        "tags": ["Commissions & Brokers"]
+      }
+    },
+    "/api/v1/commissions/{id}/approve": {
+      "post": {
+        "operationId": "CommissionController_approveCommission",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Approve earned commission and post COMMISSION_APPROVED journal",
+        "tags": ["Commissions & Brokers"]
+      }
+    },
+    "/api/v1/commissions/{id}/pay": {
+      "post": {
+        "operationId": "CommissionController_payCommission",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PayCommissionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Pay approved commission and post COMMISSION_PAID journal",
+        "tags": ["Commissions & Brokers"]
+      }
+    },
+    "/api/v1/commissions/bookings/{bookingId}/accrue": {
+      "post": {
+        "operationId": "CommissionController_accrueCommission",
+        "parameters": [
+          {
+            "name": "bookingId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Accrue earned commission on booking confirmation (no journal)",
+        "tags": ["Commissions & Brokers"]
+      }
+    },
+    "/api/v1/events/stream": {
+      "get": {
+        "operationId": "RealtimeController_stream",
+        "parameters": [
+          {
+            "name": "last-event-id",
+            "required": true,
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "lastEventId",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Continuous text/event-stream connection with 25s heartbeats"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Real-time Server-Sent Events (SSE) stream for tenant-scoped updates",
+        "tags": ["Realtime Events"]
+      }
+    },
+    "/api/v1/dashboard/summary": {
+      "get": {
+        "operationId": "DashboardController_getSummary",
+        "parameters": [
+          {
+            "name": "startDate",
+            "required": false,
+            "in": "query",
+            "description": "Filter by start date (ISO string)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "endDate",
+            "required": false,
+            "in": "query",
+            "description": "Filter by end date (ISO string)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "projectId",
+            "required": false,
+            "in": "query",
+            "description": "Filter by specific project UUID",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "branchId",
+            "required": false,
+            "in": "query",
+            "description": "Filter by branch UUID",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "salesExecutiveId",
+            "required": false,
+            "in": "query",
+            "description": "Filter by sales executive UUID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Aggregated management KPIs"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get executive management dashboard KPIs (AT-15: identical to reports)",
+        "tags": ["Management Dashboard & KPIs"]
+      }
+    },
+    "/api/v1/dashboard/sales-performance": {
+      "get": {
+        "operationId": "DashboardController_getSalesPerformance",
+        "parameters": [
+          {
+            "name": "startDate",
+            "required": false,
+            "in": "query",
+            "description": "Filter by start date (ISO string)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "endDate",
+            "required": false,
+            "in": "query",
+            "description": "Filter by end date (ISO string)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "projectId",
+            "required": false,
+            "in": "query",
+            "description": "Filter by specific project UUID",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "branchId",
+            "required": false,
+            "in": "query",
+            "description": "Filter by branch UUID",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "salesExecutiveId",
+            "required": false,
+            "in": "query",
+            "description": "Filter by sales executive UUID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Salesperson performance items"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get salesperson performance breakdown",
+        "tags": ["Management Dashboard & KPIs"]
+      }
+    },
+    "/api/v1/search": {
+      "get": {
+        "operationId": "SearchController_globalSearch",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": ["Search"]
+      }
+    },
+    "/api/v1/local-data/provision": {
+      "post": {
+        "operationId": "LocalDataController_provision",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LocalProvisioningDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Provision first-launch company and administrator for standalone local mode",
+        "tags": ["Local Standalone Data Lifecycle"]
+      }
+    },
+    "/api/v1/local-data/is-provisioned": {
+      "get": {
+        "operationId": "LocalDataController_isProvisioned",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Check if the local standalone company has already been provisioned",
+        "tags": ["Local Standalone Data Lifecycle"]
+      }
+    },
+    "/api/v1/local-data/backup": {
+      "post": {
+        "operationId": "LocalDataController_createBackup",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateLocalBackupDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Trigger manual local backup (.exzabackup)",
+        "tags": ["Local Standalone Data Lifecycle"]
+      }
+    },
+    "/api/v1/local-data/restore": {
+      "post": {
+        "operationId": "LocalDataController_restoreBackup",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RestoreLocalBackupDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Restore standalone database from a backup bundle",
+        "tags": ["Local Standalone Data Lifecycle"]
+      }
+    },
+    "/api/v1/local-data/status": {
+      "get": {
+        "operationId": "LocalDataController_getStatus",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LocalBackupStatusResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get backup health status and 7-day warning banner",
+        "tags": ["Local Standalone Data Lifecycle"]
+      }
+    },
+    "/api/v1/local-data/export": {
+      "get": {
+        "operationId": "LocalDataController_exportAll",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Export all company data (.exzaexport + CSV). Unblocked even if license is expired.",
+        "tags": ["Local Standalone Data Lifecycle"]
       }
     }
   },
@@ -10769,6 +13285,120 @@
           }
         },
         "required": ["bookingId", "firstDueDate"]
+      },
+      "ClearChequeDto": {
+        "type": "object",
+        "properties": {
+          "clearingDate": {
+            "type": "string",
+            "example": "2026-10-06",
+            "description": "Clearing date YYYY-MM-DD"
+          },
+          "bankAccountCode": {
+            "type": "string",
+            "example": "1020",
+            "description": "Target bank account code"
+          },
+          "notes": {
+            "type": "string",
+            "example": "Cleared via Dhaka Bank principal branch"
+          }
+        }
+      },
+      "BounceChequeDto": {
+        "type": "object",
+        "properties": {
+          "bounceReason": {
+            "type": "string",
+            "example": "Insufficient funds"
+          },
+          "notes": {
+            "type": "string",
+            "example": "Dishonour memo attached"
+          }
+        },
+        "required": ["bounceReason"]
+      },
+      "ReversePaymentDto": {
+        "type": "object",
+        "properties": {
+          "reason": {
+            "type": "string",
+            "example": "Payment posted in error to wrong account"
+          },
+          "approvalId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": ["reason"]
+      },
+      "PayRefundDto": {
+        "type": "object",
+        "properties": {
+          "paymentMethod": {
+            "type": "string",
+            "example": "BANK_TRANSFER",
+            "enum": ["BANK_TRANSFER", "CHEQUE", "CASH"]
+          },
+          "bankAccountId": {
+            "type": "string"
+          },
+          "bankAccountCode": {
+            "type": "string"
+          },
+          "reference": {
+            "type": "string",
+            "example": "CHQ-987654"
+          },
+          "notes": {
+            "type": "string"
+          }
+        },
+        "required": ["paymentMethod"]
+      },
+      "ChargeLateFeeDto": {
+        "type": "object",
+        "properties": {
+          "asOfDate": {
+            "type": "string",
+            "example": "2026-03-15"
+          },
+          "ratePct": {
+            "type": "number",
+            "example": 2,
+            "description": "Override monthly rate percentage (e.g. 2%)"
+          },
+          "graceDays": {
+            "type": "number",
+            "example": 7
+          }
+        }
+      },
+      "WaiveLateFeeDto": {
+        "type": "object",
+        "properties": {
+          "reason": {
+            "type": "string",
+            "example": "Approved customer hardship relief by MD"
+          }
+        },
+        "required": ["reason"]
+      },
+      "RequestWaiverDto": {
+        "type": "object",
+        "properties": {
+          "amountPaisa": {
+            "type": "string",
+            "example": "10000000",
+            "description": "Amount to waive in paisa. If omitted, full remaining amount is waived."
+          },
+          "reason": {
+            "type": "string",
+            "example": "Management approved discount/waiver for early bulk payment"
+          }
+        },
+        "required": ["reason"]
       },
       "UpdateCompanyProfileDto": {
         "type": "object",
@@ -13412,6 +16042,168 @@
           "netProfitMarginPct"
         ]
       },
+      "ProjectProfitabilitySummaryDto": {
+        "type": "object",
+        "properties": {
+          "totalRevenuePaisa": {
+            "type": "string",
+            "description": "Total portfolio revenue in paisa"
+          },
+          "totalCostPaisa": {
+            "type": "string",
+            "description": "Total portfolio cost in paisa"
+          },
+          "totalProfitPaisa": {
+            "type": "string",
+            "description": "Total portfolio profit in paisa"
+          },
+          "overallMarginPercent": {
+            "type": "number",
+            "description": "Overall margin percentage"
+          },
+          "profitableProjectsCount": {
+            "type": "number",
+            "description": "Number of profitable projects"
+          },
+          "lossMakingProjectsCount": {
+            "type": "number",
+            "description": "Number of loss-making projects"
+          }
+        },
+        "required": [
+          "totalRevenuePaisa",
+          "totalCostPaisa",
+          "totalProfitPaisa",
+          "overallMarginPercent",
+          "profitableProjectsCount",
+          "lossMakingProjectsCount"
+        ]
+      },
+      "ProjectCostBreakdownDto": {
+        "type": "object",
+        "properties": {
+          "landCostPaisa": {
+            "type": "string",
+            "description": "Land cost in paisa"
+          },
+          "developmentCostPaisa": {
+            "type": "string",
+            "description": "Development cost in paisa"
+          },
+          "marketingCostPaisa": {
+            "type": "string",
+            "description": "Marketing cost in paisa"
+          },
+          "adminCostPaisa": {
+            "type": "string",
+            "description": "Administrative cost in paisa"
+          },
+          "otherCostPaisa": {
+            "type": "string",
+            "description": "Other cost in paisa"
+          },
+          "totalCostPaisa": {
+            "type": "string",
+            "description": "Total cost in paisa"
+          }
+        },
+        "required": [
+          "landCostPaisa",
+          "developmentCostPaisa",
+          "marketingCostPaisa",
+          "adminCostPaisa",
+          "otherCostPaisa",
+          "totalCostPaisa"
+        ]
+      },
+      "ProjectProfitabilityItemDto": {
+        "type": "object",
+        "properties": {
+          "projectId": {
+            "type": "string",
+            "description": "Project UUID"
+          },
+          "projectCode": {
+            "type": "string",
+            "description": "Project code"
+          },
+          "projectName": {
+            "type": "string",
+            "description": "Project name"
+          },
+          "totalRevenuePaisa": {
+            "type": "string",
+            "description": "Total recognized revenue in paisa"
+          },
+          "costBreakdown": {
+            "$ref": "#/components/schemas/ProjectCostBreakdownDto"
+          },
+          "totalCostPaisa": {
+            "type": "string",
+            "description": "Total cost in paisa"
+          },
+          "netProfitPaisa": {
+            "type": "string",
+            "description": "Net profit in paisa"
+          },
+          "profitMarginPercent": {
+            "type": "number",
+            "description": "Profit margin percentage"
+          },
+          "isProfitable": {
+            "type": "boolean",
+            "description": "Whether project is profitable"
+          },
+          "estimatedBudgetPaisa": {
+            "type": "object",
+            "description": "Estimated budget in paisa",
+            "nullable": true
+          },
+          "budgetVariancePaisa": {
+            "type": "object",
+            "description": "Budget variance in paisa",
+            "nullable": true
+          }
+        },
+        "required": [
+          "projectId",
+          "projectCode",
+          "projectName",
+          "totalRevenuePaisa",
+          "costBreakdown",
+          "totalCostPaisa",
+          "netProfitPaisa",
+          "profitMarginPercent",
+          "isProfitable"
+        ]
+      },
+      "ProjectProfitabilityReportDto": {
+        "type": "object",
+        "properties": {
+          "asOfDate": {
+            "type": "string",
+            "description": "Report as-of date (ISO format)"
+          },
+          "startDate": {
+            "type": "string",
+            "description": "Reporting start date"
+          },
+          "endDate": {
+            "type": "string",
+            "description": "Reporting end date"
+          },
+          "summary": {
+            "$ref": "#/components/schemas/ProjectProfitabilitySummaryDto"
+          },
+          "projects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProjectProfitabilityItemDto"
+            }
+          }
+        },
+        "required": ["asOfDate", "summary", "projects"]
+      },
       "PreviewScheduleDto": {
         "type": "object",
         "properties": {
@@ -14042,6 +16834,59 @@
         },
         "required": ["reason"]
       },
+      "RequestCancellationDto": {
+        "type": "object",
+        "properties": {
+          "reason": {
+            "type": "string",
+            "example": "Client requested cancellation due to relocation"
+          },
+          "deductionRatePct": {
+            "type": "number",
+            "example": 10,
+            "description": "Deduction rate percentage (e.g. 10%)"
+          },
+          "deductionPaisa": {
+            "type": "string",
+            "example": "10000000",
+            "description": "Override deduction in paisa (৳1,00,000)"
+          },
+          "propertyStatus": {
+            "type": "string",
+            "example": "AVAILABLE",
+            "enum": ["AVAILABLE", "BLOCKED"]
+          }
+        },
+        "required": ["reason"]
+      },
+      "RequestTransferDto": {
+        "type": "object",
+        "properties": {
+          "originalBookingId": {
+            "type": "string",
+            "description": "Original Booking ID (UUID)"
+          },
+          "transfereeCustomerId": {
+            "type": "string",
+            "description": "Transferee (New) Customer ID (UUID)"
+          },
+          "transferFeePaisa": {
+            "type": "string",
+            "description": "Transfer fee in paisa",
+            "default": "0"
+          },
+          "reason": {
+            "type": "string",
+            "description": "Reason for booking transfer"
+          },
+          "executeImmediately": {
+            "type": "boolean",
+            "description": "Execute transfer immediately",
+            "default": true
+          }
+        },
+        "required": ["originalBookingId", "transfereeCustomerId"]
+      },
       "UpdateSettingDto": {
         "type": "object",
         "properties": {}
@@ -14069,6 +16914,786 @@
       "SuspendTenantDto": {
         "type": "object",
         "properties": {}
+      },
+      "CreateMigrationBatchDto": {
+        "type": "object",
+        "properties": {
+          "goLiveDate": {
+            "type": "string",
+            "example": "2026-07-01"
+          },
+          "notes": {
+            "type": "string",
+            "example": "Initial cut-over migration from legacy spreadsheets"
+          }
+        },
+        "required": ["goLiveDate"]
+      },
+      "OpeningBalanceLineDto": {
+        "type": "object",
+        "properties": {
+          "accountCode": {
+            "type": "string",
+            "example": "1100"
+          },
+          "debitPaisa": {
+            "type": "string",
+            "example": "500000000"
+          },
+          "creditPaisa": {
+            "type": "string",
+            "example": "0"
+          },
+          "customerId": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string",
+            "example": "Opening AR balance for customer"
+          }
+        },
+        "required": ["accountCode", "debitPaisa", "creditPaisa"]
+      },
+      "PostOpeningBalanceDto": {
+        "type": "object",
+        "properties": {
+          "postingDate": {
+            "type": "string",
+            "example": "2026-06-30"
+          },
+          "narration": {
+            "type": "string",
+            "example": "Go-Live Opening Balance Journal"
+          },
+          "lines": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OpeningBalanceLineDto"
+            }
+          }
+        },
+        "required": ["lines"]
+      },
+      "HistoricalPaymentItemDto": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string",
+            "example": "2025-10-15"
+          },
+          "amountPaisa": {
+            "type": "string",
+            "example": "100000000"
+          },
+          "method": {
+            "type": "string",
+            "example": "CHEQUE"
+          },
+          "receiptNumber": {
+            "type": "string",
+            "example": "OLD-REC-4821"
+          }
+        },
+        "required": ["date", "amountPaisa", "method", "receiptNumber"]
+      },
+      "RemainingInstallmentItemDto": {
+        "type": "object",
+        "properties": {
+          "installmentNumber": {
+            "type": "number",
+            "example": 1
+          },
+          "dueDate": {
+            "type": "string",
+            "example": "2026-08-01"
+          },
+          "amountPaisa": {
+            "type": "string",
+            "example": "100000000"
+          }
+        },
+        "required": ["installmentNumber", "dueDate", "amountPaisa"]
+      },
+      "AddLegacyBookingDto": {
+        "type": "object",
+        "properties": {
+          "customerId": {
+            "type": "string"
+          },
+          "propertyId": {
+            "type": "string"
+          },
+          "legacyBookingNo": {
+            "type": "string",
+            "example": "LEGACY-BKG-001"
+          },
+          "bookingDate": {
+            "type": "string",
+            "example": "2025-06-01"
+          },
+          "netPricePaisa": {
+            "type": "string",
+            "example": "500000000"
+          },
+          "totalPaidPaisa": {
+            "type": "string",
+            "example": "200000000"
+          },
+          "historicalPayments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/HistoricalPaymentItemDto"
+            }
+          },
+          "remainingInstallments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RemainingInstallmentItemDto"
+            }
+          }
+        },
+        "required": [
+          "customerId",
+          "legacyBookingNo",
+          "bookingDate",
+          "netPricePaisa",
+          "totalPaidPaisa"
+        ]
+      },
+      "FinalizeMigrationBatchDto": {
+        "type": "object",
+        "properties": {
+          "approvedAdjustmentReason": {
+            "type": "string",
+            "example": "CEO approved ৳500 rounding difference write-off",
+            "description": "Mandatory if difference is not ৳0.00"
+          }
+        }
+      },
+      "CsvPayloadDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "CreateCategoryDto": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "Category code",
+            "example": "EXP_OFFICE"
+          },
+          "name": {
+            "type": "string",
+            "description": "Category name",
+            "example": "Office Supplies & Stationery"
+          },
+          "accountCode": {
+            "type": "string",
+            "description": "COA Account code",
+            "example": "5500",
+            "default": "5500"
+          },
+          "description": {
+            "type": "string",
+            "description": "Category description"
+          },
+          "isActive": {
+            "type": "boolean",
+            "description": "Is active flag",
+            "default": true
+          }
+        },
+        "required": ["code", "name"]
+      },
+      "CreateExpenseDto": {
+        "type": "object",
+        "properties": {
+          "categoryId": {
+            "type": "string",
+            "description": "Category ID (UUID)"
+          },
+          "projectId": {
+            "type": "string",
+            "description": "Project ID (UUID) if project-related"
+          },
+          "costCenter": {
+            "type": "string",
+            "description": "Cost Center identifier"
+          },
+          "payeeName": {
+            "type": "string",
+            "description": "Payee name or vendor name",
+            "example": "Rahim Traders"
+          },
+          "vendorId": {
+            "type": "string",
+            "description": "Linked Vendor ID (UUID)"
+          },
+          "amountPaisa": {
+            "type": "string",
+            "description": "Amount in paisa as string/bigint",
+            "example": "60000000"
+          },
+          "description": {
+            "type": "string",
+            "description": "Expense description / purpose"
+          },
+          "expenseDate": {
+            "type": "string",
+            "description": "Expense date (ISO string)",
+            "example": "2026-10-05"
+          },
+          "paymentMethod": {
+            "type": "string",
+            "description": "Payment method",
+            "enum": ["CASH", "BANK_TRANSFER", "CHEQUE"],
+            "default": "BANK_TRANSFER"
+          },
+          "paidLater": {
+            "type": "boolean",
+            "description": "Pay later flag (accrues to 2100 AP)",
+            "default": false
+          },
+          "bankAccountId": {
+            "type": "string",
+            "description": "Bank Account ID (UUID)"
+          },
+          "bankAccountCode": {
+            "type": "string",
+            "description": "Bank Account Code (e.g. 1020-01)"
+          }
+        },
+        "required": ["categoryId", "payeeName", "amountPaisa", "description"]
+      },
+      "PayExpenseDto": {
+        "type": "object",
+        "properties": {
+          "paymentMethod": {
+            "type": "string",
+            "description": "Payment method",
+            "enum": ["CASH", "BANK_TRANSFER", "CHEQUE"]
+          },
+          "bankAccountId": {
+            "type": "string",
+            "description": "Bank Account ID (UUID)"
+          },
+          "bankAccountCode": {
+            "type": "string",
+            "description": "Bank Account Code (e.g. 1020-01)"
+          },
+          "reference": {
+            "type": "string",
+            "description": "Payment reference or cheque number"
+          }
+        }
+      },
+      "RejectExpenseDto": {
+        "type": "object",
+        "properties": {
+          "reason": {
+            "type": "string",
+            "description": "Reason for rejection"
+          }
+        }
+      },
+      "CreateBudgetDto": {
+        "type": "object",
+        "properties": {
+          "projectId": {
+            "type": "string",
+            "description": "Project ID (UUID) if project-specific"
+          },
+          "categoryId": {
+            "type": "string",
+            "description": "Category ID (UUID) if category-specific"
+          },
+          "fiscalYear": {
+            "type": "string",
+            "description": "Fiscal Year",
+            "example": "2026-2027"
+          },
+          "budgetAmountPaisa": {
+            "type": "string",
+            "description": "Budget amount in paisa",
+            "example": "100000000"
+          }
+        },
+        "required": ["fiscalYear", "budgetAmountPaisa"]
+      },
+      "CreateVendorDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Vendor business name",
+            "example": "Eastern Cement & Steel"
+          },
+          "contactPerson": {
+            "type": "string",
+            "description": "Contact person name"
+          },
+          "phone": {
+            "type": "string",
+            "description": "Phone number"
+          },
+          "email": {
+            "type": "string",
+            "description": "Email address"
+          },
+          "address": {
+            "type": "string",
+            "description": "Business address"
+          },
+          "tradeLicenseNo": {
+            "type": "string",
+            "description": "Trade License Number"
+          },
+          "tin": {
+            "type": "string",
+            "description": "Taxpayer Identification Number (TIN)"
+          },
+          "bin": {
+            "type": "string",
+            "description": "Business Identification Number (BIN / VAT Reg)"
+          },
+          "bankName": {
+            "type": "string",
+            "description": "Bank Name"
+          },
+          "bankBranch": {
+            "type": "string",
+            "description": "Bank Branch"
+          },
+          "bankAccountNumber": {
+            "type": "string",
+            "description": "Bank Account Number (stored encrypted)"
+          },
+          "routingNumber": {
+            "type": "string",
+            "description": "Bank Routing Number"
+          },
+          "isActive": {
+            "type": "boolean",
+            "description": "Is active",
+            "default": true
+          }
+        },
+        "required": ["name"]
+      },
+      "UpdateVendorDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Vendor business name",
+            "example": "Eastern Cement & Steel"
+          },
+          "contactPerson": {
+            "type": "string",
+            "description": "Contact person name"
+          },
+          "phone": {
+            "type": "string",
+            "description": "Phone number"
+          },
+          "email": {
+            "type": "string",
+            "description": "Email address"
+          },
+          "address": {
+            "type": "string",
+            "description": "Business address"
+          },
+          "tradeLicenseNo": {
+            "type": "string",
+            "description": "Trade License Number"
+          },
+          "tin": {
+            "type": "string",
+            "description": "Taxpayer Identification Number (TIN)"
+          },
+          "bin": {
+            "type": "string",
+            "description": "Business Identification Number (BIN / VAT Reg)"
+          },
+          "bankName": {
+            "type": "string",
+            "description": "Bank Name"
+          },
+          "bankBranch": {
+            "type": "string",
+            "description": "Bank Branch"
+          },
+          "bankAccountNumber": {
+            "type": "string",
+            "description": "Bank Account Number (stored encrypted)"
+          },
+          "routingNumber": {
+            "type": "string",
+            "description": "Bank Routing Number"
+          },
+          "isActive": {
+            "type": "boolean",
+            "description": "Is active",
+            "default": true
+          }
+        }
+      },
+      "CreateVendorBillLineDto": {
+        "type": "object",
+        "properties": {
+          "accountCode": {
+            "type": "string",
+            "description": "COA account code",
+            "example": "1210"
+          },
+          "description": {
+            "type": "string",
+            "description": "Line item description"
+          },
+          "amountPaisa": {
+            "type": "string",
+            "description": "Amount in paisa",
+            "example": "50000000"
+          },
+          "costCenter": {
+            "type": "string",
+            "description": "Cost Center identifier"
+          },
+          "projectId": {
+            "type": "string",
+            "description": "Project ID (UUID)"
+          }
+        },
+        "required": ["accountCode", "description", "amountPaisa"]
+      },
+      "CreateVendorBillDto": {
+        "type": "object",
+        "properties": {
+          "vendorId": {
+            "type": "string",
+            "description": "Vendor ID (UUID)"
+          },
+          "projectId": {
+            "type": "string",
+            "description": "Project ID (UUID)"
+          },
+          "billDate": {
+            "type": "string",
+            "description": "Bill date (ISO string)"
+          },
+          "dueDate": {
+            "type": "string",
+            "description": "Due date (ISO string)"
+          },
+          "taxWithholdingPaisa": {
+            "type": "string",
+            "description": "TDS withholding in paisa",
+            "default": "0"
+          },
+          "vatWithholdingPaisa": {
+            "type": "string",
+            "description": "VDS withholding in paisa",
+            "default": "0"
+          },
+          "notes": {
+            "type": "string",
+            "description": "Notes"
+          },
+          "postImmediately": {
+            "type": "boolean",
+            "description": "Post immediately upon creation",
+            "default": true
+          },
+          "lines": {
+            "description": "Bill charge lines",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CreateVendorBillLineDto"
+            }
+          }
+        },
+        "required": ["vendorId", "lines"]
+      },
+      "VendorPaymentAllocationDto": {
+        "type": "object",
+        "properties": {
+          "billId": {
+            "type": "string",
+            "description": "Vendor Bill ID (UUID)"
+          },
+          "amountPaisa": {
+            "type": "string",
+            "description": "Amount in paisa allocated to this bill",
+            "example": "50000000"
+          }
+        },
+        "required": ["billId", "amountPaisa"]
+      },
+      "CreateVendorPaymentDto": {
+        "type": "object",
+        "properties": {
+          "vendorId": {
+            "type": "string",
+            "description": "Vendor ID (UUID)"
+          },
+          "amountPaisa": {
+            "type": "string",
+            "description": "Total payment amount in paisa",
+            "example": "50000000"
+          },
+          "paymentMethod": {
+            "type": "string",
+            "description": "Payment method",
+            "enum": ["CASH", "BANK_TRANSFER", "CHEQUE"],
+            "default": "BANK_TRANSFER"
+          },
+          "bankAccountId": {
+            "type": "string",
+            "description": "Bank Account ID (UUID)"
+          },
+          "bankAccountCode": {
+            "type": "string",
+            "description": "Bank Account Code (e.g. 1020-01)"
+          },
+          "paymentDate": {
+            "type": "string",
+            "description": "Payment date (ISO string)"
+          },
+          "reference": {
+            "type": "string",
+            "description": "Payment reference or cheque number"
+          },
+          "notes": {
+            "type": "string",
+            "description": "Notes"
+          },
+          "allocations": {
+            "description": "Bill allocations",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VendorPaymentAllocationDto"
+            }
+          }
+        },
+        "required": ["vendorId", "amountPaisa"]
+      },
+      "CreateBrokerDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Broker full name",
+            "example": "Hasan Ali"
+          },
+          "phone": {
+            "type": "string",
+            "description": "Phone number",
+            "example": "01811223344"
+          },
+          "email": {
+            "type": "string",
+            "description": "Email address"
+          },
+          "nid": {
+            "type": "string",
+            "description": "National ID"
+          },
+          "tin": {
+            "type": "string",
+            "description": "TIN"
+          },
+          "bankName": {
+            "type": "string",
+            "description": "Bank Name"
+          },
+          "bankBranch": {
+            "type": "string",
+            "description": "Bank Branch"
+          },
+          "bankAccountNumber": {
+            "type": "string",
+            "description": "Bank Account Number (stored encrypted)"
+          },
+          "routingNumber": {
+            "type": "string",
+            "description": "Routing Number"
+          },
+          "isActive": {
+            "type": "boolean",
+            "description": "Is active",
+            "default": true
+          }
+        },
+        "required": ["name", "phone"]
+      },
+      "CreateCommissionRuleDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Rule name",
+            "example": "Standard Broker 2%"
+          },
+          "projectId": {
+            "type": "string",
+            "description": "Project ID (UUID) if project-specific"
+          },
+          "calculationType": {
+            "type": "string",
+            "description": "Calculation type",
+            "enum": ["PERCENT_NET_PRICE", "FIXED_AMOUNT", "PERCENT_COLLECTED"],
+            "default": "PERCENT_NET_PRICE"
+          },
+          "percentage": {
+            "type": "number",
+            "description": "Percentage rate (e.g. 2.00 for 2%)",
+            "example": 2
+          },
+          "fixedAmountPaisa": {
+            "type": "string",
+            "description": "Fixed amount in paisa",
+            "example": "10000000"
+          },
+          "triggerEvent": {
+            "type": "string",
+            "description": "Trigger event",
+            "enum": ["ON_CONFIRMED", "ON_AGREEMENT", "ON_COLLECTION_PCT"],
+            "default": "ON_CONFIRMED"
+          },
+          "isActive": {
+            "type": "boolean",
+            "description": "Is active",
+            "default": true
+          }
+        },
+        "required": ["name"]
+      },
+      "PayCommissionDto": {
+        "type": "object",
+        "properties": {
+          "paymentMethod": {
+            "type": "string",
+            "description": "Payment method",
+            "enum": ["CASH", "BANK_TRANSFER", "CHEQUE"],
+            "default": "BANK_TRANSFER"
+          },
+          "bankAccountId": {
+            "type": "string",
+            "description": "Bank Account ID (UUID)"
+          },
+          "bankAccountCode": {
+            "type": "string",
+            "description": "Bank Account Code (e.g. 1020-01)"
+          },
+          "reference": {
+            "type": "string",
+            "description": "Payment reference or cheque number"
+          },
+          "notes": {
+            "type": "string",
+            "description": "Notes"
+          }
+        }
+      },
+      "LocalProvisioningDto": {
+        "type": "object",
+        "properties": {
+          "companyName": {
+            "type": "string",
+            "description": "Company name for local standalone",
+            "example": "ExzaEstate Local Ltd"
+          },
+          "companyCode": {
+            "type": "string",
+            "description": "Company code",
+            "example": "LOCAL01"
+          },
+          "adminEmail": {
+            "type": "string",
+            "description": "Administrator email",
+            "example": "admin@local.exzaestate.internal"
+          },
+          "adminName": {
+            "type": "string",
+            "description": "Administrator full name",
+            "example": "Local Administrator"
+          },
+          "adminPassword": {
+            "type": "string",
+            "description": "Administrator initial password",
+            "example": "AdminLocal1234!"
+          },
+          "timezone": {
+            "type": "string",
+            "description": "Company timezone",
+            "example": "Asia/Dhaka"
+          }
+        }
+      },
+      "CreateLocalBackupDto": {
+        "type": "object",
+        "properties": {
+          "destinationDir": {
+            "type": "string",
+            "description": "User-chosen folder destination"
+          },
+          "label": {
+            "type": "string",
+            "description": "Optional label or reason for the backup",
+            "example": "Pre-tax audit backup"
+          }
+        }
+      },
+      "RestoreLocalBackupDto": {
+        "type": "object",
+        "properties": {
+          "backupFilePath": {
+            "type": "string",
+            "description": "Path or file name of the backup bundle to restore"
+          }
+        },
+        "required": ["backupFilePath"]
+      },
+      "LocalBackupStatusResponseDto": {
+        "type": "object",
+        "properties": {
+          "hasWarning": {
+            "type": "boolean",
+            "description": "Whether the system warns that no backup exists for >= 7 days"
+          },
+          "warningMessage": {
+            "type": "string",
+            "description": "Warning banner message if backup is overdue"
+          },
+          "daysSinceLastBackup": {
+            "type": "number",
+            "description": "Days elapsed since the most recent backup"
+          },
+          "warnThresholdDays": {
+            "type": "number",
+            "description": "Threshold days triggering warning (default: 7)"
+          },
+          "totalBackups": {
+            "type": "number",
+            "description": "Total number of backups found in the backup folder"
+          },
+          "latestBackupAt": {
+            "type": "string",
+            "description": "Timestamp of the latest successful backup"
+          },
+          "backupDir": {
+            "type": "string",
+            "description": "Configured backup storage directory"
+          }
+        },
+        "required": [
+          "hasWarning",
+          "daysSinceLastBackup",
+          "warnThresholdDays",
+          "totalBackups",
+          "backupDir"
+        ]
       }
     }
   }

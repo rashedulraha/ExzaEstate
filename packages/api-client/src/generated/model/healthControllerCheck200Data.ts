@@ -9,4 +9,5 @@
 
 export type HealthControllerCheck200Data = {
   status?: string;
+  minSupportedClientVersion?: string;
 };

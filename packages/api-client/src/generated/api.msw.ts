@@ -32,11 +32,13 @@ import type {
   InstallmentScheduleSummaryDto,
   JournalResponseDto,
   LedgerReportDto,
+  LocalBackupStatusResponseDto,
   NotificationPreferenceResponseDto,
   PaginatedCursorResponseDto,
   PostingRuleResponseDto,
   PresignDownloadResponseDto,
   PresignUploadResponseDto,
+  ProjectProfitabilityReportDto,
   ReportExportJobResponseDto,
   TrialBalanceReportDto,
   UnreadCountResponseDto,
@@ -50,6 +52,10 @@ export const getHealthControllerCheckResponseMock = (
   data: faker.helpers.arrayElement([
     {
       status: faker.helpers.arrayElement([
+        faker.string.alpha({ length: { min: 10, max: 20 } }),
+        undefined,
+      ]),
+      minSupportedClientVersion: faker.helpers.arrayElement([
         faker.string.alpha({ length: { min: 10, max: 20 } }),
         undefined,
       ]),
@@ -2206,6 +2212,91 @@ export const getReportsControllerExportIncomeStatementResponseMock = (
   jobId: faker.string.alpha({ length: { min: 10, max: 20 } }),
   status: faker.string.alpha({ length: { min: 10, max: 20 } }),
   message: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  ...overrideResponse,
+});
+
+export const getReportsControllerGetProjectProfitabilityResponseMock = (
+  overrideResponse: Partial<ProjectProfitabilityReportDto> = {},
+): ProjectProfitabilityReportDto => ({
+  asOfDate: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  startDate: faker.helpers.arrayElement([
+    faker.string.alpha({ length: { min: 10, max: 20 } }),
+    undefined,
+  ]),
+  endDate: faker.helpers.arrayElement([
+    faker.string.alpha({ length: { min: 10, max: 20 } }),
+    undefined,
+  ]),
+  summary: {
+    totalRevenuePaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    totalCostPaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    totalProfitPaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    overallMarginPercent: faker.number.float({ min: undefined, max: undefined, fractionDigits: 2 }),
+    profitableProjectsCount: faker.number.float({
+      min: undefined,
+      max: undefined,
+      fractionDigits: 2,
+    }),
+    lossMakingProjectsCount: faker.number.float({
+      min: undefined,
+      max: undefined,
+      fractionDigits: 2,
+    }),
+  },
+  projects: Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(
+    () => ({
+      projectId: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      projectCode: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      projectName: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      totalRevenuePaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      costBreakdown: {
+        landCostPaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+        developmentCostPaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+        marketingCostPaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+        adminCostPaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+        otherCostPaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+        totalCostPaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      },
+      totalCostPaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      netProfitPaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      profitMarginPercent: faker.number.float({
+        min: undefined,
+        max: undefined,
+        fractionDigits: 2,
+      }),
+      isProfitable: faker.datatype.boolean(),
+      estimatedBudgetPaisa: faker.helpers.arrayElement([{}, undefined]),
+      budgetVariancePaisa: faker.helpers.arrayElement([{}, undefined]),
+    }),
+  ),
+  ...overrideResponse,
+});
+
+export const getReportsControllerExportProfitabilityResponseMock = (
+  overrideResponse: Partial<ReportExportJobResponseDto> = {},
+): ReportExportJobResponseDto => ({
+  jobId: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  status: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  message: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  ...overrideResponse,
+});
+
+export const getLocalDataControllerGetStatusResponseMock = (
+  overrideResponse: Partial<LocalBackupStatusResponseDto> = {},
+): LocalBackupStatusResponseDto => ({
+  hasWarning: faker.datatype.boolean(),
+  warningMessage: faker.helpers.arrayElement([
+    faker.string.alpha({ length: { min: 10, max: 20 } }),
+    undefined,
+  ]),
+  daysSinceLastBackup: faker.number.float({ min: undefined, max: undefined, fractionDigits: 2 }),
+  warnThresholdDays: faker.number.float({ min: undefined, max: undefined, fractionDigits: 2 }),
+  totalBackups: faker.number.float({ min: undefined, max: undefined, fractionDigits: 2 }),
+  latestBackupAt: faker.helpers.arrayElement([
+    faker.string.alpha({ length: { min: 10, max: 20 } }),
+    undefined,
+  ]),
+  backupDir: faker.string.alpha({ length: { min: 10, max: 20 } }),
   ...overrideResponse,
 });
 
@@ -4504,6 +4595,348 @@ export const getInstallmentControllerGenerateScheduleMockHandler = (
   );
 };
 
+export const getChequeControllerClearChequeMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/collection/cheques/:paymentId/clear',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getChequeControllerBounceChequeMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/collection/cheques/:paymentId/bounce',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getChequeControllerGetChequeEventsMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/collection/cheques/:paymentId/events',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getReceiptControllerListReceiptsMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/collection/receipts',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getReceiptControllerGetReceiptByIdMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/collection/receipts/:id',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getReceiptControllerDownloadReceiptPdfMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/collection/receipts/:id/pdf',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getReceiptControllerReprintReceiptMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/collection/receipts/:id/reprint',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getReversalControllerReversePaymentMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/collection/payments/:id/reverse',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getStatementControllerGetCustomerStatementMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/collection/statements/customer/:customerId',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getStatementControllerGetCustomerStatementPdfMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/collection/statements/customer/:customerId/pdf',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getStatementControllerGetArReconciliationMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/collection/statements/customer/:customerId/reconciliation',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getRefundControllerListRefundsMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/collection/refunds',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getRefundControllerGetRefundByIdMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/collection/refunds/:id',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getRefundControllerPayRefundMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/collection/refunds/:id/pay',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getLateFeeControllerChargeLateFeeMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/collection/late-fees/installments/:installmentId/charge',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getLateFeeControllerWaiveLateFeeMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/collection/late-fees/:id/waive',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getWaiverControllerWaiveInstallmentMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/collection/waivers/installments/:installmentId/waive',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getAgingControllerGetAgingReportMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/collection/aging',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
 export const getCompanyControllerGetProfileMockHandler = (
   overrideResponse?:
     | void
@@ -6520,6 +6953,119 @@ export const getReportsControllerExportIncomeStatementMockHandler = (
   );
 };
 
+export const getReportsControllerGetProjectProfitabilityMockHandler = (
+  overrideResponse?:
+    | ProjectProfitabilityReportDto
+    | ((
+        info: Parameters<Parameters<typeof http.get>[1]>[0],
+      ) => Promise<ProjectProfitabilityReportDto> | ProjectProfitabilityReportDto),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/reports/profitability',
+    async (info) => {
+      await delay(1000);
+
+      return new HttpResponse(
+        JSON.stringify(
+          overrideResponse !== undefined
+            ? typeof overrideResponse === 'function'
+              ? await overrideResponse(info)
+              : overrideResponse
+            : getReportsControllerGetProjectProfitabilityResponseMock(),
+        ),
+        { status: 200, headers: { 'Content-Type': 'application/json' } },
+      );
+    },
+    options,
+  );
+};
+
+export const getReportsControllerExportProfitabilityMockHandler = (
+  overrideResponse?:
+    | ReportExportJobResponseDto
+    | ((
+        info: Parameters<Parameters<typeof http.post>[1]>[0],
+      ) => Promise<ReportExportJobResponseDto> | ReportExportJobResponseDto),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/reports/profitability/export',
+    async (info) => {
+      await delay(1000);
+
+      return new HttpResponse(
+        JSON.stringify(
+          overrideResponse !== undefined
+            ? typeof overrideResponse === 'function'
+              ? await overrideResponse(info)
+              : overrideResponse
+            : getReportsControllerExportProfitabilityResponseMock(),
+        ),
+        { status: 202, headers: { 'Content-Type': 'application/json' } },
+      );
+    },
+    options,
+  );
+};
+
+export const getReportsControllerGetSalesReportMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/reports/sales',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getReportsControllerGetCollectionReportMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/reports/collection',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getReportsControllerGetInventoryReportMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/reports/inventory',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
 export const getPaymentPlanControllerPreviewScheduleMockHandler = (
   overrideResponse?:
     | void
@@ -7204,6 +7750,63 @@ export const getAgreementControllerGetPdfMockHandler = (
   );
 };
 
+export const getCancellationControllerPreviewCancellationMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/sales/bookings/:bookingId/cancellation/preview',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getCancellationControllerCancelBookingMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/sales/bookings/:bookingId/cancellation',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getBookingTransferControllerExecuteTransferMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/sales/transfers',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 201 });
+    },
+    options,
+  );
+};
+
 export const getSettingsControllerGetAllSettingsMockHandler = (
   overrideResponse?:
     | void
@@ -7545,6 +8148,908 @@ export const getSystemHealthControllerGetHealthMockHandler = (
     options,
   );
 };
+
+export const getTenantImportControllerImportTenantMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/tenant/import',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 201 });
+    },
+    options,
+  );
+};
+
+export const getMigrationControllerCreateBatchMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/migration/batches',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 201 });
+    },
+    options,
+  );
+};
+
+export const getMigrationControllerPostOpeningBalanceMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/migration/batches/:batchId/opening-balance',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getMigrationControllerAddLegacyBookingMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/migration/batches/:batchId/legacy-bookings',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 201 });
+    },
+    options,
+  );
+};
+
+export const getMigrationControllerGetReconciliationGateMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/migration/batches/:batchId/reconciliation',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getMigrationControllerFinalizeBatchMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/migration/batches/:batchId/finalize',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getCsvMigrationControllerGetTemplateMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/migration/csv/template/:entity',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getCsvMigrationControllerValidateMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/migration/csv/validate/:entity',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 201 });
+    },
+    options,
+  );
+};
+
+export const getCsvMigrationControllerImportMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/migration/csv/import/:entity',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 201 });
+    },
+    options,
+  );
+};
+
+export const getExpenseControllerCreateCategoryMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/expenses/categories',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 201 });
+    },
+    options,
+  );
+};
+
+export const getExpenseControllerListCategoriesMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/expenses/categories',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getExpenseControllerCreateVoucherMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/expenses/vouchers',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 201 });
+    },
+    options,
+  );
+};
+
+export const getExpenseControllerGetVoucherMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/expenses/vouchers/:id',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getExpenseControllerSubmitVoucherMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/expenses/vouchers/:id/submit',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getExpenseControllerApproveVoucherMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/expenses/vouchers/:id/approve',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getExpenseControllerVerifyVoucherMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/expenses/vouchers/:id/verify',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getExpenseControllerPayVoucherMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/expenses/vouchers/:id/pay',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getExpenseControllerRejectVoucherMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/expenses/vouchers/:id/reject',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getExpenseControllerGetProjectRollupMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/expenses/projects/:projectId/rollup',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getBudgetControllerCreateBudgetMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/budgets',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 201 });
+    },
+    options,
+  );
+};
+
+export const getBudgetControllerListBudgetsMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/budgets',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getVendorControllerCreateVendorMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/vendors',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 201 });
+    },
+    options,
+  );
+};
+
+export const getVendorControllerListVendorsMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/vendors',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getVendorControllerGetVendorMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/vendors/:id',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getVendorControllerUpdateVendorMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.patch>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.patch(
+    '*/api/v1/vendors/:id',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getVendorBillControllerCreateBillMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/vendor-bills',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 201 });
+    },
+    options,
+  );
+};
+
+export const getVendorBillControllerGetBillMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/vendor-bills/:id',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getVendorBillControllerPostBillMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/vendor-bills/:id/post',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getVendorPaymentControllerCreatePaymentMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/vendor-payments',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 201 });
+    },
+    options,
+  );
+};
+
+export const getVendorApControllerGetBalanceMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/arap/vendors/:id/balance',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getVendorApControllerGetAgingMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/arap/vendors/aging',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getVendorApControllerGetLedgerMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/arap/vendors/:id/ledger',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getCommissionControllerCreateBrokerMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/commissions/brokers',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 201 });
+    },
+    options,
+  );
+};
+
+export const getCommissionControllerCreateRuleMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/commissions/rules',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 201 });
+    },
+    options,
+  );
+};
+
+export const getCommissionControllerApproveCommissionMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/commissions/:id/approve',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getCommissionControllerPayCommissionMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/commissions/:id/pay',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getCommissionControllerAccrueCommissionMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/commissions/bookings/:bookingId/accrue',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getRealtimeControllerStreamMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/events/stream',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getDashboardControllerGetSummaryMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/dashboard/summary',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getDashboardControllerGetSalesPerformanceMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/dashboard/sales-performance',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getSearchControllerGlobalSearchMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/search',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getLocalDataControllerProvisionMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/local-data/provision',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getLocalDataControllerIsProvisionedMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/local-data/is-provisioned',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getLocalDataControllerCreateBackupMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/local-data/backup',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 201 });
+    },
+    options,
+  );
+};
+
+export const getLocalDataControllerRestoreBackupMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/local-data/restore',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getLocalDataControllerGetStatusMockHandler = (
+  overrideResponse?:
+    | LocalBackupStatusResponseDto
+    | ((
+        info: Parameters<Parameters<typeof http.get>[1]>[0],
+      ) => Promise<LocalBackupStatusResponseDto> | LocalBackupStatusResponseDto),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/local-data/status',
+    async (info) => {
+      await delay(1000);
+
+      return new HttpResponse(
+        JSON.stringify(
+          overrideResponse !== undefined
+            ? typeof overrideResponse === 'function'
+              ? await overrideResponse(info)
+              : overrideResponse
+            : getLocalDataControllerGetStatusResponseMock(),
+        ),
+        { status: 200, headers: { 'Content-Type': 'application/json' } },
+      );
+    },
+    options,
+  );
+};
+
+export const getLocalDataControllerExportAllMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/local-data/export',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
 export const getExzaEstateEnterpriseAPIMock = () => [
   getHealthControllerCheckMockHandler(),
   getAuditControllerExportAuditLogsMockHandler(),
@@ -7645,6 +9150,24 @@ export const getExzaEstateEnterpriseAPIMock = () => [
   getInstallmentControllerFindByBookingIdMockHandler(),
   getInstallmentControllerFindByIdMockHandler(),
   getInstallmentControllerGenerateScheduleMockHandler(),
+  getChequeControllerClearChequeMockHandler(),
+  getChequeControllerBounceChequeMockHandler(),
+  getChequeControllerGetChequeEventsMockHandler(),
+  getReceiptControllerListReceiptsMockHandler(),
+  getReceiptControllerGetReceiptByIdMockHandler(),
+  getReceiptControllerDownloadReceiptPdfMockHandler(),
+  getReceiptControllerReprintReceiptMockHandler(),
+  getReversalControllerReversePaymentMockHandler(),
+  getStatementControllerGetCustomerStatementMockHandler(),
+  getStatementControllerGetCustomerStatementPdfMockHandler(),
+  getStatementControllerGetArReconciliationMockHandler(),
+  getRefundControllerListRefundsMockHandler(),
+  getRefundControllerGetRefundByIdMockHandler(),
+  getRefundControllerPayRefundMockHandler(),
+  getLateFeeControllerChargeLateFeeMockHandler(),
+  getLateFeeControllerWaiveLateFeeMockHandler(),
+  getWaiverControllerWaiveInstallmentMockHandler(),
+  getAgingControllerGetAgingReportMockHandler(),
   getCompanyControllerGetProfileMockHandler(),
   getCompanyControllerUpdateProfileMockHandler(),
   getCompanyControllerListBranchesMockHandler(),
@@ -7744,6 +9267,11 @@ export const getExzaEstateEnterpriseAPIMock = () => [
   getReportsControllerExportBalanceSheetMockHandler(),
   getReportsControllerGetIncomeStatementMockHandler(),
   getReportsControllerExportIncomeStatementMockHandler(),
+  getReportsControllerGetProjectProfitabilityMockHandler(),
+  getReportsControllerExportProfitabilityMockHandler(),
+  getReportsControllerGetSalesReportMockHandler(),
+  getReportsControllerGetCollectionReportMockHandler(),
+  getReportsControllerGetInventoryReportMockHandler(),
   getPaymentPlanControllerPreviewScheduleMockHandler(),
   getPaymentPlanControllerGetTemplatesMockHandler(),
   getPaymentPlanControllerCreateTemplateMockHandler(),
@@ -7780,6 +9308,9 @@ export const getExzaEstateEnterpriseAPIMock = () => [
   getAgreementControllerSignAndLockAgreementMockHandler(),
   getAgreementControllerCreateVersionMockHandler(),
   getAgreementControllerGetPdfMockHandler(),
+  getCancellationControllerPreviewCancellationMockHandler(),
+  getCancellationControllerCancelBookingMockHandler(),
+  getBookingTransferControllerExecuteTransferMockHandler(),
   getSettingsControllerGetAllSettingsMockHandler(),
   getSettingsControllerUpdateBatchMockHandler(),
   getSettingsControllerGetSettingMockHandler(),
@@ -7798,4 +9329,51 @@ export const getExzaEstateEnterpriseAPIMock = () => [
   getSystemTenantControllerSuspendTenantMockHandler(),
   getSystemTenantControllerReactivateTenantMockHandler(),
   getSystemHealthControllerGetHealthMockHandler(),
+  getTenantImportControllerImportTenantMockHandler(),
+  getMigrationControllerCreateBatchMockHandler(),
+  getMigrationControllerPostOpeningBalanceMockHandler(),
+  getMigrationControllerAddLegacyBookingMockHandler(),
+  getMigrationControllerGetReconciliationGateMockHandler(),
+  getMigrationControllerFinalizeBatchMockHandler(),
+  getCsvMigrationControllerGetTemplateMockHandler(),
+  getCsvMigrationControllerValidateMockHandler(),
+  getCsvMigrationControllerImportMockHandler(),
+  getExpenseControllerCreateCategoryMockHandler(),
+  getExpenseControllerListCategoriesMockHandler(),
+  getExpenseControllerCreateVoucherMockHandler(),
+  getExpenseControllerGetVoucherMockHandler(),
+  getExpenseControllerSubmitVoucherMockHandler(),
+  getExpenseControllerApproveVoucherMockHandler(),
+  getExpenseControllerVerifyVoucherMockHandler(),
+  getExpenseControllerPayVoucherMockHandler(),
+  getExpenseControllerRejectVoucherMockHandler(),
+  getExpenseControllerGetProjectRollupMockHandler(),
+  getBudgetControllerCreateBudgetMockHandler(),
+  getBudgetControllerListBudgetsMockHandler(),
+  getVendorControllerCreateVendorMockHandler(),
+  getVendorControllerListVendorsMockHandler(),
+  getVendorControllerGetVendorMockHandler(),
+  getVendorControllerUpdateVendorMockHandler(),
+  getVendorBillControllerCreateBillMockHandler(),
+  getVendorBillControllerGetBillMockHandler(),
+  getVendorBillControllerPostBillMockHandler(),
+  getVendorPaymentControllerCreatePaymentMockHandler(),
+  getVendorApControllerGetBalanceMockHandler(),
+  getVendorApControllerGetAgingMockHandler(),
+  getVendorApControllerGetLedgerMockHandler(),
+  getCommissionControllerCreateBrokerMockHandler(),
+  getCommissionControllerCreateRuleMockHandler(),
+  getCommissionControllerApproveCommissionMockHandler(),
+  getCommissionControllerPayCommissionMockHandler(),
+  getCommissionControllerAccrueCommissionMockHandler(),
+  getRealtimeControllerStreamMockHandler(),
+  getDashboardControllerGetSummaryMockHandler(),
+  getDashboardControllerGetSalesPerformanceMockHandler(),
+  getSearchControllerGlobalSearchMockHandler(),
+  getLocalDataControllerProvisionMockHandler(),
+  getLocalDataControllerIsProvisionedMockHandler(),
+  getLocalDataControllerCreateBackupMockHandler(),
+  getLocalDataControllerRestoreBackupMockHandler(),
+  getLocalDataControllerGetStatusMockHandler(),
+  getLocalDataControllerExportAllMockHandler(),
 ];
