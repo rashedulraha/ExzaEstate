@@ -66,6 +66,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Verify API client contract generation and zero drift
+        run: pnpm gen:api && git diff --exit-code packages/api-client/openapi.json packages/api-client/src/generated
+
       - name: Run all architectural quality checks
         run: pnpm check:all
 

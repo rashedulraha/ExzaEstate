@@ -1,0 +1,5104 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/api/v1/health": {
+      "get": {
+        "operationId": "HealthController_check",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "System is healthy",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "example": "ok"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "Platform health status",
+        "tags": ["Health"]
+      }
+    },
+    "/api/v1/audit-logs/export": {
+      "get": {
+        "description": "Generates a CSV export of filtered audit records (max 1000).",
+        "operationId": "AuditController_exportAuditLogs",
+        "parameters": [
+          {
+            "name": "actorId",
+            "required": false,
+            "in": "query",
+            "description": "Filter by actor user ID",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "module",
+            "required": false,
+            "in": "query",
+            "description": "Filter by module name (e.g. documents, company, auth)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "recordType",
+            "required": false,
+            "in": "query",
+            "description": "Filter by record/entity type (e.g. document, project, branch)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "recordId",
+            "required": false,
+            "in": "query",
+            "description": "Filter by record/entity UUID",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "action",
+            "required": false,
+            "in": "query",
+            "description": "Filter by action (e.g. create, update, delete, reverse)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "startDate",
+            "required": false,
+            "in": "query",
+            "description": "Start date filter (ISO 8601)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "endDate",
+            "required": false,
+            "in": "query",
+            "description": "End date filter (ISO 8601)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "cursor",
+            "required": false,
+            "in": "query",
+            "description": "Opaque cursor string for cursor pagination",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "Number of records to return (1-100)",
+            "schema": {
+              "default": 20,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Export audit logs as CSV",
+        "tags": ["Audit"]
+      }
+    },
+    "/api/v1/audit-logs/security-events/export": {
+      "get": {
+        "description": "Generates a CSV export of filtered security events (max 1000).",
+        "operationId": "AuditController_exportSecurityEvents",
+        "parameters": [
+          {
+            "name": "userId",
+            "required": false,
+            "in": "query",
+            "description": "Filter by actor/target user ID",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "eventType",
+            "required": false,
+            "in": "query",
+            "description": "Filter by security event type (e.g. LOGIN_SUCCESS, FORBIDDEN)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "severity",
+            "required": false,
+            "in": "query",
+            "description": "Filter by severity level (INFO, WARN, ERROR, CRITICAL)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "startDate",
+            "required": false,
+            "in": "query",
+            "description": "Start date filter (ISO 8601)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "endDate",
+            "required": false,
+            "in": "query",
+            "description": "End date filter (ISO 8601)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "cursor",
+            "required": false,
+            "in": "query",
+            "description": "Opaque cursor string for cursor pagination",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "Number of records to return (1-100)",
+            "schema": {
+              "default": 20,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Export security events as CSV (S2)",
+        "tags": ["Audit"]
+      }
+    },
+    "/api/v1/audit-logs/security-events": {
+      "get": {
+        "description": "Cursor-paginated viewer for security events with severity/date filters.",
+        "operationId": "AuditController_getSecurityEvents",
+        "parameters": [
+          {
+            "name": "userId",
+            "required": false,
+            "in": "query",
+            "description": "Filter by actor/target user ID",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "eventType",
+            "required": false,
+            "in": "query",
+            "description": "Filter by security event type (e.g. LOGIN_SUCCESS, FORBIDDEN)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "severity",
+            "required": false,
+            "in": "query",
+            "description": "Filter by severity level (INFO, WARN, ERROR, CRITICAL)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "startDate",
+            "required": false,
+            "in": "query",
+            "description": "Start date filter (ISO 8601)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "endDate",
+            "required": false,
+            "in": "query",
+            "description": "End date filter (ISO 8601)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "cursor",
+            "required": false,
+            "in": "query",
+            "description": "Opaque cursor string for cursor pagination",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "Number of records to return (1-100)",
+            "schema": {
+              "default": 20,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedCursorResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Query security events (S2)",
+        "tags": ["Audit"]
+      }
+    },
+    "/api/v1/audit-logs/entity/{recordType}/{recordId}": {
+      "get": {
+        "description": "Returns the full chronological mutation trail for a specific entity.",
+        "operationId": "AuditController_getEntityHistory",
+        "parameters": [
+          {
+            "name": "recordType",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "recordId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EntityHistoryResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get chronological entity history (S1)",
+        "tags": ["Audit"]
+      }
+    },
+    "/api/v1/audit-logs": {
+      "get": {
+        "description": "Cursor-paginated audit trail query filtered by actor, entity, action, date.",
+        "operationId": "AuditController_getAuditLogs",
+        "parameters": [
+          {
+            "name": "actorId",
+            "required": false,
+            "in": "query",
+            "description": "Filter by actor user ID",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "module",
+            "required": false,
+            "in": "query",
+            "description": "Filter by module name (e.g. documents, company, auth)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "recordType",
+            "required": false,
+            "in": "query",
+            "description": "Filter by record/entity type (e.g. document, project, branch)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "recordId",
+            "required": false,
+            "in": "query",
+            "description": "Filter by record/entity UUID",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "action",
+            "required": false,
+            "in": "query",
+            "description": "Filter by action (e.g. create, update, delete, reverse)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "startDate",
+            "required": false,
+            "in": "query",
+            "description": "Start date filter (ISO 8601)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "endDate",
+            "required": false,
+            "in": "query",
+            "description": "End date filter (ISO 8601)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "cursor",
+            "required": false,
+            "in": "query",
+            "description": "Opaque cursor string for cursor pagination",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "Number of records to return (1-100)",
+            "schema": {
+              "default": 20,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedCursorResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Query audit logs (S1)",
+        "tags": ["Audit"]
+      }
+    },
+    "/api/v1/auth/login": {
+      "post": {
+        "operationId": "AuthController_login",
+        "parameters": [
+          {
+            "name": "x-client",
+            "required": true,
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": ["Auth"]
+      }
+    },
+    "/api/v1/auth/refresh": {
+      "post": {
+        "operationId": "AuthController_refresh",
+        "parameters": [
+          {
+            "name": "x-client",
+            "required": true,
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RefreshTokenDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": ["Auth"]
+      }
+    },
+    "/api/v1/auth/logout": {
+      "post": {
+        "operationId": "AuthController_logout",
+        "parameters": [
+          {
+            "name": "x-client",
+            "required": true,
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": ["Auth"]
+      }
+    },
+    "/api/v1/auth/logout-all": {
+      "post": {
+        "operationId": "AuthController_logoutAll",
+        "parameters": [
+          {
+            "name": "x-client",
+            "required": true,
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": ["Auth"]
+      }
+    },
+    "/api/v1/auth/sessions": {
+      "get": {
+        "operationId": "AuthController_listSessions",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": ["Auth"]
+      }
+    },
+    "/api/v1/auth/sessions/{id}": {
+      "delete": {
+        "operationId": "AuthController_revokeSession",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": ["Auth"]
+      }
+    },
+    "/api/v1/auth/me": {
+      "get": {
+        "operationId": "AuthController_getMe",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": ["Auth"]
+      }
+    },
+    "/api/v1/auth/invitations/accept": {
+      "post": {
+        "operationId": "AuthController_acceptInvitation",
+        "parameters": [
+          {
+            "name": "x-client",
+            "required": true,
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AcceptInvitationDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": ["Auth"]
+      }
+    },
+    "/api/v1/auth/password/forgot": {
+      "post": {
+        "operationId": "AuthController_forgotPassword",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ForgotPasswordDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": ["Auth"]
+      }
+    },
+    "/api/v1/auth/password/reset": {
+      "post": {
+        "operationId": "AuthController_resetPassword",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResetPasswordDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": ["Auth"]
+      }
+    },
+    "/api/v1/auth/request-unlock": {
+      "post": {
+        "operationId": "AuthController_requestUnlock",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestUnlockDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": ["Auth"]
+      }
+    },
+    "/api/v1/auth/unlock": {
+      "post": {
+        "operationId": "AuthController_unlock",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UnlockDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": ["Auth"]
+      }
+    },
+    "/api/v1/auth/2fa/generate": {
+      "post": {
+        "operationId": "AuthController_generate2Fa",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": ["Auth"]
+      }
+    },
+    "/api/v1/auth/2fa/enable": {
+      "post": {
+        "operationId": "AuthController_enable2Fa",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Enable2FaDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": ["Auth"]
+      }
+    },
+    "/api/v1/auth/2fa/disable": {
+      "post": {
+        "operationId": "AuthController_disable2Fa",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Disable2FaDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": ["Auth"]
+      }
+    },
+    "/api/v1/auth/step-up": {
+      "post": {
+        "operationId": "AuthController_stepUp",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StepUpDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": ["Auth"]
+      }
+    },
+    "/api/v1/roles": {
+      "get": {
+        "operationId": "RoleController_listRoles",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": ["Role"]
+      },
+      "post": {
+        "operationId": "RoleController_createRole",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRoleDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": ["Role"]
+      }
+    },
+    "/api/v1/roles/{id}": {
+      "get": {
+        "operationId": "RoleController_getRole",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": ["Role"]
+      },
+      "patch": {
+        "operationId": "RoleController_updateRole",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateRoleDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": ["Role"]
+      },
+      "delete": {
+        "operationId": "RoleController_deleteRole",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": ["Role"]
+      }
+    },
+    "/api/v1/roles/{id}/clone": {
+      "post": {
+        "operationId": "RoleController_cloneRole",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CloneRoleDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": ["Role"]
+      }
+    },
+    "/api/v1/roles/{id}/permissions": {
+      "put": {
+        "operationId": "RoleController_updateRolePermissions",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateRolePermissionsDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": ["Role"]
+      }
+    },
+    "/api/v1/users": {
+      "get": {
+        "operationId": "UserAdminController_listUsers",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": ["UserAdmin"]
+      },
+      "post": {
+        "operationId": "UserAdminController_createUser",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUserAdminDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": ["UserAdmin"]
+      }
+    },
+    "/api/v1/users/{id}": {
+      "get": {
+        "operationId": "UserAdminController_getUser",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": ["UserAdmin"]
+      }
+    },
+    "/api/v1/users/invite": {
+      "post": {
+        "operationId": "UserAdminController_inviteUser",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InviteUserDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": ["UserAdmin"]
+      }
+    },
+    "/api/v1/users/{id}/deactivate": {
+      "post": {
+        "operationId": "UserAdminController_deactivateUser",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": ["UserAdmin"]
+      }
+    },
+    "/api/v1/users/{id}/reactivate": {
+      "post": {
+        "operationId": "UserAdminController_reactivateUser",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": ["UserAdmin"]
+      }
+    },
+    "/api/v1/users/{id}/roles": {
+      "put": {
+        "operationId": "UserAdminController_updateUserRoles",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserRolesDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": ["UserAdmin"]
+      }
+    },
+    "/api/v1/users/{id}/branches": {
+      "put": {
+        "operationId": "UserAdminController_updateUserBranches",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserBranchesDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": ["UserAdmin"]
+      }
+    },
+    "/api/v1/users/{id}/reset-password": {
+      "post": {
+        "operationId": "UserAdminController_resetPassword",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdminResetPasswordDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": ["UserAdmin"]
+      }
+    },
+    "/api/v1/users/{id}/reset-2fa": {
+      "post": {
+        "operationId": "UserAdminController_reset2Fa",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": ["UserAdmin"]
+      }
+    },
+    "/api/v1/company/profile": {
+      "get": {
+        "operationId": "CompanyController_getProfile",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": ["Company"]
+      },
+      "patch": {
+        "operationId": "CompanyController_updateProfile",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCompanyProfileDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": ["Company"]
+      }
+    },
+    "/api/v1/company/branches": {
+      "get": {
+        "operationId": "CompanyController_listBranches",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": ["Company"]
+      },
+      "post": {
+        "operationId": "CompanyController_createBranch",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBranchDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": ["Company"]
+      }
+    },
+    "/api/v1/company/branches/{id}": {
+      "get": {
+        "operationId": "CompanyController_getBranch",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": ["Company"]
+      },
+      "patch": {
+        "operationId": "CompanyController_updateBranch",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateBranchDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": ["Company"]
+      },
+      "delete": {
+        "operationId": "CompanyController_deleteBranch",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": ["Company"]
+      }
+    },
+    "/api/v1/company/departments": {
+      "get": {
+        "operationId": "CompanyController_listDepartments",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": ["Company"]
+      },
+      "post": {
+        "operationId": "CompanyController_createDepartment",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateDepartmentDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": ["Company"]
+      }
+    },
+    "/api/v1/company/departments/{id}": {
+      "get": {
+        "operationId": "CompanyController_getDepartment",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": ["Company"]
+      },
+      "patch": {
+        "operationId": "CompanyController_updateDepartment",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateDepartmentDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": ["Company"]
+      },
+      "delete": {
+        "operationId": "CompanyController_deleteDepartment",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": ["Company"]
+      }
+    },
+    "/api/v1/documents/presign-upload": {
+      "post": {
+        "description": "Validates MIME type, file size, and malware/virus signatures before issuing presigned URL.",
+        "operationId": "DocumentsController_presignUpload",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PresignUploadDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PresignUploadResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Request presigned direct upload URL (S1)",
+        "tags": ["Documents"]
+      }
+    },
+    "/api/v1/documents/process-expiry": {
+      "post": {
+        "description": "Marks expired documents and emits outbox events for notification generation.",
+        "operationId": "DocumentsController_processExpiry",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Trigger document expiration scan for company (S3)",
+        "tags": ["Documents"]
+      }
+    },
+    "/api/v1/documents": {
+      "post": {
+        "description": "Verifies storage key, initializes document record and initial version (v1).",
+        "operationId": "DocumentsController_createDocument",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateDocumentDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DocumentResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Register and confirm uploaded document (S1)",
+        "tags": ["Documents"]
+      },
+      "get": {
+        "description": "Filter documents attached to entityType and entityId with pagination.",
+        "operationId": "DocumentsController_findAll",
+        "parameters": [
+          {
+            "name": "entityType",
+            "required": false,
+            "in": "query",
+            "description": "Filter by polymorphic entity type (e.g. PROJECT, LAND, CUSTOMER)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "entityId",
+            "required": false,
+            "in": "query",
+            "description": "Filter by attached entity ID",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "category",
+            "required": false,
+            "in": "query",
+            "description": "Filter by document category",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "description": "Filter by document status (ACTIVE, EXPIRED, ARCHIVED)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "Page number (1-based)",
+            "schema": {
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "required": false,
+            "in": "query",
+            "description": "Items per page",
+            "schema": {
+              "default": 20,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "List polymorphic documents (S2)",
+        "tags": ["Documents"]
+      }
+    },
+    "/api/v1/documents/{id}": {
+      "get": {
+        "operationId": "DocumentsController_findById",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DocumentResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get document details with version history (S2)",
+        "tags": ["Documents"]
+      },
+      "delete": {
+        "operationId": "DocumentsController_delete",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Soft-delete / archive document",
+        "tags": ["Documents"]
+      }
+    },
+    "/api/v1/documents/{id}/download": {
+      "get": {
+        "description": "Returns a short-lived presigned GET URL for the specified version (default: latest). API never proxies bytes.",
+        "operationId": "DocumentsController_getDownloadUrl",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "version",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PresignDownloadResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Request presigned direct download URL (S1 / S2)",
+        "tags": ["Documents"]
+      }
+    },
+    "/api/v1/documents/{id}/versions": {
+      "post": {
+        "description": "Increments version and creates new immutable version entry. Never overwrites older versions.",
+        "operationId": "DocumentsController_createVersion",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateVersionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DocumentResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Add a new version to an existing document (S2)",
+        "tags": ["Documents"]
+      }
+    },
+    "/api/v1/employees": {
+      "post": {
+        "operationId": "EmployeeController_createEmployee",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateEmployeeDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Create employee profile",
+        "tags": ["Employees"]
+      },
+      "get": {
+        "operationId": "EmployeeController_listEmployees",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 20,
+              "type": "number"
+            }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "description": "Search term for name, code, designation",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "branchId",
+            "required": false,
+            "in": "query",
+            "description": "Filter by branch",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "departmentId",
+            "required": false,
+            "in": "query",
+            "description": "Filter by department",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "supervisorId",
+            "required": false,
+            "in": "query",
+            "description": "Filter by supervisor",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "List employees with pagination and filters",
+        "tags": ["Employees"]
+      }
+    },
+    "/api/v1/employees/{id}": {
+      "get": {
+        "operationId": "EmployeeController_getEmployeeById",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get employee details by ID",
+        "tags": ["Employees"]
+      },
+      "patch": {
+        "operationId": "EmployeeController_updateEmployee",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateEmployeeDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Update employee profile",
+        "tags": ["Employees"]
+      },
+      "delete": {
+        "operationId": "EmployeeController_deleteEmployee",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Soft-delete employee profile",
+        "tags": ["Employees"]
+      }
+    },
+    "/api/v1/lands": {
+      "post": {
+        "operationId": "LandController_createLand",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateLandDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Create land parcel with area conversion",
+        "tags": ["Lands"]
+      },
+      "get": {
+        "operationId": "LandController_listLands",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 20,
+              "type": "number"
+            }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "description": "Search term for name, code, mouza, deed, khatian",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "district",
+            "required": false,
+            "in": "query",
+            "description": "Filter by district",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "upazila",
+            "required": false,
+            "in": "query",
+            "description": "Filter by upazila",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "description": "Filter by status",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "List land parcels with filters and pagination",
+        "tags": ["Lands"]
+      }
+    },
+    "/api/v1/lands/factors": {
+      "get": {
+        "operationId": "LandController_getLandFactors",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get current company land unit factors",
+        "tags": ["Lands"]
+      },
+      "put": {
+        "operationId": "LandController_updateLandFactors",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateLandFactorsDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Update company land unit factors",
+        "tags": ["Lands"]
+      }
+    },
+    "/api/v1/lands/{id}": {
+      "get": {
+        "operationId": "LandController_getLandById",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get land parcel details by ID",
+        "tags": ["Lands"]
+      },
+      "patch": {
+        "operationId": "LandController_updateLand",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateLandDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Update land parcel details",
+        "tags": ["Lands"]
+      },
+      "delete": {
+        "operationId": "LandController_deleteLand",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Soft-delete land parcel",
+        "tags": ["Lands"]
+      }
+    },
+    "/api/v1/license/verify": {
+      "post": {
+        "operationId": "LicenseController_verifyLicense",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VerifyLicenseDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": ["License"]
+      }
+    },
+    "/api/v1/license/transfer-request": {
+      "post": {
+        "operationId": "LicenseController_transferLicense",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TransferLicenseDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": ["License"]
+      }
+    },
+    "/api/v1/license/current": {
+      "get": {
+        "operationId": "LicenseController_getCurrentLicense",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": ["License"]
+      }
+    },
+    "/api/v1/system/licenses": {
+      "post": {
+        "operationId": "SystemLicenseController_issueLicense",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateLicenseDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": ["SystemLicense"]
+      }
+    },
+    "/api/v1/notifications": {
+      "get": {
+        "operationId": "NotificationsController_getInbox",
+        "parameters": [
+          {
+            "name": "isRead",
+            "required": false,
+            "in": "query",
+            "description": "Filter by read status",
+            "schema": {
+              "example": false,
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "Number of notifications to return (max 100)",
+            "schema": {
+              "default": 20,
+              "example": 20,
+              "type": "number"
+            }
+          },
+          {
+            "name": "cursor",
+            "required": false,
+            "in": "query",
+            "description": "Opaque base64url cursor token for next page",
+            "schema": {
+              "example": "eyJvZmZzZXQiOjIwfQ",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated user notifications"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "List in-app notifications for the authenticated user",
+        "tags": ["Notifications"]
+      }
+    },
+    "/api/v1/notifications/unread-count": {
+      "get": {
+        "operationId": "NotificationsController_getUnreadCount",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnreadCountResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get total unread notification count for authenticated user",
+        "tags": ["Notifications"]
+      }
+    },
+    "/api/v1/notifications/preferences": {
+      "get": {
+        "operationId": "NotificationsController_getPreferences",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/NotificationPreferenceResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get notification delivery preferences for authenticated user",
+        "tags": ["Notifications"]
+      },
+      "put": {
+        "operationId": "NotificationsController_updatePreferences",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePreferencesDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/NotificationPreferenceResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Update notification delivery preferences for authenticated user",
+        "tags": ["Notifications"]
+      }
+    },
+    "/api/v1/notifications/{id}/read": {
+      "patch": {
+        "operationId": "NotificationsController_markAsRead",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InAppNotificationResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Mark a specific in-app notification as read",
+        "tags": ["Notifications"]
+      }
+    },
+    "/api/v1/notifications/mark-all-read": {
+      "post": {
+        "operationId": "NotificationsController_markAllRead",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "All notifications marked as read"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Mark all unread in-app notifications as read",
+        "tags": ["Notifications"]
+      }
+    },
+    "/api/v1/projects": {
+      "post": {
+        "operationId": "ProjectController_createProject",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateProjectDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Create a new project with cost center and optional land link",
+        "tags": ["Projects"]
+      },
+      "get": {
+        "operationId": "ProjectController_listProjects",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 20,
+              "type": "number"
+            }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "description": "Search term across name, code, location, district",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "description": "Filter by project status",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "type",
+            "required": false,
+            "in": "query",
+            "description": "Filter by project type",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "district",
+            "required": false,
+            "in": "query",
+            "description": "Filter by district",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "landId",
+            "required": false,
+            "in": "query",
+            "description": "Filter by linked land ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "List projects with filters and pagination",
+        "tags": ["Projects"]
+      }
+    },
+    "/api/v1/projects/{id}/summary": {
+      "get": {
+        "operationId": "ProjectController_getProjectSummary",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get project summary counts and linked master data",
+        "tags": ["Projects"]
+      }
+    },
+    "/api/v1/projects/{id}": {
+      "get": {
+        "operationId": "ProjectController_getProjectById",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get project details by ID with cost center and linked land",
+        "tags": ["Projects"]
+      },
+      "patch": {
+        "operationId": "ProjectController_updateProject",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateProjectDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Update project details",
+        "tags": ["Projects"]
+      },
+      "delete": {
+        "operationId": "ProjectController_deleteProject",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Soft-delete project and its linked cost center",
+        "tags": ["Projects"]
+      }
+    },
+    "/api/v1/cost-centers": {
+      "get": {
+        "operationId": "CostCenterController_listCostCenters",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "List all cost centers for the company",
+        "tags": ["Cost Centers"]
+      }
+    },
+    "/api/v1/cost-centers/{id}": {
+      "get": {
+        "operationId": "CostCenterController_getCostCenterById",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get cost center details by ID",
+        "tags": ["Cost Centers"]
+      },
+      "patch": {
+        "operationId": "CostCenterController_updateCostCenter",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCostCenterDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Update cost center details",
+        "tags": ["Cost Centers"]
+      }
+    },
+    "/api/v1/properties": {
+      "post": {
+        "operationId": "PropertyController_createProperty",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePropertyDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Create new property unit in a project",
+        "tags": ["Properties"]
+      },
+      "get": {
+        "operationId": "PropertyController_listProperties",
+        "parameters": [
+          {
+            "name": "projectId",
+            "required": false,
+            "in": "query",
+            "description": "Filter by project UUID",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "blockId",
+            "required": false,
+            "in": "query",
+            "description": "Filter by block or zone UUID",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "floorId",
+            "required": false,
+            "in": "query",
+            "description": "Filter by road or floor UUID",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "description": "Filter by canonical status",
+            "schema": {
+              "type": "string",
+              "enum": ["Available", "Hold", "Reserved", "Booked", "Sold", "Blocked"]
+            }
+          },
+          {
+            "name": "type",
+            "required": false,
+            "in": "query",
+            "description": "Filter by property type",
+            "schema": {
+              "type": "string",
+              "enum": ["PLOT", "FLAT", "SHOP", "OFFICE", "PARKING"]
+            }
+          },
+          {
+            "name": "facing",
+            "required": false,
+            "in": "query",
+            "description": "Filter by facing direction",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "NORTH",
+                "SOUTH",
+                "EAST",
+                "WEST",
+                "NORTH_EAST",
+                "SOUTH_EAST",
+                "NORTH_WEST",
+                "SOUTH_WEST"
+              ]
+            }
+          },
+          {
+            "name": "minPricePaisa",
+            "required": false,
+            "in": "query",
+            "description": "Minimum net price in integer paisa",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "maxPricePaisa",
+            "required": false,
+            "in": "query",
+            "description": "Maximum net price in integer paisa",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "description": "Search by unit code or title",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "Page number",
+            "schema": {
+              "minimum": 1,
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "Page size limit",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20,
+              "type": "number"
+            }
+          },
+          {
+            "name": "sortBy",
+            "required": false,
+            "in": "query",
+            "description": "Sort field",
+            "schema": {
+              "default": "code",
+              "type": "string",
+              "enum": ["code", "createdAt", "netPricePaisa", "areaSqft"]
+            }
+          },
+          {
+            "name": "sortOrder",
+            "required": false,
+            "in": "query",
+            "description": "Sort direction",
+            "schema": {
+              "default": "asc",
+              "type": "string",
+              "enum": ["asc", "desc"]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "List properties with allowlist filtering and pagination. Serving index: @@index([company_id, project_id]), @@index([company_id, status]), @@index([company_id, type])",
+        "tags": ["Properties"]
+      }
+    },
+    "/api/v1/properties/pricing-preview": {
+      "post": {
+        "operationId": "PropertyController_previewPricing",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PricingPreviewDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Preview net price breakdown without persisting (base + premium - discount + charges = net)",
+        "tags": ["Properties"]
+      }
+    },
+    "/api/v1/properties/{id}/history": {
+      "get": {
+        "operationId": "PropertyController_getStatusHistory",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get full status transition history (who/what/when/why) for a property",
+        "tags": ["Properties"]
+      }
+    },
+    "/api/v1/properties/{id}": {
+      "get": {
+        "operationId": "PropertyController_getPropertyById",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get property detail by ID with block and floor details",
+        "tags": ["Properties"]
+      },
+      "patch": {
+        "operationId": "PropertyController_updateProperty",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePropertyDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Update property details (status updates are forbidden here - use workflow actions or override)",
+        "tags": ["Properties"]
+      },
+      "delete": {
+        "operationId": "PropertyController_deleteProperty",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Soft delete a property unit (prohibited if unit is Booked, Sold, or Reserved)",
+        "tags": ["Properties"]
+      }
+    },
+    "/api/v1/properties/{id}/hold": {
+      "post": {
+        "operationId": "PropertyController_holdProperty",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HoldPropertyDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Place an Available property on management hold with optional expiry",
+        "tags": ["Properties"]
+      }
+    },
+    "/api/v1/properties/{id}/release-hold": {
+      "post": {
+        "operationId": "PropertyController_releaseHold",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Release management hold and return property to Available",
+        "tags": ["Properties"]
+      }
+    },
+    "/api/v1/properties/{id}/block": {
+      "post": {
+        "operationId": "PropertyController_blockProperty",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BlockPropertyDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Block a property unit from sale with mandatory reason",
+        "tags": ["Properties"]
+      }
+    },
+    "/api/v1/properties/{id}/unblock": {
+      "post": {
+        "operationId": "PropertyController_unblockProperty",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Unblock property and return unit to Available",
+        "tags": ["Properties"]
+      }
+    },
+    "/api/v1/properties/{id}/status/override": {
+      "patch": {
+        "operationId": "PropertyController_overrideStatus",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StatusOverrideDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Manual status override with mandatory reason and STATUS_OVERRIDE audit [RULE-PROPERTY-STATUS]",
+        "tags": ["Properties"]
+      }
+    },
+    "/api/v1/settings": {
+      "get": {
+        "operationId": "SettingsController_getAllSettings",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": ["Settings"]
+      },
+      "put": {
+        "operationId": "SettingsController_updateBatch",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BatchUpdateSettingsDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": ["Settings"]
+      }
+    },
+    "/api/v1/settings/{key}": {
+      "get": {
+        "operationId": "SettingsController_getSetting",
+        "parameters": [
+          {
+            "name": "key",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": ["Settings"]
+      },
+      "put": {
+        "operationId": "SettingsController_updateSetting",
+        "parameters": [
+          {
+            "name": "key",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateSettingDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": ["Settings"]
+      }
+    },
+    "/api/v1/numbering/preview": {
+      "get": {
+        "operationId": "NumberingController_preview",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": ["Numbering"]
+      }
+    },
+    "/api/v1/numbering/patterns": {
+      "get": {
+        "operationId": "NumberingController_listPatterns",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": ["Numbering"]
+      }
+    },
+    "/api/v1/numbering/patterns/{documentType}": {
+      "get": {
+        "operationId": "NumberingController_getPattern",
+        "parameters": [
+          {
+            "name": "documentType",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": ["Numbering"]
+      },
+      "put": {
+        "operationId": "NumberingController_updatePattern",
+        "parameters": [
+          {
+            "name": "documentType",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateNumberingPatternDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": ["Numbering"]
+      }
+    },
+    "/api/v1/setup/checklist": {
+      "get": {
+        "operationId": "SetupChecklistController_getChecklist",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": ["SetupChecklist"]
+      }
+    },
+    "/api/v1/system/auth/register-initial": {
+      "post": {
+        "operationId": "SystemAuthController_registerInitialAdmin",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InitialAdminRegisterDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "summary": "Register the first Super Admin on the platform",
+        "tags": ["System Admin Authentication"]
+      }
+    },
+    "/api/v1/system/auth/login": {
+      "post": {
+        "operationId": "SystemAuthController_login",
+        "parameters": [
+          {
+            "name": "user-agent",
+            "required": true,
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SystemLoginDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Super Admin login requiring mandatory 2FA",
+        "tags": ["System Admin Authentication"]
+      }
+    },
+    "/api/v1/system/auth/2fa/setup": {
+      "post": {
+        "operationId": "SystemAuthController_setupTwoFactor",
+        "parameters": [
+          {
+            "name": "authorization",
+            "required": true,
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Setup mandatory 2FA for Super Admin",
+        "tags": ["System Admin Authentication"]
+      }
+    },
+    "/api/v1/system/tenants": {
+      "post": {
+        "operationId": "SystemTenantController_onboardTenant",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OnboardTenantDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Onboard a new company tenant (Super Admin only)",
+        "tags": ["System Admin - Tenants"]
+      },
+      "get": {
+        "operationId": "SystemTenantController_listTenants",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "List all company tenants across the platform",
+        "tags": ["System Admin - Tenants"]
+      }
+    },
+    "/api/v1/system/tenants/{id}": {
+      "get": {
+        "operationId": "SystemTenantController_getTenantById",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get details of a company tenant by ID",
+        "tags": ["System Admin - Tenants"]
+      }
+    },
+    "/api/v1/system/tenants/{id}/suspend": {
+      "post": {
+        "operationId": "SystemTenantController_suspendTenant",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SuspendTenantDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Suspend a company tenant (blocks business access)",
+        "tags": ["System Admin - Tenants"]
+      }
+    },
+    "/api/v1/system/tenants/{id}/reactivate": {
+      "post": {
+        "operationId": "SystemTenantController_reactivateTenant",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Reactivate a suspended company tenant",
+        "tags": ["System Admin - Tenants"]
+      }
+    },
+    "/api/v1/system/health": {
+      "get": {
+        "operationId": "SystemHealthController_getHealth",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": ["SystemHealth"]
+      }
+    }
+  },
+  "info": {
+    "title": "ExzaEstate Enterprise API",
+    "description": "Multi-tenant real estate management, ERP, and accounting platform REST API contract",
+    "version": "1.0.0",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [],
+  "components": {
+    "securitySchemes": {
+      "bearer-jwt": {
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "type": "http",
+        "description": "Enter JWT access token"
+      }
+    },
+    "schemas": {
+      "PaginatedCursorResponseDto": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "description": "List of records for current cursor window",
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "object"
+              }
+            }
+          },
+          "nextCursor": {
+            "type": "object",
+            "description": "Opaque cursor token for fetching next page (null if no more records)",
+            "nullable": true
+          },
+          "hasMore": {
+            "type": "boolean",
+            "description": "Indicates whether more records exist beyond current page"
+          },
+          "total": {
+            "type": "number",
+            "description": "Total count of matching records where available"
+          }
+        },
+        "required": ["items", "hasMore"]
+      },
+      "EntityHistoryResponseDto": {
+        "type": "object",
+        "properties": {
+          "recordType": {
+            "type": "string",
+            "description": "Entity record type",
+            "example": "document"
+          },
+          "recordId": {
+            "type": "string",
+            "description": "Entity record UUID",
+            "example": "01912345-6789-7abc-def0-123456789abc"
+          },
+          "history": {
+            "description": "Chronological list of audit mutations",
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "object"
+              }
+            }
+          }
+        },
+        "required": ["recordType", "recordId", "history"]
+      },
+      "LoginDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "RefreshTokenDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "AcceptInvitationDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "ForgotPasswordDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "ResetPasswordDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "RequestUnlockDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "UnlockDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "Enable2FaDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "Disable2FaDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "StepUpDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "CreateRoleDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "CloneRoleDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "UpdateRoleDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "UpdateRolePermissionsDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "InviteUserDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "CreateUserAdminDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "UpdateUserRolesDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "UpdateUserBranchesDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "AdminResetPasswordDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "UpdateCompanyProfileDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "CreateBranchDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "UpdateBranchDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "CreateDepartmentDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "UpdateDepartmentDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "PresignUploadDto": {
+        "type": "object",
+        "properties": {
+          "fileName": {
+            "type": "string",
+            "description": "File name with extension",
+            "example": "land_deed.pdf"
+          },
+          "mimeType": {
+            "type": "string",
+            "description": "MIME content type",
+            "example": "application/pdf"
+          },
+          "sizeBytes": {
+            "type": "number",
+            "description": "File size in bytes",
+            "example": 1048576
+          },
+          "entityType": {
+            "type": "string",
+            "description": "Polymorphic entity type",
+            "example": "PROJECT"
+          },
+          "entityId": {
+            "type": "string",
+            "description": "Polymorphic entity ID",
+            "example": "01912345-6789-7abc-def0-123456789abc"
+          },
+          "isPrivate": {
+            "type": "boolean",
+            "description": "Flag whether file is stored in private/sensitive storage",
+            "default": false
+          }
+        },
+        "required": ["fileName", "mimeType", "sizeBytes", "entityType", "entityId"]
+      },
+      "PresignUploadResponseDto": {
+        "type": "object",
+        "properties": {
+          "uploadUrl": {
+            "type": "string",
+            "description": "Presigned S3 PUT URL for direct client upload"
+          },
+          "fileKey": {
+            "type": "string",
+            "description": "Storage key where file should be stored"
+          },
+          "expiresInSeconds": {
+            "type": "number",
+            "description": "Expiration in seconds",
+            "example": 900
+          }
+        },
+        "required": ["uploadUrl", "fileKey", "expiresInSeconds"]
+      },
+      "CreateDocumentDto": {
+        "type": "object",
+        "properties": {
+          "fileKey": {
+            "type": "string",
+            "description": "S3 storage file key obtained from presign-upload",
+            "example": "comp-uuid/documents/entity-uuid/rand-land_deed.pdf"
+          },
+          "fileName": {
+            "type": "string",
+            "description": "File name with extension",
+            "example": "land_deed.pdf"
+          },
+          "mimeType": {
+            "type": "string",
+            "description": "MIME content type",
+            "example": "application/pdf"
+          },
+          "sizeBytes": {
+            "type": "number",
+            "description": "File size in bytes",
+            "example": 1048576
+          },
+          "title": {
+            "type": "string",
+            "description": "Document title",
+            "example": "Purbachal Land Deed"
+          },
+          "description": {
+            "type": "string",
+            "description": "Detailed description of the document"
+          },
+          "entityType": {
+            "type": "string",
+            "description": "Polymorphic entity type",
+            "example": "PROJECT"
+          },
+          "entityId": {
+            "type": "string",
+            "description": "Polymorphic entity ID",
+            "example": "01912345-6789-7abc-def0-123456789abc"
+          },
+          "category": {
+            "type": "string",
+            "description": "Document category (e.g. DEED, NID, CONTRACT, MUTATION)",
+            "example": "DEED"
+          },
+          "isPrivate": {
+            "type": "boolean",
+            "description": "Flag whether file is sensitive/private",
+            "default": false
+          },
+          "requiredPermission": {
+            "type": "string",
+            "description": "Optional specific permission required to access this document",
+            "example": "audit:view-sensitive"
+          },
+          "expiresAt": {
+            "type": "string",
+            "description": "Document expiration date (ISO 8601)",
+            "example": "2027-12-31T23:59:59.000Z"
+          },
+          "checksum": {
+            "type": "string",
+            "description": "File checksum (SHA-256 or MD5)"
+          },
+          "metadata": {
+            "type": "object",
+            "description": "Arbitrary custom metadata"
+          }
+        },
+        "required": [
+          "fileKey",
+          "fileName",
+          "mimeType",
+          "sizeBytes",
+          "title",
+          "entityType",
+          "entityId"
+        ]
+      },
+      "DocumentVersionResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Version ID"
+          },
+          "version": {
+            "type": "number",
+            "description": "Version number",
+            "example": 1
+          },
+          "fileKey": {
+            "type": "string",
+            "description": "File key in storage"
+          },
+          "fileName": {
+            "type": "string",
+            "description": "File name"
+          },
+          "mimeType": {
+            "type": "string",
+            "description": "MIME content type"
+          },
+          "sizeBytes": {
+            "type": "string",
+            "description": "File size in bytes (as string)"
+          },
+          "checksum": {
+            "type": "object",
+            "description": "File checksum"
+          },
+          "metadata": {
+            "type": "object",
+            "description": "Custom metadata"
+          },
+          "uploadedById": {
+            "type": "object",
+            "description": "User ID of uploader"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Upload timestamp"
+          }
+        },
+        "required": ["id", "version", "fileKey", "fileName", "mimeType", "sizeBytes", "createdAt"]
+      },
+      "DocumentResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Document ID"
+          },
+          "companyId": {
+            "type": "string",
+            "description": "Company ID"
+          },
+          "title": {
+            "type": "string",
+            "description": "Document title"
+          },
+          "description": {
+            "type": "object",
+            "description": "Document description"
+          },
+          "entityType": {
+            "type": "string",
+            "description": "Polymorphic entity type"
+          },
+          "entityId": {
+            "type": "string",
+            "description": "Polymorphic entity ID"
+          },
+          "category": {
+            "type": "object",
+            "description": "Document category"
+          },
+          "isPrivate": {
+            "type": "boolean",
+            "description": "Whether file is sensitive/private"
+          },
+          "requiredPermission": {
+            "type": "object",
+            "description": "Required permission to view"
+          },
+          "currentVersion": {
+            "type": "number",
+            "description": "Current version number"
+          },
+          "expiresAt": {
+            "type": "object",
+            "description": "Expiration date (ISO 8601)"
+          },
+          "isExpired": {
+            "type": "boolean",
+            "description": "Whether document has expired"
+          },
+          "status": {
+            "type": "string",
+            "description": "Document status (ACTIVE, EXPIRED, ARCHIVED)"
+          },
+          "createdById": {
+            "type": "object",
+            "description": "User ID who created the document"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Creation timestamp"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Last update timestamp"
+          },
+          "versions": {
+            "description": "List of all versions for this document",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DocumentVersionResponseDto"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "companyId",
+          "title",
+          "entityType",
+          "entityId",
+          "isPrivate",
+          "currentVersion",
+          "isExpired",
+          "status",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "PresignDownloadResponseDto": {
+        "type": "object",
+        "properties": {
+          "downloadUrl": {
+            "type": "string",
+            "description": "Presigned S3 GET URL for direct client download"
+          },
+          "fileName": {
+            "type": "string",
+            "description": "File name"
+          },
+          "mimeType": {
+            "type": "string",
+            "description": "MIME content type"
+          },
+          "version": {
+            "type": "number",
+            "description": "Version of the downloaded document"
+          },
+          "expiresInSeconds": {
+            "type": "number",
+            "description": "Expiration in seconds",
+            "example": 900
+          }
+        },
+        "required": ["downloadUrl", "fileName", "mimeType", "version", "expiresInSeconds"]
+      },
+      "CreateVersionDto": {
+        "type": "object",
+        "properties": {
+          "fileKey": {
+            "type": "string",
+            "description": "S3 storage file key obtained from presign-upload",
+            "example": "comp-uuid/documents/entity-uuid/rand-deed_v2.pdf"
+          },
+          "fileName": {
+            "type": "string",
+            "description": "File name with extension",
+            "example": "deed_v2.pdf"
+          },
+          "mimeType": {
+            "type": "string",
+            "description": "MIME content type",
+            "example": "application/pdf"
+          },
+          "sizeBytes": {
+            "type": "number",
+            "description": "File size in bytes",
+            "example": 2048000
+          },
+          "checksum": {
+            "type": "string",
+            "description": "File checksum (SHA-256 or MD5)"
+          },
+          "metadata": {
+            "type": "object",
+            "description": "Arbitrary custom metadata"
+          }
+        },
+        "required": ["fileKey", "fileName", "mimeType", "sizeBytes"]
+      },
+      "CreateEmployeeDto": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string",
+            "description": "User ID linked to this employee profile"
+          },
+          "employeeCode": {
+            "type": "string",
+            "description": "Unique employee code within the company",
+            "example": "EMP-001"
+          },
+          "designation": {
+            "type": "string",
+            "description": "Job designation",
+            "example": "General Manager"
+          },
+          "branchId": {
+            "type": "string",
+            "description": "Branch ID"
+          },
+          "departmentId": {
+            "type": "string",
+            "description": "Department ID"
+          },
+          "supervisorId": {
+            "type": "string",
+            "description": "Supervisor employee ID"
+          },
+          "joiningDate": {
+            "type": "string",
+            "description": "Date of joining (YYYY-MM-DD)"
+          },
+          "phone": {
+            "type": "string",
+            "description": "Contact phone number"
+          }
+        },
+        "required": ["userId", "employeeCode", "designation"]
+      },
+      "UpdateEmployeeDto": {
+        "type": "object",
+        "properties": {
+          "employeeCode": {
+            "type": "string",
+            "description": "Unique employee code within the company"
+          },
+          "designation": {
+            "type": "string",
+            "description": "Job designation"
+          },
+          "branchId": {
+            "type": "object",
+            "description": "Branch ID"
+          },
+          "departmentId": {
+            "type": "object",
+            "description": "Department ID"
+          },
+          "supervisorId": {
+            "type": "object",
+            "description": "Supervisor employee ID"
+          },
+          "joiningDate": {
+            "type": "object",
+            "description": "Date of joining (YYYY-MM-DD)"
+          },
+          "phone": {
+            "type": "object",
+            "description": "Contact phone number"
+          },
+          "isActive": {
+            "type": "boolean",
+            "description": "Active status"
+          }
+        }
+      },
+      "CompoundAreaPartDto": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "object",
+            "description": "Numeric value of the land unit",
+            "example": 5
+          },
+          "unit": {
+            "type": "string",
+            "description": "Land unit name (e.g. KATHA, DECIMAL, BIGHA, ACRE, SQFT)",
+            "example": "KATHA"
+          }
+        },
+        "required": ["value", "unit"]
+      },
+      "CreateLandDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name of the land parcel",
+            "example": "Purbachal Sector 4 Parcel"
+          },
+          "code": {
+            "type": "string",
+            "description": "Unique code for the land parcel",
+            "example": "LND-001"
+          },
+          "district": {
+            "type": "string",
+            "description": "District",
+            "example": "Dhaka"
+          },
+          "upazila": {
+            "type": "string",
+            "description": "Upazila / Thana",
+            "example": "Rupganj"
+          },
+          "mouza": {
+            "type": "string",
+            "description": "Mouza",
+            "example": "Brahmankhali"
+          },
+          "jlNumber": {
+            "type": "string",
+            "description": "JL Number",
+            "example": "JL-102"
+          },
+          "khatianNumber": {
+            "type": "string",
+            "description": "Khatian Number",
+            "example": "RS-452"
+          },
+          "dagNumber": {
+            "type": "string",
+            "description": "Dag Number",
+            "example": "CS-892, RS-1120"
+          },
+          "deedNumber": {
+            "type": "string",
+            "description": "Deed Number",
+            "example": "DEED-9921/2024"
+          },
+          "deedDate": {
+            "type": "string",
+            "description": "Deed Registration Date (YYYY-MM-DD)",
+            "example": "2024-05-12"
+          },
+          "recordedOwners": {
+            "type": "string",
+            "description": "Recorded Owners / Sellers in Title Deed"
+          },
+          "areaSqft": {
+            "type": "object",
+            "description": "Direct area in canonical square feet",
+            "example": 3600
+          },
+          "enteredArea": {
+            "type": "object",
+            "description": "Entered unit area amount",
+            "example": 5
+          },
+          "enteredUnit": {
+            "type": "string",
+            "description": "Entered unit (e.g. KATHA, DECIMAL, BIGHA)",
+            "example": "KATHA"
+          },
+          "compoundArea": {
+            "description": "Compound area specification (e.g. 5 Katha and 3 Decimal)",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CompoundAreaPartDto"
+            }
+          },
+          "purchasePricePaisa": {
+            "type": "object",
+            "description": "Purchase price in integer paisa",
+            "example": "5000000000"
+          },
+          "legalCostPaisa": {
+            "type": "object",
+            "description": "Legal and registration cost in paisa",
+            "example": "25000000"
+          },
+          "developmentCostPaisa": {
+            "type": "object",
+            "description": "Development and boundary cost in paisa",
+            "example": "10000000"
+          },
+          "mutationStatus": {
+            "type": "string",
+            "description": "Mutation status",
+            "example": "COMPLETED"
+          },
+          "taxStatus": {
+            "type": "string",
+            "description": "Land tax / dakhila status",
+            "example": "UP_TO_DATE"
+          },
+          "ownershipStatus": {
+            "type": "string",
+            "description": "Ownership type (e.g. OWNED, LEASED, JV)",
+            "example": "OWNED"
+          },
+          "status": {
+            "type": "string",
+            "description": "Operational status",
+            "example": "ACTIVE"
+          },
+          "latitude": {
+            "type": "object",
+            "description": "GPS Latitude",
+            "example": 23.8103
+          },
+          "longitude": {
+            "type": "object",
+            "description": "GPS Longitude",
+            "example": 90.4125
+          },
+          "remarks": {
+            "type": "string",
+            "description": "Internal remarks or boundary description"
+          }
+        },
+        "required": ["name", "district", "upazila", "mouza"]
+      },
+      "UpdateLandFactorsDto": {
+        "type": "object",
+        "properties": {
+          "katha": {
+            "type": "number",
+            "example": 720,
+            "description": "Square feet per Katha"
+          },
+          "decimal": {
+            "type": "number",
+            "example": 435.6,
+            "description": "Square feet per Decimal/Shotok"
+          },
+          "bigha": {
+            "type": "number",
+            "example": 14400,
+            "description": "Square feet per Bigha"
+          },
+          "acre": {
+            "type": "number",
+            "example": 43560,
+            "description": "Square feet per Acre"
+          }
+        }
+      },
+      "UpdateLandDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name of the land parcel"
+          },
+          "code": {
+            "type": "string",
+            "description": "Unique code for the land parcel"
+          },
+          "district": {
+            "type": "string",
+            "description": "District"
+          },
+          "upazila": {
+            "type": "string",
+            "description": "Upazila / Thana"
+          },
+          "mouza": {
+            "type": "string",
+            "description": "Mouza"
+          },
+          "jlNumber": {
+            "type": "string",
+            "description": "JL Number"
+          },
+          "khatianNumber": {
+            "type": "string",
+            "description": "Khatian Number"
+          },
+          "dagNumber": {
+            "type": "string",
+            "description": "Dag Number"
+          },
+          "deedNumber": {
+            "type": "string",
+            "description": "Deed Number"
+          },
+          "deedDate": {
+            "type": "string",
+            "description": "Deed Registration Date (YYYY-MM-DD)"
+          },
+          "recordedOwners": {
+            "type": "string",
+            "description": "Recorded Owners / Sellers in Title Deed"
+          },
+          "areaSqft": {
+            "type": "object",
+            "description": "Direct area in canonical square feet"
+          },
+          "enteredArea": {
+            "type": "object",
+            "description": "Entered unit area amount"
+          },
+          "enteredUnit": {
+            "type": "string",
+            "description": "Entered unit"
+          },
+          "compoundArea": {
+            "description": "Compound area specification (e.g. 5 Katha and 3 Decimal)",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CompoundAreaPartDto"
+            }
+          },
+          "purchasePricePaisa": {
+            "type": "object",
+            "description": "Purchase price in integer paisa"
+          },
+          "legalCostPaisa": {
+            "type": "object",
+            "description": "Legal and registration cost in paisa"
+          },
+          "developmentCostPaisa": {
+            "type": "object",
+            "description": "Development and boundary cost in paisa"
+          },
+          "mutationStatus": {
+            "type": "string",
+            "description": "Mutation status"
+          },
+          "taxStatus": {
+            "type": "string",
+            "description": "Land tax / dakhila status"
+          },
+          "ownershipStatus": {
+            "type": "string",
+            "description": "Ownership type"
+          },
+          "status": {
+            "type": "string",
+            "description": "Operational status"
+          },
+          "latitude": {
+            "type": "object",
+            "description": "GPS Latitude"
+          },
+          "longitude": {
+            "type": "object",
+            "description": "GPS Longitude"
+          },
+          "remarks": {
+            "type": "string",
+            "description": "Internal remarks or boundary description"
+          }
+        }
+      },
+      "VerifyLicenseDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "TransferLicenseDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "CreateLicenseDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "UnreadCountResponseDto": {
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "number",
+            "description": "Total count of unread notifications",
+            "example": 5
+          }
+        },
+        "required": ["count"]
+      },
+      "NotificationPreferenceResponseDto": {
+        "type": "object",
+        "properties": {
+          "eventCode": {
+            "type": "string",
+            "description": "Domain event code",
+            "example": "booking.confirmed"
+          },
+          "eventName": {
+            "type": "string",
+            "description": "Event human-friendly name",
+            "example": "Booking Confirmed"
+          },
+          "module": {
+            "type": "string",
+            "description": "Event category/module",
+            "example": "booking"
+          },
+          "channel": {
+            "type": "string",
+            "description": "Notification channel",
+            "example": "IN_APP"
+          },
+          "enabled": {
+            "type": "boolean",
+            "description": "Whether notification delivery is active",
+            "example": true
+          }
+        },
+        "required": ["eventCode", "eventName", "module", "channel", "enabled"]
+      },
+      "UpdatePreferenceItemDto": {
+        "type": "object",
+        "properties": {
+          "eventCode": {
+            "type": "string",
+            "description": "Domain event code",
+            "example": "booking.confirmed"
+          },
+          "channel": {
+            "type": "string",
+            "description": "Notification channel",
+            "example": "IN_APP",
+            "enum": ["IN_APP", "EMAIL", "SMS"]
+          },
+          "enabled": {
+            "type": "boolean",
+            "description": "Whether notifications for this channel and event are enabled",
+            "example": true
+          }
+        },
+        "required": ["eventCode", "channel", "enabled"]
+      },
+      "UpdatePreferencesDto": {
+        "type": "object",
+        "properties": {
+          "preferences": {
+            "description": "Array of preference overrides to upsert",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UpdatePreferenceItemDto"
+            }
+          }
+        },
+        "required": ["preferences"]
+      },
+      "InAppNotificationResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Notification UUIDv7 ID"
+          },
+          "companyId": {
+            "type": "string",
+            "description": "Company UUID"
+          },
+          "userId": {
+            "type": "string",
+            "description": "User UUID of recipient"
+          },
+          "eventCode": {
+            "type": "string",
+            "description": "Domain event code",
+            "example": "booking.confirmed"
+          },
+          "title": {
+            "type": "string",
+            "description": "Rendered notification title"
+          },
+          "body": {
+            "type": "string",
+            "description": "Rendered notification body"
+          },
+          "data": {
+            "type": "object",
+            "description": "Structured metadata and link targets"
+          },
+          "isRead": {
+            "type": "boolean",
+            "description": "Whether notification has been marked as read"
+          },
+          "readAt": {
+            "type": "object",
+            "description": "Timestamp when notification was read"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when notification was created"
+          }
+        },
+        "required": [
+          "id",
+          "companyId",
+          "userId",
+          "eventCode",
+          "title",
+          "body",
+          "isRead",
+          "createdAt"
+        ]
+      },
+      "CreateProjectDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name of the project",
+            "example": "Purbachal Green City Phase 1"
+          },
+          "code": {
+            "type": "string",
+            "description": "Unique project code",
+            "example": "PRJ-PUR-001"
+          },
+          "type": {
+            "type": "string",
+            "description": "Project type (e.g. RESIDENTIAL, COMMERCIAL, LAND_DEVELOPMENT, MIXED_USE)",
+            "example": "RESIDENTIAL"
+          },
+          "status": {
+            "type": "string",
+            "description": "Project status (PLANNING, IN_PROGRESS, UNDER_CONSTRUCTION, HANDOVER, COMPLETED, ON_HOLD, CANCELLED)",
+            "example": "PLANNING"
+          },
+          "landId": {
+            "type": "string",
+            "description": "Linked land parcel ID (UUID)"
+          },
+          "projectManagerId": {
+            "type": "string",
+            "description": "Assigned Project Manager User ID (UUID)"
+          },
+          "location": {
+            "type": "string",
+            "description": "General location name",
+            "example": "Sector 4, Purbachal"
+          },
+          "district": {
+            "type": "string",
+            "description": "District",
+            "example": "Gazipur"
+          },
+          "upazila": {
+            "type": "string",
+            "description": "Upazila / Thana",
+            "example": "Kaliganj"
+          },
+          "address": {
+            "type": "string",
+            "description": "Detailed project address"
+          },
+          "startDate": {
+            "type": "string",
+            "description": "Project start date (YYYY-MM-DD)",
+            "example": "2025-01-01"
+          },
+          "expectedCompletionDate": {
+            "type": "string",
+            "description": "Target completion date (YYYY-MM-DD)",
+            "example": "2028-12-31"
+          },
+          "endDate": {
+            "type": "string",
+            "description": "Actual end date (YYYY-MM-DD)"
+          },
+          "masterPlanUrl": {
+            "type": "string",
+            "description": "URL for master plan diagram / document"
+          },
+          "galleryUrls": {
+            "description": "Gallery image URLs",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "description": {
+            "type": "string",
+            "description": "Project description or marketing summary"
+          },
+          "estimatedBudgetPaisa": {
+            "type": "object",
+            "description": "Estimated budget in integer paisa",
+            "example": "50000000000"
+          },
+          "costCenterCode": {
+            "type": "string",
+            "description": "Custom cost center code (default: CC-{code})",
+            "example": "CC-PUR-001"
+          },
+          "costCenterName": {
+            "type": "string",
+            "description": "Custom cost center name (default: {name} Cost Center)"
+          }
+        },
+        "required": ["name", "type"]
+      },
+      "UpdateProjectDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name of the project"
+          },
+          "code": {
+            "type": "string",
+            "description": "Unique project code"
+          },
+          "type": {
+            "type": "string",
+            "description": "Project type"
+          },
+          "status": {
+            "type": "string",
+            "description": "Project status"
+          },
+          "landId": {
+            "type": "object",
+            "description": "Linked land parcel ID (UUID)"
+          },
+          "projectManagerId": {
+            "type": "object",
+            "description": "Assigned Project Manager User ID (UUID)"
+          },
+          "location": {
+            "type": "string",
+            "description": "General location name"
+          },
+          "district": {
+            "type": "string",
+            "description": "District"
+          },
+          "upazila": {
+            "type": "string",
+            "description": "Upazila / Thana"
+          },
+          "address": {
+            "type": "string",
+            "description": "Detailed project address"
+          },
+          "startDate": {
+            "type": "string",
+            "description": "Project start date (YYYY-MM-DD)"
+          },
+          "expectedCompletionDate": {
+            "type": "string",
+            "description": "Target completion date (YYYY-MM-DD)"
+          },
+          "endDate": {
+            "type": "string",
+            "description": "Actual end date (YYYY-MM-DD)"
+          },
+          "masterPlanUrl": {
+            "type": "string",
+            "description": "URL for master plan diagram"
+          },
+          "galleryUrls": {
+            "description": "Gallery image URLs",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "description": {
+            "type": "string",
+            "description": "Project description or marketing summary"
+          },
+          "estimatedBudgetPaisa": {
+            "type": "object",
+            "description": "Estimated budget in integer paisa"
+          }
+        }
+      },
+      "UpdateCostCenterDto": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "Cost center code"
+          },
+          "name": {
+            "type": "string",
+            "description": "Cost center name"
+          },
+          "description": {
+            "type": "string",
+            "description": "Description or notes"
+          },
+          "isActive": {
+            "type": "boolean",
+            "description": "Active status"
+          }
+        }
+      },
+      "CreatePropertyDto": {
+        "type": "object",
+        "properties": {
+          "projectId": {
+            "type": "string",
+            "description": "Target project UUID",
+            "example": "0192a000-0000-7000-8000-000000000001"
+          },
+          "blockId": {
+            "type": "string",
+            "description": "Optional Block or Zone UUID"
+          },
+          "floorId": {
+            "type": "string",
+            "description": "Optional Road or Floor UUID"
+          },
+          "code": {
+            "type": "string",
+            "description": "Unique property unit code in the project",
+            "example": "FLAT-A1"
+          },
+          "title": {
+            "type": "string",
+            "description": "Display title for the unit",
+            "example": "3BHK South-Facing Corner Unit"
+          },
+          "type": {
+            "type": "string",
+            "description": "Property type",
+            "enum": ["PLOT", "FLAT", "SHOP", "OFFICE", "PARKING"],
+            "example": "FLAT"
+          },
+          "areaSqft": {
+            "type": "string",
+            "description": "Area in square feet",
+            "example": "1450.5000"
+          },
+          "facing": {
+            "type": "string",
+            "description": "Facing direction",
+            "enum": [
+              "NORTH",
+              "SOUTH",
+              "EAST",
+              "WEST",
+              "NORTH_EAST",
+              "SOUTH_EAST",
+              "NORTH_WEST",
+              "SOUTH_WEST"
+            ],
+            "example": "SOUTH"
+          },
+          "basePricePaisa": {
+            "type": "string",
+            "description": "Base price in integer paisa",
+            "example": "1200000000"
+          },
+          "premiumPaisa": {
+            "type": "string",
+            "description": "Premium price in integer paisa",
+            "example": "50000000",
+            "default": "0"
+          },
+          "discountLimitPct": {
+            "type": "string",
+            "description": "Discount limit percentage (0-100)",
+            "example": "5.00",
+            "default": "0.00"
+          },
+          "ownerType": {
+            "type": "string",
+            "description": "Owner type",
+            "enum": ["COMPANY", "LANDOWNER"],
+            "example": "COMPANY",
+            "default": "COMPANY"
+          },
+          "description": {
+            "type": "string",
+            "description": "Detailed unit description"
+          },
+          "metadata": {
+            "type": "object",
+            "description": "Additional extensible metadata"
+          }
+        },
+        "required": ["projectId", "code", "type", "areaSqft", "basePricePaisa"]
+      },
+      "PricingChargeItemDto": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "Charge code (e.g. UTILITY, PARKING)"
+          },
+          "name": {
+            "type": "string",
+            "description": "Display name for charge"
+          },
+          "amountPaisa": {
+            "type": "string",
+            "description": "Charge amount in integer paisa"
+          }
+        },
+        "required": ["code", "name", "amountPaisa"]
+      },
+      "PricingPreviewDto": {
+        "type": "object",
+        "properties": {
+          "basePricePaisa": {
+            "type": "string",
+            "description": "Base price in integer paisa",
+            "example": "1000000000"
+          },
+          "premiumPaisa": {
+            "type": "string",
+            "description": "Premium price in integer paisa",
+            "example": "50000000"
+          },
+          "discountPaisa": {
+            "type": "string",
+            "description": "Explicit discount in integer paisa"
+          },
+          "discountPct": {
+            "type": "number",
+            "description": "Discount percentage on gross price",
+            "example": 5
+          },
+          "charges": {
+            "description": "Itemised charges",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PricingChargeItemDto"
+            }
+          },
+          "discountLimitPct": {
+            "type": "object",
+            "description": "Property discount limit percentage to validate against"
+          }
+        },
+        "required": ["basePricePaisa"]
+      },
+      "UpdatePropertyDto": {
+        "type": "object",
+        "properties": {
+          "blockId": {
+            "type": "string",
+            "description": "Optional Block or Zone UUID"
+          },
+          "floorId": {
+            "type": "string",
+            "description": "Optional Road or Floor UUID"
+          },
+          "title": {
+            "type": "string",
+            "description": "Display title for the unit"
+          },
+          "type": {
+            "type": "string",
+            "description": "Property type",
+            "enum": ["PLOT", "FLAT", "SHOP", "OFFICE", "PARKING"]
+          },
+          "areaSqft": {
+            "type": "string",
+            "description": "Area in square feet",
+            "example": "1450.5000"
+          },
+          "facing": {
+            "type": "string",
+            "description": "Facing direction",
+            "enum": [
+              "NORTH",
+              "SOUTH",
+              "EAST",
+              "WEST",
+              "NORTH_EAST",
+              "SOUTH_EAST",
+              "NORTH_WEST",
+              "SOUTH_WEST"
+            ]
+          },
+          "basePricePaisa": {
+            "type": "string",
+            "description": "Base price in integer paisa",
+            "example": "1200000000"
+          },
+          "premiumPaisa": {
+            "type": "string",
+            "description": "Premium price in integer paisa",
+            "example": "50000000"
+          },
+          "discountLimitPct": {
+            "type": "string",
+            "description": "Discount limit percentage (0-100)",
+            "example": "5.00"
+          },
+          "ownerType": {
+            "type": "string",
+            "description": "Owner type",
+            "enum": ["COMPANY", "LANDOWNER"]
+          },
+          "description": {
+            "type": "string",
+            "description": "Detailed unit description"
+          },
+          "metadata": {
+            "type": "object",
+            "description": "Additional extensible metadata"
+          }
+        }
+      },
+      "HoldPropertyDto": {
+        "type": "object",
+        "properties": {
+          "holdExpiresAt": {
+            "type": "string",
+            "description": "Optional ISO timestamp when the hold automatically expires",
+            "example": "2026-12-31T23:59:59Z"
+          },
+          "reason": {
+            "type": "string",
+            "description": "Reason for putting the unit on management hold",
+            "example": "Reserved for VIP prospective buyer review"
+          }
+        }
+      },
+      "BlockPropertyDto": {
+        "type": "object",
+        "properties": {
+          "reason": {
+            "type": "string",
+            "description": "Mandatory business reason for blocking unit from sale",
+            "example": "Legal dispute pending or reserved for landowner partition"
+          }
+        },
+        "required": ["reason"]
+      },
+      "StatusOverrideDto": {
+        "type": "object",
+        "properties": {
+          "targetStatus": {
+            "type": "string",
+            "description": "Target status to force override",
+            "enum": ["Available", "Hold", "Reserved", "Booked", "Sold", "Blocked"],
+            "example": "Available"
+          },
+          "reason": {
+            "type": "string",
+            "description": "Mandatory audited business justification for manual override",
+            "example": "Management approved manual correction after cancellation discrepancy"
+          }
+        },
+        "required": ["targetStatus", "reason"]
+      },
+      "UpdateSettingDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "BatchUpdateSettingsDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "UpdateNumberingPatternDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "InitialAdminRegisterDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "SystemLoginDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "OnboardTenantDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "SuspendTenantDto": {
+        "type": "object",
+        "properties": {}
+      }
+    }
+  }
+}

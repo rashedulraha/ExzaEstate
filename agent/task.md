@@ -556,7 +556,7 @@ These are applied as defaults in `architecture.md` v4 but are still **"Needs sig
 
 #### A2.3 — OpenAPI Export, Generated Client & HTTP Layer
 
-- **Status:** [ ] · **Tier:** 2 · **Size:** M (3 steps) · **Priority:** P0 · 🔒 D-13
+- **Status:** [x] · **Tier:** 2 · **Size:** M (3 steps) · **Priority:** P0 · 🔒 D-13
 - **Depends:** A2.2
 - **Reads:** `architecture.md` §6.3, §12.2; `rules.md` §4.1.
 - **Touches:** `apps/backend/src/openapi-export.ts`, `packages/api-client/**`, `scripts/**`, root `package.json` (`gen:api`), `.github/workflows/ci.yml` (enable `check-gen-api`).

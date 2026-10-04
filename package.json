@@ -18,6 +18,7 @@
     "test": "turbo run test",
     "db:seed": "pnpm --filter @exzaestate/backend seed",
     "db:seed:demo": "pnpm --filter @exzaestate/backend seed:demo",
+    "gen:api": "node --import ./scripts/swc-register.mjs apps/backend/src/openapi-export.ts && pnpm --filter @exzaestate/api-client gen && prettier --write packages/api-client/openapi.json",
     "check:all": "node scripts/check-all.mjs",
     "prepare": "husky"
   },
@@ -42,6 +43,13 @@
     ]
   },
   "pnpm": {
+    "onlyBuiltDependencies": [
+      "@swc/core",
+      "argon2",
+      "esbuild",
+      "msw",
+      "prisma"
+    ],
     "ignoredBuiltDependencies": [
       "msgpackr-extract"
     ]
