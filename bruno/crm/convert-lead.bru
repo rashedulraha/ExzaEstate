@@ -1,0 +1,28 @@
+meta {
+  name: Convert Lead to Customer
+  type: http
+  seq: 14
+}
+
+post {
+  url: {{baseUrl}}/crm/leads/{{leadId}}/convert
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+body:json {
+  {
+    "customerType": "INDIVIDUAL",
+    "fatherOrSpouseName": "Mr. Late Hossain",
+    "occupation": "Engineer",
+    "addressLine1": "House 12, Road 5, Dhanmondi",
+    "city": "Dhaka",
+    "division": "Dhaka Division",
+    "postalCode": "1205",
+    "notes": "Lead successfully converted to Customer"
+  }
+}
