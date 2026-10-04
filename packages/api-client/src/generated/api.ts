@@ -24,25 +24,69 @@ import type {
 
 import type {
   AcceptInvitationDto,
+  AccountBalanceResponseDto,
+  AccountResponseDto,
+  AccountingPeriodResponseDto,
   AdminResetPasswordDto,
+  AgreementControllerListAgreementsParams,
+  ApprovalsControllerGetInboxParams,
+  ApprovalsControllerGetRulesParams,
+  ApprovalsControllerGetSentParams,
+  ApproveApprovalDto,
+  AssignLeadDto,
+  AttachCustomerDocumentDto,
   AuditControllerExportAuditLogsParams,
   AuditControllerExportSecurityEventsParams,
   AuditControllerGetAuditLogsParams,
   AuditControllerGetSecurityEventsParams,
+  BalanceSheetReportDto,
+  BankAccountResponseDto,
+  BankBranchRefDto,
+  BankReconciliationResponseDto,
+  BankRefDto,
   BatchUpdateSettingsDto,
   BlockPropertyDto,
+  CalculateChargesDto,
+  CashBankControllerListAccountsParams,
+  CashBankControllerListReconciliationsParams,
+  CashTransferResponseDto,
+  ChangeLeadStatusDto,
+  ChargeControllerGetChargeTypesParams,
   CloneRoleDto,
+  ClosePeriodDto,
+  CoaControllerGetAccountsParams,
+  CompleteFollowUpDto,
+  ConvertLeadDto,
+  CreateAccountDto,
+  CreateAgreementTemplateDto,
+  CreateApprovalRuleDto,
+  CreateBankAccountDto,
+  CreateBankReconciliationDto,
   CreateBranchDto,
+  CreateCashTransferDto,
+  CreateChargeTypeDto,
+  CreateCustomerAddressDto,
+  CreateCustomerCoBuyerDto,
+  CreateCustomerContactDto,
+  CreateCustomerDto,
+  CreateCustomerNomineeDto,
   CreateDepartmentDto,
   CreateDocumentDto,
   CreateEmployeeDto,
+  CreateFollowUpDto,
+  CreateJournalDto,
   CreateLandDto,
+  CreateLeadDto,
   CreateLicenseDto,
+  CreatePaymentPlanTemplateDto,
   CreateProjectDto,
   CreatePropertyDto,
+  CreateQuotationDto,
   CreateRoleDto,
   CreateUserAdminDto,
   CreateVersionDto,
+  CrmControllerListLeadsParams,
+  CustomerControllerListCustomersParams,
   Disable2FaDto,
   DocumentResponseDto,
   DocumentsControllerFindAllParams,
@@ -50,51 +94,93 @@ import type {
   EmployeeControllerListEmployeesParams,
   Enable2FaDto,
   EntityHistoryResponseDto,
+  ExportJobResponseDto,
+  ExportLedgerDto,
+  ExportReportDto,
+  FiscalYearResponseDto,
+  FollowUpControllerListFollowUpsParams,
   ForgotPasswordDto,
+  GenerateAgreementDto,
   HealthControllerCheck200,
   HoldPropertyDto,
   InAppNotificationResponseDto,
+  IncomeStatementReportDto,
   InitialAdminRegisterDto,
   InviteUserDto,
+  JournalControllerGetJournalsParams,
+  JournalResponseDto,
   LandControllerListLandsParams,
+  LedgerControllerGetAccountLedgerParams,
+  LedgerControllerGetLedgerParams,
+  LedgerReportDto,
   LoginDto,
+  MatchReconciliationItemsRequestDto,
   NotificationPreferenceResponseDto,
   NotificationsControllerGetInboxParams,
   OnboardTenantDto,
+  OverrideApprovalDto,
   PaginatedCursorResponseDto,
+  PaymentPlanControllerGetTemplatesParams,
+  PeriodControllerGetPeriodsParams,
+  PostingRuleResponseDto,
   PresignDownloadResponseDto,
   PresignUploadDto,
   PresignUploadResponseDto,
+  PreviewScheduleDto,
   PricingPreviewDto,
   ProjectControllerListProjectsParams,
   PropertyControllerListPropertiesParams,
+  QuotationControllerGetQuotationsParams,
   RefreshTokenDto,
+  RejectApprovalDto,
+  ReopenPeriodDto,
+  ReportExportJobResponseDto,
+  ReportsControllerGetBalanceSheetParams,
+  ReportsControllerGetIncomeStatementParams,
+  ReportsControllerGetTrialBalanceParams,
   RequestUnlockDto,
   ResetPasswordDto,
+  ReverseJournalDto,
+  SignAndLockAgreementDto,
   StatusOverrideDto,
   StepUpDto,
   SuspendTenantDto,
   SystemLoginDto,
   TransferLicenseDto,
+  TrialBalanceReportDto,
   UnlockDto,
   UnreadCountResponseDto,
+  UnreconciledLineDto,
+  UpdateAccountDto,
+  UpdateAgreementDto,
+  UpdateApprovalRuleDto,
+  UpdateBankAccountDto,
   UpdateBranchDto,
+  UpdateChargeTypeDto,
   UpdateCompanyProfileDto,
   UpdateCostCenterDto,
+  UpdateCustomerDto,
   UpdateDepartmentDto,
   UpdateEmployeeDto,
+  UpdateFollowUpDto,
   UpdateLandDto,
   UpdateLandFactorsDto,
+  UpdateLeadDto,
   UpdateNumberingPatternDto,
+  UpdatePaymentPlanTemplateDto,
+  UpdatePostingRuleDto,
   UpdatePreferencesDto,
   UpdateProjectDto,
   UpdatePropertyDto,
+  UpdateQuotationDto,
   UpdateRoleDto,
   UpdateRolePermissionsDto,
   UpdateSettingDto,
   UpdateUserBranchesDto,
   UpdateUserRolesDto,
+  VerifyKycDto,
   VerifyLicenseDto,
+  VersionAgreementDto,
 } from './model';
 
 import { customInstance } from '../http';
@@ -3763,6 +3849,6168 @@ export const useUserAdminControllerReset2Fa = <TError = unknown, TContext = unkn
   return useMutation(mutationOptions, queryClient);
 };
 
+/**
+ * @summary List pending approval requests waiting for current user action
+ */
+export const approvalsControllerGetInbox = (
+  params?: ApprovalsControllerGetInboxParams,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>(
+    { url: `/api/v1/approvals/inbox`, method: 'GET', params, signal },
+    options,
+  );
+};
+
+export const getApprovalsControllerGetInboxQueryKey = (
+  params?: ApprovalsControllerGetInboxParams,
+) => {
+  return [`/api/v1/approvals/inbox`, ...(params ? [params] : [])] as const;
+};
+
+export const getApprovalsControllerGetInboxQueryOptions = <
+  TData = Awaited<ReturnType<typeof approvalsControllerGetInbox>>,
+  TError = unknown,
+>(
+  params?: ApprovalsControllerGetInboxParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof approvalsControllerGetInbox>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getApprovalsControllerGetInboxQueryKey(params);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof approvalsControllerGetInbox>>> = ({
+    signal,
+  }) => approvalsControllerGetInbox(params, requestOptions, signal);
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof approvalsControllerGetInbox>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type ApprovalsControllerGetInboxQueryResult = NonNullable<
+  Awaited<ReturnType<typeof approvalsControllerGetInbox>>
+>;
+export type ApprovalsControllerGetInboxQueryError = unknown;
+
+export function useApprovalsControllerGetInbox<
+  TData = Awaited<ReturnType<typeof approvalsControllerGetInbox>>,
+  TError = unknown,
+>(
+  params: undefined | ApprovalsControllerGetInboxParams,
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof approvalsControllerGetInbox>>, TError, TData>
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof approvalsControllerGetInbox>>,
+          TError,
+          Awaited<ReturnType<typeof approvalsControllerGetInbox>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useApprovalsControllerGetInbox<
+  TData = Awaited<ReturnType<typeof approvalsControllerGetInbox>>,
+  TError = unknown,
+>(
+  params?: ApprovalsControllerGetInboxParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof approvalsControllerGetInbox>>, TError, TData>
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof approvalsControllerGetInbox>>,
+          TError,
+          Awaited<ReturnType<typeof approvalsControllerGetInbox>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useApprovalsControllerGetInbox<
+  TData = Awaited<ReturnType<typeof approvalsControllerGetInbox>>,
+  TError = unknown,
+>(
+  params?: ApprovalsControllerGetInboxParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof approvalsControllerGetInbox>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary List pending approval requests waiting for current user action
+ */
+
+export function useApprovalsControllerGetInbox<
+  TData = Awaited<ReturnType<typeof approvalsControllerGetInbox>>,
+  TError = unknown,
+>(
+  params?: ApprovalsControllerGetInboxParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof approvalsControllerGetInbox>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getApprovalsControllerGetInboxQueryOptions(params, options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+/**
+ * @summary List approval requests created by current user
+ */
+export const approvalsControllerGetSent = (
+  params?: ApprovalsControllerGetSentParams,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>(
+    { url: `/api/v1/approvals/sent`, method: 'GET', params, signal },
+    options,
+  );
+};
+
+export const getApprovalsControllerGetSentQueryKey = (
+  params?: ApprovalsControllerGetSentParams,
+) => {
+  return [`/api/v1/approvals/sent`, ...(params ? [params] : [])] as const;
+};
+
+export const getApprovalsControllerGetSentQueryOptions = <
+  TData = Awaited<ReturnType<typeof approvalsControllerGetSent>>,
+  TError = unknown,
+>(
+  params?: ApprovalsControllerGetSentParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof approvalsControllerGetSent>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getApprovalsControllerGetSentQueryKey(params);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof approvalsControllerGetSent>>> = ({
+    signal,
+  }) => approvalsControllerGetSent(params, requestOptions, signal);
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof approvalsControllerGetSent>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type ApprovalsControllerGetSentQueryResult = NonNullable<
+  Awaited<ReturnType<typeof approvalsControllerGetSent>>
+>;
+export type ApprovalsControllerGetSentQueryError = unknown;
+
+export function useApprovalsControllerGetSent<
+  TData = Awaited<ReturnType<typeof approvalsControllerGetSent>>,
+  TError = unknown,
+>(
+  params: undefined | ApprovalsControllerGetSentParams,
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof approvalsControllerGetSent>>, TError, TData>
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof approvalsControllerGetSent>>,
+          TError,
+          Awaited<ReturnType<typeof approvalsControllerGetSent>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useApprovalsControllerGetSent<
+  TData = Awaited<ReturnType<typeof approvalsControllerGetSent>>,
+  TError = unknown,
+>(
+  params?: ApprovalsControllerGetSentParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof approvalsControllerGetSent>>, TError, TData>
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof approvalsControllerGetSent>>,
+          TError,
+          Awaited<ReturnType<typeof approvalsControllerGetSent>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useApprovalsControllerGetSent<
+  TData = Awaited<ReturnType<typeof approvalsControllerGetSent>>,
+  TError = unknown,
+>(
+  params?: ApprovalsControllerGetSentParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof approvalsControllerGetSent>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary List approval requests created by current user
+ */
+
+export function useApprovalsControllerGetSent<
+  TData = Awaited<ReturnType<typeof approvalsControllerGetSent>>,
+  TError = unknown,
+>(
+  params?: ApprovalsControllerGetSentParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof approvalsControllerGetSent>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getApprovalsControllerGetSentQueryOptions(params, options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+/**
+ * @summary Trigger background check to mark overdue requests Expired
+ */
+export const approvalsControllerCheckExpiry = (
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>(
+    { url: `/api/v1/approvals/check-expiry`, method: 'POST', signal },
+    options,
+  );
+};
+
+export const getApprovalsControllerCheckExpiryMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof approvalsControllerCheckExpiry>>,
+    TError,
+    void,
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof approvalsControllerCheckExpiry>>,
+  TError,
+  void,
+  TContext
+> => {
+  const mutationKey = ['approvalsControllerCheckExpiry'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof approvalsControllerCheckExpiry>>,
+    void
+  > = () => {
+    return approvalsControllerCheckExpiry(requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type ApprovalsControllerCheckExpiryMutationResult = NonNullable<
+  Awaited<ReturnType<typeof approvalsControllerCheckExpiry>>
+>;
+
+export type ApprovalsControllerCheckExpiryMutationError = unknown;
+
+/**
+ * @summary Trigger background check to mark overdue requests Expired
+ */
+export const useApprovalsControllerCheckExpiry = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof approvalsControllerCheckExpiry>>,
+      TError,
+      void,
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof approvalsControllerCheckExpiry>>,
+  TError,
+  void,
+  TContext
+> => {
+  const mutationOptions = getApprovalsControllerCheckExpiryMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary List approval matrix rules configured for the company
+ */
+export const approvalsControllerGetRules = (
+  params: ApprovalsControllerGetRulesParams,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>(
+    { url: `/api/v1/approvals/rules`, method: 'GET', params, signal },
+    options,
+  );
+};
+
+export const getApprovalsControllerGetRulesQueryKey = (
+  params?: ApprovalsControllerGetRulesParams,
+) => {
+  return [`/api/v1/approvals/rules`, ...(params ? [params] : [])] as const;
+};
+
+export const getApprovalsControllerGetRulesQueryOptions = <
+  TData = Awaited<ReturnType<typeof approvalsControllerGetRules>>,
+  TError = unknown,
+>(
+  params: ApprovalsControllerGetRulesParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof approvalsControllerGetRules>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getApprovalsControllerGetRulesQueryKey(params);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof approvalsControllerGetRules>>> = ({
+    signal,
+  }) => approvalsControllerGetRules(params, requestOptions, signal);
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof approvalsControllerGetRules>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type ApprovalsControllerGetRulesQueryResult = NonNullable<
+  Awaited<ReturnType<typeof approvalsControllerGetRules>>
+>;
+export type ApprovalsControllerGetRulesQueryError = unknown;
+
+export function useApprovalsControllerGetRules<
+  TData = Awaited<ReturnType<typeof approvalsControllerGetRules>>,
+  TError = unknown,
+>(
+  params: ApprovalsControllerGetRulesParams,
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof approvalsControllerGetRules>>, TError, TData>
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof approvalsControllerGetRules>>,
+          TError,
+          Awaited<ReturnType<typeof approvalsControllerGetRules>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useApprovalsControllerGetRules<
+  TData = Awaited<ReturnType<typeof approvalsControllerGetRules>>,
+  TError = unknown,
+>(
+  params: ApprovalsControllerGetRulesParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof approvalsControllerGetRules>>, TError, TData>
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof approvalsControllerGetRules>>,
+          TError,
+          Awaited<ReturnType<typeof approvalsControllerGetRules>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useApprovalsControllerGetRules<
+  TData = Awaited<ReturnType<typeof approvalsControllerGetRules>>,
+  TError = unknown,
+>(
+  params: ApprovalsControllerGetRulesParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof approvalsControllerGetRules>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary List approval matrix rules configured for the company
+ */
+
+export function useApprovalsControllerGetRules<
+  TData = Awaited<ReturnType<typeof approvalsControllerGetRules>>,
+  TError = unknown,
+>(
+  params: ApprovalsControllerGetRulesParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof approvalsControllerGetRules>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getApprovalsControllerGetRulesQueryOptions(params, options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+/**
+ * @summary Create new approval matrix threshold rule
+ */
+export const approvalsControllerCreateRule = (
+  createApprovalRuleDto: CreateApprovalRuleDto,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>(
+    {
+      url: `/api/v1/approvals/rules`,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      data: createApprovalRuleDto,
+      signal,
+    },
+    options,
+  );
+};
+
+export const getApprovalsControllerCreateRuleMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof approvalsControllerCreateRule>>,
+    TError,
+    { data: CreateApprovalRuleDto },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof approvalsControllerCreateRule>>,
+  TError,
+  { data: CreateApprovalRuleDto },
+  TContext
+> => {
+  const mutationKey = ['approvalsControllerCreateRule'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof approvalsControllerCreateRule>>,
+    { data: CreateApprovalRuleDto }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return approvalsControllerCreateRule(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type ApprovalsControllerCreateRuleMutationResult = NonNullable<
+  Awaited<ReturnType<typeof approvalsControllerCreateRule>>
+>;
+export type ApprovalsControllerCreateRuleMutationBody = CreateApprovalRuleDto;
+export type ApprovalsControllerCreateRuleMutationError = unknown;
+
+/**
+ * @summary Create new approval matrix threshold rule
+ */
+export const useApprovalsControllerCreateRule = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof approvalsControllerCreateRule>>,
+      TError,
+      { data: CreateApprovalRuleDto },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof approvalsControllerCreateRule>>,
+  TError,
+  { data: CreateApprovalRuleDto },
+  TContext
+> => {
+  const mutationOptions = getApprovalsControllerCreateRuleMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary Update approval matrix rule
+ */
+export const approvalsControllerUpdateRule = (
+  id: string,
+  updateApprovalRuleDto: UpdateApprovalRuleDto,
+  options?: SecondParameter<typeof customInstance>,
+) => {
+  return customInstance<void>(
+    {
+      url: `/api/v1/approvals/rules/${id}`,
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      data: updateApprovalRuleDto,
+    },
+    options,
+  );
+};
+
+export const getApprovalsControllerUpdateRuleMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof approvalsControllerUpdateRule>>,
+    TError,
+    { id: string; data: UpdateApprovalRuleDto },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof approvalsControllerUpdateRule>>,
+  TError,
+  { id: string; data: UpdateApprovalRuleDto },
+  TContext
+> => {
+  const mutationKey = ['approvalsControllerUpdateRule'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof approvalsControllerUpdateRule>>,
+    { id: string; data: UpdateApprovalRuleDto }
+  > = (props) => {
+    const { id, data } = props ?? {};
+
+    return approvalsControllerUpdateRule(id, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type ApprovalsControllerUpdateRuleMutationResult = NonNullable<
+  Awaited<ReturnType<typeof approvalsControllerUpdateRule>>
+>;
+export type ApprovalsControllerUpdateRuleMutationBody = UpdateApprovalRuleDto;
+export type ApprovalsControllerUpdateRuleMutationError = unknown;
+
+/**
+ * @summary Update approval matrix rule
+ */
+export const useApprovalsControllerUpdateRule = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof approvalsControllerUpdateRule>>,
+      TError,
+      { id: string; data: UpdateApprovalRuleDto },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof approvalsControllerUpdateRule>>,
+  TError,
+  { id: string; data: UpdateApprovalRuleDto },
+  TContext
+> => {
+  const mutationOptions = getApprovalsControllerUpdateRuleMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary Soft-delete approval matrix rule
+ */
+export const approvalsControllerDeleteRule = (
+  id: string,
+  options?: SecondParameter<typeof customInstance>,
+) => {
+  return customInstance<void>({ url: `/api/v1/approvals/rules/${id}`, method: 'DELETE' }, options);
+};
+
+export const getApprovalsControllerDeleteRuleMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof approvalsControllerDeleteRule>>,
+    TError,
+    { id: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof approvalsControllerDeleteRule>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  const mutationKey = ['approvalsControllerDeleteRule'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof approvalsControllerDeleteRule>>,
+    { id: string }
+  > = (props) => {
+    const { id } = props ?? {};
+
+    return approvalsControllerDeleteRule(id, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type ApprovalsControllerDeleteRuleMutationResult = NonNullable<
+  Awaited<ReturnType<typeof approvalsControllerDeleteRule>>
+>;
+
+export type ApprovalsControllerDeleteRuleMutationError = unknown;
+
+/**
+ * @summary Soft-delete approval matrix rule
+ */
+export const useApprovalsControllerDeleteRule = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof approvalsControllerDeleteRule>>,
+      TError,
+      { id: string },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof approvalsControllerDeleteRule>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  const mutationOptions = getApprovalsControllerDeleteRuleMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary Get approval request details and step history
+ */
+export const approvalsControllerGetApprovalById = (
+  id: string,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>({ url: `/api/v1/approvals/${id}`, method: 'GET', signal }, options);
+};
+
+export const getApprovalsControllerGetApprovalByIdQueryKey = (id?: string) => {
+  return [`/api/v1/approvals/${id}`] as const;
+};
+
+export const getApprovalsControllerGetApprovalByIdQueryOptions = <
+  TData = Awaited<ReturnType<typeof approvalsControllerGetApprovalById>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof approvalsControllerGetApprovalById>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getApprovalsControllerGetApprovalByIdQueryKey(id);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof approvalsControllerGetApprovalById>>> = ({
+    signal,
+  }) => approvalsControllerGetApprovalById(id, requestOptions, signal);
+
+  return { queryKey, queryFn, enabled: !!id, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof approvalsControllerGetApprovalById>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type ApprovalsControllerGetApprovalByIdQueryResult = NonNullable<
+  Awaited<ReturnType<typeof approvalsControllerGetApprovalById>>
+>;
+export type ApprovalsControllerGetApprovalByIdQueryError = unknown;
+
+export function useApprovalsControllerGetApprovalById<
+  TData = Awaited<ReturnType<typeof approvalsControllerGetApprovalById>>,
+  TError = unknown,
+>(
+  id: string,
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof approvalsControllerGetApprovalById>>, TError, TData>
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof approvalsControllerGetApprovalById>>,
+          TError,
+          Awaited<ReturnType<typeof approvalsControllerGetApprovalById>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useApprovalsControllerGetApprovalById<
+  TData = Awaited<ReturnType<typeof approvalsControllerGetApprovalById>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof approvalsControllerGetApprovalById>>, TError, TData>
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof approvalsControllerGetApprovalById>>,
+          TError,
+          Awaited<ReturnType<typeof approvalsControllerGetApprovalById>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useApprovalsControllerGetApprovalById<
+  TData = Awaited<ReturnType<typeof approvalsControllerGetApprovalById>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof approvalsControllerGetApprovalById>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary Get approval request details and step history
+ */
+
+export function useApprovalsControllerGetApprovalById<
+  TData = Awaited<ReturnType<typeof approvalsControllerGetApprovalById>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof approvalsControllerGetApprovalById>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getApprovalsControllerGetApprovalByIdQueryOptions(id, options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+/**
+ * @summary Approve current step of the approval request
+ */
+export const approvalsControllerApprove = (
+  id: string,
+  approveApprovalDto: ApproveApprovalDto,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>(
+    {
+      url: `/api/v1/approvals/${id}/approve`,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      data: approveApprovalDto,
+      signal,
+    },
+    options,
+  );
+};
+
+export const getApprovalsControllerApproveMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof approvalsControllerApprove>>,
+    TError,
+    { id: string; data: ApproveApprovalDto },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof approvalsControllerApprove>>,
+  TError,
+  { id: string; data: ApproveApprovalDto },
+  TContext
+> => {
+  const mutationKey = ['approvalsControllerApprove'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof approvalsControllerApprove>>,
+    { id: string; data: ApproveApprovalDto }
+  > = (props) => {
+    const { id, data } = props ?? {};
+
+    return approvalsControllerApprove(id, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type ApprovalsControllerApproveMutationResult = NonNullable<
+  Awaited<ReturnType<typeof approvalsControllerApprove>>
+>;
+export type ApprovalsControllerApproveMutationBody = ApproveApprovalDto;
+export type ApprovalsControllerApproveMutationError = unknown;
+
+/**
+ * @summary Approve current step of the approval request
+ */
+export const useApprovalsControllerApprove = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof approvalsControllerApprove>>,
+      TError,
+      { id: string; data: ApproveApprovalDto },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof approvalsControllerApprove>>,
+  TError,
+  { id: string; data: ApproveApprovalDto },
+  TContext
+> => {
+  const mutationOptions = getApprovalsControllerApproveMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary Reject approval request with mandatory reason
+ */
+export const approvalsControllerReject = (
+  id: string,
+  rejectApprovalDto: RejectApprovalDto,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>(
+    {
+      url: `/api/v1/approvals/${id}/reject`,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      data: rejectApprovalDto,
+      signal,
+    },
+    options,
+  );
+};
+
+export const getApprovalsControllerRejectMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof approvalsControllerReject>>,
+    TError,
+    { id: string; data: RejectApprovalDto },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof approvalsControllerReject>>,
+  TError,
+  { id: string; data: RejectApprovalDto },
+  TContext
+> => {
+  const mutationKey = ['approvalsControllerReject'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof approvalsControllerReject>>,
+    { id: string; data: RejectApprovalDto }
+  > = (props) => {
+    const { id, data } = props ?? {};
+
+    return approvalsControllerReject(id, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type ApprovalsControllerRejectMutationResult = NonNullable<
+  Awaited<ReturnType<typeof approvalsControllerReject>>
+>;
+export type ApprovalsControllerRejectMutationBody = RejectApprovalDto;
+export type ApprovalsControllerRejectMutationError = unknown;
+
+/**
+ * @summary Reject approval request with mandatory reason
+ */
+export const useApprovalsControllerReject = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof approvalsControllerReject>>,
+      TError,
+      { id: string; data: RejectApprovalDto },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof approvalsControllerReject>>,
+  TError,
+  { id: string; data: RejectApprovalDto },
+  TContext
+> => {
+  const mutationOptions = getApprovalsControllerRejectMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary Joint control executive override (requires two distinct users)
+ */
+export const approvalsControllerOverride = (
+  id: string,
+  overrideApprovalDto: OverrideApprovalDto,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>(
+    {
+      url: `/api/v1/approvals/${id}/override`,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      data: overrideApprovalDto,
+      signal,
+    },
+    options,
+  );
+};
+
+export const getApprovalsControllerOverrideMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof approvalsControllerOverride>>,
+    TError,
+    { id: string; data: OverrideApprovalDto },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof approvalsControllerOverride>>,
+  TError,
+  { id: string; data: OverrideApprovalDto },
+  TContext
+> => {
+  const mutationKey = ['approvalsControllerOverride'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof approvalsControllerOverride>>,
+    { id: string; data: OverrideApprovalDto }
+  > = (props) => {
+    const { id, data } = props ?? {};
+
+    return approvalsControllerOverride(id, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type ApprovalsControllerOverrideMutationResult = NonNullable<
+  Awaited<ReturnType<typeof approvalsControllerOverride>>
+>;
+export type ApprovalsControllerOverrideMutationBody = OverrideApprovalDto;
+export type ApprovalsControllerOverrideMutationError = unknown;
+
+/**
+ * @summary Joint control executive override (requires two distinct users)
+ */
+export const useApprovalsControllerOverride = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof approvalsControllerOverride>>,
+      TError,
+      { id: string; data: OverrideApprovalDto },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof approvalsControllerOverride>>,
+  TError,
+  { id: string; data: OverrideApprovalDto },
+  TContext
+> => {
+  const mutationOptions = getApprovalsControllerOverrideMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary List all accounts for the current company
+ */
+export const coaControllerGetAccounts = (
+  params?: CoaControllerGetAccountsParams,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<AccountResponseDto[]>(
+    { url: `/api/v1/accounting/coa`, method: 'GET', params, signal },
+    options,
+  );
+};
+
+export const getCoaControllerGetAccountsQueryKey = (params?: CoaControllerGetAccountsParams) => {
+  return [`/api/v1/accounting/coa`, ...(params ? [params] : [])] as const;
+};
+
+export const getCoaControllerGetAccountsQueryOptions = <
+  TData = Awaited<ReturnType<typeof coaControllerGetAccounts>>,
+  TError = unknown,
+>(
+  params?: CoaControllerGetAccountsParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof coaControllerGetAccounts>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getCoaControllerGetAccountsQueryKey(params);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof coaControllerGetAccounts>>> = ({
+    signal,
+  }) => coaControllerGetAccounts(params, requestOptions, signal);
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof coaControllerGetAccounts>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type CoaControllerGetAccountsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof coaControllerGetAccounts>>
+>;
+export type CoaControllerGetAccountsQueryError = unknown;
+
+export function useCoaControllerGetAccounts<
+  TData = Awaited<ReturnType<typeof coaControllerGetAccounts>>,
+  TError = unknown,
+>(
+  params: undefined | CoaControllerGetAccountsParams,
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof coaControllerGetAccounts>>, TError, TData>
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof coaControllerGetAccounts>>,
+          TError,
+          Awaited<ReturnType<typeof coaControllerGetAccounts>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useCoaControllerGetAccounts<
+  TData = Awaited<ReturnType<typeof coaControllerGetAccounts>>,
+  TError = unknown,
+>(
+  params?: CoaControllerGetAccountsParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof coaControllerGetAccounts>>, TError, TData>
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof coaControllerGetAccounts>>,
+          TError,
+          Awaited<ReturnType<typeof coaControllerGetAccounts>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useCoaControllerGetAccounts<
+  TData = Awaited<ReturnType<typeof coaControllerGetAccounts>>,
+  TError = unknown,
+>(
+  params?: CoaControllerGetAccountsParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof coaControllerGetAccounts>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary List all accounts for the current company
+ */
+
+export function useCoaControllerGetAccounts<
+  TData = Awaited<ReturnType<typeof coaControllerGetAccounts>>,
+  TError = unknown,
+>(
+  params?: CoaControllerGetAccountsParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof coaControllerGetAccounts>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getCoaControllerGetAccountsQueryOptions(params, options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+/**
+ * @summary Create a new account in Chart of Accounts
+ */
+export const coaControllerCreateAccount = (
+  createAccountDto: CreateAccountDto,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<AccountResponseDto>(
+    {
+      url: `/api/v1/accounting/coa`,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      data: createAccountDto,
+      signal,
+    },
+    options,
+  );
+};
+
+export const getCoaControllerCreateAccountMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof coaControllerCreateAccount>>,
+    TError,
+    { data: CreateAccountDto },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof coaControllerCreateAccount>>,
+  TError,
+  { data: CreateAccountDto },
+  TContext
+> => {
+  const mutationKey = ['coaControllerCreateAccount'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof coaControllerCreateAccount>>,
+    { data: CreateAccountDto }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return coaControllerCreateAccount(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type CoaControllerCreateAccountMutationResult = NonNullable<
+  Awaited<ReturnType<typeof coaControllerCreateAccount>>
+>;
+export type CoaControllerCreateAccountMutationBody = CreateAccountDto;
+export type CoaControllerCreateAccountMutationError = unknown;
+
+/**
+ * @summary Create a new account in Chart of Accounts
+ */
+export const useCoaControllerCreateAccount = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof coaControllerCreateAccount>>,
+      TError,
+      { data: CreateAccountDto },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof coaControllerCreateAccount>>,
+  TError,
+  { data: CreateAccountDto },
+  TContext
+> => {
+  const mutationOptions = getCoaControllerCreateAccountMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary Get account details by ID
+ */
+export const coaControllerGetAccountById = (
+  id: string,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<AccountResponseDto>(
+    { url: `/api/v1/accounting/coa/${id}`, method: 'GET', signal },
+    options,
+  );
+};
+
+export const getCoaControllerGetAccountByIdQueryKey = (id?: string) => {
+  return [`/api/v1/accounting/coa/${id}`] as const;
+};
+
+export const getCoaControllerGetAccountByIdQueryOptions = <
+  TData = Awaited<ReturnType<typeof coaControllerGetAccountById>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof coaControllerGetAccountById>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getCoaControllerGetAccountByIdQueryKey(id);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof coaControllerGetAccountById>>> = ({
+    signal,
+  }) => coaControllerGetAccountById(id, requestOptions, signal);
+
+  return { queryKey, queryFn, enabled: !!id, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof coaControllerGetAccountById>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type CoaControllerGetAccountByIdQueryResult = NonNullable<
+  Awaited<ReturnType<typeof coaControllerGetAccountById>>
+>;
+export type CoaControllerGetAccountByIdQueryError = unknown;
+
+export function useCoaControllerGetAccountById<
+  TData = Awaited<ReturnType<typeof coaControllerGetAccountById>>,
+  TError = unknown,
+>(
+  id: string,
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof coaControllerGetAccountById>>, TError, TData>
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof coaControllerGetAccountById>>,
+          TError,
+          Awaited<ReturnType<typeof coaControllerGetAccountById>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useCoaControllerGetAccountById<
+  TData = Awaited<ReturnType<typeof coaControllerGetAccountById>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof coaControllerGetAccountById>>, TError, TData>
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof coaControllerGetAccountById>>,
+          TError,
+          Awaited<ReturnType<typeof coaControllerGetAccountById>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useCoaControllerGetAccountById<
+  TData = Awaited<ReturnType<typeof coaControllerGetAccountById>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof coaControllerGetAccountById>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary Get account details by ID
+ */
+
+export function useCoaControllerGetAccountById<
+  TData = Awaited<ReturnType<typeof coaControllerGetAccountById>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof coaControllerGetAccountById>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getCoaControllerGetAccountByIdQueryOptions(id, options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+/**
+ * @summary Update an account in Chart of Accounts
+ */
+export const coaControllerUpdateAccount = (
+  id: string,
+  updateAccountDto: UpdateAccountDto,
+  options?: SecondParameter<typeof customInstance>,
+) => {
+  return customInstance<AccountResponseDto>(
+    {
+      url: `/api/v1/accounting/coa/${id}`,
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      data: updateAccountDto,
+    },
+    options,
+  );
+};
+
+export const getCoaControllerUpdateAccountMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof coaControllerUpdateAccount>>,
+    TError,
+    { id: string; data: UpdateAccountDto },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof coaControllerUpdateAccount>>,
+  TError,
+  { id: string; data: UpdateAccountDto },
+  TContext
+> => {
+  const mutationKey = ['coaControllerUpdateAccount'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof coaControllerUpdateAccount>>,
+    { id: string; data: UpdateAccountDto }
+  > = (props) => {
+    const { id, data } = props ?? {};
+
+    return coaControllerUpdateAccount(id, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type CoaControllerUpdateAccountMutationResult = NonNullable<
+  Awaited<ReturnType<typeof coaControllerUpdateAccount>>
+>;
+export type CoaControllerUpdateAccountMutationBody = UpdateAccountDto;
+export type CoaControllerUpdateAccountMutationError = unknown;
+
+/**
+ * @summary Update an account in Chart of Accounts
+ */
+export const useCoaControllerUpdateAccount = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof coaControllerUpdateAccount>>,
+      TError,
+      { id: string; data: UpdateAccountDto },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof coaControllerUpdateAccount>>,
+  TError,
+  { id: string; data: UpdateAccountDto },
+  TContext
+> => {
+  const mutationOptions = getCoaControllerUpdateAccountMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary Get account ledger balance
+ */
+export const coaControllerGetAccountBalance = (
+  id: string,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<AccountBalanceResponseDto>(
+    { url: `/api/v1/accounting/coa/${id}/balance`, method: 'GET', signal },
+    options,
+  );
+};
+
+export const getCoaControllerGetAccountBalanceQueryKey = (id?: string) => {
+  return [`/api/v1/accounting/coa/${id}/balance`] as const;
+};
+
+export const getCoaControllerGetAccountBalanceQueryOptions = <
+  TData = Awaited<ReturnType<typeof coaControllerGetAccountBalance>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof coaControllerGetAccountBalance>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getCoaControllerGetAccountBalanceQueryKey(id);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof coaControllerGetAccountBalance>>> = ({
+    signal,
+  }) => coaControllerGetAccountBalance(id, requestOptions, signal);
+
+  return { queryKey, queryFn, enabled: !!id, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof coaControllerGetAccountBalance>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type CoaControllerGetAccountBalanceQueryResult = NonNullable<
+  Awaited<ReturnType<typeof coaControllerGetAccountBalance>>
+>;
+export type CoaControllerGetAccountBalanceQueryError = unknown;
+
+export function useCoaControllerGetAccountBalance<
+  TData = Awaited<ReturnType<typeof coaControllerGetAccountBalance>>,
+  TError = unknown,
+>(
+  id: string,
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof coaControllerGetAccountBalance>>, TError, TData>
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof coaControllerGetAccountBalance>>,
+          TError,
+          Awaited<ReturnType<typeof coaControllerGetAccountBalance>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useCoaControllerGetAccountBalance<
+  TData = Awaited<ReturnType<typeof coaControllerGetAccountBalance>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof coaControllerGetAccountBalance>>, TError, TData>
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof coaControllerGetAccountBalance>>,
+          TError,
+          Awaited<ReturnType<typeof coaControllerGetAccountBalance>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useCoaControllerGetAccountBalance<
+  TData = Awaited<ReturnType<typeof coaControllerGetAccountBalance>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof coaControllerGetAccountBalance>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary Get account ledger balance
+ */
+
+export function useCoaControllerGetAccountBalance<
+  TData = Awaited<ReturnType<typeof coaControllerGetAccountBalance>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof coaControllerGetAccountBalance>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getCoaControllerGetAccountBalanceQueryOptions(id, options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+/**
+ * @summary List all fiscal years and their accounting periods
+ */
+export const periodControllerGetFiscalYears = (
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<FiscalYearResponseDto[]>(
+    { url: `/api/v1/accounting/fiscal-years`, method: 'GET', signal },
+    options,
+  );
+};
+
+export const getPeriodControllerGetFiscalYearsQueryKey = () => {
+  return [`/api/v1/accounting/fiscal-years`] as const;
+};
+
+export const getPeriodControllerGetFiscalYearsQueryOptions = <
+  TData = Awaited<ReturnType<typeof periodControllerGetFiscalYears>>,
+  TError = unknown,
+>(options?: {
+  query?: Partial<
+    UseQueryOptions<Awaited<ReturnType<typeof periodControllerGetFiscalYears>>, TError, TData>
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getPeriodControllerGetFiscalYearsQueryKey();
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof periodControllerGetFiscalYears>>> = ({
+    signal,
+  }) => periodControllerGetFiscalYears(requestOptions, signal);
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof periodControllerGetFiscalYears>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type PeriodControllerGetFiscalYearsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof periodControllerGetFiscalYears>>
+>;
+export type PeriodControllerGetFiscalYearsQueryError = unknown;
+
+export function usePeriodControllerGetFiscalYears<
+  TData = Awaited<ReturnType<typeof periodControllerGetFiscalYears>>,
+  TError = unknown,
+>(
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof periodControllerGetFiscalYears>>, TError, TData>
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof periodControllerGetFiscalYears>>,
+          TError,
+          Awaited<ReturnType<typeof periodControllerGetFiscalYears>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function usePeriodControllerGetFiscalYears<
+  TData = Awaited<ReturnType<typeof periodControllerGetFiscalYears>>,
+  TError = unknown,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof periodControllerGetFiscalYears>>, TError, TData>
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof periodControllerGetFiscalYears>>,
+          TError,
+          Awaited<ReturnType<typeof periodControllerGetFiscalYears>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function usePeriodControllerGetFiscalYears<
+  TData = Awaited<ReturnType<typeof periodControllerGetFiscalYears>>,
+  TError = unknown,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof periodControllerGetFiscalYears>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary List all fiscal years and their accounting periods
+ */
+
+export function usePeriodControllerGetFiscalYears<
+  TData = Awaited<ReturnType<typeof periodControllerGetFiscalYears>>,
+  TError = unknown,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof periodControllerGetFiscalYears>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getPeriodControllerGetFiscalYearsQueryOptions(options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+/**
+ * @summary Get fiscal year details by ID
+ */
+export const periodControllerGetFiscalYearById = (
+  id: string,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<FiscalYearResponseDto>(
+    { url: `/api/v1/accounting/fiscal-years/${id}`, method: 'GET', signal },
+    options,
+  );
+};
+
+export const getPeriodControllerGetFiscalYearByIdQueryKey = (id?: string) => {
+  return [`/api/v1/accounting/fiscal-years/${id}`] as const;
+};
+
+export const getPeriodControllerGetFiscalYearByIdQueryOptions = <
+  TData = Awaited<ReturnType<typeof periodControllerGetFiscalYearById>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof periodControllerGetFiscalYearById>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getPeriodControllerGetFiscalYearByIdQueryKey(id);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof periodControllerGetFiscalYearById>>> = ({
+    signal,
+  }) => periodControllerGetFiscalYearById(id, requestOptions, signal);
+
+  return { queryKey, queryFn, enabled: !!id, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof periodControllerGetFiscalYearById>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type PeriodControllerGetFiscalYearByIdQueryResult = NonNullable<
+  Awaited<ReturnType<typeof periodControllerGetFiscalYearById>>
+>;
+export type PeriodControllerGetFiscalYearByIdQueryError = unknown;
+
+export function usePeriodControllerGetFiscalYearById<
+  TData = Awaited<ReturnType<typeof periodControllerGetFiscalYearById>>,
+  TError = unknown,
+>(
+  id: string,
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof periodControllerGetFiscalYearById>>, TError, TData>
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof periodControllerGetFiscalYearById>>,
+          TError,
+          Awaited<ReturnType<typeof periodControllerGetFiscalYearById>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function usePeriodControllerGetFiscalYearById<
+  TData = Awaited<ReturnType<typeof periodControllerGetFiscalYearById>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof periodControllerGetFiscalYearById>>, TError, TData>
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof periodControllerGetFiscalYearById>>,
+          TError,
+          Awaited<ReturnType<typeof periodControllerGetFiscalYearById>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function usePeriodControllerGetFiscalYearById<
+  TData = Awaited<ReturnType<typeof periodControllerGetFiscalYearById>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof periodControllerGetFiscalYearById>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary Get fiscal year details by ID
+ */
+
+export function usePeriodControllerGetFiscalYearById<
+  TData = Awaited<ReturnType<typeof periodControllerGetFiscalYearById>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof periodControllerGetFiscalYearById>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getPeriodControllerGetFiscalYearByIdQueryOptions(id, options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+/**
+ * @summary List accounting periods
+ */
+export const periodControllerGetPeriods = (
+  params: PeriodControllerGetPeriodsParams,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<AccountingPeriodResponseDto[]>(
+    { url: `/api/v1/accounting/periods`, method: 'GET', params, signal },
+    options,
+  );
+};
+
+export const getPeriodControllerGetPeriodsQueryKey = (
+  params?: PeriodControllerGetPeriodsParams,
+) => {
+  return [`/api/v1/accounting/periods`, ...(params ? [params] : [])] as const;
+};
+
+export const getPeriodControllerGetPeriodsQueryOptions = <
+  TData = Awaited<ReturnType<typeof periodControllerGetPeriods>>,
+  TError = unknown,
+>(
+  params: PeriodControllerGetPeriodsParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof periodControllerGetPeriods>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getPeriodControllerGetPeriodsQueryKey(params);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof periodControllerGetPeriods>>> = ({
+    signal,
+  }) => periodControllerGetPeriods(params, requestOptions, signal);
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof periodControllerGetPeriods>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type PeriodControllerGetPeriodsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof periodControllerGetPeriods>>
+>;
+export type PeriodControllerGetPeriodsQueryError = unknown;
+
+export function usePeriodControllerGetPeriods<
+  TData = Awaited<ReturnType<typeof periodControllerGetPeriods>>,
+  TError = unknown,
+>(
+  params: PeriodControllerGetPeriodsParams,
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof periodControllerGetPeriods>>, TError, TData>
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof periodControllerGetPeriods>>,
+          TError,
+          Awaited<ReturnType<typeof periodControllerGetPeriods>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function usePeriodControllerGetPeriods<
+  TData = Awaited<ReturnType<typeof periodControllerGetPeriods>>,
+  TError = unknown,
+>(
+  params: PeriodControllerGetPeriodsParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof periodControllerGetPeriods>>, TError, TData>
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof periodControllerGetPeriods>>,
+          TError,
+          Awaited<ReturnType<typeof periodControllerGetPeriods>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function usePeriodControllerGetPeriods<
+  TData = Awaited<ReturnType<typeof periodControllerGetPeriods>>,
+  TError = unknown,
+>(
+  params: PeriodControllerGetPeriodsParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof periodControllerGetPeriods>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary List accounting periods
+ */
+
+export function usePeriodControllerGetPeriods<
+  TData = Awaited<ReturnType<typeof periodControllerGetPeriods>>,
+  TError = unknown,
+>(
+  params: PeriodControllerGetPeriodsParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof periodControllerGetPeriods>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getPeriodControllerGetPeriodsQueryOptions(params, options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+/**
+ * @summary Get accounting period by ID
+ */
+export const periodControllerGetPeriodById = (
+  id: string,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<AccountingPeriodResponseDto>(
+    { url: `/api/v1/accounting/periods/${id}`, method: 'GET', signal },
+    options,
+  );
+};
+
+export const getPeriodControllerGetPeriodByIdQueryKey = (id?: string) => {
+  return [`/api/v1/accounting/periods/${id}`] as const;
+};
+
+export const getPeriodControllerGetPeriodByIdQueryOptions = <
+  TData = Awaited<ReturnType<typeof periodControllerGetPeriodById>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof periodControllerGetPeriodById>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getPeriodControllerGetPeriodByIdQueryKey(id);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof periodControllerGetPeriodById>>> = ({
+    signal,
+  }) => periodControllerGetPeriodById(id, requestOptions, signal);
+
+  return { queryKey, queryFn, enabled: !!id, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof periodControllerGetPeriodById>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type PeriodControllerGetPeriodByIdQueryResult = NonNullable<
+  Awaited<ReturnType<typeof periodControllerGetPeriodById>>
+>;
+export type PeriodControllerGetPeriodByIdQueryError = unknown;
+
+export function usePeriodControllerGetPeriodById<
+  TData = Awaited<ReturnType<typeof periodControllerGetPeriodById>>,
+  TError = unknown,
+>(
+  id: string,
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof periodControllerGetPeriodById>>, TError, TData>
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof periodControllerGetPeriodById>>,
+          TError,
+          Awaited<ReturnType<typeof periodControllerGetPeriodById>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function usePeriodControllerGetPeriodById<
+  TData = Awaited<ReturnType<typeof periodControllerGetPeriodById>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof periodControllerGetPeriodById>>, TError, TData>
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof periodControllerGetPeriodById>>,
+          TError,
+          Awaited<ReturnType<typeof periodControllerGetPeriodById>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function usePeriodControllerGetPeriodById<
+  TData = Awaited<ReturnType<typeof periodControllerGetPeriodById>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof periodControllerGetPeriodById>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary Get accounting period by ID
+ */
+
+export function usePeriodControllerGetPeriodById<
+  TData = Awaited<ReturnType<typeof periodControllerGetPeriodById>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof periodControllerGetPeriodById>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getPeriodControllerGetPeriodByIdQueryOptions(id, options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+/**
+ * @summary Close an open accounting period
+ */
+export const periodControllerClosePeriod = (
+  id: string,
+  closePeriodDto: ClosePeriodDto,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<AccountingPeriodResponseDto>(
+    {
+      url: `/api/v1/accounting/periods/${id}/close`,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      data: closePeriodDto,
+      signal,
+    },
+    options,
+  );
+};
+
+export const getPeriodControllerClosePeriodMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof periodControllerClosePeriod>>,
+    TError,
+    { id: string; data: ClosePeriodDto },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof periodControllerClosePeriod>>,
+  TError,
+  { id: string; data: ClosePeriodDto },
+  TContext
+> => {
+  const mutationKey = ['periodControllerClosePeriod'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof periodControllerClosePeriod>>,
+    { id: string; data: ClosePeriodDto }
+  > = (props) => {
+    const { id, data } = props ?? {};
+
+    return periodControllerClosePeriod(id, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type PeriodControllerClosePeriodMutationResult = NonNullable<
+  Awaited<ReturnType<typeof periodControllerClosePeriod>>
+>;
+export type PeriodControllerClosePeriodMutationBody = ClosePeriodDto;
+export type PeriodControllerClosePeriodMutationError = unknown;
+
+/**
+ * @summary Close an open accounting period
+ */
+export const usePeriodControllerClosePeriod = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof periodControllerClosePeriod>>,
+      TError,
+      { id: string; data: ClosePeriodDto },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof periodControllerClosePeriod>>,
+  TError,
+  { id: string; data: ClosePeriodDto },
+  TContext
+> => {
+  const mutationOptions = getPeriodControllerClosePeriodMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary Reopen a closed accounting period (Managing Director only, requires justification)
+ */
+export const periodControllerReopenPeriod = (
+  id: string,
+  reopenPeriodDto: ReopenPeriodDto,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<AccountingPeriodResponseDto>(
+    {
+      url: `/api/v1/accounting/periods/${id}/reopen`,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      data: reopenPeriodDto,
+      signal,
+    },
+    options,
+  );
+};
+
+export const getPeriodControllerReopenPeriodMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof periodControllerReopenPeriod>>,
+    TError,
+    { id: string; data: ReopenPeriodDto },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof periodControllerReopenPeriod>>,
+  TError,
+  { id: string; data: ReopenPeriodDto },
+  TContext
+> => {
+  const mutationKey = ['periodControllerReopenPeriod'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof periodControllerReopenPeriod>>,
+    { id: string; data: ReopenPeriodDto }
+  > = (props) => {
+    const { id, data } = props ?? {};
+
+    return periodControllerReopenPeriod(id, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type PeriodControllerReopenPeriodMutationResult = NonNullable<
+  Awaited<ReturnType<typeof periodControllerReopenPeriod>>
+>;
+export type PeriodControllerReopenPeriodMutationBody = ReopenPeriodDto;
+export type PeriodControllerReopenPeriodMutationError = unknown;
+
+/**
+ * @summary Reopen a closed accounting period (Managing Director only, requires justification)
+ */
+export const usePeriodControllerReopenPeriod = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof periodControllerReopenPeriod>>,
+      TError,
+      { id: string; data: ReopenPeriodDto },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof periodControllerReopenPeriod>>,
+  TError,
+  { id: string; data: ReopenPeriodDto },
+  TContext
+> => {
+  const mutationOptions = getPeriodControllerReopenPeriodMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary Lock a closed accounting period permanently
+ */
+export const periodControllerLockPeriod = (
+  id: string,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<AccountingPeriodResponseDto>(
+    { url: `/api/v1/accounting/periods/${id}/lock`, method: 'POST', signal },
+    options,
+  );
+};
+
+export const getPeriodControllerLockPeriodMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof periodControllerLockPeriod>>,
+    TError,
+    { id: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof periodControllerLockPeriod>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  const mutationKey = ['periodControllerLockPeriod'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof periodControllerLockPeriod>>,
+    { id: string }
+  > = (props) => {
+    const { id } = props ?? {};
+
+    return periodControllerLockPeriod(id, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type PeriodControllerLockPeriodMutationResult = NonNullable<
+  Awaited<ReturnType<typeof periodControllerLockPeriod>>
+>;
+
+export type PeriodControllerLockPeriodMutationError = unknown;
+
+/**
+ * @summary Lock a closed accounting period permanently
+ */
+export const usePeriodControllerLockPeriod = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof periodControllerLockPeriod>>,
+      TError,
+      { id: string },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof periodControllerLockPeriod>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  const mutationOptions = getPeriodControllerLockPeriodMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary List journals with optional filters and pagination
+ */
+export const journalControllerGetJournals = (
+  params?: JournalControllerGetJournalsParams,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<JournalResponseDto[]>(
+    { url: `/api/v1/accounting/journals`, method: 'GET', params, signal },
+    options,
+  );
+};
+
+export const getJournalControllerGetJournalsQueryKey = (
+  params?: JournalControllerGetJournalsParams,
+) => {
+  return [`/api/v1/accounting/journals`, ...(params ? [params] : [])] as const;
+};
+
+export const getJournalControllerGetJournalsQueryOptions = <
+  TData = Awaited<ReturnType<typeof journalControllerGetJournals>>,
+  TError = unknown,
+>(
+  params?: JournalControllerGetJournalsParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof journalControllerGetJournals>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getJournalControllerGetJournalsQueryKey(params);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof journalControllerGetJournals>>> = ({
+    signal,
+  }) => journalControllerGetJournals(params, requestOptions, signal);
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof journalControllerGetJournals>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type JournalControllerGetJournalsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof journalControllerGetJournals>>
+>;
+export type JournalControllerGetJournalsQueryError = unknown;
+
+export function useJournalControllerGetJournals<
+  TData = Awaited<ReturnType<typeof journalControllerGetJournals>>,
+  TError = unknown,
+>(
+  params: undefined | JournalControllerGetJournalsParams,
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof journalControllerGetJournals>>, TError, TData>
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof journalControllerGetJournals>>,
+          TError,
+          Awaited<ReturnType<typeof journalControllerGetJournals>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useJournalControllerGetJournals<
+  TData = Awaited<ReturnType<typeof journalControllerGetJournals>>,
+  TError = unknown,
+>(
+  params?: JournalControllerGetJournalsParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof journalControllerGetJournals>>, TError, TData>
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof journalControllerGetJournals>>,
+          TError,
+          Awaited<ReturnType<typeof journalControllerGetJournals>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useJournalControllerGetJournals<
+  TData = Awaited<ReturnType<typeof journalControllerGetJournals>>,
+  TError = unknown,
+>(
+  params?: JournalControllerGetJournalsParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof journalControllerGetJournals>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary List journals with optional filters and pagination
+ */
+
+export function useJournalControllerGetJournals<
+  TData = Awaited<ReturnType<typeof journalControllerGetJournals>>,
+  TError = unknown,
+>(
+  params?: JournalControllerGetJournalsParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof journalControllerGetJournals>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getJournalControllerGetJournalsQueryOptions(params, options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+/**
+ * @summary Get journal details by ID including lines and reversals
+ */
+export const journalControllerGetJournalById = (
+  id: string,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<JournalResponseDto>(
+    { url: `/api/v1/accounting/journals/${id}`, method: 'GET', signal },
+    options,
+  );
+};
+
+export const getJournalControllerGetJournalByIdQueryKey = (id?: string) => {
+  return [`/api/v1/accounting/journals/${id}`] as const;
+};
+
+export const getJournalControllerGetJournalByIdQueryOptions = <
+  TData = Awaited<ReturnType<typeof journalControllerGetJournalById>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof journalControllerGetJournalById>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getJournalControllerGetJournalByIdQueryKey(id);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof journalControllerGetJournalById>>> = ({
+    signal,
+  }) => journalControllerGetJournalById(id, requestOptions, signal);
+
+  return { queryKey, queryFn, enabled: !!id, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof journalControllerGetJournalById>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type JournalControllerGetJournalByIdQueryResult = NonNullable<
+  Awaited<ReturnType<typeof journalControllerGetJournalById>>
+>;
+export type JournalControllerGetJournalByIdQueryError = unknown;
+
+export function useJournalControllerGetJournalById<
+  TData = Awaited<ReturnType<typeof journalControllerGetJournalById>>,
+  TError = unknown,
+>(
+  id: string,
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof journalControllerGetJournalById>>, TError, TData>
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof journalControllerGetJournalById>>,
+          TError,
+          Awaited<ReturnType<typeof journalControllerGetJournalById>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useJournalControllerGetJournalById<
+  TData = Awaited<ReturnType<typeof journalControllerGetJournalById>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof journalControllerGetJournalById>>, TError, TData>
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof journalControllerGetJournalById>>,
+          TError,
+          Awaited<ReturnType<typeof journalControllerGetJournalById>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useJournalControllerGetJournalById<
+  TData = Awaited<ReturnType<typeof journalControllerGetJournalById>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof journalControllerGetJournalById>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary Get journal details by ID including lines and reversals
+ */
+
+export function useJournalControllerGetJournalById<
+  TData = Awaited<ReturnType<typeof journalControllerGetJournalById>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof journalControllerGetJournalById>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getJournalControllerGetJournalByIdQueryOptions(id, options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+/**
+ * @summary Create a draft journal voucher
+ */
+export const journalControllerCreateDraft = (
+  createJournalDto: CreateJournalDto,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<JournalResponseDto>(
+    {
+      url: `/api/v1/accounting/journals/draft`,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      data: createJournalDto,
+      signal,
+    },
+    options,
+  );
+};
+
+export const getJournalControllerCreateDraftMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof journalControllerCreateDraft>>,
+    TError,
+    { data: CreateJournalDto },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof journalControllerCreateDraft>>,
+  TError,
+  { data: CreateJournalDto },
+  TContext
+> => {
+  const mutationKey = ['journalControllerCreateDraft'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof journalControllerCreateDraft>>,
+    { data: CreateJournalDto }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return journalControllerCreateDraft(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type JournalControllerCreateDraftMutationResult = NonNullable<
+  Awaited<ReturnType<typeof journalControllerCreateDraft>>
+>;
+export type JournalControllerCreateDraftMutationBody = CreateJournalDto;
+export type JournalControllerCreateDraftMutationError = unknown;
+
+/**
+ * @summary Create a draft journal voucher
+ */
+export const useJournalControllerCreateDraft = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof journalControllerCreateDraft>>,
+      TError,
+      { data: CreateJournalDto },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof journalControllerCreateDraft>>,
+  TError,
+  { data: CreateJournalDto },
+  TContext
+> => {
+  const mutationOptions = getJournalControllerCreateDraftMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary Create and immediately post a balanced journal voucher
+ */
+export const journalControllerCreateAndPost = (
+  createJournalDto: CreateJournalDto,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<JournalResponseDto>(
+    {
+      url: `/api/v1/accounting/journals/post`,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      data: createJournalDto,
+      signal,
+    },
+    options,
+  );
+};
+
+export const getJournalControllerCreateAndPostMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof journalControllerCreateAndPost>>,
+    TError,
+    { data: CreateJournalDto },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof journalControllerCreateAndPost>>,
+  TError,
+  { data: CreateJournalDto },
+  TContext
+> => {
+  const mutationKey = ['journalControllerCreateAndPost'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof journalControllerCreateAndPost>>,
+    { data: CreateJournalDto }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return journalControllerCreateAndPost(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type JournalControllerCreateAndPostMutationResult = NonNullable<
+  Awaited<ReturnType<typeof journalControllerCreateAndPost>>
+>;
+export type JournalControllerCreateAndPostMutationBody = CreateJournalDto;
+export type JournalControllerCreateAndPostMutationError = unknown;
+
+/**
+ * @summary Create and immediately post a balanced journal voucher
+ */
+export const useJournalControllerCreateAndPost = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof journalControllerCreateAndPost>>,
+      TError,
+      { data: CreateJournalDto },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof journalControllerCreateAndPost>>,
+  TError,
+  { data: CreateJournalDto },
+  TContext
+> => {
+  const mutationOptions = getJournalControllerCreateAndPostMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary Post an existing draft/review journal voucher
+ */
+export const journalControllerPostDraft = (
+  id: string,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<JournalResponseDto>(
+    { url: `/api/v1/accounting/journals/${id}/post`, method: 'POST', signal },
+    options,
+  );
+};
+
+export const getJournalControllerPostDraftMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof journalControllerPostDraft>>,
+    TError,
+    { id: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof journalControllerPostDraft>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  const mutationKey = ['journalControllerPostDraft'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof journalControllerPostDraft>>,
+    { id: string }
+  > = (props) => {
+    const { id } = props ?? {};
+
+    return journalControllerPostDraft(id, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type JournalControllerPostDraftMutationResult = NonNullable<
+  Awaited<ReturnType<typeof journalControllerPostDraft>>
+>;
+
+export type JournalControllerPostDraftMutationError = unknown;
+
+/**
+ * @summary Post an existing draft/review journal voucher
+ */
+export const useJournalControllerPostDraft = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof journalControllerPostDraft>>,
+      TError,
+      { id: string },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof journalControllerPostDraft>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  const mutationOptions = getJournalControllerPostDraftMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary Reverse and correct a posted journal voucher (creates mirror entry)
+ */
+export const journalControllerReverseAndCorrect = (
+  id: string,
+  reverseJournalDto: ReverseJournalDto,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<JournalResponseDto>(
+    {
+      url: `/api/v1/accounting/journals/${id}/reverse`,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      data: reverseJournalDto,
+      signal,
+    },
+    options,
+  );
+};
+
+export const getJournalControllerReverseAndCorrectMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof journalControllerReverseAndCorrect>>,
+    TError,
+    { id: string; data: ReverseJournalDto },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof journalControllerReverseAndCorrect>>,
+  TError,
+  { id: string; data: ReverseJournalDto },
+  TContext
+> => {
+  const mutationKey = ['journalControllerReverseAndCorrect'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof journalControllerReverseAndCorrect>>,
+    { id: string; data: ReverseJournalDto }
+  > = (props) => {
+    const { id, data } = props ?? {};
+
+    return journalControllerReverseAndCorrect(id, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type JournalControllerReverseAndCorrectMutationResult = NonNullable<
+  Awaited<ReturnType<typeof journalControllerReverseAndCorrect>>
+>;
+export type JournalControllerReverseAndCorrectMutationBody = ReverseJournalDto;
+export type JournalControllerReverseAndCorrectMutationError = unknown;
+
+/**
+ * @summary Reverse and correct a posted journal voucher (creates mirror entry)
+ */
+export const useJournalControllerReverseAndCorrect = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof journalControllerReverseAndCorrect>>,
+      TError,
+      { id: string; data: ReverseJournalDto },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof journalControllerReverseAndCorrect>>,
+  TError,
+  { id: string; data: ReverseJournalDto },
+  TContext
+> => {
+  const mutationOptions = getJournalControllerReverseAndCorrectMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary Query general ledger entries with cursor pagination and running balance
+ */
+export const ledgerControllerGetLedger = (
+  params?: LedgerControllerGetLedgerParams,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<LedgerReportDto>(
+    { url: `/api/v1/accounting/ledger`, method: 'GET', params, signal },
+    options,
+  );
+};
+
+export const getLedgerControllerGetLedgerQueryKey = (params?: LedgerControllerGetLedgerParams) => {
+  return [`/api/v1/accounting/ledger`, ...(params ? [params] : [])] as const;
+};
+
+export const getLedgerControllerGetLedgerQueryOptions = <
+  TData = Awaited<ReturnType<typeof ledgerControllerGetLedger>>,
+  TError = unknown,
+>(
+  params?: LedgerControllerGetLedgerParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof ledgerControllerGetLedger>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getLedgerControllerGetLedgerQueryKey(params);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof ledgerControllerGetLedger>>> = ({
+    signal,
+  }) => ledgerControllerGetLedger(params, requestOptions, signal);
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof ledgerControllerGetLedger>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type LedgerControllerGetLedgerQueryResult = NonNullable<
+  Awaited<ReturnType<typeof ledgerControllerGetLedger>>
+>;
+export type LedgerControllerGetLedgerQueryError = unknown;
+
+export function useLedgerControllerGetLedger<
+  TData = Awaited<ReturnType<typeof ledgerControllerGetLedger>>,
+  TError = unknown,
+>(
+  params: undefined | LedgerControllerGetLedgerParams,
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof ledgerControllerGetLedger>>, TError, TData>
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof ledgerControllerGetLedger>>,
+          TError,
+          Awaited<ReturnType<typeof ledgerControllerGetLedger>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useLedgerControllerGetLedger<
+  TData = Awaited<ReturnType<typeof ledgerControllerGetLedger>>,
+  TError = unknown,
+>(
+  params?: LedgerControllerGetLedgerParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof ledgerControllerGetLedger>>, TError, TData>
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof ledgerControllerGetLedger>>,
+          TError,
+          Awaited<ReturnType<typeof ledgerControllerGetLedger>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useLedgerControllerGetLedger<
+  TData = Awaited<ReturnType<typeof ledgerControllerGetLedger>>,
+  TError = unknown,
+>(
+  params?: LedgerControllerGetLedgerParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof ledgerControllerGetLedger>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary Query general ledger entries with cursor pagination and running balance
+ */
+
+export function useLedgerControllerGetLedger<
+  TData = Awaited<ReturnType<typeof ledgerControllerGetLedger>>,
+  TError = unknown,
+>(
+  params?: LedgerControllerGetLedgerParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof ledgerControllerGetLedger>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getLedgerControllerGetLedgerQueryOptions(params, options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+/**
+ * @summary Query ledger entries for a specific account UUID
+ */
+export const ledgerControllerGetAccountLedger = (
+  accountId: string,
+  params?: LedgerControllerGetAccountLedgerParams,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<LedgerReportDto>(
+    { url: `/api/v1/accounting/ledger/accounts/${accountId}`, method: 'GET', params, signal },
+    options,
+  );
+};
+
+export const getLedgerControllerGetAccountLedgerQueryKey = (
+  accountId?: string,
+  params?: LedgerControllerGetAccountLedgerParams,
+) => {
+  return [`/api/v1/accounting/ledger/accounts/${accountId}`, ...(params ? [params] : [])] as const;
+};
+
+export const getLedgerControllerGetAccountLedgerQueryOptions = <
+  TData = Awaited<ReturnType<typeof ledgerControllerGetAccountLedger>>,
+  TError = unknown,
+>(
+  accountId: string,
+  params?: LedgerControllerGetAccountLedgerParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof ledgerControllerGetAccountLedger>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ?? getLedgerControllerGetAccountLedgerQueryKey(accountId, params);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof ledgerControllerGetAccountLedger>>> = ({
+    signal,
+  }) => ledgerControllerGetAccountLedger(accountId, params, requestOptions, signal);
+
+  return { queryKey, queryFn, enabled: !!accountId, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof ledgerControllerGetAccountLedger>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type LedgerControllerGetAccountLedgerQueryResult = NonNullable<
+  Awaited<ReturnType<typeof ledgerControllerGetAccountLedger>>
+>;
+export type LedgerControllerGetAccountLedgerQueryError = unknown;
+
+export function useLedgerControllerGetAccountLedger<
+  TData = Awaited<ReturnType<typeof ledgerControllerGetAccountLedger>>,
+  TError = unknown,
+>(
+  accountId: string,
+  params: undefined | LedgerControllerGetAccountLedgerParams,
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof ledgerControllerGetAccountLedger>>, TError, TData>
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof ledgerControllerGetAccountLedger>>,
+          TError,
+          Awaited<ReturnType<typeof ledgerControllerGetAccountLedger>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useLedgerControllerGetAccountLedger<
+  TData = Awaited<ReturnType<typeof ledgerControllerGetAccountLedger>>,
+  TError = unknown,
+>(
+  accountId: string,
+  params?: LedgerControllerGetAccountLedgerParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof ledgerControllerGetAccountLedger>>, TError, TData>
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof ledgerControllerGetAccountLedger>>,
+          TError,
+          Awaited<ReturnType<typeof ledgerControllerGetAccountLedger>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useLedgerControllerGetAccountLedger<
+  TData = Awaited<ReturnType<typeof ledgerControllerGetAccountLedger>>,
+  TError = unknown,
+>(
+  accountId: string,
+  params?: LedgerControllerGetAccountLedgerParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof ledgerControllerGetAccountLedger>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary Query ledger entries for a specific account UUID
+ */
+
+export function useLedgerControllerGetAccountLedger<
+  TData = Awaited<ReturnType<typeof ledgerControllerGetAccountLedger>>,
+  TError = unknown,
+>(
+  accountId: string,
+  params?: LedgerControllerGetAccountLedgerParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof ledgerControllerGetAccountLedger>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getLedgerControllerGetAccountLedgerQueryOptions(accountId, params, options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+/**
+ * @summary Queue asynchronous export of the general ledger (PDF, Excel, CSV)
+ */
+export const ledgerControllerExportLedger = (
+  exportLedgerDto: ExportLedgerDto,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<ExportJobResponseDto>(
+    {
+      url: `/api/v1/accounting/ledger/export`,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      data: exportLedgerDto,
+      signal,
+    },
+    options,
+  );
+};
+
+export const getLedgerControllerExportLedgerMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof ledgerControllerExportLedger>>,
+    TError,
+    { data: ExportLedgerDto },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof ledgerControllerExportLedger>>,
+  TError,
+  { data: ExportLedgerDto },
+  TContext
+> => {
+  const mutationKey = ['ledgerControllerExportLedger'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof ledgerControllerExportLedger>>,
+    { data: ExportLedgerDto }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return ledgerControllerExportLedger(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type LedgerControllerExportLedgerMutationResult = NonNullable<
+  Awaited<ReturnType<typeof ledgerControllerExportLedger>>
+>;
+export type LedgerControllerExportLedgerMutationBody = ExportLedgerDto;
+export type LedgerControllerExportLedgerMutationError = unknown;
+
+/**
+ * @summary Queue asynchronous export of the general ledger (PDF, Excel, CSV)
+ */
+export const useLedgerControllerExportLedger = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof ledgerControllerExportLedger>>,
+      TError,
+      { data: ExportLedgerDto },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof ledgerControllerExportLedger>>,
+  TError,
+  { data: ExportLedgerDto },
+  TContext
+> => {
+  const mutationOptions = getLedgerControllerExportLedgerMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary List all financial posting rules for current company
+ */
+export const postingRulesControllerFindAll = (
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<PostingRuleResponseDto[]>(
+    { url: `/api/v1/accounting/posting-rules`, method: 'GET', signal },
+    options,
+  );
+};
+
+export const getPostingRulesControllerFindAllQueryKey = () => {
+  return [`/api/v1/accounting/posting-rules`] as const;
+};
+
+export const getPostingRulesControllerFindAllQueryOptions = <
+  TData = Awaited<ReturnType<typeof postingRulesControllerFindAll>>,
+  TError = unknown,
+>(options?: {
+  query?: Partial<
+    UseQueryOptions<Awaited<ReturnType<typeof postingRulesControllerFindAll>>, TError, TData>
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getPostingRulesControllerFindAllQueryKey();
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof postingRulesControllerFindAll>>> = ({
+    signal,
+  }) => postingRulesControllerFindAll(requestOptions, signal);
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof postingRulesControllerFindAll>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type PostingRulesControllerFindAllQueryResult = NonNullable<
+  Awaited<ReturnType<typeof postingRulesControllerFindAll>>
+>;
+export type PostingRulesControllerFindAllQueryError = unknown;
+
+export function usePostingRulesControllerFindAll<
+  TData = Awaited<ReturnType<typeof postingRulesControllerFindAll>>,
+  TError = unknown,
+>(
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof postingRulesControllerFindAll>>, TError, TData>
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof postingRulesControllerFindAll>>,
+          TError,
+          Awaited<ReturnType<typeof postingRulesControllerFindAll>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function usePostingRulesControllerFindAll<
+  TData = Awaited<ReturnType<typeof postingRulesControllerFindAll>>,
+  TError = unknown,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof postingRulesControllerFindAll>>, TError, TData>
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof postingRulesControllerFindAll>>,
+          TError,
+          Awaited<ReturnType<typeof postingRulesControllerFindAll>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function usePostingRulesControllerFindAll<
+  TData = Awaited<ReturnType<typeof postingRulesControllerFindAll>>,
+  TError = unknown,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof postingRulesControllerFindAll>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary List all financial posting rules for current company
+ */
+
+export function usePostingRulesControllerFindAll<
+  TData = Awaited<ReturnType<typeof postingRulesControllerFindAll>>,
+  TError = unknown,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof postingRulesControllerFindAll>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getPostingRulesControllerFindAllQueryOptions(options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+/**
+ * @summary Get specific posting rule mapping by event type
+ */
+export const postingRulesControllerFindByEventType = (
+  eventType: string,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<PostingRuleResponseDto>(
+    { url: `/api/v1/accounting/posting-rules/${eventType}`, method: 'GET', signal },
+    options,
+  );
+};
+
+export const getPostingRulesControllerFindByEventTypeQueryKey = (eventType?: string) => {
+  return [`/api/v1/accounting/posting-rules/${eventType}`] as const;
+};
+
+export const getPostingRulesControllerFindByEventTypeQueryOptions = <
+  TData = Awaited<ReturnType<typeof postingRulesControllerFindByEventType>>,
+  TError = unknown,
+>(
+  eventType: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof postingRulesControllerFindByEventType>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ?? getPostingRulesControllerFindByEventTypeQueryKey(eventType);
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof postingRulesControllerFindByEventType>>
+  > = ({ signal }) => postingRulesControllerFindByEventType(eventType, requestOptions, signal);
+
+  return { queryKey, queryFn, enabled: !!eventType, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof postingRulesControllerFindByEventType>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type PostingRulesControllerFindByEventTypeQueryResult = NonNullable<
+  Awaited<ReturnType<typeof postingRulesControllerFindByEventType>>
+>;
+export type PostingRulesControllerFindByEventTypeQueryError = unknown;
+
+export function usePostingRulesControllerFindByEventType<
+  TData = Awaited<ReturnType<typeof postingRulesControllerFindByEventType>>,
+  TError = unknown,
+>(
+  eventType: string,
+  options: {
+    query: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof postingRulesControllerFindByEventType>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof postingRulesControllerFindByEventType>>,
+          TError,
+          Awaited<ReturnType<typeof postingRulesControllerFindByEventType>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function usePostingRulesControllerFindByEventType<
+  TData = Awaited<ReturnType<typeof postingRulesControllerFindByEventType>>,
+  TError = unknown,
+>(
+  eventType: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof postingRulesControllerFindByEventType>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof postingRulesControllerFindByEventType>>,
+          TError,
+          Awaited<ReturnType<typeof postingRulesControllerFindByEventType>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function usePostingRulesControllerFindByEventType<
+  TData = Awaited<ReturnType<typeof postingRulesControllerFindByEventType>>,
+  TError = unknown,
+>(
+  eventType: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof postingRulesControllerFindByEventType>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary Get specific posting rule mapping by event type
+ */
+
+export function usePostingRulesControllerFindByEventType<
+  TData = Awaited<ReturnType<typeof postingRulesControllerFindByEventType>>,
+  TError = unknown,
+>(
+  eventType: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof postingRulesControllerFindByEventType>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getPostingRulesControllerFindByEventTypeQueryOptions(eventType, options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+/**
+ * @summary Update posting rule account mappings without a deploy
+ */
+export const postingRulesControllerUpdate = (
+  eventType: string,
+  updatePostingRuleDto: UpdatePostingRuleDto,
+  options?: SecondParameter<typeof customInstance>,
+) => {
+  return customInstance<PostingRuleResponseDto>(
+    {
+      url: `/api/v1/accounting/posting-rules/${eventType}`,
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      data: updatePostingRuleDto,
+    },
+    options,
+  );
+};
+
+export const getPostingRulesControllerUpdateMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof postingRulesControllerUpdate>>,
+    TError,
+    { eventType: string; data: UpdatePostingRuleDto },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof postingRulesControllerUpdate>>,
+  TError,
+  { eventType: string; data: UpdatePostingRuleDto },
+  TContext
+> => {
+  const mutationKey = ['postingRulesControllerUpdate'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof postingRulesControllerUpdate>>,
+    { eventType: string; data: UpdatePostingRuleDto }
+  > = (props) => {
+    const { eventType, data } = props ?? {};
+
+    return postingRulesControllerUpdate(eventType, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type PostingRulesControllerUpdateMutationResult = NonNullable<
+  Awaited<ReturnType<typeof postingRulesControllerUpdate>>
+>;
+export type PostingRulesControllerUpdateMutationBody = UpdatePostingRuleDto;
+export type PostingRulesControllerUpdateMutationError = unknown;
+
+/**
+ * @summary Update posting rule account mappings without a deploy
+ */
+export const usePostingRulesControllerUpdate = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof postingRulesControllerUpdate>>,
+      TError,
+      { eventType: string; data: UpdatePostingRuleDto },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof postingRulesControllerUpdate>>,
+  TError,
+  { eventType: string; data: UpdatePostingRuleDto },
+  TContext
+> => {
+  const mutationOptions = getPostingRulesControllerUpdateMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary Delete a posting rule mapping (blocks transactions with POSTING_RULE_MISSING)
+ */
+export const postingRulesControllerDelete = (
+  eventType: string,
+  options?: SecondParameter<typeof customInstance>,
+) => {
+  return customInstance<void>(
+    { url: `/api/v1/accounting/posting-rules/${eventType}`, method: 'DELETE' },
+    options,
+  );
+};
+
+export const getPostingRulesControllerDeleteMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof postingRulesControllerDelete>>,
+    TError,
+    { eventType: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof postingRulesControllerDelete>>,
+  TError,
+  { eventType: string },
+  TContext
+> => {
+  const mutationKey = ['postingRulesControllerDelete'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof postingRulesControllerDelete>>,
+    { eventType: string }
+  > = (props) => {
+    const { eventType } = props ?? {};
+
+    return postingRulesControllerDelete(eventType, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type PostingRulesControllerDeleteMutationResult = NonNullable<
+  Awaited<ReturnType<typeof postingRulesControllerDelete>>
+>;
+
+export type PostingRulesControllerDeleteMutationError = unknown;
+
+/**
+ * @summary Delete a posting rule mapping (blocks transactions with POSTING_RULE_MISSING)
+ */
+export const usePostingRulesControllerDelete = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof postingRulesControllerDelete>>,
+      TError,
+      { eventType: string },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof postingRulesControllerDelete>>,
+  TError,
+  { eventType: string },
+  TContext
+> => {
+  const mutationOptions = getPostingRulesControllerDeleteMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary Reset posting rules to system defaults
+ */
+export const postingRulesControllerResetToDefaults = (
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>(
+    { url: `/api/v1/accounting/posting-rules/reset`, method: 'POST', signal },
+    options,
+  );
+};
+
+export const getPostingRulesControllerResetToDefaultsMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof postingRulesControllerResetToDefaults>>,
+    TError,
+    void,
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof postingRulesControllerResetToDefaults>>,
+  TError,
+  void,
+  TContext
+> => {
+  const mutationKey = ['postingRulesControllerResetToDefaults'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof postingRulesControllerResetToDefaults>>,
+    void
+  > = () => {
+    return postingRulesControllerResetToDefaults(requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type PostingRulesControllerResetToDefaultsMutationResult = NonNullable<
+  Awaited<ReturnType<typeof postingRulesControllerResetToDefaults>>
+>;
+
+export type PostingRulesControllerResetToDefaultsMutationError = unknown;
+
+/**
+ * @summary Reset posting rules to system defaults
+ */
+export const usePostingRulesControllerResetToDefaults = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof postingRulesControllerResetToDefaults>>,
+      TError,
+      void,
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof postingRulesControllerResetToDefaults>>,
+  TError,
+  void,
+  TContext
+> => {
+  const mutationOptions = getPostingRulesControllerResetToDefaultsMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary List all global reference banks and branches
+ */
+export const cashBankControllerListGlobalBanks = (
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<BankRefDto[]>(
+    { url: `/api/v1/accounting/cashbank/banks`, method: 'GET', signal },
+    options,
+  );
+};
+
+export const getCashBankControllerListGlobalBanksQueryKey = () => {
+  return [`/api/v1/accounting/cashbank/banks`] as const;
+};
+
+export const getCashBankControllerListGlobalBanksQueryOptions = <
+  TData = Awaited<ReturnType<typeof cashBankControllerListGlobalBanks>>,
+  TError = unknown,
+>(options?: {
+  query?: Partial<
+    UseQueryOptions<Awaited<ReturnType<typeof cashBankControllerListGlobalBanks>>, TError, TData>
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getCashBankControllerListGlobalBanksQueryKey();
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof cashBankControllerListGlobalBanks>>> = ({
+    signal,
+  }) => cashBankControllerListGlobalBanks(requestOptions, signal);
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof cashBankControllerListGlobalBanks>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type CashBankControllerListGlobalBanksQueryResult = NonNullable<
+  Awaited<ReturnType<typeof cashBankControllerListGlobalBanks>>
+>;
+export type CashBankControllerListGlobalBanksQueryError = unknown;
+
+export function useCashBankControllerListGlobalBanks<
+  TData = Awaited<ReturnType<typeof cashBankControllerListGlobalBanks>>,
+  TError = unknown,
+>(
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof cashBankControllerListGlobalBanks>>, TError, TData>
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof cashBankControllerListGlobalBanks>>,
+          TError,
+          Awaited<ReturnType<typeof cashBankControllerListGlobalBanks>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useCashBankControllerListGlobalBanks<
+  TData = Awaited<ReturnType<typeof cashBankControllerListGlobalBanks>>,
+  TError = unknown,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof cashBankControllerListGlobalBanks>>, TError, TData>
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof cashBankControllerListGlobalBanks>>,
+          TError,
+          Awaited<ReturnType<typeof cashBankControllerListGlobalBanks>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useCashBankControllerListGlobalBanks<
+  TData = Awaited<ReturnType<typeof cashBankControllerListGlobalBanks>>,
+  TError = unknown,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof cashBankControllerListGlobalBanks>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary List all global reference banks and branches
+ */
+
+export function useCashBankControllerListGlobalBanks<
+  TData = Awaited<ReturnType<typeof cashBankControllerListGlobalBanks>>,
+  TError = unknown,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof cashBankControllerListGlobalBanks>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getCashBankControllerListGlobalBanksQueryOptions(options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+/**
+ * @summary List branches for a global bank
+ */
+export const cashBankControllerListBranches = (
+  bankId: string,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<BankBranchRefDto[]>(
+    { url: `/api/v1/accounting/cashbank/banks/${bankId}/branches`, method: 'GET', signal },
+    options,
+  );
+};
+
+export const getCashBankControllerListBranchesQueryKey = (bankId?: string) => {
+  return [`/api/v1/accounting/cashbank/banks/${bankId}/branches`] as const;
+};
+
+export const getCashBankControllerListBranchesQueryOptions = <
+  TData = Awaited<ReturnType<typeof cashBankControllerListBranches>>,
+  TError = unknown,
+>(
+  bankId: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof cashBankControllerListBranches>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getCashBankControllerListBranchesQueryKey(bankId);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof cashBankControllerListBranches>>> = ({
+    signal,
+  }) => cashBankControllerListBranches(bankId, requestOptions, signal);
+
+  return { queryKey, queryFn, enabled: !!bankId, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof cashBankControllerListBranches>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type CashBankControllerListBranchesQueryResult = NonNullable<
+  Awaited<ReturnType<typeof cashBankControllerListBranches>>
+>;
+export type CashBankControllerListBranchesQueryError = unknown;
+
+export function useCashBankControllerListBranches<
+  TData = Awaited<ReturnType<typeof cashBankControllerListBranches>>,
+  TError = unknown,
+>(
+  bankId: string,
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof cashBankControllerListBranches>>, TError, TData>
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof cashBankControllerListBranches>>,
+          TError,
+          Awaited<ReturnType<typeof cashBankControllerListBranches>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useCashBankControllerListBranches<
+  TData = Awaited<ReturnType<typeof cashBankControllerListBranches>>,
+  TError = unknown,
+>(
+  bankId: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof cashBankControllerListBranches>>, TError, TData>
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof cashBankControllerListBranches>>,
+          TError,
+          Awaited<ReturnType<typeof cashBankControllerListBranches>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useCashBankControllerListBranches<
+  TData = Awaited<ReturnType<typeof cashBankControllerListBranches>>,
+  TError = unknown,
+>(
+  bankId: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof cashBankControllerListBranches>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary List branches for a global bank
+ */
+
+export function useCashBankControllerListBranches<
+  TData = Awaited<ReturnType<typeof cashBankControllerListBranches>>,
+  TError = unknown,
+>(
+  bankId: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof cashBankControllerListBranches>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getCashBankControllerListBranchesQueryOptions(bankId, options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+/**
+ * @summary Create a company bank, cash, or wallet account
+ */
+export const cashBankControllerCreateAccount = (
+  createBankAccountDto: CreateBankAccountDto,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<BankAccountResponseDto>(
+    {
+      url: `/api/v1/accounting/cashbank/accounts`,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      data: createBankAccountDto,
+      signal,
+    },
+    options,
+  );
+};
+
+export const getCashBankControllerCreateAccountMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof cashBankControllerCreateAccount>>,
+    TError,
+    { data: CreateBankAccountDto },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof cashBankControllerCreateAccount>>,
+  TError,
+  { data: CreateBankAccountDto },
+  TContext
+> => {
+  const mutationKey = ['cashBankControllerCreateAccount'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof cashBankControllerCreateAccount>>,
+    { data: CreateBankAccountDto }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return cashBankControllerCreateAccount(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type CashBankControllerCreateAccountMutationResult = NonNullable<
+  Awaited<ReturnType<typeof cashBankControllerCreateAccount>>
+>;
+export type CashBankControllerCreateAccountMutationBody = CreateBankAccountDto;
+export type CashBankControllerCreateAccountMutationError = unknown;
+
+/**
+ * @summary Create a company bank, cash, or wallet account
+ */
+export const useCashBankControllerCreateAccount = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof cashBankControllerCreateAccount>>,
+      TError,
+      { data: CreateBankAccountDto },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof cashBankControllerCreateAccount>>,
+  TError,
+  { data: CreateBankAccountDto },
+  TContext
+> => {
+  const mutationOptions = getCashBankControllerCreateAccountMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary List all company cash and bank accounts with current balances
+ */
+export const cashBankControllerListAccounts = (
+  params: CashBankControllerListAccountsParams,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<BankAccountResponseDto[]>(
+    { url: `/api/v1/accounting/cashbank/accounts`, method: 'GET', params, signal },
+    options,
+  );
+};
+
+export const getCashBankControllerListAccountsQueryKey = (
+  params?: CashBankControllerListAccountsParams,
+) => {
+  return [`/api/v1/accounting/cashbank/accounts`, ...(params ? [params] : [])] as const;
+};
+
+export const getCashBankControllerListAccountsQueryOptions = <
+  TData = Awaited<ReturnType<typeof cashBankControllerListAccounts>>,
+  TError = unknown,
+>(
+  params: CashBankControllerListAccountsParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof cashBankControllerListAccounts>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getCashBankControllerListAccountsQueryKey(params);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof cashBankControllerListAccounts>>> = ({
+    signal,
+  }) => cashBankControllerListAccounts(params, requestOptions, signal);
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof cashBankControllerListAccounts>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type CashBankControllerListAccountsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof cashBankControllerListAccounts>>
+>;
+export type CashBankControllerListAccountsQueryError = unknown;
+
+export function useCashBankControllerListAccounts<
+  TData = Awaited<ReturnType<typeof cashBankControllerListAccounts>>,
+  TError = unknown,
+>(
+  params: CashBankControllerListAccountsParams,
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof cashBankControllerListAccounts>>, TError, TData>
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof cashBankControllerListAccounts>>,
+          TError,
+          Awaited<ReturnType<typeof cashBankControllerListAccounts>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useCashBankControllerListAccounts<
+  TData = Awaited<ReturnType<typeof cashBankControllerListAccounts>>,
+  TError = unknown,
+>(
+  params: CashBankControllerListAccountsParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof cashBankControllerListAccounts>>, TError, TData>
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof cashBankControllerListAccounts>>,
+          TError,
+          Awaited<ReturnType<typeof cashBankControllerListAccounts>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useCashBankControllerListAccounts<
+  TData = Awaited<ReturnType<typeof cashBankControllerListAccounts>>,
+  TError = unknown,
+>(
+  params: CashBankControllerListAccountsParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof cashBankControllerListAccounts>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary List all company cash and bank accounts with current balances
+ */
+
+export function useCashBankControllerListAccounts<
+  TData = Awaited<ReturnType<typeof cashBankControllerListAccounts>>,
+  TError = unknown,
+>(
+  params: CashBankControllerListAccountsParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof cashBankControllerListAccounts>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getCashBankControllerListAccountsQueryOptions(params, options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+/**
+ * @summary Get details of a company bank or cash account
+ */
+export const cashBankControllerGetAccount = (
+  id: string,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<BankAccountResponseDto>(
+    { url: `/api/v1/accounting/cashbank/accounts/${id}`, method: 'GET', signal },
+    options,
+  );
+};
+
+export const getCashBankControllerGetAccountQueryKey = (id?: string) => {
+  return [`/api/v1/accounting/cashbank/accounts/${id}`] as const;
+};
+
+export const getCashBankControllerGetAccountQueryOptions = <
+  TData = Awaited<ReturnType<typeof cashBankControllerGetAccount>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof cashBankControllerGetAccount>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getCashBankControllerGetAccountQueryKey(id);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof cashBankControllerGetAccount>>> = ({
+    signal,
+  }) => cashBankControllerGetAccount(id, requestOptions, signal);
+
+  return { queryKey, queryFn, enabled: !!id, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof cashBankControllerGetAccount>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type CashBankControllerGetAccountQueryResult = NonNullable<
+  Awaited<ReturnType<typeof cashBankControllerGetAccount>>
+>;
+export type CashBankControllerGetAccountQueryError = unknown;
+
+export function useCashBankControllerGetAccount<
+  TData = Awaited<ReturnType<typeof cashBankControllerGetAccount>>,
+  TError = unknown,
+>(
+  id: string,
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof cashBankControllerGetAccount>>, TError, TData>
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof cashBankControllerGetAccount>>,
+          TError,
+          Awaited<ReturnType<typeof cashBankControllerGetAccount>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useCashBankControllerGetAccount<
+  TData = Awaited<ReturnType<typeof cashBankControllerGetAccount>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof cashBankControllerGetAccount>>, TError, TData>
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof cashBankControllerGetAccount>>,
+          TError,
+          Awaited<ReturnType<typeof cashBankControllerGetAccount>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useCashBankControllerGetAccount<
+  TData = Awaited<ReturnType<typeof cashBankControllerGetAccount>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof cashBankControllerGetAccount>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary Get details of a company bank or cash account
+ */
+
+export function useCashBankControllerGetAccount<
+  TData = Awaited<ReturnType<typeof cashBankControllerGetAccount>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof cashBankControllerGetAccount>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getCashBankControllerGetAccountQueryOptions(id, options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+/**
+ * @summary Update details of a company bank or cash account
+ */
+export const cashBankControllerUpdateAccount = (
+  id: string,
+  updateBankAccountDto: UpdateBankAccountDto,
+  options?: SecondParameter<typeof customInstance>,
+) => {
+  return customInstance<BankAccountResponseDto>(
+    {
+      url: `/api/v1/accounting/cashbank/accounts/${id}`,
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      data: updateBankAccountDto,
+    },
+    options,
+  );
+};
+
+export const getCashBankControllerUpdateAccountMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof cashBankControllerUpdateAccount>>,
+    TError,
+    { id: string; data: UpdateBankAccountDto },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof cashBankControllerUpdateAccount>>,
+  TError,
+  { id: string; data: UpdateBankAccountDto },
+  TContext
+> => {
+  const mutationKey = ['cashBankControllerUpdateAccount'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof cashBankControllerUpdateAccount>>,
+    { id: string; data: UpdateBankAccountDto }
+  > = (props) => {
+    const { id, data } = props ?? {};
+
+    return cashBankControllerUpdateAccount(id, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type CashBankControllerUpdateAccountMutationResult = NonNullable<
+  Awaited<ReturnType<typeof cashBankControllerUpdateAccount>>
+>;
+export type CashBankControllerUpdateAccountMutationBody = UpdateBankAccountDto;
+export type CashBankControllerUpdateAccountMutationError = unknown;
+
+/**
+ * @summary Update details of a company bank or cash account
+ */
+export const useCashBankControllerUpdateAccount = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof cashBankControllerUpdateAccount>>,
+      TError,
+      { id: string; data: UpdateBankAccountDto },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof cashBankControllerUpdateAccount>>,
+  TError,
+  { id: string; data: UpdateBankAccountDto },
+  TContext
+> => {
+  const mutationOptions = getCashBankControllerUpdateAccountMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary Post an internal transfer between cash/bank accounts
+ */
+export const cashBankControllerTransfer = (
+  createCashTransferDto: CreateCashTransferDto,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<CashTransferResponseDto>(
+    {
+      url: `/api/v1/accounting/cashbank/transfers`,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      data: createCashTransferDto,
+      signal,
+    },
+    options,
+  );
+};
+
+export const getCashBankControllerTransferMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof cashBankControllerTransfer>>,
+    TError,
+    { data: CreateCashTransferDto },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof cashBankControllerTransfer>>,
+  TError,
+  { data: CreateCashTransferDto },
+  TContext
+> => {
+  const mutationKey = ['cashBankControllerTransfer'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof cashBankControllerTransfer>>,
+    { data: CreateCashTransferDto }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return cashBankControllerTransfer(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type CashBankControllerTransferMutationResult = NonNullable<
+  Awaited<ReturnType<typeof cashBankControllerTransfer>>
+>;
+export type CashBankControllerTransferMutationBody = CreateCashTransferDto;
+export type CashBankControllerTransferMutationError = unknown;
+
+/**
+ * @summary Post an internal transfer between cash/bank accounts
+ */
+export const useCashBankControllerTransfer = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof cashBankControllerTransfer>>,
+      TError,
+      { data: CreateCashTransferDto },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof cashBankControllerTransfer>>,
+  TError,
+  { data: CreateCashTransferDto },
+  TContext
+> => {
+  const mutationOptions = getCashBankControllerTransferMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary List all cash transfers
+ */
+export const cashBankControllerListTransfers = (
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<CashTransferResponseDto[]>(
+    { url: `/api/v1/accounting/cashbank/transfers`, method: 'GET', signal },
+    options,
+  );
+};
+
+export const getCashBankControllerListTransfersQueryKey = () => {
+  return [`/api/v1/accounting/cashbank/transfers`] as const;
+};
+
+export const getCashBankControllerListTransfersQueryOptions = <
+  TData = Awaited<ReturnType<typeof cashBankControllerListTransfers>>,
+  TError = unknown,
+>(options?: {
+  query?: Partial<
+    UseQueryOptions<Awaited<ReturnType<typeof cashBankControllerListTransfers>>, TError, TData>
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getCashBankControllerListTransfersQueryKey();
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof cashBankControllerListTransfers>>> = ({
+    signal,
+  }) => cashBankControllerListTransfers(requestOptions, signal);
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof cashBankControllerListTransfers>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type CashBankControllerListTransfersQueryResult = NonNullable<
+  Awaited<ReturnType<typeof cashBankControllerListTransfers>>
+>;
+export type CashBankControllerListTransfersQueryError = unknown;
+
+export function useCashBankControllerListTransfers<
+  TData = Awaited<ReturnType<typeof cashBankControllerListTransfers>>,
+  TError = unknown,
+>(
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof cashBankControllerListTransfers>>, TError, TData>
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof cashBankControllerListTransfers>>,
+          TError,
+          Awaited<ReturnType<typeof cashBankControllerListTransfers>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useCashBankControllerListTransfers<
+  TData = Awaited<ReturnType<typeof cashBankControllerListTransfers>>,
+  TError = unknown,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof cashBankControllerListTransfers>>, TError, TData>
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof cashBankControllerListTransfers>>,
+          TError,
+          Awaited<ReturnType<typeof cashBankControllerListTransfers>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useCashBankControllerListTransfers<
+  TData = Awaited<ReturnType<typeof cashBankControllerListTransfers>>,
+  TError = unknown,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof cashBankControllerListTransfers>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary List all cash transfers
+ */
+
+export function useCashBankControllerListTransfers<
+  TData = Awaited<ReturnType<typeof cashBankControllerListTransfers>>,
+  TError = unknown,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof cashBankControllerListTransfers>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getCashBankControllerListTransfersQueryOptions(options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+/**
+ * @summary Get details of a cash transfer
+ */
+export const cashBankControllerGetTransfer = (
+  id: string,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<CashTransferResponseDto>(
+    { url: `/api/v1/accounting/cashbank/transfers/${id}`, method: 'GET', signal },
+    options,
+  );
+};
+
+export const getCashBankControllerGetTransferQueryKey = (id?: string) => {
+  return [`/api/v1/accounting/cashbank/transfers/${id}`] as const;
+};
+
+export const getCashBankControllerGetTransferQueryOptions = <
+  TData = Awaited<ReturnType<typeof cashBankControllerGetTransfer>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof cashBankControllerGetTransfer>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getCashBankControllerGetTransferQueryKey(id);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof cashBankControllerGetTransfer>>> = ({
+    signal,
+  }) => cashBankControllerGetTransfer(id, requestOptions, signal);
+
+  return { queryKey, queryFn, enabled: !!id, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof cashBankControllerGetTransfer>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type CashBankControllerGetTransferQueryResult = NonNullable<
+  Awaited<ReturnType<typeof cashBankControllerGetTransfer>>
+>;
+export type CashBankControllerGetTransferQueryError = unknown;
+
+export function useCashBankControllerGetTransfer<
+  TData = Awaited<ReturnType<typeof cashBankControllerGetTransfer>>,
+  TError = unknown,
+>(
+  id: string,
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof cashBankControllerGetTransfer>>, TError, TData>
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof cashBankControllerGetTransfer>>,
+          TError,
+          Awaited<ReturnType<typeof cashBankControllerGetTransfer>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useCashBankControllerGetTransfer<
+  TData = Awaited<ReturnType<typeof cashBankControllerGetTransfer>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof cashBankControllerGetTransfer>>, TError, TData>
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof cashBankControllerGetTransfer>>,
+          TError,
+          Awaited<ReturnType<typeof cashBankControllerGetTransfer>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useCashBankControllerGetTransfer<
+  TData = Awaited<ReturnType<typeof cashBankControllerGetTransfer>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof cashBankControllerGetTransfer>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary Get details of a cash transfer
+ */
+
+export function useCashBankControllerGetTransfer<
+  TData = Awaited<ReturnType<typeof cashBankControllerGetTransfer>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof cashBankControllerGetTransfer>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getCashBankControllerGetTransferQueryOptions(id, options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+/**
+ * @summary Create a draft bank reconciliation session
+ */
+export const cashBankControllerCreateReconciliation = (
+  createBankReconciliationDto: CreateBankReconciliationDto,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<BankReconciliationResponseDto>(
+    {
+      url: `/api/v1/accounting/cashbank/reconciliations`,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      data: createBankReconciliationDto,
+      signal,
+    },
+    options,
+  );
+};
+
+export const getCashBankControllerCreateReconciliationMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof cashBankControllerCreateReconciliation>>,
+    TError,
+    { data: CreateBankReconciliationDto },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof cashBankControllerCreateReconciliation>>,
+  TError,
+  { data: CreateBankReconciliationDto },
+  TContext
+> => {
+  const mutationKey = ['cashBankControllerCreateReconciliation'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof cashBankControllerCreateReconciliation>>,
+    { data: CreateBankReconciliationDto }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return cashBankControllerCreateReconciliation(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type CashBankControllerCreateReconciliationMutationResult = NonNullable<
+  Awaited<ReturnType<typeof cashBankControllerCreateReconciliation>>
+>;
+export type CashBankControllerCreateReconciliationMutationBody = CreateBankReconciliationDto;
+export type CashBankControllerCreateReconciliationMutationError = unknown;
+
+/**
+ * @summary Create a draft bank reconciliation session
+ */
+export const useCashBankControllerCreateReconciliation = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof cashBankControllerCreateReconciliation>>,
+      TError,
+      { data: CreateBankReconciliationDto },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof cashBankControllerCreateReconciliation>>,
+  TError,
+  { data: CreateBankReconciliationDto },
+  TContext
+> => {
+  const mutationOptions = getCashBankControllerCreateReconciliationMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary List bank reconciliations
+ */
+export const cashBankControllerListReconciliations = (
+  params: CashBankControllerListReconciliationsParams,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<BankReconciliationResponseDto[]>(
+    { url: `/api/v1/accounting/cashbank/reconciliations`, method: 'GET', params, signal },
+    options,
+  );
+};
+
+export const getCashBankControllerListReconciliationsQueryKey = (
+  params?: CashBankControllerListReconciliationsParams,
+) => {
+  return [`/api/v1/accounting/cashbank/reconciliations`, ...(params ? [params] : [])] as const;
+};
+
+export const getCashBankControllerListReconciliationsQueryOptions = <
+  TData = Awaited<ReturnType<typeof cashBankControllerListReconciliations>>,
+  TError = unknown,
+>(
+  params: CashBankControllerListReconciliationsParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof cashBankControllerListReconciliations>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ?? getCashBankControllerListReconciliationsQueryKey(params);
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof cashBankControllerListReconciliations>>
+  > = ({ signal }) => cashBankControllerListReconciliations(params, requestOptions, signal);
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof cashBankControllerListReconciliations>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type CashBankControllerListReconciliationsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof cashBankControllerListReconciliations>>
+>;
+export type CashBankControllerListReconciliationsQueryError = unknown;
+
+export function useCashBankControllerListReconciliations<
+  TData = Awaited<ReturnType<typeof cashBankControllerListReconciliations>>,
+  TError = unknown,
+>(
+  params: CashBankControllerListReconciliationsParams,
+  options: {
+    query: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof cashBankControllerListReconciliations>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof cashBankControllerListReconciliations>>,
+          TError,
+          Awaited<ReturnType<typeof cashBankControllerListReconciliations>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useCashBankControllerListReconciliations<
+  TData = Awaited<ReturnType<typeof cashBankControllerListReconciliations>>,
+  TError = unknown,
+>(
+  params: CashBankControllerListReconciliationsParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof cashBankControllerListReconciliations>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof cashBankControllerListReconciliations>>,
+          TError,
+          Awaited<ReturnType<typeof cashBankControllerListReconciliations>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useCashBankControllerListReconciliations<
+  TData = Awaited<ReturnType<typeof cashBankControllerListReconciliations>>,
+  TError = unknown,
+>(
+  params: CashBankControllerListReconciliationsParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof cashBankControllerListReconciliations>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary List bank reconciliations
+ */
+
+export function useCashBankControllerListReconciliations<
+  TData = Awaited<ReturnType<typeof cashBankControllerListReconciliations>>,
+  TError = unknown,
+>(
+  params: CashBankControllerListReconciliationsParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof cashBankControllerListReconciliations>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getCashBankControllerListReconciliationsQueryOptions(params, options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+/**
+ * @summary Get bank reconciliation details
+ */
+export const cashBankControllerGetReconciliation = (
+  id: string,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<BankReconciliationResponseDto>(
+    { url: `/api/v1/accounting/cashbank/reconciliations/${id}`, method: 'GET', signal },
+    options,
+  );
+};
+
+export const getCashBankControllerGetReconciliationQueryKey = (id?: string) => {
+  return [`/api/v1/accounting/cashbank/reconciliations/${id}`] as const;
+};
+
+export const getCashBankControllerGetReconciliationQueryOptions = <
+  TData = Awaited<ReturnType<typeof cashBankControllerGetReconciliation>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof cashBankControllerGetReconciliation>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getCashBankControllerGetReconciliationQueryKey(id);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof cashBankControllerGetReconciliation>>> = ({
+    signal,
+  }) => cashBankControllerGetReconciliation(id, requestOptions, signal);
+
+  return { queryKey, queryFn, enabled: !!id, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof cashBankControllerGetReconciliation>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type CashBankControllerGetReconciliationQueryResult = NonNullable<
+  Awaited<ReturnType<typeof cashBankControllerGetReconciliation>>
+>;
+export type CashBankControllerGetReconciliationQueryError = unknown;
+
+export function useCashBankControllerGetReconciliation<
+  TData = Awaited<ReturnType<typeof cashBankControllerGetReconciliation>>,
+  TError = unknown,
+>(
+  id: string,
+  options: {
+    query: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof cashBankControllerGetReconciliation>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof cashBankControllerGetReconciliation>>,
+          TError,
+          Awaited<ReturnType<typeof cashBankControllerGetReconciliation>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useCashBankControllerGetReconciliation<
+  TData = Awaited<ReturnType<typeof cashBankControllerGetReconciliation>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof cashBankControllerGetReconciliation>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof cashBankControllerGetReconciliation>>,
+          TError,
+          Awaited<ReturnType<typeof cashBankControllerGetReconciliation>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useCashBankControllerGetReconciliation<
+  TData = Awaited<ReturnType<typeof cashBankControllerGetReconciliation>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof cashBankControllerGetReconciliation>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary Get bank reconciliation details
+ */
+
+export function useCashBankControllerGetReconciliation<
+  TData = Awaited<ReturnType<typeof cashBankControllerGetReconciliation>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof cashBankControllerGetReconciliation>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getCashBankControllerGetReconciliationQueryOptions(id, options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+/**
+ * @summary Get unreconciled journal lines for this reconciliation
+ */
+export const cashBankControllerGetUnreconciledLines = (
+  id: string,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<UnreconciledLineDto[]>(
+    {
+      url: `/api/v1/accounting/cashbank/reconciliations/${id}/unreconciled-lines`,
+      method: 'GET',
+      signal,
+    },
+    options,
+  );
+};
+
+export const getCashBankControllerGetUnreconciledLinesQueryKey = (id?: string) => {
+  return [`/api/v1/accounting/cashbank/reconciliations/${id}/unreconciled-lines`] as const;
+};
+
+export const getCashBankControllerGetUnreconciledLinesQueryOptions = <
+  TData = Awaited<ReturnType<typeof cashBankControllerGetUnreconciledLines>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof cashBankControllerGetUnreconciledLines>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getCashBankControllerGetUnreconciledLinesQueryKey(id);
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof cashBankControllerGetUnreconciledLines>>
+  > = ({ signal }) => cashBankControllerGetUnreconciledLines(id, requestOptions, signal);
+
+  return { queryKey, queryFn, enabled: !!id, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof cashBankControllerGetUnreconciledLines>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type CashBankControllerGetUnreconciledLinesQueryResult = NonNullable<
+  Awaited<ReturnType<typeof cashBankControllerGetUnreconciledLines>>
+>;
+export type CashBankControllerGetUnreconciledLinesQueryError = unknown;
+
+export function useCashBankControllerGetUnreconciledLines<
+  TData = Awaited<ReturnType<typeof cashBankControllerGetUnreconciledLines>>,
+  TError = unknown,
+>(
+  id: string,
+  options: {
+    query: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof cashBankControllerGetUnreconciledLines>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof cashBankControllerGetUnreconciledLines>>,
+          TError,
+          Awaited<ReturnType<typeof cashBankControllerGetUnreconciledLines>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useCashBankControllerGetUnreconciledLines<
+  TData = Awaited<ReturnType<typeof cashBankControllerGetUnreconciledLines>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof cashBankControllerGetUnreconciledLines>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof cashBankControllerGetUnreconciledLines>>,
+          TError,
+          Awaited<ReturnType<typeof cashBankControllerGetUnreconciledLines>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useCashBankControllerGetUnreconciledLines<
+  TData = Awaited<ReturnType<typeof cashBankControllerGetUnreconciledLines>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof cashBankControllerGetUnreconciledLines>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary Get unreconciled journal lines for this reconciliation
+ */
+
+export function useCashBankControllerGetUnreconciledLines<
+  TData = Awaited<ReturnType<typeof cashBankControllerGetUnreconciledLines>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof cashBankControllerGetUnreconciledLines>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getCashBankControllerGetUnreconciledLinesQueryOptions(id, options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+/**
+ * @summary Match and tick off cleared journal lines in reconciliation
+ */
+export const cashBankControllerMatchItems = (
+  id: string,
+  matchReconciliationItemsRequestDto: MatchReconciliationItemsRequestDto,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<BankReconciliationResponseDto>(
+    {
+      url: `/api/v1/accounting/cashbank/reconciliations/${id}/match`,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      data: matchReconciliationItemsRequestDto,
+      signal,
+    },
+    options,
+  );
+};
+
+export const getCashBankControllerMatchItemsMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof cashBankControllerMatchItems>>,
+    TError,
+    { id: string; data: MatchReconciliationItemsRequestDto },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof cashBankControllerMatchItems>>,
+  TError,
+  { id: string; data: MatchReconciliationItemsRequestDto },
+  TContext
+> => {
+  const mutationKey = ['cashBankControllerMatchItems'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof cashBankControllerMatchItems>>,
+    { id: string; data: MatchReconciliationItemsRequestDto }
+  > = (props) => {
+    const { id, data } = props ?? {};
+
+    return cashBankControllerMatchItems(id, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type CashBankControllerMatchItemsMutationResult = NonNullable<
+  Awaited<ReturnType<typeof cashBankControllerMatchItems>>
+>;
+export type CashBankControllerMatchItemsMutationBody = MatchReconciliationItemsRequestDto;
+export type CashBankControllerMatchItemsMutationError = unknown;
+
+/**
+ * @summary Match and tick off cleared journal lines in reconciliation
+ */
+export const useCashBankControllerMatchItems = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof cashBankControllerMatchItems>>,
+      TError,
+      { id: string; data: MatchReconciliationItemsRequestDto },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof cashBankControllerMatchItems>>,
+  TError,
+  { id: string; data: MatchReconciliationItemsRequestDto },
+  TContext
+> => {
+  const mutationOptions = getCashBankControllerMatchItemsMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary Finalize and complete a balanced bank reconciliation
+ */
+export const cashBankControllerCompleteReconciliation = (
+  id: string,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<BankReconciliationResponseDto>(
+    { url: `/api/v1/accounting/cashbank/reconciliations/${id}/complete`, method: 'POST', signal },
+    options,
+  );
+};
+
+export const getCashBankControllerCompleteReconciliationMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof cashBankControllerCompleteReconciliation>>,
+    TError,
+    { id: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof cashBankControllerCompleteReconciliation>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  const mutationKey = ['cashBankControllerCompleteReconciliation'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof cashBankControllerCompleteReconciliation>>,
+    { id: string }
+  > = (props) => {
+    const { id } = props ?? {};
+
+    return cashBankControllerCompleteReconciliation(id, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type CashBankControllerCompleteReconciliationMutationResult = NonNullable<
+  Awaited<ReturnType<typeof cashBankControllerCompleteReconciliation>>
+>;
+
+export type CashBankControllerCompleteReconciliationMutationError = unknown;
+
+/**
+ * @summary Finalize and complete a balanced bank reconciliation
+ */
+export const useCashBankControllerCompleteReconciliation = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof cashBankControllerCompleteReconciliation>>,
+      TError,
+      { id: string },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof cashBankControllerCompleteReconciliation>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  const mutationOptions = getCashBankControllerCompleteReconciliationMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary Submit a draft booking money / collection payment request
+ */
+export const paymentControllerCreateDraftPayment = (
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>(
+    { url: `/api/v1/collection/payments/draft`, method: 'POST', signal },
+    options,
+  );
+};
+
+export const getPaymentControllerCreateDraftPaymentMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof paymentControllerCreateDraftPayment>>,
+    TError,
+    void,
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof paymentControllerCreateDraftPayment>>,
+  TError,
+  void,
+  TContext
+> => {
+  const mutationKey = ['paymentControllerCreateDraftPayment'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof paymentControllerCreateDraftPayment>>,
+    void
+  > = () => {
+    return paymentControllerCreateDraftPayment(requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type PaymentControllerCreateDraftPaymentMutationResult = NonNullable<
+  Awaited<ReturnType<typeof paymentControllerCreateDraftPayment>>
+>;
+
+export type PaymentControllerCreateDraftPaymentMutationError = unknown;
+
+/**
+ * @summary Submit a draft booking money / collection payment request
+ */
+export const usePaymentControllerCreateDraftPayment = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof paymentControllerCreateDraftPayment>>,
+      TError,
+      void,
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof paymentControllerCreateDraftPayment>>,
+  TError,
+  void,
+  TContext
+> => {
+  const mutationOptions = getPaymentControllerCreateDraftPaymentMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary Post a payment to confirm receipt and lock immutably
+ */
+export const paymentControllerPostPayment = (
+  id: string,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>(
+    { url: `/api/v1/collection/payments/${id}/post`, method: 'POST', signal },
+    options,
+  );
+};
+
+export const getPaymentControllerPostPaymentMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof paymentControllerPostPayment>>,
+    TError,
+    { id: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof paymentControllerPostPayment>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  const mutationKey = ['paymentControllerPostPayment'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof paymentControllerPostPayment>>,
+    { id: string }
+  > = (props) => {
+    const { id } = props ?? {};
+
+    return paymentControllerPostPayment(id, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type PaymentControllerPostPaymentMutationResult = NonNullable<
+  Awaited<ReturnType<typeof paymentControllerPostPayment>>
+>;
+
+export type PaymentControllerPostPaymentMutationError = unknown;
+
+/**
+ * @summary Post a payment to confirm receipt and lock immutably
+ */
+export const usePaymentControllerPostPayment = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof paymentControllerPostPayment>>,
+      TError,
+      { id: string },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof paymentControllerPostPayment>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  const mutationOptions = getPaymentControllerPostPaymentMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary List payments with filtering and pagination
+ */
+export const paymentControllerListPayments = (
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>(
+    { url: `/api/v1/collection/payments`, method: 'GET', signal },
+    options,
+  );
+};
+
+export const getPaymentControllerListPaymentsQueryKey = () => {
+  return [`/api/v1/collection/payments`] as const;
+};
+
+export const getPaymentControllerListPaymentsQueryOptions = <
+  TData = Awaited<ReturnType<typeof paymentControllerListPayments>>,
+  TError = unknown,
+>(options?: {
+  query?: Partial<
+    UseQueryOptions<Awaited<ReturnType<typeof paymentControllerListPayments>>, TError, TData>
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getPaymentControllerListPaymentsQueryKey();
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof paymentControllerListPayments>>> = ({
+    signal,
+  }) => paymentControllerListPayments(requestOptions, signal);
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof paymentControllerListPayments>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type PaymentControllerListPaymentsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof paymentControllerListPayments>>
+>;
+export type PaymentControllerListPaymentsQueryError = unknown;
+
+export function usePaymentControllerListPayments<
+  TData = Awaited<ReturnType<typeof paymentControllerListPayments>>,
+  TError = unknown,
+>(
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof paymentControllerListPayments>>, TError, TData>
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof paymentControllerListPayments>>,
+          TError,
+          Awaited<ReturnType<typeof paymentControllerListPayments>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function usePaymentControllerListPayments<
+  TData = Awaited<ReturnType<typeof paymentControllerListPayments>>,
+  TError = unknown,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof paymentControllerListPayments>>, TError, TData>
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof paymentControllerListPayments>>,
+          TError,
+          Awaited<ReturnType<typeof paymentControllerListPayments>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function usePaymentControllerListPayments<
+  TData = Awaited<ReturnType<typeof paymentControllerListPayments>>,
+  TError = unknown,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof paymentControllerListPayments>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary List payments with filtering and pagination
+ */
+
+export function usePaymentControllerListPayments<
+  TData = Awaited<ReturnType<typeof paymentControllerListPayments>>,
+  TError = unknown,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof paymentControllerListPayments>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getPaymentControllerListPaymentsQueryOptions(options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+/**
+ * @summary Get payment details by ID
+ */
+export const paymentControllerGetPaymentById = (
+  id: string,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>(
+    { url: `/api/v1/collection/payments/${id}`, method: 'GET', signal },
+    options,
+  );
+};
+
+export const getPaymentControllerGetPaymentByIdQueryKey = (id?: string) => {
+  return [`/api/v1/collection/payments/${id}`] as const;
+};
+
+export const getPaymentControllerGetPaymentByIdQueryOptions = <
+  TData = Awaited<ReturnType<typeof paymentControllerGetPaymentById>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof paymentControllerGetPaymentById>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getPaymentControllerGetPaymentByIdQueryKey(id);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof paymentControllerGetPaymentById>>> = ({
+    signal,
+  }) => paymentControllerGetPaymentById(id, requestOptions, signal);
+
+  return { queryKey, queryFn, enabled: !!id, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof paymentControllerGetPaymentById>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type PaymentControllerGetPaymentByIdQueryResult = NonNullable<
+  Awaited<ReturnType<typeof paymentControllerGetPaymentById>>
+>;
+export type PaymentControllerGetPaymentByIdQueryError = unknown;
+
+export function usePaymentControllerGetPaymentById<
+  TData = Awaited<ReturnType<typeof paymentControllerGetPaymentById>>,
+  TError = unknown,
+>(
+  id: string,
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof paymentControllerGetPaymentById>>, TError, TData>
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof paymentControllerGetPaymentById>>,
+          TError,
+          Awaited<ReturnType<typeof paymentControllerGetPaymentById>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function usePaymentControllerGetPaymentById<
+  TData = Awaited<ReturnType<typeof paymentControllerGetPaymentById>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof paymentControllerGetPaymentById>>, TError, TData>
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof paymentControllerGetPaymentById>>,
+          TError,
+          Awaited<ReturnType<typeof paymentControllerGetPaymentById>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function usePaymentControllerGetPaymentById<
+  TData = Awaited<ReturnType<typeof paymentControllerGetPaymentById>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof paymentControllerGetPaymentById>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary Get payment details by ID
+ */
+
+export function usePaymentControllerGetPaymentById<
+  TData = Awaited<ReturnType<typeof paymentControllerGetPaymentById>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof paymentControllerGetPaymentById>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getPaymentControllerGetPaymentByIdQueryOptions(id, options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
 export const companyControllerGetProfile = (
   options?: SecondParameter<typeof customInstance>,
   signal?: AbortSignal,
@@ -4910,6 +11158,3575 @@ export const useCompanyControllerDeleteDepartment = <TError = unknown, TContext 
   TContext
 > => {
   const mutationOptions = getCompanyControllerDeleteDepartmentMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary Create new customer with optional addresses, contacts, nominees, co-buyers
+ */
+export const customerControllerCreateCustomer = (
+  createCustomerDto: CreateCustomerDto,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>(
+    {
+      url: `/api/v1/crm/customers`,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      data: createCustomerDto,
+      signal,
+    },
+    options,
+  );
+};
+
+export const getCustomerControllerCreateCustomerMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof customerControllerCreateCustomer>>,
+    TError,
+    { data: CreateCustomerDto },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof customerControllerCreateCustomer>>,
+  TError,
+  { data: CreateCustomerDto },
+  TContext
+> => {
+  const mutationKey = ['customerControllerCreateCustomer'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof customerControllerCreateCustomer>>,
+    { data: CreateCustomerDto }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return customerControllerCreateCustomer(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type CustomerControllerCreateCustomerMutationResult = NonNullable<
+  Awaited<ReturnType<typeof customerControllerCreateCustomer>>
+>;
+export type CustomerControllerCreateCustomerMutationBody = CreateCustomerDto;
+export type CustomerControllerCreateCustomerMutationError = unknown;
+
+/**
+ * @summary Create new customer with optional addresses, contacts, nominees, co-buyers
+ */
+export const useCustomerControllerCreateCustomer = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof customerControllerCreateCustomer>>,
+      TError,
+      { data: CreateCustomerDto },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof customerControllerCreateCustomer>>,
+  TError,
+  { data: CreateCustomerDto },
+  TContext
+> => {
+  const mutationOptions = getCustomerControllerCreateCustomerMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary List customers with scope enforcement, filters, blind index search, and pagination
+ */
+export const customerControllerListCustomers = (
+  params?: CustomerControllerListCustomersParams,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>(
+    { url: `/api/v1/crm/customers`, method: 'GET', params, signal },
+    options,
+  );
+};
+
+export const getCustomerControllerListCustomersQueryKey = (
+  params?: CustomerControllerListCustomersParams,
+) => {
+  return [`/api/v1/crm/customers`, ...(params ? [params] : [])] as const;
+};
+
+export const getCustomerControllerListCustomersQueryOptions = <
+  TData = Awaited<ReturnType<typeof customerControllerListCustomers>>,
+  TError = unknown,
+>(
+  params?: CustomerControllerListCustomersParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof customerControllerListCustomers>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getCustomerControllerListCustomersQueryKey(params);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof customerControllerListCustomers>>> = ({
+    signal,
+  }) => customerControllerListCustomers(params, requestOptions, signal);
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof customerControllerListCustomers>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type CustomerControllerListCustomersQueryResult = NonNullable<
+  Awaited<ReturnType<typeof customerControllerListCustomers>>
+>;
+export type CustomerControllerListCustomersQueryError = unknown;
+
+export function useCustomerControllerListCustomers<
+  TData = Awaited<ReturnType<typeof customerControllerListCustomers>>,
+  TError = unknown,
+>(
+  params: undefined | CustomerControllerListCustomersParams,
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof customerControllerListCustomers>>, TError, TData>
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof customerControllerListCustomers>>,
+          TError,
+          Awaited<ReturnType<typeof customerControllerListCustomers>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useCustomerControllerListCustomers<
+  TData = Awaited<ReturnType<typeof customerControllerListCustomers>>,
+  TError = unknown,
+>(
+  params?: CustomerControllerListCustomersParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof customerControllerListCustomers>>, TError, TData>
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof customerControllerListCustomers>>,
+          TError,
+          Awaited<ReturnType<typeof customerControllerListCustomers>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useCustomerControllerListCustomers<
+  TData = Awaited<ReturnType<typeof customerControllerListCustomers>>,
+  TError = unknown,
+>(
+  params?: CustomerControllerListCustomersParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof customerControllerListCustomers>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary List customers with scope enforcement, filters, blind index search, and pagination
+ */
+
+export function useCustomerControllerListCustomers<
+  TData = Awaited<ReturnType<typeof customerControllerListCustomers>>,
+  TError = unknown,
+>(
+  params?: CustomerControllerListCustomersParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof customerControllerListCustomers>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getCustomerControllerListCustomersQueryOptions(params, options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+/**
+ * @summary Get Customer 360 profile with unmasked PII if permitted, otherwise masked
+ */
+export const customerControllerGetCustomerById = (
+  id: string,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>(
+    { url: `/api/v1/crm/customers/${id}`, method: 'GET', signal },
+    options,
+  );
+};
+
+export const getCustomerControllerGetCustomerByIdQueryKey = (id?: string) => {
+  return [`/api/v1/crm/customers/${id}`] as const;
+};
+
+export const getCustomerControllerGetCustomerByIdQueryOptions = <
+  TData = Awaited<ReturnType<typeof customerControllerGetCustomerById>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof customerControllerGetCustomerById>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getCustomerControllerGetCustomerByIdQueryKey(id);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof customerControllerGetCustomerById>>> = ({
+    signal,
+  }) => customerControllerGetCustomerById(id, requestOptions, signal);
+
+  return { queryKey, queryFn, enabled: !!id, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof customerControllerGetCustomerById>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type CustomerControllerGetCustomerByIdQueryResult = NonNullable<
+  Awaited<ReturnType<typeof customerControllerGetCustomerById>>
+>;
+export type CustomerControllerGetCustomerByIdQueryError = unknown;
+
+export function useCustomerControllerGetCustomerById<
+  TData = Awaited<ReturnType<typeof customerControllerGetCustomerById>>,
+  TError = unknown,
+>(
+  id: string,
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof customerControllerGetCustomerById>>, TError, TData>
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof customerControllerGetCustomerById>>,
+          TError,
+          Awaited<ReturnType<typeof customerControllerGetCustomerById>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useCustomerControllerGetCustomerById<
+  TData = Awaited<ReturnType<typeof customerControllerGetCustomerById>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof customerControllerGetCustomerById>>, TError, TData>
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof customerControllerGetCustomerById>>,
+          TError,
+          Awaited<ReturnType<typeof customerControllerGetCustomerById>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useCustomerControllerGetCustomerById<
+  TData = Awaited<ReturnType<typeof customerControllerGetCustomerById>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof customerControllerGetCustomerById>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary Get Customer 360 profile with unmasked PII if permitted, otherwise masked
+ */
+
+export function useCustomerControllerGetCustomerById<
+  TData = Awaited<ReturnType<typeof customerControllerGetCustomerById>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof customerControllerGetCustomerById>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getCustomerControllerGetCustomerByIdQueryOptions(id, options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+/**
+ * @summary Update customer details
+ */
+export const customerControllerUpdateCustomer = (
+  id: string,
+  updateCustomerDto: UpdateCustomerDto,
+  options?: SecondParameter<typeof customInstance>,
+) => {
+  return customInstance<void>(
+    {
+      url: `/api/v1/crm/customers/${id}`,
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      data: updateCustomerDto,
+    },
+    options,
+  );
+};
+
+export const getCustomerControllerUpdateCustomerMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof customerControllerUpdateCustomer>>,
+    TError,
+    { id: string; data: UpdateCustomerDto },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof customerControllerUpdateCustomer>>,
+  TError,
+  { id: string; data: UpdateCustomerDto },
+  TContext
+> => {
+  const mutationKey = ['customerControllerUpdateCustomer'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof customerControllerUpdateCustomer>>,
+    { id: string; data: UpdateCustomerDto }
+  > = (props) => {
+    const { id, data } = props ?? {};
+
+    return customerControllerUpdateCustomer(id, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type CustomerControllerUpdateCustomerMutationResult = NonNullable<
+  Awaited<ReturnType<typeof customerControllerUpdateCustomer>>
+>;
+export type CustomerControllerUpdateCustomerMutationBody = UpdateCustomerDto;
+export type CustomerControllerUpdateCustomerMutationError = unknown;
+
+/**
+ * @summary Update customer details
+ */
+export const useCustomerControllerUpdateCustomer = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof customerControllerUpdateCustomer>>,
+      TError,
+      { id: string; data: UpdateCustomerDto },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof customerControllerUpdateCustomer>>,
+  TError,
+  { id: string; data: UpdateCustomerDto },
+  TContext
+> => {
+  const mutationOptions = getCustomerControllerUpdateCustomerMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary Soft delete a customer
+ */
+export const customerControllerDeleteCustomer = (
+  id: string,
+  options?: SecondParameter<typeof customInstance>,
+) => {
+  return customInstance<void>({ url: `/api/v1/crm/customers/${id}`, method: 'DELETE' }, options);
+};
+
+export const getCustomerControllerDeleteCustomerMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof customerControllerDeleteCustomer>>,
+    TError,
+    { id: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof customerControllerDeleteCustomer>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  const mutationKey = ['customerControllerDeleteCustomer'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof customerControllerDeleteCustomer>>,
+    { id: string }
+  > = (props) => {
+    const { id } = props ?? {};
+
+    return customerControllerDeleteCustomer(id, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type CustomerControllerDeleteCustomerMutationResult = NonNullable<
+  Awaited<ReturnType<typeof customerControllerDeleteCustomer>>
+>;
+
+export type CustomerControllerDeleteCustomerMutationError = unknown;
+
+/**
+ * @summary Soft delete a customer
+ */
+export const useCustomerControllerDeleteCustomer = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof customerControllerDeleteCustomer>>,
+      TError,
+      { id: string },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof customerControllerDeleteCustomer>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  const mutationOptions = getCustomerControllerDeleteCustomerMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary Get unified customer activity timeline (leads, follow-ups, documents, status changes, KYC)
+ */
+export const customerControllerGetCustomerTimeline = (
+  id: string,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>(
+    { url: `/api/v1/crm/customers/${id}/timeline`, method: 'GET', signal },
+    options,
+  );
+};
+
+export const getCustomerControllerGetCustomerTimelineQueryKey = (id?: string) => {
+  return [`/api/v1/crm/customers/${id}/timeline`] as const;
+};
+
+export const getCustomerControllerGetCustomerTimelineQueryOptions = <
+  TData = Awaited<ReturnType<typeof customerControllerGetCustomerTimeline>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof customerControllerGetCustomerTimeline>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getCustomerControllerGetCustomerTimelineQueryKey(id);
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof customerControllerGetCustomerTimeline>>
+  > = ({ signal }) => customerControllerGetCustomerTimeline(id, requestOptions, signal);
+
+  return { queryKey, queryFn, enabled: !!id, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof customerControllerGetCustomerTimeline>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type CustomerControllerGetCustomerTimelineQueryResult = NonNullable<
+  Awaited<ReturnType<typeof customerControllerGetCustomerTimeline>>
+>;
+export type CustomerControllerGetCustomerTimelineQueryError = unknown;
+
+export function useCustomerControllerGetCustomerTimeline<
+  TData = Awaited<ReturnType<typeof customerControllerGetCustomerTimeline>>,
+  TError = unknown,
+>(
+  id: string,
+  options: {
+    query: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof customerControllerGetCustomerTimeline>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof customerControllerGetCustomerTimeline>>,
+          TError,
+          Awaited<ReturnType<typeof customerControllerGetCustomerTimeline>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useCustomerControllerGetCustomerTimeline<
+  TData = Awaited<ReturnType<typeof customerControllerGetCustomerTimeline>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof customerControllerGetCustomerTimeline>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof customerControllerGetCustomerTimeline>>,
+          TError,
+          Awaited<ReturnType<typeof customerControllerGetCustomerTimeline>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useCustomerControllerGetCustomerTimeline<
+  TData = Awaited<ReturnType<typeof customerControllerGetCustomerTimeline>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof customerControllerGetCustomerTimeline>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary Get unified customer activity timeline (leads, follow-ups, documents, status changes, KYC)
+ */
+
+export function useCustomerControllerGetCustomerTimeline<
+  TData = Awaited<ReturnType<typeof customerControllerGetCustomerTimeline>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof customerControllerGetCustomerTimeline>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getCustomerControllerGetCustomerTimelineQueryOptions(id, options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+/**
+ * @summary Add a secondary contact to a customer
+ */
+export const customerControllerAddContact = (
+  id: string,
+  createCustomerContactDto: CreateCustomerContactDto,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>(
+    {
+      url: `/api/v1/crm/customers/${id}/contacts`,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      data: createCustomerContactDto,
+      signal,
+    },
+    options,
+  );
+};
+
+export const getCustomerControllerAddContactMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof customerControllerAddContact>>,
+    TError,
+    { id: string; data: CreateCustomerContactDto },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof customerControllerAddContact>>,
+  TError,
+  { id: string; data: CreateCustomerContactDto },
+  TContext
+> => {
+  const mutationKey = ['customerControllerAddContact'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof customerControllerAddContact>>,
+    { id: string; data: CreateCustomerContactDto }
+  > = (props) => {
+    const { id, data } = props ?? {};
+
+    return customerControllerAddContact(id, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type CustomerControllerAddContactMutationResult = NonNullable<
+  Awaited<ReturnType<typeof customerControllerAddContact>>
+>;
+export type CustomerControllerAddContactMutationBody = CreateCustomerContactDto;
+export type CustomerControllerAddContactMutationError = unknown;
+
+/**
+ * @summary Add a secondary contact to a customer
+ */
+export const useCustomerControllerAddContact = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof customerControllerAddContact>>,
+      TError,
+      { id: string; data: CreateCustomerContactDto },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof customerControllerAddContact>>,
+  TError,
+  { id: string; data: CreateCustomerContactDto },
+  TContext
+> => {
+  const mutationOptions = getCustomerControllerAddContactMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary Remove a contact from a customer
+ */
+export const customerControllerDeleteContact = (
+  id: string,
+  contactId: string,
+  options?: SecondParameter<typeof customInstance>,
+) => {
+  return customInstance<void>(
+    { url: `/api/v1/crm/customers/${id}/contacts/${contactId}`, method: 'DELETE' },
+    options,
+  );
+};
+
+export const getCustomerControllerDeleteContactMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof customerControllerDeleteContact>>,
+    TError,
+    { id: string; contactId: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof customerControllerDeleteContact>>,
+  TError,
+  { id: string; contactId: string },
+  TContext
+> => {
+  const mutationKey = ['customerControllerDeleteContact'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof customerControllerDeleteContact>>,
+    { id: string; contactId: string }
+  > = (props) => {
+    const { id, contactId } = props ?? {};
+
+    return customerControllerDeleteContact(id, contactId, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type CustomerControllerDeleteContactMutationResult = NonNullable<
+  Awaited<ReturnType<typeof customerControllerDeleteContact>>
+>;
+
+export type CustomerControllerDeleteContactMutationError = unknown;
+
+/**
+ * @summary Remove a contact from a customer
+ */
+export const useCustomerControllerDeleteContact = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof customerControllerDeleteContact>>,
+      TError,
+      { id: string; contactId: string },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof customerControllerDeleteContact>>,
+  TError,
+  { id: string; contactId: string },
+  TContext
+> => {
+  const mutationOptions = getCustomerControllerDeleteContactMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary Add an address to a customer
+ */
+export const customerControllerAddAddress = (
+  id: string,
+  createCustomerAddressDto: CreateCustomerAddressDto,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>(
+    {
+      url: `/api/v1/crm/customers/${id}/addresses`,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      data: createCustomerAddressDto,
+      signal,
+    },
+    options,
+  );
+};
+
+export const getCustomerControllerAddAddressMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof customerControllerAddAddress>>,
+    TError,
+    { id: string; data: CreateCustomerAddressDto },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof customerControllerAddAddress>>,
+  TError,
+  { id: string; data: CreateCustomerAddressDto },
+  TContext
+> => {
+  const mutationKey = ['customerControllerAddAddress'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof customerControllerAddAddress>>,
+    { id: string; data: CreateCustomerAddressDto }
+  > = (props) => {
+    const { id, data } = props ?? {};
+
+    return customerControllerAddAddress(id, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type CustomerControllerAddAddressMutationResult = NonNullable<
+  Awaited<ReturnType<typeof customerControllerAddAddress>>
+>;
+export type CustomerControllerAddAddressMutationBody = CreateCustomerAddressDto;
+export type CustomerControllerAddAddressMutationError = unknown;
+
+/**
+ * @summary Add an address to a customer
+ */
+export const useCustomerControllerAddAddress = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof customerControllerAddAddress>>,
+      TError,
+      { id: string; data: CreateCustomerAddressDto },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof customerControllerAddAddress>>,
+  TError,
+  { id: string; data: CreateCustomerAddressDto },
+  TContext
+> => {
+  const mutationOptions = getCustomerControllerAddAddressMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary Remove an address from a customer
+ */
+export const customerControllerDeleteAddress = (
+  id: string,
+  addressId: string,
+  options?: SecondParameter<typeof customInstance>,
+) => {
+  return customInstance<void>(
+    { url: `/api/v1/crm/customers/${id}/addresses/${addressId}`, method: 'DELETE' },
+    options,
+  );
+};
+
+export const getCustomerControllerDeleteAddressMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof customerControllerDeleteAddress>>,
+    TError,
+    { id: string; addressId: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof customerControllerDeleteAddress>>,
+  TError,
+  { id: string; addressId: string },
+  TContext
+> => {
+  const mutationKey = ['customerControllerDeleteAddress'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof customerControllerDeleteAddress>>,
+    { id: string; addressId: string }
+  > = (props) => {
+    const { id, addressId } = props ?? {};
+
+    return customerControllerDeleteAddress(id, addressId, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type CustomerControllerDeleteAddressMutationResult = NonNullable<
+  Awaited<ReturnType<typeof customerControllerDeleteAddress>>
+>;
+
+export type CustomerControllerDeleteAddressMutationError = unknown;
+
+/**
+ * @summary Remove an address from a customer
+ */
+export const useCustomerControllerDeleteAddress = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof customerControllerDeleteAddress>>,
+      TError,
+      { id: string; addressId: string },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof customerControllerDeleteAddress>>,
+  TError,
+  { id: string; addressId: string },
+  TContext
+> => {
+  const mutationOptions = getCustomerControllerDeleteAddressMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary Add a nominee with encrypted NID to a customer
+ */
+export const customerControllerAddNominee = (
+  id: string,
+  createCustomerNomineeDto: CreateCustomerNomineeDto,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>(
+    {
+      url: `/api/v1/crm/customers/${id}/nominees`,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      data: createCustomerNomineeDto,
+      signal,
+    },
+    options,
+  );
+};
+
+export const getCustomerControllerAddNomineeMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof customerControllerAddNominee>>,
+    TError,
+    { id: string; data: CreateCustomerNomineeDto },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof customerControllerAddNominee>>,
+  TError,
+  { id: string; data: CreateCustomerNomineeDto },
+  TContext
+> => {
+  const mutationKey = ['customerControllerAddNominee'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof customerControllerAddNominee>>,
+    { id: string; data: CreateCustomerNomineeDto }
+  > = (props) => {
+    const { id, data } = props ?? {};
+
+    return customerControllerAddNominee(id, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type CustomerControllerAddNomineeMutationResult = NonNullable<
+  Awaited<ReturnType<typeof customerControllerAddNominee>>
+>;
+export type CustomerControllerAddNomineeMutationBody = CreateCustomerNomineeDto;
+export type CustomerControllerAddNomineeMutationError = unknown;
+
+/**
+ * @summary Add a nominee with encrypted NID to a customer
+ */
+export const useCustomerControllerAddNominee = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof customerControllerAddNominee>>,
+      TError,
+      { id: string; data: CreateCustomerNomineeDto },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof customerControllerAddNominee>>,
+  TError,
+  { id: string; data: CreateCustomerNomineeDto },
+  TContext
+> => {
+  const mutationOptions = getCustomerControllerAddNomineeMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary Remove a nominee from a customer
+ */
+export const customerControllerDeleteNominee = (
+  id: string,
+  nomineeId: string,
+  options?: SecondParameter<typeof customInstance>,
+) => {
+  return customInstance<void>(
+    { url: `/api/v1/crm/customers/${id}/nominees/${nomineeId}`, method: 'DELETE' },
+    options,
+  );
+};
+
+export const getCustomerControllerDeleteNomineeMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof customerControllerDeleteNominee>>,
+    TError,
+    { id: string; nomineeId: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof customerControllerDeleteNominee>>,
+  TError,
+  { id: string; nomineeId: string },
+  TContext
+> => {
+  const mutationKey = ['customerControllerDeleteNominee'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof customerControllerDeleteNominee>>,
+    { id: string; nomineeId: string }
+  > = (props) => {
+    const { id, nomineeId } = props ?? {};
+
+    return customerControllerDeleteNominee(id, nomineeId, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type CustomerControllerDeleteNomineeMutationResult = NonNullable<
+  Awaited<ReturnType<typeof customerControllerDeleteNominee>>
+>;
+
+export type CustomerControllerDeleteNomineeMutationError = unknown;
+
+/**
+ * @summary Remove a nominee from a customer
+ */
+export const useCustomerControllerDeleteNominee = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof customerControllerDeleteNominee>>,
+      TError,
+      { id: string; nomineeId: string },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof customerControllerDeleteNominee>>,
+  TError,
+  { id: string; nomineeId: string },
+  TContext
+> => {
+  const mutationOptions = getCustomerControllerDeleteNomineeMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary Add a co-buyer / joint buyer to a customer
+ */
+export const customerControllerAddCoBuyer = (
+  id: string,
+  createCustomerCoBuyerDto: CreateCustomerCoBuyerDto,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>(
+    {
+      url: `/api/v1/crm/customers/${id}/co-buyers`,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      data: createCustomerCoBuyerDto,
+      signal,
+    },
+    options,
+  );
+};
+
+export const getCustomerControllerAddCoBuyerMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof customerControllerAddCoBuyer>>,
+    TError,
+    { id: string; data: CreateCustomerCoBuyerDto },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof customerControllerAddCoBuyer>>,
+  TError,
+  { id: string; data: CreateCustomerCoBuyerDto },
+  TContext
+> => {
+  const mutationKey = ['customerControllerAddCoBuyer'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof customerControllerAddCoBuyer>>,
+    { id: string; data: CreateCustomerCoBuyerDto }
+  > = (props) => {
+    const { id, data } = props ?? {};
+
+    return customerControllerAddCoBuyer(id, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type CustomerControllerAddCoBuyerMutationResult = NonNullable<
+  Awaited<ReturnType<typeof customerControllerAddCoBuyer>>
+>;
+export type CustomerControllerAddCoBuyerMutationBody = CreateCustomerCoBuyerDto;
+export type CustomerControllerAddCoBuyerMutationError = unknown;
+
+/**
+ * @summary Add a co-buyer / joint buyer to a customer
+ */
+export const useCustomerControllerAddCoBuyer = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof customerControllerAddCoBuyer>>,
+      TError,
+      { id: string; data: CreateCustomerCoBuyerDto },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof customerControllerAddCoBuyer>>,
+  TError,
+  { id: string; data: CreateCustomerCoBuyerDto },
+  TContext
+> => {
+  const mutationOptions = getCustomerControllerAddCoBuyerMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary Remove a co-buyer from a customer
+ */
+export const customerControllerDeleteCoBuyer = (
+  id: string,
+  coBuyerId: string,
+  options?: SecondParameter<typeof customInstance>,
+) => {
+  return customInstance<void>(
+    { url: `/api/v1/crm/customers/${id}/co-buyers/${coBuyerId}`, method: 'DELETE' },
+    options,
+  );
+};
+
+export const getCustomerControllerDeleteCoBuyerMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof customerControllerDeleteCoBuyer>>,
+    TError,
+    { id: string; coBuyerId: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof customerControllerDeleteCoBuyer>>,
+  TError,
+  { id: string; coBuyerId: string },
+  TContext
+> => {
+  const mutationKey = ['customerControllerDeleteCoBuyer'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof customerControllerDeleteCoBuyer>>,
+    { id: string; coBuyerId: string }
+  > = (props) => {
+    const { id, coBuyerId } = props ?? {};
+
+    return customerControllerDeleteCoBuyer(id, coBuyerId, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type CustomerControllerDeleteCoBuyerMutationResult = NonNullable<
+  Awaited<ReturnType<typeof customerControllerDeleteCoBuyer>>
+>;
+
+export type CustomerControllerDeleteCoBuyerMutationError = unknown;
+
+/**
+ * @summary Remove a co-buyer from a customer
+ */
+export const useCustomerControllerDeleteCoBuyer = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof customerControllerDeleteCoBuyer>>,
+      TError,
+      { id: string; coBuyerId: string },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof customerControllerDeleteCoBuyer>>,
+  TError,
+  { id: string; coBuyerId: string },
+  TContext
+> => {
+  const mutationOptions = getCustomerControllerDeleteCoBuyerMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary Validate KYC completeness and mark customer as KYC verified
+ */
+export const customerControllerVerifyKyc = (
+  id: string,
+  verifyKycDto: VerifyKycDto,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>(
+    {
+      url: `/api/v1/crm/customers/${id}/kyc-verify`,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      data: verifyKycDto,
+      signal,
+    },
+    options,
+  );
+};
+
+export const getCustomerControllerVerifyKycMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof customerControllerVerifyKyc>>,
+    TError,
+    { id: string; data: VerifyKycDto },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof customerControllerVerifyKyc>>,
+  TError,
+  { id: string; data: VerifyKycDto },
+  TContext
+> => {
+  const mutationKey = ['customerControllerVerifyKyc'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof customerControllerVerifyKyc>>,
+    { id: string; data: VerifyKycDto }
+  > = (props) => {
+    const { id, data } = props ?? {};
+
+    return customerControllerVerifyKyc(id, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type CustomerControllerVerifyKycMutationResult = NonNullable<
+  Awaited<ReturnType<typeof customerControllerVerifyKyc>>
+>;
+export type CustomerControllerVerifyKycMutationBody = VerifyKycDto;
+export type CustomerControllerVerifyKycMutationError = unknown;
+
+/**
+ * @summary Validate KYC completeness and mark customer as KYC verified
+ */
+export const useCustomerControllerVerifyKyc = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof customerControllerVerifyKyc>>,
+      TError,
+      { id: string; data: VerifyKycDto },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof customerControllerVerifyKyc>>,
+  TError,
+  { id: string; data: VerifyKycDto },
+  TContext
+> => {
+  const mutationOptions = getCustomerControllerVerifyKycMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary Attach a document record to a customer
+ */
+export const customerControllerAttachDocument = (
+  id: string,
+  attachCustomerDocumentDto: AttachCustomerDocumentDto,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>(
+    {
+      url: `/api/v1/crm/customers/${id}/documents`,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      data: attachCustomerDocumentDto,
+      signal,
+    },
+    options,
+  );
+};
+
+export const getCustomerControllerAttachDocumentMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof customerControllerAttachDocument>>,
+    TError,
+    { id: string; data: AttachCustomerDocumentDto },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof customerControllerAttachDocument>>,
+  TError,
+  { id: string; data: AttachCustomerDocumentDto },
+  TContext
+> => {
+  const mutationKey = ['customerControllerAttachDocument'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof customerControllerAttachDocument>>,
+    { id: string; data: AttachCustomerDocumentDto }
+  > = (props) => {
+    const { id, data } = props ?? {};
+
+    return customerControllerAttachDocument(id, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type CustomerControllerAttachDocumentMutationResult = NonNullable<
+  Awaited<ReturnType<typeof customerControllerAttachDocument>>
+>;
+export type CustomerControllerAttachDocumentMutationBody = AttachCustomerDocumentDto;
+export type CustomerControllerAttachDocumentMutationError = unknown;
+
+/**
+ * @summary Attach a document record to a customer
+ */
+export const useCustomerControllerAttachDocument = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof customerControllerAttachDocument>>,
+      TError,
+      { id: string; data: AttachCustomerDocumentDto },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof customerControllerAttachDocument>>,
+  TError,
+  { id: string; data: AttachCustomerDocumentDto },
+  TContext
+> => {
+  const mutationOptions = getCustomerControllerAttachDocumentMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary Create new lead with duplicate phone detection
+ */
+export const crmControllerCreateLead = (
+  createLeadDto: CreateLeadDto,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>(
+    {
+      url: `/api/v1/crm/leads`,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      data: createLeadDto,
+      signal,
+    },
+    options,
+  );
+};
+
+export const getCrmControllerCreateLeadMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof crmControllerCreateLead>>,
+    TError,
+    { data: CreateLeadDto },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof crmControllerCreateLead>>,
+  TError,
+  { data: CreateLeadDto },
+  TContext
+> => {
+  const mutationKey = ['crmControllerCreateLead'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof crmControllerCreateLead>>,
+    { data: CreateLeadDto }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return crmControllerCreateLead(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type CrmControllerCreateLeadMutationResult = NonNullable<
+  Awaited<ReturnType<typeof crmControllerCreateLead>>
+>;
+export type CrmControllerCreateLeadMutationBody = CreateLeadDto;
+export type CrmControllerCreateLeadMutationError = unknown;
+
+/**
+ * @summary Create new lead with duplicate phone detection
+ */
+export const useCrmControllerCreateLead = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof crmControllerCreateLead>>,
+      TError,
+      { data: CreateLeadDto },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof crmControllerCreateLead>>,
+  TError,
+  { data: CreateLeadDto },
+  TContext
+> => {
+  const mutationOptions = getCrmControllerCreateLeadMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary List leads with scope enforcement (OWN/TEAM/BRANCH/ALL) and filtering/search
+ */
+export const crmControllerListLeads = (
+  params?: CrmControllerListLeadsParams,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>({ url: `/api/v1/crm/leads`, method: 'GET', params, signal }, options);
+};
+
+export const getCrmControllerListLeadsQueryKey = (params?: CrmControllerListLeadsParams) => {
+  return [`/api/v1/crm/leads`, ...(params ? [params] : [])] as const;
+};
+
+export const getCrmControllerListLeadsQueryOptions = <
+  TData = Awaited<ReturnType<typeof crmControllerListLeads>>,
+  TError = unknown,
+>(
+  params?: CrmControllerListLeadsParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof crmControllerListLeads>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getCrmControllerListLeadsQueryKey(params);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof crmControllerListLeads>>> = ({ signal }) =>
+    crmControllerListLeads(params, requestOptions, signal);
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof crmControllerListLeads>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type CrmControllerListLeadsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof crmControllerListLeads>>
+>;
+export type CrmControllerListLeadsQueryError = unknown;
+
+export function useCrmControllerListLeads<
+  TData = Awaited<ReturnType<typeof crmControllerListLeads>>,
+  TError = unknown,
+>(
+  params: undefined | CrmControllerListLeadsParams,
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof crmControllerListLeads>>, TError, TData>
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof crmControllerListLeads>>,
+          TError,
+          Awaited<ReturnType<typeof crmControllerListLeads>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useCrmControllerListLeads<
+  TData = Awaited<ReturnType<typeof crmControllerListLeads>>,
+  TError = unknown,
+>(
+  params?: CrmControllerListLeadsParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof crmControllerListLeads>>, TError, TData>
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof crmControllerListLeads>>,
+          TError,
+          Awaited<ReturnType<typeof crmControllerListLeads>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useCrmControllerListLeads<
+  TData = Awaited<ReturnType<typeof crmControllerListLeads>>,
+  TError = unknown,
+>(
+  params?: CrmControllerListLeadsParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof crmControllerListLeads>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary List leads with scope enforcement (OWN/TEAM/BRANCH/ALL) and filtering/search
+ */
+
+export function useCrmControllerListLeads<
+  TData = Awaited<ReturnType<typeof crmControllerListLeads>>,
+  TError = unknown,
+>(
+  params?: CrmControllerListLeadsParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof crmControllerListLeads>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getCrmControllerListLeadsQueryOptions(params, options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+/**
+ * @summary Get lead details by ID with scope validation
+ */
+export const crmControllerGetLeadById = (
+  id: string,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>({ url: `/api/v1/crm/leads/${id}`, method: 'GET', signal }, options);
+};
+
+export const getCrmControllerGetLeadByIdQueryKey = (id?: string) => {
+  return [`/api/v1/crm/leads/${id}`] as const;
+};
+
+export const getCrmControllerGetLeadByIdQueryOptions = <
+  TData = Awaited<ReturnType<typeof crmControllerGetLeadById>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof crmControllerGetLeadById>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getCrmControllerGetLeadByIdQueryKey(id);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof crmControllerGetLeadById>>> = ({
+    signal,
+  }) => crmControllerGetLeadById(id, requestOptions, signal);
+
+  return { queryKey, queryFn, enabled: !!id, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof crmControllerGetLeadById>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type CrmControllerGetLeadByIdQueryResult = NonNullable<
+  Awaited<ReturnType<typeof crmControllerGetLeadById>>
+>;
+export type CrmControllerGetLeadByIdQueryError = unknown;
+
+export function useCrmControllerGetLeadById<
+  TData = Awaited<ReturnType<typeof crmControllerGetLeadById>>,
+  TError = unknown,
+>(
+  id: string,
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof crmControllerGetLeadById>>, TError, TData>
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof crmControllerGetLeadById>>,
+          TError,
+          Awaited<ReturnType<typeof crmControllerGetLeadById>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useCrmControllerGetLeadById<
+  TData = Awaited<ReturnType<typeof crmControllerGetLeadById>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof crmControllerGetLeadById>>, TError, TData>
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof crmControllerGetLeadById>>,
+          TError,
+          Awaited<ReturnType<typeof crmControllerGetLeadById>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useCrmControllerGetLeadById<
+  TData = Awaited<ReturnType<typeof crmControllerGetLeadById>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof crmControllerGetLeadById>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary Get lead details by ID with scope validation
+ */
+
+export function useCrmControllerGetLeadById<
+  TData = Awaited<ReturnType<typeof crmControllerGetLeadById>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof crmControllerGetLeadById>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getCrmControllerGetLeadByIdQueryOptions(id, options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+/**
+ * @summary Update lead information
+ */
+export const crmControllerUpdateLead = (
+  id: string,
+  updateLeadDto: UpdateLeadDto,
+  options?: SecondParameter<typeof customInstance>,
+) => {
+  return customInstance<void>(
+    {
+      url: `/api/v1/crm/leads/${id}`,
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      data: updateLeadDto,
+    },
+    options,
+  );
+};
+
+export const getCrmControllerUpdateLeadMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof crmControllerUpdateLead>>,
+    TError,
+    { id: string; data: UpdateLeadDto },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof crmControllerUpdateLead>>,
+  TError,
+  { id: string; data: UpdateLeadDto },
+  TContext
+> => {
+  const mutationKey = ['crmControllerUpdateLead'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof crmControllerUpdateLead>>,
+    { id: string; data: UpdateLeadDto }
+  > = (props) => {
+    const { id, data } = props ?? {};
+
+    return crmControllerUpdateLead(id, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type CrmControllerUpdateLeadMutationResult = NonNullable<
+  Awaited<ReturnType<typeof crmControllerUpdateLead>>
+>;
+export type CrmControllerUpdateLeadMutationBody = UpdateLeadDto;
+export type CrmControllerUpdateLeadMutationError = unknown;
+
+/**
+ * @summary Update lead information
+ */
+export const useCrmControllerUpdateLead = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof crmControllerUpdateLead>>,
+      TError,
+      { id: string; data: UpdateLeadDto },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof crmControllerUpdateLead>>,
+  TError,
+  { id: string; data: UpdateLeadDto },
+  TContext
+> => {
+  const mutationOptions = getCrmControllerUpdateLeadMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary Advance or transition lead pipeline status
+ */
+export const crmControllerChangeLeadStatus = (
+  id: string,
+  changeLeadStatusDto: ChangeLeadStatusDto,
+  options?: SecondParameter<typeof customInstance>,
+) => {
+  return customInstance<void>(
+    {
+      url: `/api/v1/crm/leads/${id}/status`,
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      data: changeLeadStatusDto,
+    },
+    options,
+  );
+};
+
+export const getCrmControllerChangeLeadStatusMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof crmControllerChangeLeadStatus>>,
+    TError,
+    { id: string; data: ChangeLeadStatusDto },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof crmControllerChangeLeadStatus>>,
+  TError,
+  { id: string; data: ChangeLeadStatusDto },
+  TContext
+> => {
+  const mutationKey = ['crmControllerChangeLeadStatus'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof crmControllerChangeLeadStatus>>,
+    { id: string; data: ChangeLeadStatusDto }
+  > = (props) => {
+    const { id, data } = props ?? {};
+
+    return crmControllerChangeLeadStatus(id, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type CrmControllerChangeLeadStatusMutationResult = NonNullable<
+  Awaited<ReturnType<typeof crmControllerChangeLeadStatus>>
+>;
+export type CrmControllerChangeLeadStatusMutationBody = ChangeLeadStatusDto;
+export type CrmControllerChangeLeadStatusMutationError = unknown;
+
+/**
+ * @summary Advance or transition lead pipeline status
+ */
+export const useCrmControllerChangeLeadStatus = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof crmControllerChangeLeadStatus>>,
+      TError,
+      { id: string; data: ChangeLeadStatusDto },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof crmControllerChangeLeadStatus>>,
+  TError,
+  { id: string; data: ChangeLeadStatusDto },
+  TContext
+> => {
+  const mutationOptions = getCrmControllerChangeLeadStatusMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary Assign lead to sales executive
+ */
+export const crmControllerAssignLead = (
+  id: string,
+  assignLeadDto: AssignLeadDto,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>(
+    {
+      url: `/api/v1/crm/leads/${id}/assign`,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      data: assignLeadDto,
+      signal,
+    },
+    options,
+  );
+};
+
+export const getCrmControllerAssignLeadMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof crmControllerAssignLead>>,
+    TError,
+    { id: string; data: AssignLeadDto },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof crmControllerAssignLead>>,
+  TError,
+  { id: string; data: AssignLeadDto },
+  TContext
+> => {
+  const mutationKey = ['crmControllerAssignLead'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof crmControllerAssignLead>>,
+    { id: string; data: AssignLeadDto }
+  > = (props) => {
+    const { id, data } = props ?? {};
+
+    return crmControllerAssignLead(id, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type CrmControllerAssignLeadMutationResult = NonNullable<
+  Awaited<ReturnType<typeof crmControllerAssignLead>>
+>;
+export type CrmControllerAssignLeadMutationBody = AssignLeadDto;
+export type CrmControllerAssignLeadMutationError = unknown;
+
+/**
+ * @summary Assign lead to sales executive
+ */
+export const useCrmControllerAssignLead = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof crmControllerAssignLead>>,
+      TError,
+      { id: string; data: AssignLeadDto },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof crmControllerAssignLead>>,
+  TError,
+  { id: string; data: AssignLeadDto },
+  TContext
+> => {
+  const mutationOptions = getCrmControllerAssignLeadMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary Convert lead to customer idempotently in one atomic transaction
+ */
+export const crmControllerConvertLead = (
+  id: string,
+  convertLeadDto: ConvertLeadDto,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>(
+    {
+      url: `/api/v1/crm/leads/${id}/convert`,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      data: convertLeadDto,
+      signal,
+    },
+    options,
+  );
+};
+
+export const getCrmControllerConvertLeadMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof crmControllerConvertLead>>,
+    TError,
+    { id: string; data: ConvertLeadDto },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof crmControllerConvertLead>>,
+  TError,
+  { id: string; data: ConvertLeadDto },
+  TContext
+> => {
+  const mutationKey = ['crmControllerConvertLead'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof crmControllerConvertLead>>,
+    { id: string; data: ConvertLeadDto }
+  > = (props) => {
+    const { id, data } = props ?? {};
+
+    return crmControllerConvertLead(id, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type CrmControllerConvertLeadMutationResult = NonNullable<
+  Awaited<ReturnType<typeof crmControllerConvertLead>>
+>;
+export type CrmControllerConvertLeadMutationBody = ConvertLeadDto;
+export type CrmControllerConvertLeadMutationError = unknown;
+
+/**
+ * @summary Convert lead to customer idempotently in one atomic transaction
+ */
+export const useCrmControllerConvertLead = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof crmControllerConvertLead>>,
+      TError,
+      { id: string; data: ConvertLeadDto },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof crmControllerConvertLead>>,
+  TError,
+  { id: string; data: ConvertLeadDto },
+  TContext
+> => {
+  const mutationOptions = getCrmControllerConvertLeadMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary Create new follow-up task/call/visit
+ */
+export const followUpControllerCreateFollowUp = (
+  createFollowUpDto: CreateFollowUpDto,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>(
+    {
+      url: `/api/v1/crm/follow-ups`,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      data: createFollowUpDto,
+      signal,
+    },
+    options,
+  );
+};
+
+export const getFollowUpControllerCreateFollowUpMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof followUpControllerCreateFollowUp>>,
+    TError,
+    { data: CreateFollowUpDto },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof followUpControllerCreateFollowUp>>,
+  TError,
+  { data: CreateFollowUpDto },
+  TContext
+> => {
+  const mutationKey = ['followUpControllerCreateFollowUp'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof followUpControllerCreateFollowUp>>,
+    { data: CreateFollowUpDto }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return followUpControllerCreateFollowUp(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type FollowUpControllerCreateFollowUpMutationResult = NonNullable<
+  Awaited<ReturnType<typeof followUpControllerCreateFollowUp>>
+>;
+export type FollowUpControllerCreateFollowUpMutationBody = CreateFollowUpDto;
+export type FollowUpControllerCreateFollowUpMutationError = unknown;
+
+/**
+ * @summary Create new follow-up task/call/visit
+ */
+export const useFollowUpControllerCreateFollowUp = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof followUpControllerCreateFollowUp>>,
+      TError,
+      { data: CreateFollowUpDto },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof followUpControllerCreateFollowUp>>,
+  TError,
+  { data: CreateFollowUpDto },
+  TContext
+> => {
+  const mutationOptions = getFollowUpControllerCreateFollowUpMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary List follow-ups with scope enforcement (OWN/TEAM/BRANCH/ALL), overdue filtering, and pagination
+ */
+export const followUpControllerListFollowUps = (
+  params?: FollowUpControllerListFollowUpsParams,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>(
+    { url: `/api/v1/crm/follow-ups`, method: 'GET', params, signal },
+    options,
+  );
+};
+
+export const getFollowUpControllerListFollowUpsQueryKey = (
+  params?: FollowUpControllerListFollowUpsParams,
+) => {
+  return [`/api/v1/crm/follow-ups`, ...(params ? [params] : [])] as const;
+};
+
+export const getFollowUpControllerListFollowUpsQueryOptions = <
+  TData = Awaited<ReturnType<typeof followUpControllerListFollowUps>>,
+  TError = unknown,
+>(
+  params?: FollowUpControllerListFollowUpsParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof followUpControllerListFollowUps>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getFollowUpControllerListFollowUpsQueryKey(params);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof followUpControllerListFollowUps>>> = ({
+    signal,
+  }) => followUpControllerListFollowUps(params, requestOptions, signal);
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof followUpControllerListFollowUps>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type FollowUpControllerListFollowUpsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof followUpControllerListFollowUps>>
+>;
+export type FollowUpControllerListFollowUpsQueryError = unknown;
+
+export function useFollowUpControllerListFollowUps<
+  TData = Awaited<ReturnType<typeof followUpControllerListFollowUps>>,
+  TError = unknown,
+>(
+  params: undefined | FollowUpControllerListFollowUpsParams,
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof followUpControllerListFollowUps>>, TError, TData>
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof followUpControllerListFollowUps>>,
+          TError,
+          Awaited<ReturnType<typeof followUpControllerListFollowUps>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useFollowUpControllerListFollowUps<
+  TData = Awaited<ReturnType<typeof followUpControllerListFollowUps>>,
+  TError = unknown,
+>(
+  params?: FollowUpControllerListFollowUpsParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof followUpControllerListFollowUps>>, TError, TData>
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof followUpControllerListFollowUps>>,
+          TError,
+          Awaited<ReturnType<typeof followUpControllerListFollowUps>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useFollowUpControllerListFollowUps<
+  TData = Awaited<ReturnType<typeof followUpControllerListFollowUps>>,
+  TError = unknown,
+>(
+  params?: FollowUpControllerListFollowUpsParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof followUpControllerListFollowUps>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary List follow-ups with scope enforcement (OWN/TEAM/BRANCH/ALL), overdue filtering, and pagination
+ */
+
+export function useFollowUpControllerListFollowUps<
+  TData = Awaited<ReturnType<typeof followUpControllerListFollowUps>>,
+  TError = unknown,
+>(
+  params?: FollowUpControllerListFollowUpsParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof followUpControllerListFollowUps>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getFollowUpControllerListFollowUpsQueryOptions(params, options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+/**
+ * @summary Get follow-up details by ID with scope validation
+ */
+export const followUpControllerGetFollowUpById = (
+  id: string,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>(
+    { url: `/api/v1/crm/follow-ups/${id}`, method: 'GET', signal },
+    options,
+  );
+};
+
+export const getFollowUpControllerGetFollowUpByIdQueryKey = (id?: string) => {
+  return [`/api/v1/crm/follow-ups/${id}`] as const;
+};
+
+export const getFollowUpControllerGetFollowUpByIdQueryOptions = <
+  TData = Awaited<ReturnType<typeof followUpControllerGetFollowUpById>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof followUpControllerGetFollowUpById>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getFollowUpControllerGetFollowUpByIdQueryKey(id);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof followUpControllerGetFollowUpById>>> = ({
+    signal,
+  }) => followUpControllerGetFollowUpById(id, requestOptions, signal);
+
+  return { queryKey, queryFn, enabled: !!id, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof followUpControllerGetFollowUpById>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type FollowUpControllerGetFollowUpByIdQueryResult = NonNullable<
+  Awaited<ReturnType<typeof followUpControllerGetFollowUpById>>
+>;
+export type FollowUpControllerGetFollowUpByIdQueryError = unknown;
+
+export function useFollowUpControllerGetFollowUpById<
+  TData = Awaited<ReturnType<typeof followUpControllerGetFollowUpById>>,
+  TError = unknown,
+>(
+  id: string,
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof followUpControllerGetFollowUpById>>, TError, TData>
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof followUpControllerGetFollowUpById>>,
+          TError,
+          Awaited<ReturnType<typeof followUpControllerGetFollowUpById>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useFollowUpControllerGetFollowUpById<
+  TData = Awaited<ReturnType<typeof followUpControllerGetFollowUpById>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof followUpControllerGetFollowUpById>>, TError, TData>
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof followUpControllerGetFollowUpById>>,
+          TError,
+          Awaited<ReturnType<typeof followUpControllerGetFollowUpById>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useFollowUpControllerGetFollowUpById<
+  TData = Awaited<ReturnType<typeof followUpControllerGetFollowUpById>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof followUpControllerGetFollowUpById>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary Get follow-up details by ID with scope validation
+ */
+
+export function useFollowUpControllerGetFollowUpById<
+  TData = Awaited<ReturnType<typeof followUpControllerGetFollowUpById>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof followUpControllerGetFollowUpById>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getFollowUpControllerGetFollowUpByIdQueryOptions(id, options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+/**
+ * @summary Update follow-up details
+ */
+export const followUpControllerUpdateFollowUp = (
+  id: string,
+  updateFollowUpDto: UpdateFollowUpDto,
+  options?: SecondParameter<typeof customInstance>,
+) => {
+  return customInstance<void>(
+    {
+      url: `/api/v1/crm/follow-ups/${id}`,
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      data: updateFollowUpDto,
+    },
+    options,
+  );
+};
+
+export const getFollowUpControllerUpdateFollowUpMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof followUpControllerUpdateFollowUp>>,
+    TError,
+    { id: string; data: UpdateFollowUpDto },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof followUpControllerUpdateFollowUp>>,
+  TError,
+  { id: string; data: UpdateFollowUpDto },
+  TContext
+> => {
+  const mutationKey = ['followUpControllerUpdateFollowUp'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof followUpControllerUpdateFollowUp>>,
+    { id: string; data: UpdateFollowUpDto }
+  > = (props) => {
+    const { id, data } = props ?? {};
+
+    return followUpControllerUpdateFollowUp(id, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type FollowUpControllerUpdateFollowUpMutationResult = NonNullable<
+  Awaited<ReturnType<typeof followUpControllerUpdateFollowUp>>
+>;
+export type FollowUpControllerUpdateFollowUpMutationBody = UpdateFollowUpDto;
+export type FollowUpControllerUpdateFollowUpMutationError = unknown;
+
+/**
+ * @summary Update follow-up details
+ */
+export const useFollowUpControllerUpdateFollowUp = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof followUpControllerUpdateFollowUp>>,
+      TError,
+      { id: string; data: UpdateFollowUpDto },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof followUpControllerUpdateFollowUp>>,
+  TError,
+  { id: string; data: UpdateFollowUpDto },
+  TContext
+> => {
+  const mutationOptions = getFollowUpControllerUpdateFollowUpMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary Soft delete a follow-up
+ */
+export const followUpControllerDeleteFollowUp = (
+  id: string,
+  options?: SecondParameter<typeof customInstance>,
+) => {
+  return customInstance<void>({ url: `/api/v1/crm/follow-ups/${id}`, method: 'DELETE' }, options);
+};
+
+export const getFollowUpControllerDeleteFollowUpMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof followUpControllerDeleteFollowUp>>,
+    TError,
+    { id: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof followUpControllerDeleteFollowUp>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  const mutationKey = ['followUpControllerDeleteFollowUp'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof followUpControllerDeleteFollowUp>>,
+    { id: string }
+  > = (props) => {
+    const { id } = props ?? {};
+
+    return followUpControllerDeleteFollowUp(id, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type FollowUpControllerDeleteFollowUpMutationResult = NonNullable<
+  Awaited<ReturnType<typeof followUpControllerDeleteFollowUp>>
+>;
+
+export type FollowUpControllerDeleteFollowUpMutationError = unknown;
+
+/**
+ * @summary Soft delete a follow-up
+ */
+export const useFollowUpControllerDeleteFollowUp = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof followUpControllerDeleteFollowUp>>,
+      TError,
+      { id: string },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof followUpControllerDeleteFollowUp>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  const mutationOptions = getFollowUpControllerDeleteFollowUpMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary Complete follow-up with outcome and optionally schedule next follow-up
+ */
+export const followUpControllerCompleteFollowUp = (
+  id: string,
+  completeFollowUpDto: CompleteFollowUpDto,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>(
+    {
+      url: `/api/v1/crm/follow-ups/${id}/complete`,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      data: completeFollowUpDto,
+      signal,
+    },
+    options,
+  );
+};
+
+export const getFollowUpControllerCompleteFollowUpMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof followUpControllerCompleteFollowUp>>,
+    TError,
+    { id: string; data: CompleteFollowUpDto },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof followUpControllerCompleteFollowUp>>,
+  TError,
+  { id: string; data: CompleteFollowUpDto },
+  TContext
+> => {
+  const mutationKey = ['followUpControllerCompleteFollowUp'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof followUpControllerCompleteFollowUp>>,
+    { id: string; data: CompleteFollowUpDto }
+  > = (props) => {
+    const { id, data } = props ?? {};
+
+    return followUpControllerCompleteFollowUp(id, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type FollowUpControllerCompleteFollowUpMutationResult = NonNullable<
+  Awaited<ReturnType<typeof followUpControllerCompleteFollowUp>>
+>;
+export type FollowUpControllerCompleteFollowUpMutationBody = CompleteFollowUpDto;
+export type FollowUpControllerCompleteFollowUpMutationError = unknown;
+
+/**
+ * @summary Complete follow-up with outcome and optionally schedule next follow-up
+ */
+export const useFollowUpControllerCompleteFollowUp = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof followUpControllerCompleteFollowUp>>,
+      TError,
+      { id: string; data: CompleteFollowUpDto },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof followUpControllerCompleteFollowUp>>,
+  TError,
+  { id: string; data: CompleteFollowUpDto },
+  TContext
+> => {
+  const mutationOptions = getFollowUpControllerCompleteFollowUpMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary Process overdue follow-ups in company timezone and send in-app alerts
+ */
+export const followUpControllerProcessOverdue = (
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>(
+    { url: `/api/v1/crm/follow-ups/process-overdue`, method: 'POST', signal },
+    options,
+  );
+};
+
+export const getFollowUpControllerProcessOverdueMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof followUpControllerProcessOverdue>>,
+    TError,
+    void,
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof followUpControllerProcessOverdue>>,
+  TError,
+  void,
+  TContext
+> => {
+  const mutationKey = ['followUpControllerProcessOverdue'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof followUpControllerProcessOverdue>>,
+    void
+  > = () => {
+    return followUpControllerProcessOverdue(requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type FollowUpControllerProcessOverdueMutationResult = NonNullable<
+  Awaited<ReturnType<typeof followUpControllerProcessOverdue>>
+>;
+
+export type FollowUpControllerProcessOverdueMutationError = unknown;
+
+/**
+ * @summary Process overdue follow-ups in company timezone and send in-app alerts
+ */
+export const useFollowUpControllerProcessOverdue = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof followUpControllerProcessOverdue>>,
+      TError,
+      void,
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof followUpControllerProcessOverdue>>,
+  TError,
+  void,
+  TContext
+> => {
+  const mutationOptions = getFollowUpControllerProcessOverdueMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary List in-app notifications for the authenticated user
+ */
+export const notificationsControllerGetInbox = (
+  params?: NotificationsControllerGetInboxParams,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>(
+    { url: `/api/v1/notifications`, method: 'GET', params, signal },
+    options,
+  );
+};
+
+export const getNotificationsControllerGetInboxQueryKey = (
+  params?: NotificationsControllerGetInboxParams,
+) => {
+  return [`/api/v1/notifications`, ...(params ? [params] : [])] as const;
+};
+
+export const getNotificationsControllerGetInboxQueryOptions = <
+  TData = Awaited<ReturnType<typeof notificationsControllerGetInbox>>,
+  TError = unknown,
+>(
+  params?: NotificationsControllerGetInboxParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof notificationsControllerGetInbox>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getNotificationsControllerGetInboxQueryKey(params);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof notificationsControllerGetInbox>>> = ({
+    signal,
+  }) => notificationsControllerGetInbox(params, requestOptions, signal);
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof notificationsControllerGetInbox>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type NotificationsControllerGetInboxQueryResult = NonNullable<
+  Awaited<ReturnType<typeof notificationsControllerGetInbox>>
+>;
+export type NotificationsControllerGetInboxQueryError = unknown;
+
+export function useNotificationsControllerGetInbox<
+  TData = Awaited<ReturnType<typeof notificationsControllerGetInbox>>,
+  TError = unknown,
+>(
+  params: undefined | NotificationsControllerGetInboxParams,
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof notificationsControllerGetInbox>>, TError, TData>
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof notificationsControllerGetInbox>>,
+          TError,
+          Awaited<ReturnType<typeof notificationsControllerGetInbox>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useNotificationsControllerGetInbox<
+  TData = Awaited<ReturnType<typeof notificationsControllerGetInbox>>,
+  TError = unknown,
+>(
+  params?: NotificationsControllerGetInboxParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof notificationsControllerGetInbox>>, TError, TData>
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof notificationsControllerGetInbox>>,
+          TError,
+          Awaited<ReturnType<typeof notificationsControllerGetInbox>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useNotificationsControllerGetInbox<
+  TData = Awaited<ReturnType<typeof notificationsControllerGetInbox>>,
+  TError = unknown,
+>(
+  params?: NotificationsControllerGetInboxParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof notificationsControllerGetInbox>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary List in-app notifications for the authenticated user
+ */
+
+export function useNotificationsControllerGetInbox<
+  TData = Awaited<ReturnType<typeof notificationsControllerGetInbox>>,
+  TError = unknown,
+>(
+  params?: NotificationsControllerGetInboxParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof notificationsControllerGetInbox>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getNotificationsControllerGetInboxQueryOptions(params, options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+/**
+ * @summary Get total unread notification count for authenticated user
+ */
+export const notificationsControllerGetUnreadCount = (
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<UnreadCountResponseDto>(
+    { url: `/api/v1/notifications/unread-count`, method: 'GET', signal },
+    options,
+  );
+};
+
+export const getNotificationsControllerGetUnreadCountQueryKey = () => {
+  return [`/api/v1/notifications/unread-count`] as const;
+};
+
+export const getNotificationsControllerGetUnreadCountQueryOptions = <
+  TData = Awaited<ReturnType<typeof notificationsControllerGetUnreadCount>>,
+  TError = unknown,
+>(options?: {
+  query?: Partial<
+    UseQueryOptions<
+      Awaited<ReturnType<typeof notificationsControllerGetUnreadCount>>,
+      TError,
+      TData
+    >
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getNotificationsControllerGetUnreadCountQueryKey();
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof notificationsControllerGetUnreadCount>>
+  > = ({ signal }) => notificationsControllerGetUnreadCount(requestOptions, signal);
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof notificationsControllerGetUnreadCount>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type NotificationsControllerGetUnreadCountQueryResult = NonNullable<
+  Awaited<ReturnType<typeof notificationsControllerGetUnreadCount>>
+>;
+export type NotificationsControllerGetUnreadCountQueryError = unknown;
+
+export function useNotificationsControllerGetUnreadCount<
+  TData = Awaited<ReturnType<typeof notificationsControllerGetUnreadCount>>,
+  TError = unknown,
+>(
+  options: {
+    query: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof notificationsControllerGetUnreadCount>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof notificationsControllerGetUnreadCount>>,
+          TError,
+          Awaited<ReturnType<typeof notificationsControllerGetUnreadCount>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useNotificationsControllerGetUnreadCount<
+  TData = Awaited<ReturnType<typeof notificationsControllerGetUnreadCount>>,
+  TError = unknown,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof notificationsControllerGetUnreadCount>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof notificationsControllerGetUnreadCount>>,
+          TError,
+          Awaited<ReturnType<typeof notificationsControllerGetUnreadCount>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useNotificationsControllerGetUnreadCount<
+  TData = Awaited<ReturnType<typeof notificationsControllerGetUnreadCount>>,
+  TError = unknown,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof notificationsControllerGetUnreadCount>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary Get total unread notification count for authenticated user
+ */
+
+export function useNotificationsControllerGetUnreadCount<
+  TData = Awaited<ReturnType<typeof notificationsControllerGetUnreadCount>>,
+  TError = unknown,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof notificationsControllerGetUnreadCount>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getNotificationsControllerGetUnreadCountQueryOptions(options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+/**
+ * @summary Get notification delivery preferences for authenticated user
+ */
+export const notificationsControllerGetPreferences = (
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<NotificationPreferenceResponseDto[]>(
+    { url: `/api/v1/notifications/preferences`, method: 'GET', signal },
+    options,
+  );
+};
+
+export const getNotificationsControllerGetPreferencesQueryKey = () => {
+  return [`/api/v1/notifications/preferences`] as const;
+};
+
+export const getNotificationsControllerGetPreferencesQueryOptions = <
+  TData = Awaited<ReturnType<typeof notificationsControllerGetPreferences>>,
+  TError = unknown,
+>(options?: {
+  query?: Partial<
+    UseQueryOptions<
+      Awaited<ReturnType<typeof notificationsControllerGetPreferences>>,
+      TError,
+      TData
+    >
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getNotificationsControllerGetPreferencesQueryKey();
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof notificationsControllerGetPreferences>>
+  > = ({ signal }) => notificationsControllerGetPreferences(requestOptions, signal);
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof notificationsControllerGetPreferences>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type NotificationsControllerGetPreferencesQueryResult = NonNullable<
+  Awaited<ReturnType<typeof notificationsControllerGetPreferences>>
+>;
+export type NotificationsControllerGetPreferencesQueryError = unknown;
+
+export function useNotificationsControllerGetPreferences<
+  TData = Awaited<ReturnType<typeof notificationsControllerGetPreferences>>,
+  TError = unknown,
+>(
+  options: {
+    query: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof notificationsControllerGetPreferences>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof notificationsControllerGetPreferences>>,
+          TError,
+          Awaited<ReturnType<typeof notificationsControllerGetPreferences>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useNotificationsControllerGetPreferences<
+  TData = Awaited<ReturnType<typeof notificationsControllerGetPreferences>>,
+  TError = unknown,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof notificationsControllerGetPreferences>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof notificationsControllerGetPreferences>>,
+          TError,
+          Awaited<ReturnType<typeof notificationsControllerGetPreferences>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useNotificationsControllerGetPreferences<
+  TData = Awaited<ReturnType<typeof notificationsControllerGetPreferences>>,
+  TError = unknown,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof notificationsControllerGetPreferences>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary Get notification delivery preferences for authenticated user
+ */
+
+export function useNotificationsControllerGetPreferences<
+  TData = Awaited<ReturnType<typeof notificationsControllerGetPreferences>>,
+  TError = unknown,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof notificationsControllerGetPreferences>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getNotificationsControllerGetPreferencesQueryOptions(options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+/**
+ * @summary Update notification delivery preferences for authenticated user
+ */
+export const notificationsControllerUpdatePreferences = (
+  updatePreferencesDto: UpdatePreferencesDto,
+  options?: SecondParameter<typeof customInstance>,
+) => {
+  return customInstance<NotificationPreferenceResponseDto[]>(
+    {
+      url: `/api/v1/notifications/preferences`,
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      data: updatePreferencesDto,
+    },
+    options,
+  );
+};
+
+export const getNotificationsControllerUpdatePreferencesMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof notificationsControllerUpdatePreferences>>,
+    TError,
+    { data: UpdatePreferencesDto },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof notificationsControllerUpdatePreferences>>,
+  TError,
+  { data: UpdatePreferencesDto },
+  TContext
+> => {
+  const mutationKey = ['notificationsControllerUpdatePreferences'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof notificationsControllerUpdatePreferences>>,
+    { data: UpdatePreferencesDto }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return notificationsControllerUpdatePreferences(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type NotificationsControllerUpdatePreferencesMutationResult = NonNullable<
+  Awaited<ReturnType<typeof notificationsControllerUpdatePreferences>>
+>;
+export type NotificationsControllerUpdatePreferencesMutationBody = UpdatePreferencesDto;
+export type NotificationsControllerUpdatePreferencesMutationError = unknown;
+
+/**
+ * @summary Update notification delivery preferences for authenticated user
+ */
+export const useNotificationsControllerUpdatePreferences = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof notificationsControllerUpdatePreferences>>,
+      TError,
+      { data: UpdatePreferencesDto },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof notificationsControllerUpdatePreferences>>,
+  TError,
+  { data: UpdatePreferencesDto },
+  TContext
+> => {
+  const mutationOptions = getNotificationsControllerUpdatePreferencesMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary Mark a specific in-app notification as read
+ */
+export const notificationsControllerMarkAsRead = (
+  id: string,
+  options?: SecondParameter<typeof customInstance>,
+) => {
+  return customInstance<InAppNotificationResponseDto>(
+    { url: `/api/v1/notifications/${id}/read`, method: 'PATCH' },
+    options,
+  );
+};
+
+export const getNotificationsControllerMarkAsReadMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof notificationsControllerMarkAsRead>>,
+    TError,
+    { id: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof notificationsControllerMarkAsRead>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  const mutationKey = ['notificationsControllerMarkAsRead'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof notificationsControllerMarkAsRead>>,
+    { id: string }
+  > = (props) => {
+    const { id } = props ?? {};
+
+    return notificationsControllerMarkAsRead(id, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type NotificationsControllerMarkAsReadMutationResult = NonNullable<
+  Awaited<ReturnType<typeof notificationsControllerMarkAsRead>>
+>;
+
+export type NotificationsControllerMarkAsReadMutationError = unknown;
+
+/**
+ * @summary Mark a specific in-app notification as read
+ */
+export const useNotificationsControllerMarkAsRead = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof notificationsControllerMarkAsRead>>,
+      TError,
+      { id: string },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof notificationsControllerMarkAsRead>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  const mutationOptions = getNotificationsControllerMarkAsReadMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary Mark all unread in-app notifications as read
+ */
+export const notificationsControllerMarkAllRead = (
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>(
+    { url: `/api/v1/notifications/mark-all-read`, method: 'POST', signal },
+    options,
+  );
+};
+
+export const getNotificationsControllerMarkAllReadMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof notificationsControllerMarkAllRead>>,
+    TError,
+    void,
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof notificationsControllerMarkAllRead>>,
+  TError,
+  void,
+  TContext
+> => {
+  const mutationKey = ['notificationsControllerMarkAllRead'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof notificationsControllerMarkAllRead>>,
+    void
+  > = () => {
+    return notificationsControllerMarkAllRead(requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type NotificationsControllerMarkAllReadMutationResult = NonNullable<
+  Awaited<ReturnType<typeof notificationsControllerMarkAllRead>>
+>;
+
+export type NotificationsControllerMarkAllReadMutationError = unknown;
+
+/**
+ * @summary Mark all unread in-app notifications as read
+ */
+export const useNotificationsControllerMarkAllRead = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof notificationsControllerMarkAllRead>>,
+      TError,
+      void,
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof notificationsControllerMarkAllRead>>,
+  TError,
+  void,
+  TContext
+> => {
+  const mutationOptions = getNotificationsControllerMarkAllReadMutationOptions(options);
 
   return useMutation(mutationOptions, queryClient);
 };
@@ -7334,674 +17151,6 @@ export const useSystemLicenseControllerIssueLicense = <TError = unknown, TContex
 };
 
 /**
- * @summary List in-app notifications for the authenticated user
- */
-export const notificationsControllerGetInbox = (
-  params?: NotificationsControllerGetInboxParams,
-  options?: SecondParameter<typeof customInstance>,
-  signal?: AbortSignal,
-) => {
-  return customInstance<void>(
-    { url: `/api/v1/notifications`, method: 'GET', params, signal },
-    options,
-  );
-};
-
-export const getNotificationsControllerGetInboxQueryKey = (
-  params?: NotificationsControllerGetInboxParams,
-) => {
-  return [`/api/v1/notifications`, ...(params ? [params] : [])] as const;
-};
-
-export const getNotificationsControllerGetInboxQueryOptions = <
-  TData = Awaited<ReturnType<typeof notificationsControllerGetInbox>>,
-  TError = unknown,
->(
-  params?: NotificationsControllerGetInboxParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof notificationsControllerGetInbox>>, TError, TData>
-    >;
-    request?: SecondParameter<typeof customInstance>;
-  },
-) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {};
-
-  const queryKey = queryOptions?.queryKey ?? getNotificationsControllerGetInboxQueryKey(params);
-
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof notificationsControllerGetInbox>>> = ({
-    signal,
-  }) => notificationsControllerGetInbox(params, requestOptions, signal);
-
-  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
-    Awaited<ReturnType<typeof notificationsControllerGetInbox>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> };
-};
-
-export type NotificationsControllerGetInboxQueryResult = NonNullable<
-  Awaited<ReturnType<typeof notificationsControllerGetInbox>>
->;
-export type NotificationsControllerGetInboxQueryError = unknown;
-
-export function useNotificationsControllerGetInbox<
-  TData = Awaited<ReturnType<typeof notificationsControllerGetInbox>>,
-  TError = unknown,
->(
-  params: undefined | NotificationsControllerGetInboxParams,
-  options: {
-    query: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof notificationsControllerGetInbox>>, TError, TData>
-    > &
-      Pick<
-        DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof notificationsControllerGetInbox>>,
-          TError,
-          Awaited<ReturnType<typeof notificationsControllerGetInbox>>
-        >,
-        'initialData'
-      >;
-    request?: SecondParameter<typeof customInstance>;
-  },
-  queryClient?: QueryClient,
-): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function useNotificationsControllerGetInbox<
-  TData = Awaited<ReturnType<typeof notificationsControllerGetInbox>>,
-  TError = unknown,
->(
-  params?: NotificationsControllerGetInboxParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof notificationsControllerGetInbox>>, TError, TData>
-    > &
-      Pick<
-        UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof notificationsControllerGetInbox>>,
-          TError,
-          Awaited<ReturnType<typeof notificationsControllerGetInbox>>
-        >,
-        'initialData'
-      >;
-    request?: SecondParameter<typeof customInstance>;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function useNotificationsControllerGetInbox<
-  TData = Awaited<ReturnType<typeof notificationsControllerGetInbox>>,
-  TError = unknown,
->(
-  params?: NotificationsControllerGetInboxParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof notificationsControllerGetInbox>>, TError, TData>
-    >;
-    request?: SecondParameter<typeof customInstance>;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-/**
- * @summary List in-app notifications for the authenticated user
- */
-
-export function useNotificationsControllerGetInbox<
-  TData = Awaited<ReturnType<typeof notificationsControllerGetInbox>>,
-  TError = unknown,
->(
-  params?: NotificationsControllerGetInboxParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof notificationsControllerGetInbox>>, TError, TData>
-    >;
-    request?: SecondParameter<typeof customInstance>;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-  const queryOptions = getNotificationsControllerGetInboxQueryOptions(params, options);
-
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
-    queryKey: DataTag<QueryKey, TData, TError>;
-  };
-
-  query.queryKey = queryOptions.queryKey;
-
-  return query;
-}
-
-/**
- * @summary Get total unread notification count for authenticated user
- */
-export const notificationsControllerGetUnreadCount = (
-  options?: SecondParameter<typeof customInstance>,
-  signal?: AbortSignal,
-) => {
-  return customInstance<UnreadCountResponseDto>(
-    { url: `/api/v1/notifications/unread-count`, method: 'GET', signal },
-    options,
-  );
-};
-
-export const getNotificationsControllerGetUnreadCountQueryKey = () => {
-  return [`/api/v1/notifications/unread-count`] as const;
-};
-
-export const getNotificationsControllerGetUnreadCountQueryOptions = <
-  TData = Awaited<ReturnType<typeof notificationsControllerGetUnreadCount>>,
-  TError = unknown,
->(options?: {
-  query?: Partial<
-    UseQueryOptions<
-      Awaited<ReturnType<typeof notificationsControllerGetUnreadCount>>,
-      TError,
-      TData
-    >
-  >;
-  request?: SecondParameter<typeof customInstance>;
-}) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {};
-
-  const queryKey = queryOptions?.queryKey ?? getNotificationsControllerGetUnreadCountQueryKey();
-
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof notificationsControllerGetUnreadCount>>
-  > = ({ signal }) => notificationsControllerGetUnreadCount(requestOptions, signal);
-
-  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
-    Awaited<ReturnType<typeof notificationsControllerGetUnreadCount>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> };
-};
-
-export type NotificationsControllerGetUnreadCountQueryResult = NonNullable<
-  Awaited<ReturnType<typeof notificationsControllerGetUnreadCount>>
->;
-export type NotificationsControllerGetUnreadCountQueryError = unknown;
-
-export function useNotificationsControllerGetUnreadCount<
-  TData = Awaited<ReturnType<typeof notificationsControllerGetUnreadCount>>,
-  TError = unknown,
->(
-  options: {
-    query: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof notificationsControllerGetUnreadCount>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
-        DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof notificationsControllerGetUnreadCount>>,
-          TError,
-          Awaited<ReturnType<typeof notificationsControllerGetUnreadCount>>
-        >,
-        'initialData'
-      >;
-    request?: SecondParameter<typeof customInstance>;
-  },
-  queryClient?: QueryClient,
-): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function useNotificationsControllerGetUnreadCount<
-  TData = Awaited<ReturnType<typeof notificationsControllerGetUnreadCount>>,
-  TError = unknown,
->(
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof notificationsControllerGetUnreadCount>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
-        UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof notificationsControllerGetUnreadCount>>,
-          TError,
-          Awaited<ReturnType<typeof notificationsControllerGetUnreadCount>>
-        >,
-        'initialData'
-      >;
-    request?: SecondParameter<typeof customInstance>;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function useNotificationsControllerGetUnreadCount<
-  TData = Awaited<ReturnType<typeof notificationsControllerGetUnreadCount>>,
-  TError = unknown,
->(
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof notificationsControllerGetUnreadCount>>,
-        TError,
-        TData
-      >
-    >;
-    request?: SecondParameter<typeof customInstance>;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-/**
- * @summary Get total unread notification count for authenticated user
- */
-
-export function useNotificationsControllerGetUnreadCount<
-  TData = Awaited<ReturnType<typeof notificationsControllerGetUnreadCount>>,
-  TError = unknown,
->(
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof notificationsControllerGetUnreadCount>>,
-        TError,
-        TData
-      >
-    >;
-    request?: SecondParameter<typeof customInstance>;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-  const queryOptions = getNotificationsControllerGetUnreadCountQueryOptions(options);
-
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
-    queryKey: DataTag<QueryKey, TData, TError>;
-  };
-
-  query.queryKey = queryOptions.queryKey;
-
-  return query;
-}
-
-/**
- * @summary Get notification delivery preferences for authenticated user
- */
-export const notificationsControllerGetPreferences = (
-  options?: SecondParameter<typeof customInstance>,
-  signal?: AbortSignal,
-) => {
-  return customInstance<NotificationPreferenceResponseDto[]>(
-    { url: `/api/v1/notifications/preferences`, method: 'GET', signal },
-    options,
-  );
-};
-
-export const getNotificationsControllerGetPreferencesQueryKey = () => {
-  return [`/api/v1/notifications/preferences`] as const;
-};
-
-export const getNotificationsControllerGetPreferencesQueryOptions = <
-  TData = Awaited<ReturnType<typeof notificationsControllerGetPreferences>>,
-  TError = unknown,
->(options?: {
-  query?: Partial<
-    UseQueryOptions<
-      Awaited<ReturnType<typeof notificationsControllerGetPreferences>>,
-      TError,
-      TData
-    >
-  >;
-  request?: SecondParameter<typeof customInstance>;
-}) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {};
-
-  const queryKey = queryOptions?.queryKey ?? getNotificationsControllerGetPreferencesQueryKey();
-
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof notificationsControllerGetPreferences>>
-  > = ({ signal }) => notificationsControllerGetPreferences(requestOptions, signal);
-
-  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
-    Awaited<ReturnType<typeof notificationsControllerGetPreferences>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> };
-};
-
-export type NotificationsControllerGetPreferencesQueryResult = NonNullable<
-  Awaited<ReturnType<typeof notificationsControllerGetPreferences>>
->;
-export type NotificationsControllerGetPreferencesQueryError = unknown;
-
-export function useNotificationsControllerGetPreferences<
-  TData = Awaited<ReturnType<typeof notificationsControllerGetPreferences>>,
-  TError = unknown,
->(
-  options: {
-    query: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof notificationsControllerGetPreferences>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
-        DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof notificationsControllerGetPreferences>>,
-          TError,
-          Awaited<ReturnType<typeof notificationsControllerGetPreferences>>
-        >,
-        'initialData'
-      >;
-    request?: SecondParameter<typeof customInstance>;
-  },
-  queryClient?: QueryClient,
-): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function useNotificationsControllerGetPreferences<
-  TData = Awaited<ReturnType<typeof notificationsControllerGetPreferences>>,
-  TError = unknown,
->(
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof notificationsControllerGetPreferences>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
-        UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof notificationsControllerGetPreferences>>,
-          TError,
-          Awaited<ReturnType<typeof notificationsControllerGetPreferences>>
-        >,
-        'initialData'
-      >;
-    request?: SecondParameter<typeof customInstance>;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function useNotificationsControllerGetPreferences<
-  TData = Awaited<ReturnType<typeof notificationsControllerGetPreferences>>,
-  TError = unknown,
->(
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof notificationsControllerGetPreferences>>,
-        TError,
-        TData
-      >
-    >;
-    request?: SecondParameter<typeof customInstance>;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-/**
- * @summary Get notification delivery preferences for authenticated user
- */
-
-export function useNotificationsControllerGetPreferences<
-  TData = Awaited<ReturnType<typeof notificationsControllerGetPreferences>>,
-  TError = unknown,
->(
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof notificationsControllerGetPreferences>>,
-        TError,
-        TData
-      >
-    >;
-    request?: SecondParameter<typeof customInstance>;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-  const queryOptions = getNotificationsControllerGetPreferencesQueryOptions(options);
-
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
-    queryKey: DataTag<QueryKey, TData, TError>;
-  };
-
-  query.queryKey = queryOptions.queryKey;
-
-  return query;
-}
-
-/**
- * @summary Update notification delivery preferences for authenticated user
- */
-export const notificationsControllerUpdatePreferences = (
-  updatePreferencesDto: UpdatePreferencesDto,
-  options?: SecondParameter<typeof customInstance>,
-) => {
-  return customInstance<NotificationPreferenceResponseDto[]>(
-    {
-      url: `/api/v1/notifications/preferences`,
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      data: updatePreferencesDto,
-    },
-    options,
-  );
-};
-
-export const getNotificationsControllerUpdatePreferencesMutationOptions = <
-  TError = unknown,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof notificationsControllerUpdatePreferences>>,
-    TError,
-    { data: UpdatePreferencesDto },
-    TContext
-  >;
-  request?: SecondParameter<typeof customInstance>;
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof notificationsControllerUpdatePreferences>>,
-  TError,
-  { data: UpdatePreferencesDto },
-  TContext
-> => {
-  const mutationKey = ['notificationsControllerUpdatePreferences'];
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined };
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof notificationsControllerUpdatePreferences>>,
-    { data: UpdatePreferencesDto }
-  > = (props) => {
-    const { data } = props ?? {};
-
-    return notificationsControllerUpdatePreferences(data, requestOptions);
-  };
-
-  return { mutationFn, ...mutationOptions };
-};
-
-export type NotificationsControllerUpdatePreferencesMutationResult = NonNullable<
-  Awaited<ReturnType<typeof notificationsControllerUpdatePreferences>>
->;
-export type NotificationsControllerUpdatePreferencesMutationBody = UpdatePreferencesDto;
-export type NotificationsControllerUpdatePreferencesMutationError = unknown;
-
-/**
- * @summary Update notification delivery preferences for authenticated user
- */
-export const useNotificationsControllerUpdatePreferences = <TError = unknown, TContext = unknown>(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof notificationsControllerUpdatePreferences>>,
-      TError,
-      { data: UpdatePreferencesDto },
-      TContext
-    >;
-    request?: SecondParameter<typeof customInstance>;
-  },
-  queryClient?: QueryClient,
-): UseMutationResult<
-  Awaited<ReturnType<typeof notificationsControllerUpdatePreferences>>,
-  TError,
-  { data: UpdatePreferencesDto },
-  TContext
-> => {
-  const mutationOptions = getNotificationsControllerUpdatePreferencesMutationOptions(options);
-
-  return useMutation(mutationOptions, queryClient);
-};
-
-/**
- * @summary Mark a specific in-app notification as read
- */
-export const notificationsControllerMarkAsRead = (
-  id: string,
-  options?: SecondParameter<typeof customInstance>,
-) => {
-  return customInstance<InAppNotificationResponseDto>(
-    { url: `/api/v1/notifications/${id}/read`, method: 'PATCH' },
-    options,
-  );
-};
-
-export const getNotificationsControllerMarkAsReadMutationOptions = <
-  TError = unknown,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof notificationsControllerMarkAsRead>>,
-    TError,
-    { id: string },
-    TContext
-  >;
-  request?: SecondParameter<typeof customInstance>;
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof notificationsControllerMarkAsRead>>,
-  TError,
-  { id: string },
-  TContext
-> => {
-  const mutationKey = ['notificationsControllerMarkAsRead'];
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined };
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof notificationsControllerMarkAsRead>>,
-    { id: string }
-  > = (props) => {
-    const { id } = props ?? {};
-
-    return notificationsControllerMarkAsRead(id, requestOptions);
-  };
-
-  return { mutationFn, ...mutationOptions };
-};
-
-export type NotificationsControllerMarkAsReadMutationResult = NonNullable<
-  Awaited<ReturnType<typeof notificationsControllerMarkAsRead>>
->;
-
-export type NotificationsControllerMarkAsReadMutationError = unknown;
-
-/**
- * @summary Mark a specific in-app notification as read
- */
-export const useNotificationsControllerMarkAsRead = <TError = unknown, TContext = unknown>(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof notificationsControllerMarkAsRead>>,
-      TError,
-      { id: string },
-      TContext
-    >;
-    request?: SecondParameter<typeof customInstance>;
-  },
-  queryClient?: QueryClient,
-): UseMutationResult<
-  Awaited<ReturnType<typeof notificationsControllerMarkAsRead>>,
-  TError,
-  { id: string },
-  TContext
-> => {
-  const mutationOptions = getNotificationsControllerMarkAsReadMutationOptions(options);
-
-  return useMutation(mutationOptions, queryClient);
-};
-
-/**
- * @summary Mark all unread in-app notifications as read
- */
-export const notificationsControllerMarkAllRead = (
-  options?: SecondParameter<typeof customInstance>,
-  signal?: AbortSignal,
-) => {
-  return customInstance<void>(
-    { url: `/api/v1/notifications/mark-all-read`, method: 'POST', signal },
-    options,
-  );
-};
-
-export const getNotificationsControllerMarkAllReadMutationOptions = <
-  TError = unknown,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof notificationsControllerMarkAllRead>>,
-    TError,
-    void,
-    TContext
-  >;
-  request?: SecondParameter<typeof customInstance>;
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof notificationsControllerMarkAllRead>>,
-  TError,
-  void,
-  TContext
-> => {
-  const mutationKey = ['notificationsControllerMarkAllRead'];
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined };
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof notificationsControllerMarkAllRead>>,
-    void
-  > = () => {
-    return notificationsControllerMarkAllRead(requestOptions);
-  };
-
-  return { mutationFn, ...mutationOptions };
-};
-
-export type NotificationsControllerMarkAllReadMutationResult = NonNullable<
-  Awaited<ReturnType<typeof notificationsControllerMarkAllRead>>
->;
-
-export type NotificationsControllerMarkAllReadMutationError = unknown;
-
-/**
- * @summary Mark all unread in-app notifications as read
- */
-export const useNotificationsControllerMarkAllRead = <TError = unknown, TContext = unknown>(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof notificationsControllerMarkAllRead>>,
-      TError,
-      void,
-      TContext
-    >;
-    request?: SecondParameter<typeof customInstance>;
-  },
-  queryClient?: QueryClient,
-): UseMutationResult<
-  Awaited<ReturnType<typeof notificationsControllerMarkAllRead>>,
-  TError,
-  void,
-  TContext
-> => {
-  const mutationOptions = getNotificationsControllerMarkAllReadMutationOptions(options);
-
-  return useMutation(mutationOptions, queryClient);
-};
-
-/**
  * @summary Create a new project with cost center and optional land link
  */
 export const projectControllerCreateProject = (
@@ -10181,6 +19330,4368 @@ export const usePropertyControllerOverrideStatus = <TError = unknown, TContext =
 
   return useMutation(mutationOptions, queryClient);
 };
+
+/**
+ * @summary Generate Trial Balance report (total debits equal credits)
+ */
+export const reportsControllerGetTrialBalance = (
+  params?: ReportsControllerGetTrialBalanceParams,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<TrialBalanceReportDto>(
+    { url: `/api/v1/reports/trial-balance`, method: 'GET', params, signal },
+    options,
+  );
+};
+
+export const getReportsControllerGetTrialBalanceQueryKey = (
+  params?: ReportsControllerGetTrialBalanceParams,
+) => {
+  return [`/api/v1/reports/trial-balance`, ...(params ? [params] : [])] as const;
+};
+
+export const getReportsControllerGetTrialBalanceQueryOptions = <
+  TData = Awaited<ReturnType<typeof reportsControllerGetTrialBalance>>,
+  TError = unknown,
+>(
+  params?: ReportsControllerGetTrialBalanceParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof reportsControllerGetTrialBalance>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getReportsControllerGetTrialBalanceQueryKey(params);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof reportsControllerGetTrialBalance>>> = ({
+    signal,
+  }) => reportsControllerGetTrialBalance(params, requestOptions, signal);
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof reportsControllerGetTrialBalance>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type ReportsControllerGetTrialBalanceQueryResult = NonNullable<
+  Awaited<ReturnType<typeof reportsControllerGetTrialBalance>>
+>;
+export type ReportsControllerGetTrialBalanceQueryError = unknown;
+
+export function useReportsControllerGetTrialBalance<
+  TData = Awaited<ReturnType<typeof reportsControllerGetTrialBalance>>,
+  TError = unknown,
+>(
+  params: undefined | ReportsControllerGetTrialBalanceParams,
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof reportsControllerGetTrialBalance>>, TError, TData>
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof reportsControllerGetTrialBalance>>,
+          TError,
+          Awaited<ReturnType<typeof reportsControllerGetTrialBalance>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useReportsControllerGetTrialBalance<
+  TData = Awaited<ReturnType<typeof reportsControllerGetTrialBalance>>,
+  TError = unknown,
+>(
+  params?: ReportsControllerGetTrialBalanceParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof reportsControllerGetTrialBalance>>, TError, TData>
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof reportsControllerGetTrialBalance>>,
+          TError,
+          Awaited<ReturnType<typeof reportsControllerGetTrialBalance>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useReportsControllerGetTrialBalance<
+  TData = Awaited<ReturnType<typeof reportsControllerGetTrialBalance>>,
+  TError = unknown,
+>(
+  params?: ReportsControllerGetTrialBalanceParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof reportsControllerGetTrialBalance>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary Generate Trial Balance report (total debits equal credits)
+ */
+
+export function useReportsControllerGetTrialBalance<
+  TData = Awaited<ReturnType<typeof reportsControllerGetTrialBalance>>,
+  TError = unknown,
+>(
+  params?: ReportsControllerGetTrialBalanceParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof reportsControllerGetTrialBalance>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getReportsControllerGetTrialBalanceQueryOptions(params, options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+/**
+ * @summary Queue asynchronous export of Trial Balance report
+ */
+export const reportsControllerExportTrialBalance = (
+  exportReportDto: ExportReportDto,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<ReportExportJobResponseDto>(
+    {
+      url: `/api/v1/reports/trial-balance/export`,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      data: exportReportDto,
+      signal,
+    },
+    options,
+  );
+};
+
+export const getReportsControllerExportTrialBalanceMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof reportsControllerExportTrialBalance>>,
+    TError,
+    { data: ExportReportDto },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof reportsControllerExportTrialBalance>>,
+  TError,
+  { data: ExportReportDto },
+  TContext
+> => {
+  const mutationKey = ['reportsControllerExportTrialBalance'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof reportsControllerExportTrialBalance>>,
+    { data: ExportReportDto }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return reportsControllerExportTrialBalance(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type ReportsControllerExportTrialBalanceMutationResult = NonNullable<
+  Awaited<ReturnType<typeof reportsControllerExportTrialBalance>>
+>;
+export type ReportsControllerExportTrialBalanceMutationBody = ExportReportDto;
+export type ReportsControllerExportTrialBalanceMutationError = unknown;
+
+/**
+ * @summary Queue asynchronous export of Trial Balance report
+ */
+export const useReportsControllerExportTrialBalance = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof reportsControllerExportTrialBalance>>,
+      TError,
+      { data: ExportReportDto },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof reportsControllerExportTrialBalance>>,
+  TError,
+  { data: ExportReportDto },
+  TContext
+> => {
+  const mutationOptions = getReportsControllerExportTrialBalanceMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary Generate Balance Sheet report (Assets = Liabilities + Equity)
+ */
+export const reportsControllerGetBalanceSheet = (
+  params?: ReportsControllerGetBalanceSheetParams,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<BalanceSheetReportDto>(
+    { url: `/api/v1/reports/balance-sheet`, method: 'GET', params, signal },
+    options,
+  );
+};
+
+export const getReportsControllerGetBalanceSheetQueryKey = (
+  params?: ReportsControllerGetBalanceSheetParams,
+) => {
+  return [`/api/v1/reports/balance-sheet`, ...(params ? [params] : [])] as const;
+};
+
+export const getReportsControllerGetBalanceSheetQueryOptions = <
+  TData = Awaited<ReturnType<typeof reportsControllerGetBalanceSheet>>,
+  TError = unknown,
+>(
+  params?: ReportsControllerGetBalanceSheetParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof reportsControllerGetBalanceSheet>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getReportsControllerGetBalanceSheetQueryKey(params);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof reportsControllerGetBalanceSheet>>> = ({
+    signal,
+  }) => reportsControllerGetBalanceSheet(params, requestOptions, signal);
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof reportsControllerGetBalanceSheet>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type ReportsControllerGetBalanceSheetQueryResult = NonNullable<
+  Awaited<ReturnType<typeof reportsControllerGetBalanceSheet>>
+>;
+export type ReportsControllerGetBalanceSheetQueryError = unknown;
+
+export function useReportsControllerGetBalanceSheet<
+  TData = Awaited<ReturnType<typeof reportsControllerGetBalanceSheet>>,
+  TError = unknown,
+>(
+  params: undefined | ReportsControllerGetBalanceSheetParams,
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof reportsControllerGetBalanceSheet>>, TError, TData>
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof reportsControllerGetBalanceSheet>>,
+          TError,
+          Awaited<ReturnType<typeof reportsControllerGetBalanceSheet>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useReportsControllerGetBalanceSheet<
+  TData = Awaited<ReturnType<typeof reportsControllerGetBalanceSheet>>,
+  TError = unknown,
+>(
+  params?: ReportsControllerGetBalanceSheetParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof reportsControllerGetBalanceSheet>>, TError, TData>
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof reportsControllerGetBalanceSheet>>,
+          TError,
+          Awaited<ReturnType<typeof reportsControllerGetBalanceSheet>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useReportsControllerGetBalanceSheet<
+  TData = Awaited<ReturnType<typeof reportsControllerGetBalanceSheet>>,
+  TError = unknown,
+>(
+  params?: ReportsControllerGetBalanceSheetParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof reportsControllerGetBalanceSheet>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary Generate Balance Sheet report (Assets = Liabilities + Equity)
+ */
+
+export function useReportsControllerGetBalanceSheet<
+  TData = Awaited<ReturnType<typeof reportsControllerGetBalanceSheet>>,
+  TError = unknown,
+>(
+  params?: ReportsControllerGetBalanceSheetParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof reportsControllerGetBalanceSheet>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getReportsControllerGetBalanceSheetQueryOptions(params, options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+/**
+ * @summary Queue asynchronous export of Balance Sheet report
+ */
+export const reportsControllerExportBalanceSheet = (
+  exportReportDto: ExportReportDto,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<ReportExportJobResponseDto>(
+    {
+      url: `/api/v1/reports/balance-sheet/export`,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      data: exportReportDto,
+      signal,
+    },
+    options,
+  );
+};
+
+export const getReportsControllerExportBalanceSheetMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof reportsControllerExportBalanceSheet>>,
+    TError,
+    { data: ExportReportDto },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof reportsControllerExportBalanceSheet>>,
+  TError,
+  { data: ExportReportDto },
+  TContext
+> => {
+  const mutationKey = ['reportsControllerExportBalanceSheet'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof reportsControllerExportBalanceSheet>>,
+    { data: ExportReportDto }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return reportsControllerExportBalanceSheet(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type ReportsControllerExportBalanceSheetMutationResult = NonNullable<
+  Awaited<ReturnType<typeof reportsControllerExportBalanceSheet>>
+>;
+export type ReportsControllerExportBalanceSheetMutationBody = ExportReportDto;
+export type ReportsControllerExportBalanceSheetMutationError = unknown;
+
+/**
+ * @summary Queue asynchronous export of Balance Sheet report
+ */
+export const useReportsControllerExportBalanceSheet = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof reportsControllerExportBalanceSheet>>,
+      TError,
+      { data: ExportReportDto },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof reportsControllerExportBalanceSheet>>,
+  TError,
+  { data: ExportReportDto },
+  TContext
+> => {
+  const mutationOptions = getReportsControllerExportBalanceSheetMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary Generate Income Statement / Profit & Loss report
+ */
+export const reportsControllerGetIncomeStatement = (
+  params?: ReportsControllerGetIncomeStatementParams,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<IncomeStatementReportDto>(
+    { url: `/api/v1/reports/income-statement`, method: 'GET', params, signal },
+    options,
+  );
+};
+
+export const getReportsControllerGetIncomeStatementQueryKey = (
+  params?: ReportsControllerGetIncomeStatementParams,
+) => {
+  return [`/api/v1/reports/income-statement`, ...(params ? [params] : [])] as const;
+};
+
+export const getReportsControllerGetIncomeStatementQueryOptions = <
+  TData = Awaited<ReturnType<typeof reportsControllerGetIncomeStatement>>,
+  TError = unknown,
+>(
+  params?: ReportsControllerGetIncomeStatementParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof reportsControllerGetIncomeStatement>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getReportsControllerGetIncomeStatementQueryKey(params);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof reportsControllerGetIncomeStatement>>> = ({
+    signal,
+  }) => reportsControllerGetIncomeStatement(params, requestOptions, signal);
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof reportsControllerGetIncomeStatement>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type ReportsControllerGetIncomeStatementQueryResult = NonNullable<
+  Awaited<ReturnType<typeof reportsControllerGetIncomeStatement>>
+>;
+export type ReportsControllerGetIncomeStatementQueryError = unknown;
+
+export function useReportsControllerGetIncomeStatement<
+  TData = Awaited<ReturnType<typeof reportsControllerGetIncomeStatement>>,
+  TError = unknown,
+>(
+  params: undefined | ReportsControllerGetIncomeStatementParams,
+  options: {
+    query: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof reportsControllerGetIncomeStatement>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof reportsControllerGetIncomeStatement>>,
+          TError,
+          Awaited<ReturnType<typeof reportsControllerGetIncomeStatement>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useReportsControllerGetIncomeStatement<
+  TData = Awaited<ReturnType<typeof reportsControllerGetIncomeStatement>>,
+  TError = unknown,
+>(
+  params?: ReportsControllerGetIncomeStatementParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof reportsControllerGetIncomeStatement>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof reportsControllerGetIncomeStatement>>,
+          TError,
+          Awaited<ReturnType<typeof reportsControllerGetIncomeStatement>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useReportsControllerGetIncomeStatement<
+  TData = Awaited<ReturnType<typeof reportsControllerGetIncomeStatement>>,
+  TError = unknown,
+>(
+  params?: ReportsControllerGetIncomeStatementParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof reportsControllerGetIncomeStatement>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary Generate Income Statement / Profit & Loss report
+ */
+
+export function useReportsControllerGetIncomeStatement<
+  TData = Awaited<ReturnType<typeof reportsControllerGetIncomeStatement>>,
+  TError = unknown,
+>(
+  params?: ReportsControllerGetIncomeStatementParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof reportsControllerGetIncomeStatement>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getReportsControllerGetIncomeStatementQueryOptions(params, options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+/**
+ * @summary Queue asynchronous export of Income Statement report
+ */
+export const reportsControllerExportIncomeStatement = (
+  exportReportDto: ExportReportDto,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<ReportExportJobResponseDto>(
+    {
+      url: `/api/v1/reports/income-statement/export`,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      data: exportReportDto,
+      signal,
+    },
+    options,
+  );
+};
+
+export const getReportsControllerExportIncomeStatementMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof reportsControllerExportIncomeStatement>>,
+    TError,
+    { data: ExportReportDto },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof reportsControllerExportIncomeStatement>>,
+  TError,
+  { data: ExportReportDto },
+  TContext
+> => {
+  const mutationKey = ['reportsControllerExportIncomeStatement'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof reportsControllerExportIncomeStatement>>,
+    { data: ExportReportDto }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return reportsControllerExportIncomeStatement(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type ReportsControllerExportIncomeStatementMutationResult = NonNullable<
+  Awaited<ReturnType<typeof reportsControllerExportIncomeStatement>>
+>;
+export type ReportsControllerExportIncomeStatementMutationBody = ExportReportDto;
+export type ReportsControllerExportIncomeStatementMutationError = unknown;
+
+/**
+ * @summary Queue asynchronous export of Income Statement report
+ */
+export const useReportsControllerExportIncomeStatement = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof reportsControllerExportIncomeStatement>>,
+      TError,
+      { data: ExportReportDto },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof reportsControllerExportIncomeStatement>>,
+  TError,
+  { data: ExportReportDto },
+  TContext
+> => {
+  const mutationOptions = getReportsControllerExportIncomeStatementMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary Preview calculated installment schedule from price parameters or template (AT-23 largest-remainder engine)
+ */
+export const paymentPlanControllerPreviewSchedule = (
+  previewScheduleDto: PreviewScheduleDto,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>(
+    {
+      url: `/api/v1/sales/payment-plans/preview`,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      data: previewScheduleDto,
+      signal,
+    },
+    options,
+  );
+};
+
+export const getPaymentPlanControllerPreviewScheduleMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof paymentPlanControllerPreviewSchedule>>,
+    TError,
+    { data: PreviewScheduleDto },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof paymentPlanControllerPreviewSchedule>>,
+  TError,
+  { data: PreviewScheduleDto },
+  TContext
+> => {
+  const mutationKey = ['paymentPlanControllerPreviewSchedule'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof paymentPlanControllerPreviewSchedule>>,
+    { data: PreviewScheduleDto }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return paymentPlanControllerPreviewSchedule(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type PaymentPlanControllerPreviewScheduleMutationResult = NonNullable<
+  Awaited<ReturnType<typeof paymentPlanControllerPreviewSchedule>>
+>;
+export type PaymentPlanControllerPreviewScheduleMutationBody = PreviewScheduleDto;
+export type PaymentPlanControllerPreviewScheduleMutationError = unknown;
+
+/**
+ * @summary Preview calculated installment schedule from price parameters or template (AT-23 largest-remainder engine)
+ */
+export const usePaymentPlanControllerPreviewSchedule = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof paymentPlanControllerPreviewSchedule>>,
+      TError,
+      { data: PreviewScheduleDto },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof paymentPlanControllerPreviewSchedule>>,
+  TError,
+  { data: PreviewScheduleDto },
+  TContext
+> => {
+  const mutationOptions = getPaymentPlanControllerPreviewScheduleMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary List configured payment plan templates
+ */
+export const paymentPlanControllerGetTemplates = (
+  params?: PaymentPlanControllerGetTemplatesParams,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>(
+    { url: `/api/v1/sales/payment-plans`, method: 'GET', params, signal },
+    options,
+  );
+};
+
+export const getPaymentPlanControllerGetTemplatesQueryKey = (
+  params?: PaymentPlanControllerGetTemplatesParams,
+) => {
+  return [`/api/v1/sales/payment-plans`, ...(params ? [params] : [])] as const;
+};
+
+export const getPaymentPlanControllerGetTemplatesQueryOptions = <
+  TData = Awaited<ReturnType<typeof paymentPlanControllerGetTemplates>>,
+  TError = unknown,
+>(
+  params?: PaymentPlanControllerGetTemplatesParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof paymentPlanControllerGetTemplates>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getPaymentPlanControllerGetTemplatesQueryKey(params);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof paymentPlanControllerGetTemplates>>> = ({
+    signal,
+  }) => paymentPlanControllerGetTemplates(params, requestOptions, signal);
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof paymentPlanControllerGetTemplates>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type PaymentPlanControllerGetTemplatesQueryResult = NonNullable<
+  Awaited<ReturnType<typeof paymentPlanControllerGetTemplates>>
+>;
+export type PaymentPlanControllerGetTemplatesQueryError = unknown;
+
+export function usePaymentPlanControllerGetTemplates<
+  TData = Awaited<ReturnType<typeof paymentPlanControllerGetTemplates>>,
+  TError = unknown,
+>(
+  params: undefined | PaymentPlanControllerGetTemplatesParams,
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof paymentPlanControllerGetTemplates>>, TError, TData>
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof paymentPlanControllerGetTemplates>>,
+          TError,
+          Awaited<ReturnType<typeof paymentPlanControllerGetTemplates>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function usePaymentPlanControllerGetTemplates<
+  TData = Awaited<ReturnType<typeof paymentPlanControllerGetTemplates>>,
+  TError = unknown,
+>(
+  params?: PaymentPlanControllerGetTemplatesParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof paymentPlanControllerGetTemplates>>, TError, TData>
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof paymentPlanControllerGetTemplates>>,
+          TError,
+          Awaited<ReturnType<typeof paymentPlanControllerGetTemplates>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function usePaymentPlanControllerGetTemplates<
+  TData = Awaited<ReturnType<typeof paymentPlanControllerGetTemplates>>,
+  TError = unknown,
+>(
+  params?: PaymentPlanControllerGetTemplatesParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof paymentPlanControllerGetTemplates>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary List configured payment plan templates
+ */
+
+export function usePaymentPlanControllerGetTemplates<
+  TData = Awaited<ReturnType<typeof paymentPlanControllerGetTemplates>>,
+  TError = unknown,
+>(
+  params?: PaymentPlanControllerGetTemplatesParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof paymentPlanControllerGetTemplates>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getPaymentPlanControllerGetTemplatesQueryOptions(params, options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+/**
+ * @summary Create a new payment plan template (Admin / MD)
+ */
+export const paymentPlanControllerCreateTemplate = (
+  createPaymentPlanTemplateDto: CreatePaymentPlanTemplateDto,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>(
+    {
+      url: `/api/v1/sales/payment-plans`,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      data: createPaymentPlanTemplateDto,
+      signal,
+    },
+    options,
+  );
+};
+
+export const getPaymentPlanControllerCreateTemplateMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof paymentPlanControllerCreateTemplate>>,
+    TError,
+    { data: CreatePaymentPlanTemplateDto },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof paymentPlanControllerCreateTemplate>>,
+  TError,
+  { data: CreatePaymentPlanTemplateDto },
+  TContext
+> => {
+  const mutationKey = ['paymentPlanControllerCreateTemplate'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof paymentPlanControllerCreateTemplate>>,
+    { data: CreatePaymentPlanTemplateDto }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return paymentPlanControllerCreateTemplate(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type PaymentPlanControllerCreateTemplateMutationResult = NonNullable<
+  Awaited<ReturnType<typeof paymentPlanControllerCreateTemplate>>
+>;
+export type PaymentPlanControllerCreateTemplateMutationBody = CreatePaymentPlanTemplateDto;
+export type PaymentPlanControllerCreateTemplateMutationError = unknown;
+
+/**
+ * @summary Create a new payment plan template (Admin / MD)
+ */
+export const usePaymentPlanControllerCreateTemplate = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof paymentPlanControllerCreateTemplate>>,
+      TError,
+      { data: CreatePaymentPlanTemplateDto },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof paymentPlanControllerCreateTemplate>>,
+  TError,
+  { data: CreatePaymentPlanTemplateDto },
+  TContext
+> => {
+  const mutationOptions = getPaymentPlanControllerCreateTemplateMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary Get payment plan template details by ID
+ */
+export const paymentPlanControllerGetTemplateById = (
+  id: string,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>(
+    { url: `/api/v1/sales/payment-plans/${id}`, method: 'GET', signal },
+    options,
+  );
+};
+
+export const getPaymentPlanControllerGetTemplateByIdQueryKey = (id?: string) => {
+  return [`/api/v1/sales/payment-plans/${id}`] as const;
+};
+
+export const getPaymentPlanControllerGetTemplateByIdQueryOptions = <
+  TData = Awaited<ReturnType<typeof paymentPlanControllerGetTemplateById>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof paymentPlanControllerGetTemplateById>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getPaymentPlanControllerGetTemplateByIdQueryKey(id);
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof paymentPlanControllerGetTemplateById>>
+  > = ({ signal }) => paymentPlanControllerGetTemplateById(id, requestOptions, signal);
+
+  return { queryKey, queryFn, enabled: !!id, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof paymentPlanControllerGetTemplateById>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type PaymentPlanControllerGetTemplateByIdQueryResult = NonNullable<
+  Awaited<ReturnType<typeof paymentPlanControllerGetTemplateById>>
+>;
+export type PaymentPlanControllerGetTemplateByIdQueryError = unknown;
+
+export function usePaymentPlanControllerGetTemplateById<
+  TData = Awaited<ReturnType<typeof paymentPlanControllerGetTemplateById>>,
+  TError = unknown,
+>(
+  id: string,
+  options: {
+    query: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof paymentPlanControllerGetTemplateById>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof paymentPlanControllerGetTemplateById>>,
+          TError,
+          Awaited<ReturnType<typeof paymentPlanControllerGetTemplateById>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function usePaymentPlanControllerGetTemplateById<
+  TData = Awaited<ReturnType<typeof paymentPlanControllerGetTemplateById>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof paymentPlanControllerGetTemplateById>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof paymentPlanControllerGetTemplateById>>,
+          TError,
+          Awaited<ReturnType<typeof paymentPlanControllerGetTemplateById>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function usePaymentPlanControllerGetTemplateById<
+  TData = Awaited<ReturnType<typeof paymentPlanControllerGetTemplateById>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof paymentPlanControllerGetTemplateById>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary Get payment plan template details by ID
+ */
+
+export function usePaymentPlanControllerGetTemplateById<
+  TData = Awaited<ReturnType<typeof paymentPlanControllerGetTemplateById>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof paymentPlanControllerGetTemplateById>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getPaymentPlanControllerGetTemplateByIdQueryOptions(id, options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+/**
+ * @summary Update payment plan template settings
+ */
+export const paymentPlanControllerUpdateTemplate = (
+  id: string,
+  updatePaymentPlanTemplateDto: UpdatePaymentPlanTemplateDto,
+  options?: SecondParameter<typeof customInstance>,
+) => {
+  return customInstance<void>(
+    {
+      url: `/api/v1/sales/payment-plans/${id}`,
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      data: updatePaymentPlanTemplateDto,
+    },
+    options,
+  );
+};
+
+export const getPaymentPlanControllerUpdateTemplateMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof paymentPlanControllerUpdateTemplate>>,
+    TError,
+    { id: string; data: UpdatePaymentPlanTemplateDto },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof paymentPlanControllerUpdateTemplate>>,
+  TError,
+  { id: string; data: UpdatePaymentPlanTemplateDto },
+  TContext
+> => {
+  const mutationKey = ['paymentPlanControllerUpdateTemplate'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof paymentPlanControllerUpdateTemplate>>,
+    { id: string; data: UpdatePaymentPlanTemplateDto }
+  > = (props) => {
+    const { id, data } = props ?? {};
+
+    return paymentPlanControllerUpdateTemplate(id, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type PaymentPlanControllerUpdateTemplateMutationResult = NonNullable<
+  Awaited<ReturnType<typeof paymentPlanControllerUpdateTemplate>>
+>;
+export type PaymentPlanControllerUpdateTemplateMutationBody = UpdatePaymentPlanTemplateDto;
+export type PaymentPlanControllerUpdateTemplateMutationError = unknown;
+
+/**
+ * @summary Update payment plan template settings
+ */
+export const usePaymentPlanControllerUpdateTemplate = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof paymentPlanControllerUpdateTemplate>>,
+      TError,
+      { id: string; data: UpdatePaymentPlanTemplateDto },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof paymentPlanControllerUpdateTemplate>>,
+  TError,
+  { id: string; data: UpdatePaymentPlanTemplateDto },
+  TContext
+> => {
+  const mutationOptions = getPaymentPlanControllerUpdateTemplateMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary Soft delete payment plan template
+ */
+export const paymentPlanControllerDeleteTemplate = (
+  id: string,
+  options?: SecondParameter<typeof customInstance>,
+) => {
+  return customInstance<void>(
+    { url: `/api/v1/sales/payment-plans/${id}`, method: 'DELETE' },
+    options,
+  );
+};
+
+export const getPaymentPlanControllerDeleteTemplateMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof paymentPlanControllerDeleteTemplate>>,
+    TError,
+    { id: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof paymentPlanControllerDeleteTemplate>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  const mutationKey = ['paymentPlanControllerDeleteTemplate'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof paymentPlanControllerDeleteTemplate>>,
+    { id: string }
+  > = (props) => {
+    const { id } = props ?? {};
+
+    return paymentPlanControllerDeleteTemplate(id, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type PaymentPlanControllerDeleteTemplateMutationResult = NonNullable<
+  Awaited<ReturnType<typeof paymentPlanControllerDeleteTemplate>>
+>;
+
+export type PaymentPlanControllerDeleteTemplateMutationError = unknown;
+
+/**
+ * @summary Soft delete payment plan template
+ */
+export const usePaymentPlanControllerDeleteTemplate = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof paymentPlanControllerDeleteTemplate>>,
+      TError,
+      { id: string },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof paymentPlanControllerDeleteTemplate>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  const mutationOptions = getPaymentPlanControllerDeleteTemplateMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary Calculate itemised charges on net property price with configurable VAT and totals
+ */
+export const chargeControllerCalculateCharges = (
+  calculateChargesDto: CalculateChargesDto,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>(
+    {
+      url: `/api/v1/sales/charges/calculate`,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      data: calculateChargesDto,
+      signal,
+    },
+    options,
+  );
+};
+
+export const getChargeControllerCalculateChargesMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof chargeControllerCalculateCharges>>,
+    TError,
+    { data: CalculateChargesDto },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof chargeControllerCalculateCharges>>,
+  TError,
+  { data: CalculateChargesDto },
+  TContext
+> => {
+  const mutationKey = ['chargeControllerCalculateCharges'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof chargeControllerCalculateCharges>>,
+    { data: CalculateChargesDto }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return chargeControllerCalculateCharges(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type ChargeControllerCalculateChargesMutationResult = NonNullable<
+  Awaited<ReturnType<typeof chargeControllerCalculateCharges>>
+>;
+export type ChargeControllerCalculateChargesMutationBody = CalculateChargesDto;
+export type ChargeControllerCalculateChargesMutationError = unknown;
+
+/**
+ * @summary Calculate itemised charges on net property price with configurable VAT and totals
+ */
+export const useChargeControllerCalculateCharges = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof chargeControllerCalculateCharges>>,
+      TError,
+      { data: CalculateChargesDto },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof chargeControllerCalculateCharges>>,
+  TError,
+  { data: CalculateChargesDto },
+  TContext
+> => {
+  const mutationOptions = getChargeControllerCalculateChargesMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary List charge types catalogue with filtering and search
+ */
+export const chargeControllerGetChargeTypes = (
+  params?: ChargeControllerGetChargeTypesParams,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>(
+    { url: `/api/v1/sales/charges`, method: 'GET', params, signal },
+    options,
+  );
+};
+
+export const getChargeControllerGetChargeTypesQueryKey = (
+  params?: ChargeControllerGetChargeTypesParams,
+) => {
+  return [`/api/v1/sales/charges`, ...(params ? [params] : [])] as const;
+};
+
+export const getChargeControllerGetChargeTypesQueryOptions = <
+  TData = Awaited<ReturnType<typeof chargeControllerGetChargeTypes>>,
+  TError = unknown,
+>(
+  params?: ChargeControllerGetChargeTypesParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof chargeControllerGetChargeTypes>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getChargeControllerGetChargeTypesQueryKey(params);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof chargeControllerGetChargeTypes>>> = ({
+    signal,
+  }) => chargeControllerGetChargeTypes(params, requestOptions, signal);
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof chargeControllerGetChargeTypes>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type ChargeControllerGetChargeTypesQueryResult = NonNullable<
+  Awaited<ReturnType<typeof chargeControllerGetChargeTypes>>
+>;
+export type ChargeControllerGetChargeTypesQueryError = unknown;
+
+export function useChargeControllerGetChargeTypes<
+  TData = Awaited<ReturnType<typeof chargeControllerGetChargeTypes>>,
+  TError = unknown,
+>(
+  params: undefined | ChargeControllerGetChargeTypesParams,
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof chargeControllerGetChargeTypes>>, TError, TData>
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof chargeControllerGetChargeTypes>>,
+          TError,
+          Awaited<ReturnType<typeof chargeControllerGetChargeTypes>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useChargeControllerGetChargeTypes<
+  TData = Awaited<ReturnType<typeof chargeControllerGetChargeTypes>>,
+  TError = unknown,
+>(
+  params?: ChargeControllerGetChargeTypesParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof chargeControllerGetChargeTypes>>, TError, TData>
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof chargeControllerGetChargeTypes>>,
+          TError,
+          Awaited<ReturnType<typeof chargeControllerGetChargeTypes>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useChargeControllerGetChargeTypes<
+  TData = Awaited<ReturnType<typeof chargeControllerGetChargeTypes>>,
+  TError = unknown,
+>(
+  params?: ChargeControllerGetChargeTypesParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof chargeControllerGetChargeTypes>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary List charge types catalogue with filtering and search
+ */
+
+export function useChargeControllerGetChargeTypes<
+  TData = Awaited<ReturnType<typeof chargeControllerGetChargeTypes>>,
+  TError = unknown,
+>(
+  params?: ChargeControllerGetChargeTypesParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof chargeControllerGetChargeTypes>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getChargeControllerGetChargeTypesQueryOptions(params, options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+/**
+ * @summary Create a new charge type in catalogue (Admin / MD)
+ */
+export const chargeControllerCreateChargeType = (
+  createChargeTypeDto: CreateChargeTypeDto,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>(
+    {
+      url: `/api/v1/sales/charges`,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      data: createChargeTypeDto,
+      signal,
+    },
+    options,
+  );
+};
+
+export const getChargeControllerCreateChargeTypeMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof chargeControllerCreateChargeType>>,
+    TError,
+    { data: CreateChargeTypeDto },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof chargeControllerCreateChargeType>>,
+  TError,
+  { data: CreateChargeTypeDto },
+  TContext
+> => {
+  const mutationKey = ['chargeControllerCreateChargeType'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof chargeControllerCreateChargeType>>,
+    { data: CreateChargeTypeDto }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return chargeControllerCreateChargeType(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type ChargeControllerCreateChargeTypeMutationResult = NonNullable<
+  Awaited<ReturnType<typeof chargeControllerCreateChargeType>>
+>;
+export type ChargeControllerCreateChargeTypeMutationBody = CreateChargeTypeDto;
+export type ChargeControllerCreateChargeTypeMutationError = unknown;
+
+/**
+ * @summary Create a new charge type in catalogue (Admin / MD)
+ */
+export const useChargeControllerCreateChargeType = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof chargeControllerCreateChargeType>>,
+      TError,
+      { data: CreateChargeTypeDto },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof chargeControllerCreateChargeType>>,
+  TError,
+  { data: CreateChargeTypeDto },
+  TContext
+> => {
+  const mutationOptions = getChargeControllerCreateChargeTypeMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary Get charge type details by ID
+ */
+export const chargeControllerGetChargeTypeById = (
+  id: string,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>(
+    { url: `/api/v1/sales/charges/${id}`, method: 'GET', signal },
+    options,
+  );
+};
+
+export const getChargeControllerGetChargeTypeByIdQueryKey = (id?: string) => {
+  return [`/api/v1/sales/charges/${id}`] as const;
+};
+
+export const getChargeControllerGetChargeTypeByIdQueryOptions = <
+  TData = Awaited<ReturnType<typeof chargeControllerGetChargeTypeById>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof chargeControllerGetChargeTypeById>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getChargeControllerGetChargeTypeByIdQueryKey(id);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof chargeControllerGetChargeTypeById>>> = ({
+    signal,
+  }) => chargeControllerGetChargeTypeById(id, requestOptions, signal);
+
+  return { queryKey, queryFn, enabled: !!id, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof chargeControllerGetChargeTypeById>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type ChargeControllerGetChargeTypeByIdQueryResult = NonNullable<
+  Awaited<ReturnType<typeof chargeControllerGetChargeTypeById>>
+>;
+export type ChargeControllerGetChargeTypeByIdQueryError = unknown;
+
+export function useChargeControllerGetChargeTypeById<
+  TData = Awaited<ReturnType<typeof chargeControllerGetChargeTypeById>>,
+  TError = unknown,
+>(
+  id: string,
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof chargeControllerGetChargeTypeById>>, TError, TData>
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof chargeControllerGetChargeTypeById>>,
+          TError,
+          Awaited<ReturnType<typeof chargeControllerGetChargeTypeById>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useChargeControllerGetChargeTypeById<
+  TData = Awaited<ReturnType<typeof chargeControllerGetChargeTypeById>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof chargeControllerGetChargeTypeById>>, TError, TData>
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof chargeControllerGetChargeTypeById>>,
+          TError,
+          Awaited<ReturnType<typeof chargeControllerGetChargeTypeById>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useChargeControllerGetChargeTypeById<
+  TData = Awaited<ReturnType<typeof chargeControllerGetChargeTypeById>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof chargeControllerGetChargeTypeById>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary Get charge type details by ID
+ */
+
+export function useChargeControllerGetChargeTypeById<
+  TData = Awaited<ReturnType<typeof chargeControllerGetChargeTypeById>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof chargeControllerGetChargeTypeById>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getChargeControllerGetChargeTypeByIdQueryOptions(id, options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+/**
+ * @summary Update charge type configuration
+ */
+export const chargeControllerUpdateChargeType = (
+  id: string,
+  updateChargeTypeDto: UpdateChargeTypeDto,
+  options?: SecondParameter<typeof customInstance>,
+) => {
+  return customInstance<void>(
+    {
+      url: `/api/v1/sales/charges/${id}`,
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      data: updateChargeTypeDto,
+    },
+    options,
+  );
+};
+
+export const getChargeControllerUpdateChargeTypeMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof chargeControllerUpdateChargeType>>,
+    TError,
+    { id: string; data: UpdateChargeTypeDto },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof chargeControllerUpdateChargeType>>,
+  TError,
+  { id: string; data: UpdateChargeTypeDto },
+  TContext
+> => {
+  const mutationKey = ['chargeControllerUpdateChargeType'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof chargeControllerUpdateChargeType>>,
+    { id: string; data: UpdateChargeTypeDto }
+  > = (props) => {
+    const { id, data } = props ?? {};
+
+    return chargeControllerUpdateChargeType(id, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type ChargeControllerUpdateChargeTypeMutationResult = NonNullable<
+  Awaited<ReturnType<typeof chargeControllerUpdateChargeType>>
+>;
+export type ChargeControllerUpdateChargeTypeMutationBody = UpdateChargeTypeDto;
+export type ChargeControllerUpdateChargeTypeMutationError = unknown;
+
+/**
+ * @summary Update charge type configuration
+ */
+export const useChargeControllerUpdateChargeType = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof chargeControllerUpdateChargeType>>,
+      TError,
+      { id: string; data: UpdateChargeTypeDto },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof chargeControllerUpdateChargeType>>,
+  TError,
+  { id: string; data: UpdateChargeTypeDto },
+  TContext
+> => {
+  const mutationOptions = getChargeControllerUpdateChargeTypeMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary Soft delete charge type
+ */
+export const chargeControllerDeleteChargeType = (
+  id: string,
+  options?: SecondParameter<typeof customInstance>,
+) => {
+  return customInstance<void>({ url: `/api/v1/sales/charges/${id}`, method: 'DELETE' }, options);
+};
+
+export const getChargeControllerDeleteChargeTypeMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof chargeControllerDeleteChargeType>>,
+    TError,
+    { id: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof chargeControllerDeleteChargeType>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  const mutationKey = ['chargeControllerDeleteChargeType'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof chargeControllerDeleteChargeType>>,
+    { id: string }
+  > = (props) => {
+    const { id } = props ?? {};
+
+    return chargeControllerDeleteChargeType(id, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type ChargeControllerDeleteChargeTypeMutationResult = NonNullable<
+  Awaited<ReturnType<typeof chargeControllerDeleteChargeType>>
+>;
+
+export type ChargeControllerDeleteChargeTypeMutationError = unknown;
+
+/**
+ * @summary Soft delete charge type
+ */
+export const useChargeControllerDeleteChargeType = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof chargeControllerDeleteChargeType>>,
+      TError,
+      { id: string },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof chargeControllerDeleteChargeType>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  const mutationOptions = getChargeControllerDeleteChargeTypeMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary Create a new property quotation with pricing and payment schedule
+ */
+export const quotationControllerCreateQuotation = (
+  createQuotationDto: CreateQuotationDto,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>(
+    {
+      url: `/api/v1/sales/quotations`,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      data: createQuotationDto,
+      signal,
+    },
+    options,
+  );
+};
+
+export const getQuotationControllerCreateQuotationMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof quotationControllerCreateQuotation>>,
+    TError,
+    { data: CreateQuotationDto },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof quotationControllerCreateQuotation>>,
+  TError,
+  { data: CreateQuotationDto },
+  TContext
+> => {
+  const mutationKey = ['quotationControllerCreateQuotation'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof quotationControllerCreateQuotation>>,
+    { data: CreateQuotationDto }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return quotationControllerCreateQuotation(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type QuotationControllerCreateQuotationMutationResult = NonNullable<
+  Awaited<ReturnType<typeof quotationControllerCreateQuotation>>
+>;
+export type QuotationControllerCreateQuotationMutationBody = CreateQuotationDto;
+export type QuotationControllerCreateQuotationMutationError = unknown;
+
+/**
+ * @summary Create a new property quotation with pricing and payment schedule
+ */
+export const useQuotationControllerCreateQuotation = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof quotationControllerCreateQuotation>>,
+      TError,
+      { data: CreateQuotationDto },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof quotationControllerCreateQuotation>>,
+  TError,
+  { data: CreateQuotationDto },
+  TContext
+> => {
+  const mutationOptions = getQuotationControllerCreateQuotationMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary List quotations with filtering, pagination and search
+ */
+export const quotationControllerGetQuotations = (
+  params?: QuotationControllerGetQuotationsParams,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>(
+    { url: `/api/v1/sales/quotations`, method: 'GET', params, signal },
+    options,
+  );
+};
+
+export const getQuotationControllerGetQuotationsQueryKey = (
+  params?: QuotationControllerGetQuotationsParams,
+) => {
+  return [`/api/v1/sales/quotations`, ...(params ? [params] : [])] as const;
+};
+
+export const getQuotationControllerGetQuotationsQueryOptions = <
+  TData = Awaited<ReturnType<typeof quotationControllerGetQuotations>>,
+  TError = unknown,
+>(
+  params?: QuotationControllerGetQuotationsParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof quotationControllerGetQuotations>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getQuotationControllerGetQuotationsQueryKey(params);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof quotationControllerGetQuotations>>> = ({
+    signal,
+  }) => quotationControllerGetQuotations(params, requestOptions, signal);
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof quotationControllerGetQuotations>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type QuotationControllerGetQuotationsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof quotationControllerGetQuotations>>
+>;
+export type QuotationControllerGetQuotationsQueryError = unknown;
+
+export function useQuotationControllerGetQuotations<
+  TData = Awaited<ReturnType<typeof quotationControllerGetQuotations>>,
+  TError = unknown,
+>(
+  params: undefined | QuotationControllerGetQuotationsParams,
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof quotationControllerGetQuotations>>, TError, TData>
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof quotationControllerGetQuotations>>,
+          TError,
+          Awaited<ReturnType<typeof quotationControllerGetQuotations>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useQuotationControllerGetQuotations<
+  TData = Awaited<ReturnType<typeof quotationControllerGetQuotations>>,
+  TError = unknown,
+>(
+  params?: QuotationControllerGetQuotationsParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof quotationControllerGetQuotations>>, TError, TData>
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof quotationControllerGetQuotations>>,
+          TError,
+          Awaited<ReturnType<typeof quotationControllerGetQuotations>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useQuotationControllerGetQuotations<
+  TData = Awaited<ReturnType<typeof quotationControllerGetQuotations>>,
+  TError = unknown,
+>(
+  params?: QuotationControllerGetQuotationsParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof quotationControllerGetQuotations>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary List quotations with filtering, pagination and search
+ */
+
+export function useQuotationControllerGetQuotations<
+  TData = Awaited<ReturnType<typeof quotationControllerGetQuotations>>,
+  TError = unknown,
+>(
+  params?: QuotationControllerGetQuotationsParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof quotationControllerGetQuotations>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getQuotationControllerGetQuotationsQueryOptions(params, options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+/**
+ * @summary Trigger background or on-demand check to mark overdue quotations Expired
+ */
+export const quotationControllerCheckExpiry = (
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>(
+    { url: `/api/v1/sales/quotations/check-expiry`, method: 'POST', signal },
+    options,
+  );
+};
+
+export const getQuotationControllerCheckExpiryMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof quotationControllerCheckExpiry>>,
+    TError,
+    void,
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof quotationControllerCheckExpiry>>,
+  TError,
+  void,
+  TContext
+> => {
+  const mutationKey = ['quotationControllerCheckExpiry'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof quotationControllerCheckExpiry>>,
+    void
+  > = () => {
+    return quotationControllerCheckExpiry(requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type QuotationControllerCheckExpiryMutationResult = NonNullable<
+  Awaited<ReturnType<typeof quotationControllerCheckExpiry>>
+>;
+
+export type QuotationControllerCheckExpiryMutationError = unknown;
+
+/**
+ * @summary Trigger background or on-demand check to mark overdue quotations Expired
+ */
+export const useQuotationControllerCheckExpiry = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof quotationControllerCheckExpiry>>,
+      TError,
+      void,
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof quotationControllerCheckExpiry>>,
+  TError,
+  void,
+  TContext
+> => {
+  const mutationOptions = getQuotationControllerCheckExpiryMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary Get quotation details by ID
+ */
+export const quotationControllerGetQuotationById = (
+  id: string,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>(
+    { url: `/api/v1/sales/quotations/${id}`, method: 'GET', signal },
+    options,
+  );
+};
+
+export const getQuotationControllerGetQuotationByIdQueryKey = (id?: string) => {
+  return [`/api/v1/sales/quotations/${id}`] as const;
+};
+
+export const getQuotationControllerGetQuotationByIdQueryOptions = <
+  TData = Awaited<ReturnType<typeof quotationControllerGetQuotationById>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof quotationControllerGetQuotationById>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getQuotationControllerGetQuotationByIdQueryKey(id);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof quotationControllerGetQuotationById>>> = ({
+    signal,
+  }) => quotationControllerGetQuotationById(id, requestOptions, signal);
+
+  return { queryKey, queryFn, enabled: !!id, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof quotationControllerGetQuotationById>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type QuotationControllerGetQuotationByIdQueryResult = NonNullable<
+  Awaited<ReturnType<typeof quotationControllerGetQuotationById>>
+>;
+export type QuotationControllerGetQuotationByIdQueryError = unknown;
+
+export function useQuotationControllerGetQuotationById<
+  TData = Awaited<ReturnType<typeof quotationControllerGetQuotationById>>,
+  TError = unknown,
+>(
+  id: string,
+  options: {
+    query: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof quotationControllerGetQuotationById>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof quotationControllerGetQuotationById>>,
+          TError,
+          Awaited<ReturnType<typeof quotationControllerGetQuotationById>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useQuotationControllerGetQuotationById<
+  TData = Awaited<ReturnType<typeof quotationControllerGetQuotationById>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof quotationControllerGetQuotationById>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof quotationControllerGetQuotationById>>,
+          TError,
+          Awaited<ReturnType<typeof quotationControllerGetQuotationById>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useQuotationControllerGetQuotationById<
+  TData = Awaited<ReturnType<typeof quotationControllerGetQuotationById>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof quotationControllerGetQuotationById>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary Get quotation details by ID
+ */
+
+export function useQuotationControllerGetQuotationById<
+  TData = Awaited<ReturnType<typeof quotationControllerGetQuotationById>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof quotationControllerGetQuotationById>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getQuotationControllerGetQuotationByIdQueryOptions(id, options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+/**
+ * @summary Update Draft quotation settings or validity date
+ */
+export const quotationControllerUpdateQuotation = (
+  id: string,
+  updateQuotationDto: UpdateQuotationDto,
+  options?: SecondParameter<typeof customInstance>,
+) => {
+  return customInstance<void>(
+    {
+      url: `/api/v1/sales/quotations/${id}`,
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      data: updateQuotationDto,
+    },
+    options,
+  );
+};
+
+export const getQuotationControllerUpdateQuotationMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof quotationControllerUpdateQuotation>>,
+    TError,
+    { id: string; data: UpdateQuotationDto },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof quotationControllerUpdateQuotation>>,
+  TError,
+  { id: string; data: UpdateQuotationDto },
+  TContext
+> => {
+  const mutationKey = ['quotationControllerUpdateQuotation'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof quotationControllerUpdateQuotation>>,
+    { id: string; data: UpdateQuotationDto }
+  > = (props) => {
+    const { id, data } = props ?? {};
+
+    return quotationControllerUpdateQuotation(id, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type QuotationControllerUpdateQuotationMutationResult = NonNullable<
+  Awaited<ReturnType<typeof quotationControllerUpdateQuotation>>
+>;
+export type QuotationControllerUpdateQuotationMutationBody = UpdateQuotationDto;
+export type QuotationControllerUpdateQuotationMutationError = unknown;
+
+/**
+ * @summary Update Draft quotation settings or validity date
+ */
+export const useQuotationControllerUpdateQuotation = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof quotationControllerUpdateQuotation>>,
+      TError,
+      { id: string; data: UpdateQuotationDto },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof quotationControllerUpdateQuotation>>,
+  TError,
+  { id: string; data: UpdateQuotationDto },
+  TContext
+> => {
+  const mutationOptions = getQuotationControllerUpdateQuotationMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary Soft delete a Draft quotation
+ */
+export const quotationControllerDeleteQuotation = (
+  id: string,
+  options?: SecondParameter<typeof customInstance>,
+) => {
+  return customInstance<void>({ url: `/api/v1/sales/quotations/${id}`, method: 'DELETE' }, options);
+};
+
+export const getQuotationControllerDeleteQuotationMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof quotationControllerDeleteQuotation>>,
+    TError,
+    { id: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof quotationControllerDeleteQuotation>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  const mutationKey = ['quotationControllerDeleteQuotation'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof quotationControllerDeleteQuotation>>,
+    { id: string }
+  > = (props) => {
+    const { id } = props ?? {};
+
+    return quotationControllerDeleteQuotation(id, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type QuotationControllerDeleteQuotationMutationResult = NonNullable<
+  Awaited<ReturnType<typeof quotationControllerDeleteQuotation>>
+>;
+
+export type QuotationControllerDeleteQuotationMutationError = unknown;
+
+/**
+ * @summary Soft delete a Draft quotation
+ */
+export const useQuotationControllerDeleteQuotation = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof quotationControllerDeleteQuotation>>,
+      TError,
+      { id: string },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof quotationControllerDeleteQuotation>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  const mutationOptions = getQuotationControllerDeleteQuotationMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary Download or view branded institutional Quotation PDF
+ */
+export const quotationControllerDownloadPdf = (
+  id: string,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>(
+    { url: `/api/v1/sales/quotations/${id}/pdf`, method: 'GET', signal },
+    options,
+  );
+};
+
+export const getQuotationControllerDownloadPdfQueryKey = (id?: string) => {
+  return [`/api/v1/sales/quotations/${id}/pdf`] as const;
+};
+
+export const getQuotationControllerDownloadPdfQueryOptions = <
+  TData = Awaited<ReturnType<typeof quotationControllerDownloadPdf>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof quotationControllerDownloadPdf>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getQuotationControllerDownloadPdfQueryKey(id);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof quotationControllerDownloadPdf>>> = ({
+    signal,
+  }) => quotationControllerDownloadPdf(id, requestOptions, signal);
+
+  return { queryKey, queryFn, enabled: !!id, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof quotationControllerDownloadPdf>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type QuotationControllerDownloadPdfQueryResult = NonNullable<
+  Awaited<ReturnType<typeof quotationControllerDownloadPdf>>
+>;
+export type QuotationControllerDownloadPdfQueryError = unknown;
+
+export function useQuotationControllerDownloadPdf<
+  TData = Awaited<ReturnType<typeof quotationControllerDownloadPdf>>,
+  TError = unknown,
+>(
+  id: string,
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof quotationControllerDownloadPdf>>, TError, TData>
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof quotationControllerDownloadPdf>>,
+          TError,
+          Awaited<ReturnType<typeof quotationControllerDownloadPdf>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useQuotationControllerDownloadPdf<
+  TData = Awaited<ReturnType<typeof quotationControllerDownloadPdf>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof quotationControllerDownloadPdf>>, TError, TData>
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof quotationControllerDownloadPdf>>,
+          TError,
+          Awaited<ReturnType<typeof quotationControllerDownloadPdf>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useQuotationControllerDownloadPdf<
+  TData = Awaited<ReturnType<typeof quotationControllerDownloadPdf>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof quotationControllerDownloadPdf>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary Download or view branded institutional Quotation PDF
+ */
+
+export function useQuotationControllerDownloadPdf<
+  TData = Awaited<ReturnType<typeof quotationControllerDownloadPdf>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof quotationControllerDownloadPdf>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getQuotationControllerDownloadPdfQueryOptions(id, options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+/**
+ * @summary Mark quotation as Sent to prospective client
+ */
+export const quotationControllerSendQuotation = (
+  id: string,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>(
+    { url: `/api/v1/sales/quotations/${id}/send`, method: 'POST', signal },
+    options,
+  );
+};
+
+export const getQuotationControllerSendQuotationMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof quotationControllerSendQuotation>>,
+    TError,
+    { id: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof quotationControllerSendQuotation>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  const mutationKey = ['quotationControllerSendQuotation'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof quotationControllerSendQuotation>>,
+    { id: string }
+  > = (props) => {
+    const { id } = props ?? {};
+
+    return quotationControllerSendQuotation(id, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type QuotationControllerSendQuotationMutationResult = NonNullable<
+  Awaited<ReturnType<typeof quotationControllerSendQuotation>>
+>;
+
+export type QuotationControllerSendQuotationMutationError = unknown;
+
+/**
+ * @summary Mark quotation as Sent to prospective client
+ */
+export const useQuotationControllerSendQuotation = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof quotationControllerSendQuotation>>,
+      TError,
+      { id: string },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof quotationControllerSendQuotation>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  const mutationOptions = getQuotationControllerSendQuotationMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary Approve quotation discount and terms (MD / GM)
+ */
+export const quotationControllerApproveQuotation = (
+  id: string,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>(
+    { url: `/api/v1/sales/quotations/${id}/approve`, method: 'POST', signal },
+    options,
+  );
+};
+
+export const getQuotationControllerApproveQuotationMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof quotationControllerApproveQuotation>>,
+    TError,
+    { id: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof quotationControllerApproveQuotation>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  const mutationKey = ['quotationControllerApproveQuotation'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof quotationControllerApproveQuotation>>,
+    { id: string }
+  > = (props) => {
+    const { id } = props ?? {};
+
+    return quotationControllerApproveQuotation(id, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type QuotationControllerApproveQuotationMutationResult = NonNullable<
+  Awaited<ReturnType<typeof quotationControllerApproveQuotation>>
+>;
+
+export type QuotationControllerApproveQuotationMutationError = unknown;
+
+/**
+ * @summary Approve quotation discount and terms (MD / GM)
+ */
+export const useQuotationControllerApproveQuotation = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof quotationControllerApproveQuotation>>,
+      TError,
+      { id: string },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof quotationControllerApproveQuotation>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  const mutationOptions = getQuotationControllerApproveQuotationMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary Reject quotation with mandatory reason
+ */
+export const quotationControllerRejectQuotation = (
+  id: string,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>(
+    { url: `/api/v1/sales/quotations/${id}/reject`, method: 'POST', signal },
+    options,
+  );
+};
+
+export const getQuotationControllerRejectQuotationMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof quotationControllerRejectQuotation>>,
+    TError,
+    { id: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof quotationControllerRejectQuotation>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  const mutationKey = ['quotationControllerRejectQuotation'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof quotationControllerRejectQuotation>>,
+    { id: string }
+  > = (props) => {
+    const { id } = props ?? {};
+
+    return quotationControllerRejectQuotation(id, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type QuotationControllerRejectQuotationMutationResult = NonNullable<
+  Awaited<ReturnType<typeof quotationControllerRejectQuotation>>
+>;
+
+export type QuotationControllerRejectQuotationMutationError = unknown;
+
+/**
+ * @summary Reject quotation with mandatory reason
+ */
+export const useQuotationControllerRejectQuotation = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof quotationControllerRejectQuotation>>,
+      TError,
+      { id: string },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof quotationControllerRejectQuotation>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  const mutationOptions = getQuotationControllerRejectQuotationMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary Create a new property booking with atomic row lock (idempotent)
+ */
+export const bookingControllerCreateBooking = (
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>({ url: `/api/v1/sales/bookings`, method: 'POST', signal }, options);
+};
+
+export const getBookingControllerCreateBookingMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof bookingControllerCreateBooking>>,
+    TError,
+    void,
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof bookingControllerCreateBooking>>,
+  TError,
+  void,
+  TContext
+> => {
+  const mutationKey = ['bookingControllerCreateBooking'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof bookingControllerCreateBooking>>,
+    void
+  > = () => {
+    return bookingControllerCreateBooking(requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type BookingControllerCreateBookingMutationResult = NonNullable<
+  Awaited<ReturnType<typeof bookingControllerCreateBooking>>
+>;
+
+export type BookingControllerCreateBookingMutationError = unknown;
+
+/**
+ * @summary Create a new property booking with atomic row lock (idempotent)
+ */
+export const useBookingControllerCreateBooking = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof bookingControllerCreateBooking>>,
+      TError,
+      void,
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof bookingControllerCreateBooking>>,
+  TError,
+  void,
+  TContext
+> => {
+  const mutationOptions = getBookingControllerCreateBookingMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary List and filter bookings with pagination
+ */
+export const bookingControllerListBookings = (
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>({ url: `/api/v1/sales/bookings`, method: 'GET', signal }, options);
+};
+
+export const getBookingControllerListBookingsQueryKey = () => {
+  return [`/api/v1/sales/bookings`] as const;
+};
+
+export const getBookingControllerListBookingsQueryOptions = <
+  TData = Awaited<ReturnType<typeof bookingControllerListBookings>>,
+  TError = unknown,
+>(options?: {
+  query?: Partial<
+    UseQueryOptions<Awaited<ReturnType<typeof bookingControllerListBookings>>, TError, TData>
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getBookingControllerListBookingsQueryKey();
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof bookingControllerListBookings>>> = ({
+    signal,
+  }) => bookingControllerListBookings(requestOptions, signal);
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof bookingControllerListBookings>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type BookingControllerListBookingsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof bookingControllerListBookings>>
+>;
+export type BookingControllerListBookingsQueryError = unknown;
+
+export function useBookingControllerListBookings<
+  TData = Awaited<ReturnType<typeof bookingControllerListBookings>>,
+  TError = unknown,
+>(
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof bookingControllerListBookings>>, TError, TData>
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof bookingControllerListBookings>>,
+          TError,
+          Awaited<ReturnType<typeof bookingControllerListBookings>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useBookingControllerListBookings<
+  TData = Awaited<ReturnType<typeof bookingControllerListBookings>>,
+  TError = unknown,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof bookingControllerListBookings>>, TError, TData>
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof bookingControllerListBookings>>,
+          TError,
+          Awaited<ReturnType<typeof bookingControllerListBookings>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useBookingControllerListBookings<
+  TData = Awaited<ReturnType<typeof bookingControllerListBookings>>,
+  TError = unknown,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof bookingControllerListBookings>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary List and filter bookings with pagination
+ */
+
+export function useBookingControllerListBookings<
+  TData = Awaited<ReturnType<typeof bookingControllerListBookings>>,
+  TError = unknown,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof bookingControllerListBookings>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getBookingControllerListBookingsQueryOptions(options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+/**
+ * @summary Get single booking details by ID
+ */
+export const bookingControllerGetBooking = (
+  id: string,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>(
+    { url: `/api/v1/sales/bookings/${id}`, method: 'GET', signal },
+    options,
+  );
+};
+
+export const getBookingControllerGetBookingQueryKey = (id?: string) => {
+  return [`/api/v1/sales/bookings/${id}`] as const;
+};
+
+export const getBookingControllerGetBookingQueryOptions = <
+  TData = Awaited<ReturnType<typeof bookingControllerGetBooking>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof bookingControllerGetBooking>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getBookingControllerGetBookingQueryKey(id);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof bookingControllerGetBooking>>> = ({
+    signal,
+  }) => bookingControllerGetBooking(id, requestOptions, signal);
+
+  return { queryKey, queryFn, enabled: !!id, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof bookingControllerGetBooking>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type BookingControllerGetBookingQueryResult = NonNullable<
+  Awaited<ReturnType<typeof bookingControllerGetBooking>>
+>;
+export type BookingControllerGetBookingQueryError = unknown;
+
+export function useBookingControllerGetBooking<
+  TData = Awaited<ReturnType<typeof bookingControllerGetBooking>>,
+  TError = unknown,
+>(
+  id: string,
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof bookingControllerGetBooking>>, TError, TData>
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof bookingControllerGetBooking>>,
+          TError,
+          Awaited<ReturnType<typeof bookingControllerGetBooking>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useBookingControllerGetBooking<
+  TData = Awaited<ReturnType<typeof bookingControllerGetBooking>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof bookingControllerGetBooking>>, TError, TData>
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof bookingControllerGetBooking>>,
+          TError,
+          Awaited<ReturnType<typeof bookingControllerGetBooking>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useBookingControllerGetBooking<
+  TData = Awaited<ReturnType<typeof bookingControllerGetBooking>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof bookingControllerGetBooking>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary Get single booking details by ID
+ */
+
+export function useBookingControllerGetBooking<
+  TData = Awaited<ReturnType<typeof bookingControllerGetBooking>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof bookingControllerGetBooking>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getBookingControllerGetBookingQueryOptions(id, options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+/**
+ * @summary Process reservation hold expirations for unfunded bookings and release properties
+ */
+export const bookingControllerProcessExpirations = (
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>(
+    { url: `/api/v1/sales/bookings/process-expirations`, method: 'POST', signal },
+    options,
+  );
+};
+
+export const getBookingControllerProcessExpirationsMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof bookingControllerProcessExpirations>>,
+    TError,
+    void,
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof bookingControllerProcessExpirations>>,
+  TError,
+  void,
+  TContext
+> => {
+  const mutationKey = ['bookingControllerProcessExpirations'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof bookingControllerProcessExpirations>>,
+    void
+  > = () => {
+    return bookingControllerProcessExpirations(requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type BookingControllerProcessExpirationsMutationResult = NonNullable<
+  Awaited<ReturnType<typeof bookingControllerProcessExpirations>>
+>;
+
+export type BookingControllerProcessExpirationsMutationError = unknown;
+
+/**
+ * @summary Process reservation hold expirations for unfunded bookings and release properties
+ */
+export const useBookingControllerProcessExpirations = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof bookingControllerProcessExpirations>>,
+      TError,
+      void,
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof bookingControllerProcessExpirations>>,
+  TError,
+  void,
+  TContext
+> => {
+  const mutationOptions = getBookingControllerProcessExpirationsMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary Cancel booking and release property per policy
+ */
+export const bookingControllerCancelBooking = (
+  id: string,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>(
+    { url: `/api/v1/sales/bookings/${id}/cancel`, method: 'POST', signal },
+    options,
+  );
+};
+
+export const getBookingControllerCancelBookingMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof bookingControllerCancelBooking>>,
+    TError,
+    { id: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof bookingControllerCancelBooking>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  const mutationKey = ['bookingControllerCancelBooking'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof bookingControllerCancelBooking>>,
+    { id: string }
+  > = (props) => {
+    const { id } = props ?? {};
+
+    return bookingControllerCancelBooking(id, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type BookingControllerCancelBookingMutationResult = NonNullable<
+  Awaited<ReturnType<typeof bookingControllerCancelBooking>>
+>;
+
+export type BookingControllerCancelBookingMutationError = unknown;
+
+/**
+ * @summary Cancel booking and release property per policy
+ */
+export const useBookingControllerCancelBooking = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof bookingControllerCancelBooking>>,
+      TError,
+      { id: string },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof bookingControllerCancelBooking>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  const mutationOptions = getBookingControllerCancelBookingMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary Create a new agreement template
+ */
+export const agreementControllerCreateTemplate = (
+  createAgreementTemplateDto: CreateAgreementTemplateDto,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>(
+    {
+      url: `/api/v1/sales/agreements/templates`,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      data: createAgreementTemplateDto,
+      signal,
+    },
+    options,
+  );
+};
+
+export const getAgreementControllerCreateTemplateMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof agreementControllerCreateTemplate>>,
+    TError,
+    { data: CreateAgreementTemplateDto },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof agreementControllerCreateTemplate>>,
+  TError,
+  { data: CreateAgreementTemplateDto },
+  TContext
+> => {
+  const mutationKey = ['agreementControllerCreateTemplate'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof agreementControllerCreateTemplate>>,
+    { data: CreateAgreementTemplateDto }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return agreementControllerCreateTemplate(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type AgreementControllerCreateTemplateMutationResult = NonNullable<
+  Awaited<ReturnType<typeof agreementControllerCreateTemplate>>
+>;
+export type AgreementControllerCreateTemplateMutationBody = CreateAgreementTemplateDto;
+export type AgreementControllerCreateTemplateMutationError = unknown;
+
+/**
+ * @summary Create a new agreement template
+ */
+export const useAgreementControllerCreateTemplate = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof agreementControllerCreateTemplate>>,
+      TError,
+      { data: CreateAgreementTemplateDto },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof agreementControllerCreateTemplate>>,
+  TError,
+  { data: CreateAgreementTemplateDto },
+  TContext
+> => {
+  const mutationOptions = getAgreementControllerCreateTemplateMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary List available agreement templates
+ */
+export const agreementControllerGetTemplates = (
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>(
+    { url: `/api/v1/sales/agreements/templates`, method: 'GET', signal },
+    options,
+  );
+};
+
+export const getAgreementControllerGetTemplatesQueryKey = () => {
+  return [`/api/v1/sales/agreements/templates`] as const;
+};
+
+export const getAgreementControllerGetTemplatesQueryOptions = <
+  TData = Awaited<ReturnType<typeof agreementControllerGetTemplates>>,
+  TError = unknown,
+>(options?: {
+  query?: Partial<
+    UseQueryOptions<Awaited<ReturnType<typeof agreementControllerGetTemplates>>, TError, TData>
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getAgreementControllerGetTemplatesQueryKey();
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof agreementControllerGetTemplates>>> = ({
+    signal,
+  }) => agreementControllerGetTemplates(requestOptions, signal);
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof agreementControllerGetTemplates>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type AgreementControllerGetTemplatesQueryResult = NonNullable<
+  Awaited<ReturnType<typeof agreementControllerGetTemplates>>
+>;
+export type AgreementControllerGetTemplatesQueryError = unknown;
+
+export function useAgreementControllerGetTemplates<
+  TData = Awaited<ReturnType<typeof agreementControllerGetTemplates>>,
+  TError = unknown,
+>(
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof agreementControllerGetTemplates>>, TError, TData>
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof agreementControllerGetTemplates>>,
+          TError,
+          Awaited<ReturnType<typeof agreementControllerGetTemplates>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useAgreementControllerGetTemplates<
+  TData = Awaited<ReturnType<typeof agreementControllerGetTemplates>>,
+  TError = unknown,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof agreementControllerGetTemplates>>, TError, TData>
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof agreementControllerGetTemplates>>,
+          TError,
+          Awaited<ReturnType<typeof agreementControllerGetTemplates>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useAgreementControllerGetTemplates<
+  TData = Awaited<ReturnType<typeof agreementControllerGetTemplates>>,
+  TError = unknown,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof agreementControllerGetTemplates>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary List available agreement templates
+ */
+
+export function useAgreementControllerGetTemplates<
+  TData = Awaited<ReturnType<typeof agreementControllerGetTemplates>>,
+  TError = unknown,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof agreementControllerGetTemplates>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getAgreementControllerGetTemplatesQueryOptions(options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+/**
+ * @summary Generate agreement for a confirmed booking
+ */
+export const agreementControllerGenerateAgreement = (
+  generateAgreementDto: GenerateAgreementDto,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>(
+    {
+      url: `/api/v1/sales/agreements/generate`,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      data: generateAgreementDto,
+      signal,
+    },
+    options,
+  );
+};
+
+export const getAgreementControllerGenerateAgreementMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof agreementControllerGenerateAgreement>>,
+    TError,
+    { data: GenerateAgreementDto },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof agreementControllerGenerateAgreement>>,
+  TError,
+  { data: GenerateAgreementDto },
+  TContext
+> => {
+  const mutationKey = ['agreementControllerGenerateAgreement'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof agreementControllerGenerateAgreement>>,
+    { data: GenerateAgreementDto }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return agreementControllerGenerateAgreement(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type AgreementControllerGenerateAgreementMutationResult = NonNullable<
+  Awaited<ReturnType<typeof agreementControllerGenerateAgreement>>
+>;
+export type AgreementControllerGenerateAgreementMutationBody = GenerateAgreementDto;
+export type AgreementControllerGenerateAgreementMutationError = unknown;
+
+/**
+ * @summary Generate agreement for a confirmed booking
+ */
+export const useAgreementControllerGenerateAgreement = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof agreementControllerGenerateAgreement>>,
+      TError,
+      { data: GenerateAgreementDto },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof agreementControllerGenerateAgreement>>,
+  TError,
+  { data: GenerateAgreementDto },
+  TContext
+> => {
+  const mutationOptions = getAgreementControllerGenerateAgreementMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary List and filter agreements with pagination
+ */
+export const agreementControllerListAgreements = (
+  params?: AgreementControllerListAgreementsParams,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>(
+    { url: `/api/v1/sales/agreements`, method: 'GET', params, signal },
+    options,
+  );
+};
+
+export const getAgreementControllerListAgreementsQueryKey = (
+  params?: AgreementControllerListAgreementsParams,
+) => {
+  return [`/api/v1/sales/agreements`, ...(params ? [params] : [])] as const;
+};
+
+export const getAgreementControllerListAgreementsQueryOptions = <
+  TData = Awaited<ReturnType<typeof agreementControllerListAgreements>>,
+  TError = unknown,
+>(
+  params?: AgreementControllerListAgreementsParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof agreementControllerListAgreements>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getAgreementControllerListAgreementsQueryKey(params);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof agreementControllerListAgreements>>> = ({
+    signal,
+  }) => agreementControllerListAgreements(params, requestOptions, signal);
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof agreementControllerListAgreements>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type AgreementControllerListAgreementsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof agreementControllerListAgreements>>
+>;
+export type AgreementControllerListAgreementsQueryError = unknown;
+
+export function useAgreementControllerListAgreements<
+  TData = Awaited<ReturnType<typeof agreementControllerListAgreements>>,
+  TError = unknown,
+>(
+  params: undefined | AgreementControllerListAgreementsParams,
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof agreementControllerListAgreements>>, TError, TData>
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof agreementControllerListAgreements>>,
+          TError,
+          Awaited<ReturnType<typeof agreementControllerListAgreements>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useAgreementControllerListAgreements<
+  TData = Awaited<ReturnType<typeof agreementControllerListAgreements>>,
+  TError = unknown,
+>(
+  params?: AgreementControllerListAgreementsParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof agreementControllerListAgreements>>, TError, TData>
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof agreementControllerListAgreements>>,
+          TError,
+          Awaited<ReturnType<typeof agreementControllerListAgreements>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useAgreementControllerListAgreements<
+  TData = Awaited<ReturnType<typeof agreementControllerListAgreements>>,
+  TError = unknown,
+>(
+  params?: AgreementControllerListAgreementsParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof agreementControllerListAgreements>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary List and filter agreements with pagination
+ */
+
+export function useAgreementControllerListAgreements<
+  TData = Awaited<ReturnType<typeof agreementControllerListAgreements>>,
+  TError = unknown,
+>(
+  params?: AgreementControllerListAgreementsParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof agreementControllerListAgreements>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getAgreementControllerListAgreementsQueryOptions(params, options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+/**
+ * @summary Get single agreement details by ID
+ */
+export const agreementControllerGetAgreement = (
+  id: string,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>(
+    { url: `/api/v1/sales/agreements/${id}`, method: 'GET', signal },
+    options,
+  );
+};
+
+export const getAgreementControllerGetAgreementQueryKey = (id?: string) => {
+  return [`/api/v1/sales/agreements/${id}`] as const;
+};
+
+export const getAgreementControllerGetAgreementQueryOptions = <
+  TData = Awaited<ReturnType<typeof agreementControllerGetAgreement>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof agreementControllerGetAgreement>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getAgreementControllerGetAgreementQueryKey(id);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof agreementControllerGetAgreement>>> = ({
+    signal,
+  }) => agreementControllerGetAgreement(id, requestOptions, signal);
+
+  return { queryKey, queryFn, enabled: !!id, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof agreementControllerGetAgreement>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type AgreementControllerGetAgreementQueryResult = NonNullable<
+  Awaited<ReturnType<typeof agreementControllerGetAgreement>>
+>;
+export type AgreementControllerGetAgreementQueryError = unknown;
+
+export function useAgreementControllerGetAgreement<
+  TData = Awaited<ReturnType<typeof agreementControllerGetAgreement>>,
+  TError = unknown,
+>(
+  id: string,
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof agreementControllerGetAgreement>>, TError, TData>
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof agreementControllerGetAgreement>>,
+          TError,
+          Awaited<ReturnType<typeof agreementControllerGetAgreement>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useAgreementControllerGetAgreement<
+  TData = Awaited<ReturnType<typeof agreementControllerGetAgreement>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof agreementControllerGetAgreement>>, TError, TData>
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof agreementControllerGetAgreement>>,
+          TError,
+          Awaited<ReturnType<typeof agreementControllerGetAgreement>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useAgreementControllerGetAgreement<
+  TData = Awaited<ReturnType<typeof agreementControllerGetAgreement>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof agreementControllerGetAgreement>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary Get single agreement details by ID
+ */
+
+export function useAgreementControllerGetAgreement<
+  TData = Awaited<ReturnType<typeof agreementControllerGetAgreement>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof agreementControllerGetAgreement>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getAgreementControllerGetAgreementQueryOptions(id, options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+/**
+ * @summary Update agreement content (only before signed & locked)
+ */
+export const agreementControllerUpdateAgreement = (
+  id: string,
+  updateAgreementDto: UpdateAgreementDto,
+  options?: SecondParameter<typeof customInstance>,
+) => {
+  return customInstance<void>(
+    {
+      url: `/api/v1/sales/agreements/${id}`,
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      data: updateAgreementDto,
+    },
+    options,
+  );
+};
+
+export const getAgreementControllerUpdateAgreementMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof agreementControllerUpdateAgreement>>,
+    TError,
+    { id: string; data: UpdateAgreementDto },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof agreementControllerUpdateAgreement>>,
+  TError,
+  { id: string; data: UpdateAgreementDto },
+  TContext
+> => {
+  const mutationKey = ['agreementControllerUpdateAgreement'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof agreementControllerUpdateAgreement>>,
+    { id: string; data: UpdateAgreementDto }
+  > = (props) => {
+    const { id, data } = props ?? {};
+
+    return agreementControllerUpdateAgreement(id, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type AgreementControllerUpdateAgreementMutationResult = NonNullable<
+  Awaited<ReturnType<typeof agreementControllerUpdateAgreement>>
+>;
+export type AgreementControllerUpdateAgreementMutationBody = UpdateAgreementDto;
+export type AgreementControllerUpdateAgreementMutationError = unknown;
+
+/**
+ * @summary Update agreement content (only before signed & locked)
+ */
+export const useAgreementControllerUpdateAgreement = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof agreementControllerUpdateAgreement>>,
+      TError,
+      { id: string; data: UpdateAgreementDto },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof agreementControllerUpdateAgreement>>,
+  TError,
+  { id: string; data: UpdateAgreementDto },
+  TContext
+> => {
+  const mutationOptions = getAgreementControllerUpdateAgreementMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary Mark agreement signed and locked, advancing booking to AGREEMENT_COMPLETED
+ */
+export const agreementControllerSignAndLockAgreement = (
+  id: string,
+  signAndLockAgreementDto: SignAndLockAgreementDto,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>(
+    {
+      url: `/api/v1/sales/agreements/${id}/sign-and-lock`,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      data: signAndLockAgreementDto,
+      signal,
+    },
+    options,
+  );
+};
+
+export const getAgreementControllerSignAndLockAgreementMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof agreementControllerSignAndLockAgreement>>,
+    TError,
+    { id: string; data: SignAndLockAgreementDto },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof agreementControllerSignAndLockAgreement>>,
+  TError,
+  { id: string; data: SignAndLockAgreementDto },
+  TContext
+> => {
+  const mutationKey = ['agreementControllerSignAndLockAgreement'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof agreementControllerSignAndLockAgreement>>,
+    { id: string; data: SignAndLockAgreementDto }
+  > = (props) => {
+    const { id, data } = props ?? {};
+
+    return agreementControllerSignAndLockAgreement(id, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type AgreementControllerSignAndLockAgreementMutationResult = NonNullable<
+  Awaited<ReturnType<typeof agreementControllerSignAndLockAgreement>>
+>;
+export type AgreementControllerSignAndLockAgreementMutationBody = SignAndLockAgreementDto;
+export type AgreementControllerSignAndLockAgreementMutationError = unknown;
+
+/**
+ * @summary Mark agreement signed and locked, advancing booking to AGREEMENT_COMPLETED
+ */
+export const useAgreementControllerSignAndLockAgreement = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof agreementControllerSignAndLockAgreement>>,
+      TError,
+      { id: string; data: SignAndLockAgreementDto },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof agreementControllerSignAndLockAgreement>>,
+  TError,
+  { id: string; data: SignAndLockAgreementDto },
+  TContext
+> => {
+  const mutationOptions = getAgreementControllerSignAndLockAgreementMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary Create a new superseded version from a signed & locked agreement
+ */
+export const agreementControllerCreateVersion = (
+  id: string,
+  versionAgreementDto: VersionAgreementDto,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>(
+    {
+      url: `/api/v1/sales/agreements/${id}/version`,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      data: versionAgreementDto,
+      signal,
+    },
+    options,
+  );
+};
+
+export const getAgreementControllerCreateVersionMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof agreementControllerCreateVersion>>,
+    TError,
+    { id: string; data: VersionAgreementDto },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof agreementControllerCreateVersion>>,
+  TError,
+  { id: string; data: VersionAgreementDto },
+  TContext
+> => {
+  const mutationKey = ['agreementControllerCreateVersion'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof agreementControllerCreateVersion>>,
+    { id: string; data: VersionAgreementDto }
+  > = (props) => {
+    const { id, data } = props ?? {};
+
+    return agreementControllerCreateVersion(id, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type AgreementControllerCreateVersionMutationResult = NonNullable<
+  Awaited<ReturnType<typeof agreementControllerCreateVersion>>
+>;
+export type AgreementControllerCreateVersionMutationBody = VersionAgreementDto;
+export type AgreementControllerCreateVersionMutationError = unknown;
+
+/**
+ * @summary Create a new superseded version from a signed & locked agreement
+ */
+export const useAgreementControllerCreateVersion = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof agreementControllerCreateVersion>>,
+      TError,
+      { id: string; data: VersionAgreementDto },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof agreementControllerCreateVersion>>,
+  TError,
+  { id: string; data: VersionAgreementDto },
+  TContext
+> => {
+  const mutationOptions = getAgreementControllerCreateVersionMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary Download institutional branded PDF agreement
+ */
+export const agreementControllerGetPdf = (
+  id: string,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>(
+    { url: `/api/v1/sales/agreements/${id}/pdf`, method: 'GET', signal },
+    options,
+  );
+};
+
+export const getAgreementControllerGetPdfQueryKey = (id?: string) => {
+  return [`/api/v1/sales/agreements/${id}/pdf`] as const;
+};
+
+export const getAgreementControllerGetPdfQueryOptions = <
+  TData = Awaited<ReturnType<typeof agreementControllerGetPdf>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof agreementControllerGetPdf>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getAgreementControllerGetPdfQueryKey(id);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof agreementControllerGetPdf>>> = ({
+    signal,
+  }) => agreementControllerGetPdf(id, requestOptions, signal);
+
+  return { queryKey, queryFn, enabled: !!id, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof agreementControllerGetPdf>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type AgreementControllerGetPdfQueryResult = NonNullable<
+  Awaited<ReturnType<typeof agreementControllerGetPdf>>
+>;
+export type AgreementControllerGetPdfQueryError = unknown;
+
+export function useAgreementControllerGetPdf<
+  TData = Awaited<ReturnType<typeof agreementControllerGetPdf>>,
+  TError = unknown,
+>(
+  id: string,
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof agreementControllerGetPdf>>, TError, TData>
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof agreementControllerGetPdf>>,
+          TError,
+          Awaited<ReturnType<typeof agreementControllerGetPdf>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useAgreementControllerGetPdf<
+  TData = Awaited<ReturnType<typeof agreementControllerGetPdf>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof agreementControllerGetPdf>>, TError, TData>
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof agreementControllerGetPdf>>,
+          TError,
+          Awaited<ReturnType<typeof agreementControllerGetPdf>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useAgreementControllerGetPdf<
+  TData = Awaited<ReturnType<typeof agreementControllerGetPdf>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof agreementControllerGetPdf>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary Download institutional branded PDF agreement
+ */
+
+export function useAgreementControllerGetPdf<
+  TData = Awaited<ReturnType<typeof agreementControllerGetPdf>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof agreementControllerGetPdf>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getAgreementControllerGetPdfQueryOptions(id, options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
 
 export const settingsControllerGetAllSettings = (
   options?: SecondParameter<typeof customInstance>,

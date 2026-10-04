@@ -12,15 +12,33 @@ import { HttpResponse, delay, http } from 'msw';
 import type { RequestHandlerOptions } from 'msw';
 
 import type {
+  AccountBalanceResponseDto,
+  AccountResponseDto,
+  AccountingPeriodResponseDto,
+  BalanceSheetReportDto,
+  BankAccountResponseDto,
+  BankBranchRefDto,
+  BankReconciliationResponseDto,
+  BankRefDto,
+  CashTransferResponseDto,
   DocumentResponseDto,
   EntityHistoryResponseDto,
+  ExportJobResponseDto,
+  FiscalYearResponseDto,
   HealthControllerCheck200,
   InAppNotificationResponseDto,
+  IncomeStatementReportDto,
+  JournalResponseDto,
+  LedgerReportDto,
   NotificationPreferenceResponseDto,
   PaginatedCursorResponseDto,
+  PostingRuleResponseDto,
   PresignDownloadResponseDto,
   PresignUploadResponseDto,
+  ReportExportJobResponseDto,
+  TrialBalanceReportDto,
   UnreadCountResponseDto,
+  UnreconciledLineDto,
 } from './model';
 
 export const getHealthControllerCheckResponseMock = (
@@ -77,6 +95,1615 @@ export const getAuditControllerGetAuditLogsResponseMock = (
     faker.number.float({ min: undefined, max: undefined, fractionDigits: 2 }),
     undefined,
   ]),
+  ...overrideResponse,
+});
+
+export const getCoaControllerGetAccountsResponseMock = (): AccountResponseDto[] =>
+  Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({
+    id: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    companyId: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    code: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    name: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    type: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    parentId: faker.helpers.arrayElement([{}, undefined]),
+    isGroup: faker.datatype.boolean(),
+    isSystem: faker.datatype.boolean(),
+    partyType: faker.helpers.arrayElement([{}, undefined]),
+    isActive: faker.datatype.boolean(),
+    description: faker.helpers.arrayElement([{}, undefined]),
+    createdAt: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    updatedAt: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  }));
+
+export const getCoaControllerCreateAccountResponseMock = (
+  overrideResponse: Partial<AccountResponseDto> = {},
+): AccountResponseDto => ({
+  id: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  companyId: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  code: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  name: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  type: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  parentId: faker.helpers.arrayElement([{}, undefined]),
+  isGroup: faker.datatype.boolean(),
+  isSystem: faker.datatype.boolean(),
+  partyType: faker.helpers.arrayElement([{}, undefined]),
+  isActive: faker.datatype.boolean(),
+  description: faker.helpers.arrayElement([{}, undefined]),
+  createdAt: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  updatedAt: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  ...overrideResponse,
+});
+
+export const getCoaControllerGetAccountByIdResponseMock = (
+  overrideResponse: Partial<AccountResponseDto> = {},
+): AccountResponseDto => ({
+  id: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  companyId: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  code: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  name: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  type: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  parentId: faker.helpers.arrayElement([{}, undefined]),
+  isGroup: faker.datatype.boolean(),
+  isSystem: faker.datatype.boolean(),
+  partyType: faker.helpers.arrayElement([{}, undefined]),
+  isActive: faker.datatype.boolean(),
+  description: faker.helpers.arrayElement([{}, undefined]),
+  createdAt: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  updatedAt: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  ...overrideResponse,
+});
+
+export const getCoaControllerUpdateAccountResponseMock = (
+  overrideResponse: Partial<AccountResponseDto> = {},
+): AccountResponseDto => ({
+  id: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  companyId: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  code: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  name: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  type: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  parentId: faker.helpers.arrayElement([{}, undefined]),
+  isGroup: faker.datatype.boolean(),
+  isSystem: faker.datatype.boolean(),
+  partyType: faker.helpers.arrayElement([{}, undefined]),
+  isActive: faker.datatype.boolean(),
+  description: faker.helpers.arrayElement([{}, undefined]),
+  createdAt: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  updatedAt: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  ...overrideResponse,
+});
+
+export const getCoaControllerGetAccountBalanceResponseMock = (
+  overrideResponse: Partial<AccountBalanceResponseDto> = {},
+): AccountBalanceResponseDto => ({
+  accountId: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  code: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  name: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  type: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  balancePaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  formattedBalance: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  ...overrideResponse,
+});
+
+export const getPeriodControllerGetFiscalYearsResponseMock = (): FiscalYearResponseDto[] =>
+  Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({
+    id: faker.string.uuid(),
+    name: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    startDate: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    endDate: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    isClosed: faker.datatype.boolean(),
+    periods: faker.helpers.arrayElement([
+      Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({
+        id: faker.string.uuid(),
+        fiscalYearId: faker.string.uuid(),
+        periodNumber: faker.number.float({ min: undefined, max: undefined, fractionDigits: 2 }),
+        name: faker.string.alpha({ length: { min: 10, max: 20 } }),
+        startDate: faker.string.alpha({ length: { min: 10, max: 20 } }),
+        endDate: faker.string.alpha({ length: { min: 10, max: 20 } }),
+        status: faker.helpers.arrayElement(['Open', 'Closed', 'Locked'] as const),
+        closedAt: faker.helpers.arrayElement([
+          faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, null]),
+          undefined,
+        ]),
+        closedById: faker.helpers.arrayElement([
+          faker.helpers.arrayElement([faker.string.uuid(), null]),
+          undefined,
+        ]),
+        reopenedAt: faker.helpers.arrayElement([
+          faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, null]),
+          undefined,
+        ]),
+        reopenedById: faker.helpers.arrayElement([
+          faker.helpers.arrayElement([faker.string.uuid(), null]),
+          undefined,
+        ]),
+        reopenReason: faker.helpers.arrayElement([
+          faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]),
+          undefined,
+        ]),
+        createdAt: `${faker.date.past().toISOString().split('.')[0]}Z`,
+        updatedAt: `${faker.date.past().toISOString().split('.')[0]}Z`,
+      })),
+      undefined,
+    ]),
+    createdAt: `${faker.date.past().toISOString().split('.')[0]}Z`,
+    updatedAt: `${faker.date.past().toISOString().split('.')[0]}Z`,
+  }));
+
+export const getPeriodControllerGetFiscalYearByIdResponseMock = (
+  overrideResponse: Partial<FiscalYearResponseDto> = {},
+): FiscalYearResponseDto => ({
+  id: faker.string.uuid(),
+  name: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  startDate: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  endDate: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  isClosed: faker.datatype.boolean(),
+  periods: faker.helpers.arrayElement([
+    Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({
+      id: faker.string.uuid(),
+      fiscalYearId: faker.string.uuid(),
+      periodNumber: faker.number.float({ min: undefined, max: undefined, fractionDigits: 2 }),
+      name: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      startDate: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      endDate: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      status: faker.helpers.arrayElement(['Open', 'Closed', 'Locked'] as const),
+      closedAt: faker.helpers.arrayElement([
+        faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, null]),
+        undefined,
+      ]),
+      closedById: faker.helpers.arrayElement([
+        faker.helpers.arrayElement([faker.string.uuid(), null]),
+        undefined,
+      ]),
+      reopenedAt: faker.helpers.arrayElement([
+        faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, null]),
+        undefined,
+      ]),
+      reopenedById: faker.helpers.arrayElement([
+        faker.helpers.arrayElement([faker.string.uuid(), null]),
+        undefined,
+      ]),
+      reopenReason: faker.helpers.arrayElement([
+        faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]),
+        undefined,
+      ]),
+      createdAt: `${faker.date.past().toISOString().split('.')[0]}Z`,
+      updatedAt: `${faker.date.past().toISOString().split('.')[0]}Z`,
+    })),
+    undefined,
+  ]),
+  createdAt: `${faker.date.past().toISOString().split('.')[0]}Z`,
+  updatedAt: `${faker.date.past().toISOString().split('.')[0]}Z`,
+  ...overrideResponse,
+});
+
+export const getPeriodControllerGetPeriodsResponseMock = (): AccountingPeriodResponseDto[] =>
+  Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({
+    id: faker.string.uuid(),
+    fiscalYearId: faker.string.uuid(),
+    periodNumber: faker.number.float({ min: undefined, max: undefined, fractionDigits: 2 }),
+    name: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    startDate: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    endDate: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    status: faker.helpers.arrayElement(['Open', 'Closed', 'Locked'] as const),
+    closedAt: faker.helpers.arrayElement([
+      faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, null]),
+      undefined,
+    ]),
+    closedById: faker.helpers.arrayElement([
+      faker.helpers.arrayElement([faker.string.uuid(), null]),
+      undefined,
+    ]),
+    reopenedAt: faker.helpers.arrayElement([
+      faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, null]),
+      undefined,
+    ]),
+    reopenedById: faker.helpers.arrayElement([
+      faker.helpers.arrayElement([faker.string.uuid(), null]),
+      undefined,
+    ]),
+    reopenReason: faker.helpers.arrayElement([
+      faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]),
+      undefined,
+    ]),
+    createdAt: `${faker.date.past().toISOString().split('.')[0]}Z`,
+    updatedAt: `${faker.date.past().toISOString().split('.')[0]}Z`,
+  }));
+
+export const getPeriodControllerGetPeriodByIdResponseMock = (
+  overrideResponse: Partial<AccountingPeriodResponseDto> = {},
+): AccountingPeriodResponseDto => ({
+  id: faker.string.uuid(),
+  fiscalYearId: faker.string.uuid(),
+  periodNumber: faker.number.float({ min: undefined, max: undefined, fractionDigits: 2 }),
+  name: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  startDate: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  endDate: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  status: faker.helpers.arrayElement(['Open', 'Closed', 'Locked'] as const),
+  closedAt: faker.helpers.arrayElement([
+    faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, null]),
+    undefined,
+  ]),
+  closedById: faker.helpers.arrayElement([
+    faker.helpers.arrayElement([faker.string.uuid(), null]),
+    undefined,
+  ]),
+  reopenedAt: faker.helpers.arrayElement([
+    faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, null]),
+    undefined,
+  ]),
+  reopenedById: faker.helpers.arrayElement([
+    faker.helpers.arrayElement([faker.string.uuid(), null]),
+    undefined,
+  ]),
+  reopenReason: faker.helpers.arrayElement([
+    faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]),
+    undefined,
+  ]),
+  createdAt: `${faker.date.past().toISOString().split('.')[0]}Z`,
+  updatedAt: `${faker.date.past().toISOString().split('.')[0]}Z`,
+  ...overrideResponse,
+});
+
+export const getPeriodControllerClosePeriodResponseMock = (
+  overrideResponse: Partial<AccountingPeriodResponseDto> = {},
+): AccountingPeriodResponseDto => ({
+  id: faker.string.uuid(),
+  fiscalYearId: faker.string.uuid(),
+  periodNumber: faker.number.float({ min: undefined, max: undefined, fractionDigits: 2 }),
+  name: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  startDate: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  endDate: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  status: faker.helpers.arrayElement(['Open', 'Closed', 'Locked'] as const),
+  closedAt: faker.helpers.arrayElement([
+    faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, null]),
+    undefined,
+  ]),
+  closedById: faker.helpers.arrayElement([
+    faker.helpers.arrayElement([faker.string.uuid(), null]),
+    undefined,
+  ]),
+  reopenedAt: faker.helpers.arrayElement([
+    faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, null]),
+    undefined,
+  ]),
+  reopenedById: faker.helpers.arrayElement([
+    faker.helpers.arrayElement([faker.string.uuid(), null]),
+    undefined,
+  ]),
+  reopenReason: faker.helpers.arrayElement([
+    faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]),
+    undefined,
+  ]),
+  createdAt: `${faker.date.past().toISOString().split('.')[0]}Z`,
+  updatedAt: `${faker.date.past().toISOString().split('.')[0]}Z`,
+  ...overrideResponse,
+});
+
+export const getPeriodControllerReopenPeriodResponseMock = (
+  overrideResponse: Partial<AccountingPeriodResponseDto> = {},
+): AccountingPeriodResponseDto => ({
+  id: faker.string.uuid(),
+  fiscalYearId: faker.string.uuid(),
+  periodNumber: faker.number.float({ min: undefined, max: undefined, fractionDigits: 2 }),
+  name: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  startDate: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  endDate: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  status: faker.helpers.arrayElement(['Open', 'Closed', 'Locked'] as const),
+  closedAt: faker.helpers.arrayElement([
+    faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, null]),
+    undefined,
+  ]),
+  closedById: faker.helpers.arrayElement([
+    faker.helpers.arrayElement([faker.string.uuid(), null]),
+    undefined,
+  ]),
+  reopenedAt: faker.helpers.arrayElement([
+    faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, null]),
+    undefined,
+  ]),
+  reopenedById: faker.helpers.arrayElement([
+    faker.helpers.arrayElement([faker.string.uuid(), null]),
+    undefined,
+  ]),
+  reopenReason: faker.helpers.arrayElement([
+    faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]),
+    undefined,
+  ]),
+  createdAt: `${faker.date.past().toISOString().split('.')[0]}Z`,
+  updatedAt: `${faker.date.past().toISOString().split('.')[0]}Z`,
+  ...overrideResponse,
+});
+
+export const getPeriodControllerLockPeriodResponseMock = (
+  overrideResponse: Partial<AccountingPeriodResponseDto> = {},
+): AccountingPeriodResponseDto => ({
+  id: faker.string.uuid(),
+  fiscalYearId: faker.string.uuid(),
+  periodNumber: faker.number.float({ min: undefined, max: undefined, fractionDigits: 2 }),
+  name: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  startDate: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  endDate: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  status: faker.helpers.arrayElement(['Open', 'Closed', 'Locked'] as const),
+  closedAt: faker.helpers.arrayElement([
+    faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, null]),
+    undefined,
+  ]),
+  closedById: faker.helpers.arrayElement([
+    faker.helpers.arrayElement([faker.string.uuid(), null]),
+    undefined,
+  ]),
+  reopenedAt: faker.helpers.arrayElement([
+    faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, null]),
+    undefined,
+  ]),
+  reopenedById: faker.helpers.arrayElement([
+    faker.helpers.arrayElement([faker.string.uuid(), null]),
+    undefined,
+  ]),
+  reopenReason: faker.helpers.arrayElement([
+    faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]),
+    undefined,
+  ]),
+  createdAt: `${faker.date.past().toISOString().split('.')[0]}Z`,
+  updatedAt: `${faker.date.past().toISOString().split('.')[0]}Z`,
+  ...overrideResponse,
+});
+
+export const getJournalControllerGetJournalsResponseMock = (): JournalResponseDto[] =>
+  Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({
+    id: faker.string.uuid(),
+    journalNumber: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    type: faker.helpers.arrayElement(['GENERAL', 'OPENING', 'SYSTEM', 'REVERSAL'] as const),
+    status: faker.helpers.arrayElement([
+      'Draft',
+      'Review',
+      'Posted',
+      'Locked',
+      'Reversed',
+    ] as const),
+    postingDate: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    periodId: faker.helpers.arrayElement([
+      faker.helpers.arrayElement([faker.string.uuid(), null]),
+      undefined,
+    ]),
+    narration: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    reference: faker.helpers.arrayElement([
+      faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]),
+      undefined,
+    ]),
+    sourceModule: faker.helpers.arrayElement([
+      faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]),
+      undefined,
+    ]),
+    totalAmount: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    reversalOfId: faker.helpers.arrayElement([
+      faker.helpers.arrayElement([faker.string.uuid(), null]),
+      undefined,
+    ]),
+    isReversed: faker.datatype.boolean(),
+    reversalRecord: faker.helpers.arrayElement([
+      {
+        ...{
+          id: faker.string.uuid(),
+          originalJournalId: faker.string.uuid(),
+          reversalJournalId: faker.string.uuid(),
+          reason: faker.string.alpha({ length: { min: 10, max: 20 } }),
+          reversedAt: `${faker.date.past().toISOString().split('.')[0]}Z`,
+          reversedById: faker.string.uuid(),
+        },
+      },
+      undefined,
+    ]),
+    postedAt: faker.helpers.arrayElement([
+      faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, null]),
+      undefined,
+    ]),
+    postedById: faker.helpers.arrayElement([
+      faker.helpers.arrayElement([faker.string.uuid(), null]),
+      undefined,
+    ]),
+    lines: faker.helpers.arrayElement([
+      Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({
+        id: faker.string.uuid(),
+        lineNumber: faker.number.float({ min: undefined, max: undefined, fractionDigits: 2 }),
+        accountId: faker.string.uuid(),
+        accountCode: faker.string.alpha({ length: { min: 10, max: 20 } }),
+        accountName: faker.string.alpha({ length: { min: 10, max: 20 } }),
+        debitPaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+        creditPaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+        description: faker.helpers.arrayElement([
+          faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]),
+          undefined,
+        ]),
+        partyType: faker.helpers.arrayElement([
+          faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]),
+          undefined,
+        ]),
+        partyId: faker.helpers.arrayElement([
+          faker.helpers.arrayElement([faker.string.uuid(), null]),
+          undefined,
+        ]),
+        costCenter: faker.helpers.arrayElement([
+          faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]),
+          undefined,
+        ]),
+        projectId: faker.helpers.arrayElement([
+          faker.helpers.arrayElement([faker.string.uuid(), null]),
+          undefined,
+        ]),
+        createdAt: `${faker.date.past().toISOString().split('.')[0]}Z`,
+        updatedAt: `${faker.date.past().toISOString().split('.')[0]}Z`,
+      })),
+      undefined,
+    ]),
+    createdAt: `${faker.date.past().toISOString().split('.')[0]}Z`,
+    updatedAt: `${faker.date.past().toISOString().split('.')[0]}Z`,
+  }));
+
+export const getJournalControllerGetJournalByIdResponseMock = (
+  overrideResponse: Partial<JournalResponseDto> = {},
+): JournalResponseDto => ({
+  id: faker.string.uuid(),
+  journalNumber: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  type: faker.helpers.arrayElement(['GENERAL', 'OPENING', 'SYSTEM', 'REVERSAL'] as const),
+  status: faker.helpers.arrayElement(['Draft', 'Review', 'Posted', 'Locked', 'Reversed'] as const),
+  postingDate: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  periodId: faker.helpers.arrayElement([
+    faker.helpers.arrayElement([faker.string.uuid(), null]),
+    undefined,
+  ]),
+  narration: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  reference: faker.helpers.arrayElement([
+    faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]),
+    undefined,
+  ]),
+  sourceModule: faker.helpers.arrayElement([
+    faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]),
+    undefined,
+  ]),
+  totalAmount: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  reversalOfId: faker.helpers.arrayElement([
+    faker.helpers.arrayElement([faker.string.uuid(), null]),
+    undefined,
+  ]),
+  isReversed: faker.datatype.boolean(),
+  reversalRecord: faker.helpers.arrayElement([
+    {
+      ...{
+        id: faker.string.uuid(),
+        originalJournalId: faker.string.uuid(),
+        reversalJournalId: faker.string.uuid(),
+        reason: faker.string.alpha({ length: { min: 10, max: 20 } }),
+        reversedAt: `${faker.date.past().toISOString().split('.')[0]}Z`,
+        reversedById: faker.string.uuid(),
+      },
+    },
+    undefined,
+  ]),
+  postedAt: faker.helpers.arrayElement([
+    faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, null]),
+    undefined,
+  ]),
+  postedById: faker.helpers.arrayElement([
+    faker.helpers.arrayElement([faker.string.uuid(), null]),
+    undefined,
+  ]),
+  lines: faker.helpers.arrayElement([
+    Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({
+      id: faker.string.uuid(),
+      lineNumber: faker.number.float({ min: undefined, max: undefined, fractionDigits: 2 }),
+      accountId: faker.string.uuid(),
+      accountCode: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      accountName: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      debitPaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      creditPaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      description: faker.helpers.arrayElement([
+        faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]),
+        undefined,
+      ]),
+      partyType: faker.helpers.arrayElement([
+        faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]),
+        undefined,
+      ]),
+      partyId: faker.helpers.arrayElement([
+        faker.helpers.arrayElement([faker.string.uuid(), null]),
+        undefined,
+      ]),
+      costCenter: faker.helpers.arrayElement([
+        faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]),
+        undefined,
+      ]),
+      projectId: faker.helpers.arrayElement([
+        faker.helpers.arrayElement([faker.string.uuid(), null]),
+        undefined,
+      ]),
+      createdAt: `${faker.date.past().toISOString().split('.')[0]}Z`,
+      updatedAt: `${faker.date.past().toISOString().split('.')[0]}Z`,
+    })),
+    undefined,
+  ]),
+  createdAt: `${faker.date.past().toISOString().split('.')[0]}Z`,
+  updatedAt: `${faker.date.past().toISOString().split('.')[0]}Z`,
+  ...overrideResponse,
+});
+
+export const getJournalControllerCreateDraftResponseMock = (
+  overrideResponse: Partial<JournalResponseDto> = {},
+): JournalResponseDto => ({
+  id: faker.string.uuid(),
+  journalNumber: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  type: faker.helpers.arrayElement(['GENERAL', 'OPENING', 'SYSTEM', 'REVERSAL'] as const),
+  status: faker.helpers.arrayElement(['Draft', 'Review', 'Posted', 'Locked', 'Reversed'] as const),
+  postingDate: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  periodId: faker.helpers.arrayElement([
+    faker.helpers.arrayElement([faker.string.uuid(), null]),
+    undefined,
+  ]),
+  narration: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  reference: faker.helpers.arrayElement([
+    faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]),
+    undefined,
+  ]),
+  sourceModule: faker.helpers.arrayElement([
+    faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]),
+    undefined,
+  ]),
+  totalAmount: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  reversalOfId: faker.helpers.arrayElement([
+    faker.helpers.arrayElement([faker.string.uuid(), null]),
+    undefined,
+  ]),
+  isReversed: faker.datatype.boolean(),
+  reversalRecord: faker.helpers.arrayElement([
+    {
+      ...{
+        id: faker.string.uuid(),
+        originalJournalId: faker.string.uuid(),
+        reversalJournalId: faker.string.uuid(),
+        reason: faker.string.alpha({ length: { min: 10, max: 20 } }),
+        reversedAt: `${faker.date.past().toISOString().split('.')[0]}Z`,
+        reversedById: faker.string.uuid(),
+      },
+    },
+    undefined,
+  ]),
+  postedAt: faker.helpers.arrayElement([
+    faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, null]),
+    undefined,
+  ]),
+  postedById: faker.helpers.arrayElement([
+    faker.helpers.arrayElement([faker.string.uuid(), null]),
+    undefined,
+  ]),
+  lines: faker.helpers.arrayElement([
+    Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({
+      id: faker.string.uuid(),
+      lineNumber: faker.number.float({ min: undefined, max: undefined, fractionDigits: 2 }),
+      accountId: faker.string.uuid(),
+      accountCode: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      accountName: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      debitPaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      creditPaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      description: faker.helpers.arrayElement([
+        faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]),
+        undefined,
+      ]),
+      partyType: faker.helpers.arrayElement([
+        faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]),
+        undefined,
+      ]),
+      partyId: faker.helpers.arrayElement([
+        faker.helpers.arrayElement([faker.string.uuid(), null]),
+        undefined,
+      ]),
+      costCenter: faker.helpers.arrayElement([
+        faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]),
+        undefined,
+      ]),
+      projectId: faker.helpers.arrayElement([
+        faker.helpers.arrayElement([faker.string.uuid(), null]),
+        undefined,
+      ]),
+      createdAt: `${faker.date.past().toISOString().split('.')[0]}Z`,
+      updatedAt: `${faker.date.past().toISOString().split('.')[0]}Z`,
+    })),
+    undefined,
+  ]),
+  createdAt: `${faker.date.past().toISOString().split('.')[0]}Z`,
+  updatedAt: `${faker.date.past().toISOString().split('.')[0]}Z`,
+  ...overrideResponse,
+});
+
+export const getJournalControllerCreateAndPostResponseMock = (
+  overrideResponse: Partial<JournalResponseDto> = {},
+): JournalResponseDto => ({
+  id: faker.string.uuid(),
+  journalNumber: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  type: faker.helpers.arrayElement(['GENERAL', 'OPENING', 'SYSTEM', 'REVERSAL'] as const),
+  status: faker.helpers.arrayElement(['Draft', 'Review', 'Posted', 'Locked', 'Reversed'] as const),
+  postingDate: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  periodId: faker.helpers.arrayElement([
+    faker.helpers.arrayElement([faker.string.uuid(), null]),
+    undefined,
+  ]),
+  narration: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  reference: faker.helpers.arrayElement([
+    faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]),
+    undefined,
+  ]),
+  sourceModule: faker.helpers.arrayElement([
+    faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]),
+    undefined,
+  ]),
+  totalAmount: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  reversalOfId: faker.helpers.arrayElement([
+    faker.helpers.arrayElement([faker.string.uuid(), null]),
+    undefined,
+  ]),
+  isReversed: faker.datatype.boolean(),
+  reversalRecord: faker.helpers.arrayElement([
+    {
+      ...{
+        id: faker.string.uuid(),
+        originalJournalId: faker.string.uuid(),
+        reversalJournalId: faker.string.uuid(),
+        reason: faker.string.alpha({ length: { min: 10, max: 20 } }),
+        reversedAt: `${faker.date.past().toISOString().split('.')[0]}Z`,
+        reversedById: faker.string.uuid(),
+      },
+    },
+    undefined,
+  ]),
+  postedAt: faker.helpers.arrayElement([
+    faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, null]),
+    undefined,
+  ]),
+  postedById: faker.helpers.arrayElement([
+    faker.helpers.arrayElement([faker.string.uuid(), null]),
+    undefined,
+  ]),
+  lines: faker.helpers.arrayElement([
+    Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({
+      id: faker.string.uuid(),
+      lineNumber: faker.number.float({ min: undefined, max: undefined, fractionDigits: 2 }),
+      accountId: faker.string.uuid(),
+      accountCode: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      accountName: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      debitPaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      creditPaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      description: faker.helpers.arrayElement([
+        faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]),
+        undefined,
+      ]),
+      partyType: faker.helpers.arrayElement([
+        faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]),
+        undefined,
+      ]),
+      partyId: faker.helpers.arrayElement([
+        faker.helpers.arrayElement([faker.string.uuid(), null]),
+        undefined,
+      ]),
+      costCenter: faker.helpers.arrayElement([
+        faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]),
+        undefined,
+      ]),
+      projectId: faker.helpers.arrayElement([
+        faker.helpers.arrayElement([faker.string.uuid(), null]),
+        undefined,
+      ]),
+      createdAt: `${faker.date.past().toISOString().split('.')[0]}Z`,
+      updatedAt: `${faker.date.past().toISOString().split('.')[0]}Z`,
+    })),
+    undefined,
+  ]),
+  createdAt: `${faker.date.past().toISOString().split('.')[0]}Z`,
+  updatedAt: `${faker.date.past().toISOString().split('.')[0]}Z`,
+  ...overrideResponse,
+});
+
+export const getJournalControllerPostDraftResponseMock = (
+  overrideResponse: Partial<JournalResponseDto> = {},
+): JournalResponseDto => ({
+  id: faker.string.uuid(),
+  journalNumber: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  type: faker.helpers.arrayElement(['GENERAL', 'OPENING', 'SYSTEM', 'REVERSAL'] as const),
+  status: faker.helpers.arrayElement(['Draft', 'Review', 'Posted', 'Locked', 'Reversed'] as const),
+  postingDate: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  periodId: faker.helpers.arrayElement([
+    faker.helpers.arrayElement([faker.string.uuid(), null]),
+    undefined,
+  ]),
+  narration: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  reference: faker.helpers.arrayElement([
+    faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]),
+    undefined,
+  ]),
+  sourceModule: faker.helpers.arrayElement([
+    faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]),
+    undefined,
+  ]),
+  totalAmount: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  reversalOfId: faker.helpers.arrayElement([
+    faker.helpers.arrayElement([faker.string.uuid(), null]),
+    undefined,
+  ]),
+  isReversed: faker.datatype.boolean(),
+  reversalRecord: faker.helpers.arrayElement([
+    {
+      ...{
+        id: faker.string.uuid(),
+        originalJournalId: faker.string.uuid(),
+        reversalJournalId: faker.string.uuid(),
+        reason: faker.string.alpha({ length: { min: 10, max: 20 } }),
+        reversedAt: `${faker.date.past().toISOString().split('.')[0]}Z`,
+        reversedById: faker.string.uuid(),
+      },
+    },
+    undefined,
+  ]),
+  postedAt: faker.helpers.arrayElement([
+    faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, null]),
+    undefined,
+  ]),
+  postedById: faker.helpers.arrayElement([
+    faker.helpers.arrayElement([faker.string.uuid(), null]),
+    undefined,
+  ]),
+  lines: faker.helpers.arrayElement([
+    Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({
+      id: faker.string.uuid(),
+      lineNumber: faker.number.float({ min: undefined, max: undefined, fractionDigits: 2 }),
+      accountId: faker.string.uuid(),
+      accountCode: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      accountName: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      debitPaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      creditPaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      description: faker.helpers.arrayElement([
+        faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]),
+        undefined,
+      ]),
+      partyType: faker.helpers.arrayElement([
+        faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]),
+        undefined,
+      ]),
+      partyId: faker.helpers.arrayElement([
+        faker.helpers.arrayElement([faker.string.uuid(), null]),
+        undefined,
+      ]),
+      costCenter: faker.helpers.arrayElement([
+        faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]),
+        undefined,
+      ]),
+      projectId: faker.helpers.arrayElement([
+        faker.helpers.arrayElement([faker.string.uuid(), null]),
+        undefined,
+      ]),
+      createdAt: `${faker.date.past().toISOString().split('.')[0]}Z`,
+      updatedAt: `${faker.date.past().toISOString().split('.')[0]}Z`,
+    })),
+    undefined,
+  ]),
+  createdAt: `${faker.date.past().toISOString().split('.')[0]}Z`,
+  updatedAt: `${faker.date.past().toISOString().split('.')[0]}Z`,
+  ...overrideResponse,
+});
+
+export const getJournalControllerReverseAndCorrectResponseMock = (
+  overrideResponse: Partial<JournalResponseDto> = {},
+): JournalResponseDto => ({
+  id: faker.string.uuid(),
+  journalNumber: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  type: faker.helpers.arrayElement(['GENERAL', 'OPENING', 'SYSTEM', 'REVERSAL'] as const),
+  status: faker.helpers.arrayElement(['Draft', 'Review', 'Posted', 'Locked', 'Reversed'] as const),
+  postingDate: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  periodId: faker.helpers.arrayElement([
+    faker.helpers.arrayElement([faker.string.uuid(), null]),
+    undefined,
+  ]),
+  narration: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  reference: faker.helpers.arrayElement([
+    faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]),
+    undefined,
+  ]),
+  sourceModule: faker.helpers.arrayElement([
+    faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]),
+    undefined,
+  ]),
+  totalAmount: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  reversalOfId: faker.helpers.arrayElement([
+    faker.helpers.arrayElement([faker.string.uuid(), null]),
+    undefined,
+  ]),
+  isReversed: faker.datatype.boolean(),
+  reversalRecord: faker.helpers.arrayElement([
+    {
+      ...{
+        id: faker.string.uuid(),
+        originalJournalId: faker.string.uuid(),
+        reversalJournalId: faker.string.uuid(),
+        reason: faker.string.alpha({ length: { min: 10, max: 20 } }),
+        reversedAt: `${faker.date.past().toISOString().split('.')[0]}Z`,
+        reversedById: faker.string.uuid(),
+      },
+    },
+    undefined,
+  ]),
+  postedAt: faker.helpers.arrayElement([
+    faker.helpers.arrayElement([`${faker.date.past().toISOString().split('.')[0]}Z`, null]),
+    undefined,
+  ]),
+  postedById: faker.helpers.arrayElement([
+    faker.helpers.arrayElement([faker.string.uuid(), null]),
+    undefined,
+  ]),
+  lines: faker.helpers.arrayElement([
+    Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({
+      id: faker.string.uuid(),
+      lineNumber: faker.number.float({ min: undefined, max: undefined, fractionDigits: 2 }),
+      accountId: faker.string.uuid(),
+      accountCode: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      accountName: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      debitPaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      creditPaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      description: faker.helpers.arrayElement([
+        faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]),
+        undefined,
+      ]),
+      partyType: faker.helpers.arrayElement([
+        faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]),
+        undefined,
+      ]),
+      partyId: faker.helpers.arrayElement([
+        faker.helpers.arrayElement([faker.string.uuid(), null]),
+        undefined,
+      ]),
+      costCenter: faker.helpers.arrayElement([
+        faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]),
+        undefined,
+      ]),
+      projectId: faker.helpers.arrayElement([
+        faker.helpers.arrayElement([faker.string.uuid(), null]),
+        undefined,
+      ]),
+      createdAt: `${faker.date.past().toISOString().split('.')[0]}Z`,
+      updatedAt: `${faker.date.past().toISOString().split('.')[0]}Z`,
+    })),
+    undefined,
+  ]),
+  createdAt: `${faker.date.past().toISOString().split('.')[0]}Z`,
+  updatedAt: `${faker.date.past().toISOString().split('.')[0]}Z`,
+  ...overrideResponse,
+});
+
+export const getLedgerControllerGetLedgerResponseMock = (
+  overrideResponse: Partial<LedgerReportDto> = {},
+): LedgerReportDto => ({
+  account: faker.helpers.arrayElement([
+    {
+      ...{
+        id: faker.string.alpha({ length: { min: 10, max: 20 } }),
+        code: faker.string.alpha({ length: { min: 10, max: 20 } }),
+        name: faker.string.alpha({ length: { min: 10, max: 20 } }),
+        type: faker.helpers.arrayElement([
+          'ASSET',
+          'LIABILITY',
+          'EQUITY',
+          'INCOME',
+          'EXPENSE',
+        ] as const),
+        normalBalance: faker.helpers.arrayElement(['DEBIT', 'CREDIT'] as const),
+      },
+    },
+    undefined,
+  ]),
+  openingBalancePaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  openingBalanceFormatted: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  totalDebitPaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  totalDebitFormatted: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  totalCreditPaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  totalCreditFormatted: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  closingBalancePaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  closingBalanceFormatted: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  lines: Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({
+    id: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    journalId: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    journalNumber: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    entryDate: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    description: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    debitPaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    creditPaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    debitFormatted: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    creditFormatted: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    runningBalancePaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    runningBalanceFormatted: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    costCenter: faker.helpers.arrayElement([{}, undefined]),
+    costCenterId: faker.helpers.arrayElement([{}, undefined]),
+    projectId: faker.helpers.arrayElement([{}, undefined]),
+    partyType: faker.helpers.arrayElement([{}, undefined]),
+    partyId: faker.helpers.arrayElement([{}, undefined]),
+  })),
+  nextCursor: faker.helpers.arrayElement([{}, undefined]),
+  hasMore: faker.datatype.boolean(),
+  ...overrideResponse,
+});
+
+export const getLedgerControllerGetAccountLedgerResponseMock = (
+  overrideResponse: Partial<LedgerReportDto> = {},
+): LedgerReportDto => ({
+  account: faker.helpers.arrayElement([
+    {
+      ...{
+        id: faker.string.alpha({ length: { min: 10, max: 20 } }),
+        code: faker.string.alpha({ length: { min: 10, max: 20 } }),
+        name: faker.string.alpha({ length: { min: 10, max: 20 } }),
+        type: faker.helpers.arrayElement([
+          'ASSET',
+          'LIABILITY',
+          'EQUITY',
+          'INCOME',
+          'EXPENSE',
+        ] as const),
+        normalBalance: faker.helpers.arrayElement(['DEBIT', 'CREDIT'] as const),
+      },
+    },
+    undefined,
+  ]),
+  openingBalancePaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  openingBalanceFormatted: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  totalDebitPaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  totalDebitFormatted: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  totalCreditPaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  totalCreditFormatted: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  closingBalancePaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  closingBalanceFormatted: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  lines: Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({
+    id: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    journalId: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    journalNumber: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    entryDate: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    description: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    debitPaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    creditPaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    debitFormatted: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    creditFormatted: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    runningBalancePaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    runningBalanceFormatted: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    costCenter: faker.helpers.arrayElement([{}, undefined]),
+    costCenterId: faker.helpers.arrayElement([{}, undefined]),
+    projectId: faker.helpers.arrayElement([{}, undefined]),
+    partyType: faker.helpers.arrayElement([{}, undefined]),
+    partyId: faker.helpers.arrayElement([{}, undefined]),
+  })),
+  nextCursor: faker.helpers.arrayElement([{}, undefined]),
+  hasMore: faker.datatype.boolean(),
+  ...overrideResponse,
+});
+
+export const getLedgerControllerExportLedgerResponseMock = (
+  overrideResponse: Partial<ExportJobResponseDto> = {},
+): ExportJobResponseDto => ({
+  jobId: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  status: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  message: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  ...overrideResponse,
+});
+
+export const getPostingRulesControllerFindAllResponseMock = (): PostingRuleResponseDto[] =>
+  Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({
+    id: faker.string.uuid(),
+    companyId: faker.string.uuid(),
+    eventType: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    ruleName: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    description: faker.helpers.arrayElement([{}, undefined]),
+    debitAccountCode: faker.helpers.arrayElement([{}, undefined]),
+    creditAccountCode: faker.helpers.arrayElement([{}, undefined]),
+    accountMappings: {},
+    isActive: faker.datatype.boolean(),
+    createdAt: `${faker.date.past().toISOString().split('.')[0]}Z`,
+    updatedAt: `${faker.date.past().toISOString().split('.')[0]}Z`,
+  }));
+
+export const getPostingRulesControllerFindByEventTypeResponseMock = (
+  overrideResponse: Partial<PostingRuleResponseDto> = {},
+): PostingRuleResponseDto => ({
+  id: faker.string.uuid(),
+  companyId: faker.string.uuid(),
+  eventType: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  ruleName: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  description: faker.helpers.arrayElement([{}, undefined]),
+  debitAccountCode: faker.helpers.arrayElement([{}, undefined]),
+  creditAccountCode: faker.helpers.arrayElement([{}, undefined]),
+  accountMappings: {},
+  isActive: faker.datatype.boolean(),
+  createdAt: `${faker.date.past().toISOString().split('.')[0]}Z`,
+  updatedAt: `${faker.date.past().toISOString().split('.')[0]}Z`,
+  ...overrideResponse,
+});
+
+export const getPostingRulesControllerUpdateResponseMock = (
+  overrideResponse: Partial<PostingRuleResponseDto> = {},
+): PostingRuleResponseDto => ({
+  id: faker.string.uuid(),
+  companyId: faker.string.uuid(),
+  eventType: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  ruleName: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  description: faker.helpers.arrayElement([{}, undefined]),
+  debitAccountCode: faker.helpers.arrayElement([{}, undefined]),
+  creditAccountCode: faker.helpers.arrayElement([{}, undefined]),
+  accountMappings: {},
+  isActive: faker.datatype.boolean(),
+  createdAt: `${faker.date.past().toISOString().split('.')[0]}Z`,
+  updatedAt: `${faker.date.past().toISOString().split('.')[0]}Z`,
+  ...overrideResponse,
+});
+
+export const getCashBankControllerListGlobalBanksResponseMock = (): BankRefDto[] =>
+  Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({
+    id: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    name: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    code: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    swiftCode: faker.helpers.arrayElement([{}, undefined]),
+    branches: faker.helpers.arrayElement([
+      Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({
+        id: faker.string.alpha({ length: { min: 10, max: 20 } }),
+        name: faker.string.alpha({ length: { min: 10, max: 20 } }),
+        routingNumber: faker.string.alpha({ length: { min: 10, max: 20 } }),
+        district: faker.helpers.arrayElement([{}, undefined]),
+      })),
+      undefined,
+    ]),
+  }));
+
+export const getCashBankControllerListBranchesResponseMock = (): BankBranchRefDto[] =>
+  Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({
+    id: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    name: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    routingNumber: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    district: faker.helpers.arrayElement([{}, undefined]),
+  }));
+
+export const getCashBankControllerCreateAccountResponseMock = (
+  overrideResponse: Partial<BankAccountResponseDto> = {},
+): BankAccountResponseDto => ({
+  id: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  companyId: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  accountType: faker.helpers.arrayElement(['BANK', 'CASH', 'WALLET'] as const),
+  name: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  accountNumberMasked: faker.helpers.arrayElement([{}, undefined]),
+  bankId: faker.helpers.arrayElement([{}, undefined]),
+  bank: faker.helpers.arrayElement([
+    {
+      id: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      name: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      code: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      swiftCode: faker.helpers.arrayElement([{}, undefined]),
+      branches: faker.helpers.arrayElement([
+        Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({
+          id: faker.string.alpha({ length: { min: 10, max: 20 } }),
+          name: faker.string.alpha({ length: { min: 10, max: 20 } }),
+          routingNumber: faker.string.alpha({ length: { min: 10, max: 20 } }),
+          district: faker.helpers.arrayElement([{}, undefined]),
+        })),
+        undefined,
+      ]),
+    },
+    undefined,
+  ]),
+  branchId: faker.helpers.arrayElement([{}, undefined]),
+  branch: faker.helpers.arrayElement([
+    {
+      id: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      name: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      routingNumber: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      district: faker.helpers.arrayElement([{}, undefined]),
+    },
+    undefined,
+  ]),
+  routingNumber: faker.helpers.arrayElement([{}, undefined]),
+  swiftCode: faker.helpers.arrayElement([{}, undefined]),
+  currency: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  coaAccountId: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  coaAccountCode: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  initialBalancePaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  currentBalancePaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  isActive: faker.datatype.boolean(),
+  createdAt: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  updatedAt: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  ...overrideResponse,
+});
+
+export const getCashBankControllerListAccountsResponseMock = (): BankAccountResponseDto[] =>
+  Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({
+    id: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    companyId: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    accountType: faker.helpers.arrayElement(['BANK', 'CASH', 'WALLET'] as const),
+    name: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    accountNumberMasked: faker.helpers.arrayElement([{}, undefined]),
+    bankId: faker.helpers.arrayElement([{}, undefined]),
+    bank: faker.helpers.arrayElement([
+      {
+        id: faker.string.alpha({ length: { min: 10, max: 20 } }),
+        name: faker.string.alpha({ length: { min: 10, max: 20 } }),
+        code: faker.string.alpha({ length: { min: 10, max: 20 } }),
+        swiftCode: faker.helpers.arrayElement([{}, undefined]),
+        branches: faker.helpers.arrayElement([
+          Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(
+            () => ({
+              id: faker.string.alpha({ length: { min: 10, max: 20 } }),
+              name: faker.string.alpha({ length: { min: 10, max: 20 } }),
+              routingNumber: faker.string.alpha({ length: { min: 10, max: 20 } }),
+              district: faker.helpers.arrayElement([{}, undefined]),
+            }),
+          ),
+          undefined,
+        ]),
+      },
+      undefined,
+    ]),
+    branchId: faker.helpers.arrayElement([{}, undefined]),
+    branch: faker.helpers.arrayElement([
+      {
+        id: faker.string.alpha({ length: { min: 10, max: 20 } }),
+        name: faker.string.alpha({ length: { min: 10, max: 20 } }),
+        routingNumber: faker.string.alpha({ length: { min: 10, max: 20 } }),
+        district: faker.helpers.arrayElement([{}, undefined]),
+      },
+      undefined,
+    ]),
+    routingNumber: faker.helpers.arrayElement([{}, undefined]),
+    swiftCode: faker.helpers.arrayElement([{}, undefined]),
+    currency: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    coaAccountId: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    coaAccountCode: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    initialBalancePaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    currentBalancePaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    isActive: faker.datatype.boolean(),
+    createdAt: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    updatedAt: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  }));
+
+export const getCashBankControllerGetAccountResponseMock = (
+  overrideResponse: Partial<BankAccountResponseDto> = {},
+): BankAccountResponseDto => ({
+  id: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  companyId: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  accountType: faker.helpers.arrayElement(['BANK', 'CASH', 'WALLET'] as const),
+  name: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  accountNumberMasked: faker.helpers.arrayElement([{}, undefined]),
+  bankId: faker.helpers.arrayElement([{}, undefined]),
+  bank: faker.helpers.arrayElement([
+    {
+      id: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      name: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      code: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      swiftCode: faker.helpers.arrayElement([{}, undefined]),
+      branches: faker.helpers.arrayElement([
+        Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({
+          id: faker.string.alpha({ length: { min: 10, max: 20 } }),
+          name: faker.string.alpha({ length: { min: 10, max: 20 } }),
+          routingNumber: faker.string.alpha({ length: { min: 10, max: 20 } }),
+          district: faker.helpers.arrayElement([{}, undefined]),
+        })),
+        undefined,
+      ]),
+    },
+    undefined,
+  ]),
+  branchId: faker.helpers.arrayElement([{}, undefined]),
+  branch: faker.helpers.arrayElement([
+    {
+      id: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      name: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      routingNumber: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      district: faker.helpers.arrayElement([{}, undefined]),
+    },
+    undefined,
+  ]),
+  routingNumber: faker.helpers.arrayElement([{}, undefined]),
+  swiftCode: faker.helpers.arrayElement([{}, undefined]),
+  currency: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  coaAccountId: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  coaAccountCode: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  initialBalancePaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  currentBalancePaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  isActive: faker.datatype.boolean(),
+  createdAt: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  updatedAt: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  ...overrideResponse,
+});
+
+export const getCashBankControllerUpdateAccountResponseMock = (
+  overrideResponse: Partial<BankAccountResponseDto> = {},
+): BankAccountResponseDto => ({
+  id: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  companyId: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  accountType: faker.helpers.arrayElement(['BANK', 'CASH', 'WALLET'] as const),
+  name: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  accountNumberMasked: faker.helpers.arrayElement([{}, undefined]),
+  bankId: faker.helpers.arrayElement([{}, undefined]),
+  bank: faker.helpers.arrayElement([
+    {
+      id: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      name: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      code: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      swiftCode: faker.helpers.arrayElement([{}, undefined]),
+      branches: faker.helpers.arrayElement([
+        Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({
+          id: faker.string.alpha({ length: { min: 10, max: 20 } }),
+          name: faker.string.alpha({ length: { min: 10, max: 20 } }),
+          routingNumber: faker.string.alpha({ length: { min: 10, max: 20 } }),
+          district: faker.helpers.arrayElement([{}, undefined]),
+        })),
+        undefined,
+      ]),
+    },
+    undefined,
+  ]),
+  branchId: faker.helpers.arrayElement([{}, undefined]),
+  branch: faker.helpers.arrayElement([
+    {
+      id: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      name: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      routingNumber: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      district: faker.helpers.arrayElement([{}, undefined]),
+    },
+    undefined,
+  ]),
+  routingNumber: faker.helpers.arrayElement([{}, undefined]),
+  swiftCode: faker.helpers.arrayElement([{}, undefined]),
+  currency: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  coaAccountId: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  coaAccountCode: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  initialBalancePaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  currentBalancePaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  isActive: faker.datatype.boolean(),
+  createdAt: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  updatedAt: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  ...overrideResponse,
+});
+
+export const getCashBankControllerTransferResponseMock = (
+  overrideResponse: Partial<CashTransferResponseDto> = {},
+): CashTransferResponseDto => ({
+  id: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  companyId: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  transferNumber: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  sourceBankAccountId: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  destinationBankAccountId: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  amountPaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  transferDate: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  referenceNumber: faker.helpers.arrayElement([{}, undefined]),
+  narration: faker.helpers.arrayElement([{}, undefined]),
+  journalId: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  createdById: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  createdAt: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  updatedAt: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  ...overrideResponse,
+});
+
+export const getCashBankControllerListTransfersResponseMock = (): CashTransferResponseDto[] =>
+  Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({
+    id: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    companyId: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    transferNumber: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    sourceBankAccountId: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    destinationBankAccountId: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    amountPaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    transferDate: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    referenceNumber: faker.helpers.arrayElement([{}, undefined]),
+    narration: faker.helpers.arrayElement([{}, undefined]),
+    journalId: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    createdById: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    createdAt: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    updatedAt: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  }));
+
+export const getCashBankControllerGetTransferResponseMock = (
+  overrideResponse: Partial<CashTransferResponseDto> = {},
+): CashTransferResponseDto => ({
+  id: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  companyId: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  transferNumber: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  sourceBankAccountId: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  destinationBankAccountId: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  amountPaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  transferDate: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  referenceNumber: faker.helpers.arrayElement([{}, undefined]),
+  narration: faker.helpers.arrayElement([{}, undefined]),
+  journalId: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  createdById: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  createdAt: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  updatedAt: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  ...overrideResponse,
+});
+
+export const getCashBankControllerCreateReconciliationResponseMock = (
+  overrideResponse: Partial<BankReconciliationResponseDto> = {},
+): BankReconciliationResponseDto => ({
+  id: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  companyId: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  bankAccountId: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  statementDate: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  statementBalancePaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  bookBalancePaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  reconciledBalancePaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  differencePaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  status: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  completedAt: faker.helpers.arrayElement([{}, undefined]),
+  completedById: faker.helpers.arrayElement([{}, undefined]),
+  notes: faker.helpers.arrayElement([{}, undefined]),
+  items: faker.helpers.arrayElement([
+    Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({
+      id: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      journalLineId: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      clearedDate: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      isCleared: faker.datatype.boolean(),
+      notes: faker.helpers.arrayElement([{}, undefined]),
+      journalNumber: faker.helpers.arrayElement([
+        faker.string.alpha({ length: { min: 10, max: 20 } }),
+        undefined,
+      ]),
+      postingDate: faker.helpers.arrayElement([
+        faker.string.alpha({ length: { min: 10, max: 20 } }),
+        undefined,
+      ]),
+      description: faker.helpers.arrayElement([{}, undefined]),
+      debitPaisa: faker.helpers.arrayElement([
+        faker.string.alpha({ length: { min: 10, max: 20 } }),
+        undefined,
+      ]),
+      creditPaisa: faker.helpers.arrayElement([
+        faker.string.alpha({ length: { min: 10, max: 20 } }),
+        undefined,
+      ]),
+    })),
+    undefined,
+  ]),
+  createdAt: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  updatedAt: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  ...overrideResponse,
+});
+
+export const getCashBankControllerListReconciliationsResponseMock =
+  (): BankReconciliationResponseDto[] =>
+    Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({
+      id: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      companyId: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      bankAccountId: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      statementDate: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      statementBalancePaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      bookBalancePaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      reconciledBalancePaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      differencePaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      status: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      completedAt: faker.helpers.arrayElement([{}, undefined]),
+      completedById: faker.helpers.arrayElement([{}, undefined]),
+      notes: faker.helpers.arrayElement([{}, undefined]),
+      items: faker.helpers.arrayElement([
+        Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({
+          id: faker.string.alpha({ length: { min: 10, max: 20 } }),
+          journalLineId: faker.string.alpha({ length: { min: 10, max: 20 } }),
+          clearedDate: faker.string.alpha({ length: { min: 10, max: 20 } }),
+          isCleared: faker.datatype.boolean(),
+          notes: faker.helpers.arrayElement([{}, undefined]),
+          journalNumber: faker.helpers.arrayElement([
+            faker.string.alpha({ length: { min: 10, max: 20 } }),
+            undefined,
+          ]),
+          postingDate: faker.helpers.arrayElement([
+            faker.string.alpha({ length: { min: 10, max: 20 } }),
+            undefined,
+          ]),
+          description: faker.helpers.arrayElement([{}, undefined]),
+          debitPaisa: faker.helpers.arrayElement([
+            faker.string.alpha({ length: { min: 10, max: 20 } }),
+            undefined,
+          ]),
+          creditPaisa: faker.helpers.arrayElement([
+            faker.string.alpha({ length: { min: 10, max: 20 } }),
+            undefined,
+          ]),
+        })),
+        undefined,
+      ]),
+      createdAt: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      updatedAt: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    }));
+
+export const getCashBankControllerGetReconciliationResponseMock = (
+  overrideResponse: Partial<BankReconciliationResponseDto> = {},
+): BankReconciliationResponseDto => ({
+  id: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  companyId: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  bankAccountId: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  statementDate: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  statementBalancePaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  bookBalancePaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  reconciledBalancePaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  differencePaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  status: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  completedAt: faker.helpers.arrayElement([{}, undefined]),
+  completedById: faker.helpers.arrayElement([{}, undefined]),
+  notes: faker.helpers.arrayElement([{}, undefined]),
+  items: faker.helpers.arrayElement([
+    Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({
+      id: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      journalLineId: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      clearedDate: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      isCleared: faker.datatype.boolean(),
+      notes: faker.helpers.arrayElement([{}, undefined]),
+      journalNumber: faker.helpers.arrayElement([
+        faker.string.alpha({ length: { min: 10, max: 20 } }),
+        undefined,
+      ]),
+      postingDate: faker.helpers.arrayElement([
+        faker.string.alpha({ length: { min: 10, max: 20 } }),
+        undefined,
+      ]),
+      description: faker.helpers.arrayElement([{}, undefined]),
+      debitPaisa: faker.helpers.arrayElement([
+        faker.string.alpha({ length: { min: 10, max: 20 } }),
+        undefined,
+      ]),
+      creditPaisa: faker.helpers.arrayElement([
+        faker.string.alpha({ length: { min: 10, max: 20 } }),
+        undefined,
+      ]),
+    })),
+    undefined,
+  ]),
+  createdAt: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  updatedAt: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  ...overrideResponse,
+});
+
+export const getCashBankControllerGetUnreconciledLinesResponseMock = (): UnreconciledLineDto[] =>
+  Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({
+    journalLineId: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    journalId: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    journalNumber: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    postingDate: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    narration: faker.helpers.arrayElement([{}, undefined]),
+    description: faker.helpers.arrayElement([{}, undefined]),
+    debitPaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    creditPaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    reference: faker.helpers.arrayElement([{}, undefined]),
+  }));
+
+export const getCashBankControllerMatchItemsResponseMock = (
+  overrideResponse: Partial<BankReconciliationResponseDto> = {},
+): BankReconciliationResponseDto => ({
+  id: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  companyId: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  bankAccountId: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  statementDate: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  statementBalancePaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  bookBalancePaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  reconciledBalancePaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  differencePaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  status: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  completedAt: faker.helpers.arrayElement([{}, undefined]),
+  completedById: faker.helpers.arrayElement([{}, undefined]),
+  notes: faker.helpers.arrayElement([{}, undefined]),
+  items: faker.helpers.arrayElement([
+    Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({
+      id: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      journalLineId: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      clearedDate: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      isCleared: faker.datatype.boolean(),
+      notes: faker.helpers.arrayElement([{}, undefined]),
+      journalNumber: faker.helpers.arrayElement([
+        faker.string.alpha({ length: { min: 10, max: 20 } }),
+        undefined,
+      ]),
+      postingDate: faker.helpers.arrayElement([
+        faker.string.alpha({ length: { min: 10, max: 20 } }),
+        undefined,
+      ]),
+      description: faker.helpers.arrayElement([{}, undefined]),
+      debitPaisa: faker.helpers.arrayElement([
+        faker.string.alpha({ length: { min: 10, max: 20 } }),
+        undefined,
+      ]),
+      creditPaisa: faker.helpers.arrayElement([
+        faker.string.alpha({ length: { min: 10, max: 20 } }),
+        undefined,
+      ]),
+    })),
+    undefined,
+  ]),
+  createdAt: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  updatedAt: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  ...overrideResponse,
+});
+
+export const getCashBankControllerCompleteReconciliationResponseMock = (
+  overrideResponse: Partial<BankReconciliationResponseDto> = {},
+): BankReconciliationResponseDto => ({
+  id: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  companyId: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  bankAccountId: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  statementDate: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  statementBalancePaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  bookBalancePaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  reconciledBalancePaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  differencePaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  status: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  completedAt: faker.helpers.arrayElement([{}, undefined]),
+  completedById: faker.helpers.arrayElement([{}, undefined]),
+  notes: faker.helpers.arrayElement([{}, undefined]),
+  items: faker.helpers.arrayElement([
+    Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({
+      id: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      journalLineId: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      clearedDate: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      isCleared: faker.datatype.boolean(),
+      notes: faker.helpers.arrayElement([{}, undefined]),
+      journalNumber: faker.helpers.arrayElement([
+        faker.string.alpha({ length: { min: 10, max: 20 } }),
+        undefined,
+      ]),
+      postingDate: faker.helpers.arrayElement([
+        faker.string.alpha({ length: { min: 10, max: 20 } }),
+        undefined,
+      ]),
+      description: faker.helpers.arrayElement([{}, undefined]),
+      debitPaisa: faker.helpers.arrayElement([
+        faker.string.alpha({ length: { min: 10, max: 20 } }),
+        undefined,
+      ]),
+      creditPaisa: faker.helpers.arrayElement([
+        faker.string.alpha({ length: { min: 10, max: 20 } }),
+        undefined,
+      ]),
+    })),
+    undefined,
+  ]),
+  createdAt: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  updatedAt: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  ...overrideResponse,
+});
+
+export const getNotificationsControllerGetUnreadCountResponseMock = (
+  overrideResponse: Partial<UnreadCountResponseDto> = {},
+): UnreadCountResponseDto => ({
+  count: faker.number.float({ min: undefined, max: undefined, fractionDigits: 2 }),
+  ...overrideResponse,
+});
+
+export const getNotificationsControllerGetPreferencesResponseMock =
+  (): NotificationPreferenceResponseDto[] =>
+    Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({
+      eventCode: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      eventName: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      module: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      channel: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      enabled: faker.datatype.boolean(),
+    }));
+
+export const getNotificationsControllerUpdatePreferencesResponseMock =
+  (): NotificationPreferenceResponseDto[] =>
+    Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({
+      eventCode: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      eventName: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      module: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      channel: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      enabled: faker.datatype.boolean(),
+    }));
+
+export const getNotificationsControllerMarkAsReadResponseMock = (
+  overrideResponse: Partial<InAppNotificationResponseDto> = {},
+): InAppNotificationResponseDto => ({
+  id: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  companyId: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  userId: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  eventCode: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  title: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  body: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  data: faker.helpers.arrayElement([{}, undefined]),
+  isRead: faker.datatype.boolean(),
+  readAt: faker.helpers.arrayElement([{}, undefined]),
+  createdAt: faker.string.alpha({ length: { min: 10, max: 20 } }),
   ...overrideResponse,
 });
 
@@ -211,46 +1838,202 @@ export const getDocumentsControllerCreateVersionResponseMock = (
   ...overrideResponse,
 });
 
-export const getNotificationsControllerGetUnreadCountResponseMock = (
-  overrideResponse: Partial<UnreadCountResponseDto> = {},
-): UnreadCountResponseDto => ({
-  count: faker.number.float({ min: undefined, max: undefined, fractionDigits: 2 }),
+export const getReportsControllerGetTrialBalanceResponseMock = (
+  overrideResponse: Partial<TrialBalanceReportDto> = {},
+): TrialBalanceReportDto => ({
+  startDate: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  endDate: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  rows: Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({
+    accountId: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    accountCode: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    accountName: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    accountType: faker.helpers.arrayElement([
+      'ASSET',
+      'LIABILITY',
+      'EQUITY',
+      'INCOME',
+      'EXPENSE',
+    ] as const),
+    openingDebitPaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    openingCreditPaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    periodDebitPaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    periodCreditPaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    closingDebitPaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    closingCreditPaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    netDebitPaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    netCreditPaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    netDebitFormatted: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    netCreditFormatted: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  })),
+  totalOpeningDebitPaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  totalOpeningCreditPaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  totalPeriodDebitPaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  totalPeriodCreditPaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  totalClosingDebitPaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  totalClosingCreditPaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  totalDebitPaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  totalCreditPaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  totalDebitFormatted: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  totalCreditFormatted: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  isBalanced: faker.datatype.boolean(),
+  differencePaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
   ...overrideResponse,
 });
 
-export const getNotificationsControllerGetPreferencesResponseMock =
-  (): NotificationPreferenceResponseDto[] =>
-    Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({
-      eventCode: faker.string.alpha({ length: { min: 10, max: 20 } }),
-      eventName: faker.string.alpha({ length: { min: 10, max: 20 } }),
-      module: faker.string.alpha({ length: { min: 10, max: 20 } }),
-      channel: faker.string.alpha({ length: { min: 10, max: 20 } }),
-      enabled: faker.datatype.boolean(),
-    }));
+export const getReportsControllerExportTrialBalanceResponseMock = (
+  overrideResponse: Partial<ReportExportJobResponseDto> = {},
+): ReportExportJobResponseDto => ({
+  jobId: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  status: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  message: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  ...overrideResponse,
+});
 
-export const getNotificationsControllerUpdatePreferencesResponseMock =
-  (): NotificationPreferenceResponseDto[] =>
-    Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({
-      eventCode: faker.string.alpha({ length: { min: 10, max: 20 } }),
-      eventName: faker.string.alpha({ length: { min: 10, max: 20 } }),
-      module: faker.string.alpha({ length: { min: 10, max: 20 } }),
-      channel: faker.string.alpha({ length: { min: 10, max: 20 } }),
-      enabled: faker.datatype.boolean(),
-    }));
+export const getReportsControllerGetBalanceSheetResponseMock = (
+  overrideResponse: Partial<BalanceSheetReportDto> = {},
+): BalanceSheetReportDto => ({
+  asOfDate: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  assets: {
+    currentAssets: Array.from(
+      { length: faker.number.int({ min: 1, max: 10 }) },
+      (_, i) => i + 1,
+    ).map(() => ({
+      accountId: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      accountCode: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      accountName: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      balancePaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      balanceFormatted: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    })),
+    totalCurrentAssetsPaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    totalCurrentAssetsFormatted: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    nonCurrentAssets: Array.from(
+      { length: faker.number.int({ min: 1, max: 10 }) },
+      (_, i) => i + 1,
+    ).map(() => ({
+      accountId: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      accountCode: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      accountName: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      balancePaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      balanceFormatted: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    })),
+    totalNonCurrentAssetsPaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    totalNonCurrentAssetsFormatted: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    totalAssetsPaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    totalAssetsFormatted: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  },
+  liabilities: {
+    currentLiabilities: Array.from(
+      { length: faker.number.int({ min: 1, max: 10 }) },
+      (_, i) => i + 1,
+    ).map(() => ({
+      accountId: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      accountCode: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      accountName: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      balancePaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      balanceFormatted: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    })),
+    totalCurrentLiabilitiesPaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    totalCurrentLiabilitiesFormatted: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    nonCurrentLiabilities: Array.from(
+      { length: faker.number.int({ min: 1, max: 10 }) },
+      (_, i) => i + 1,
+    ).map(() => ({
+      accountId: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      accountCode: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      accountName: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      balancePaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      balanceFormatted: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    })),
+    totalNonCurrentLiabilitiesPaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    totalNonCurrentLiabilitiesFormatted: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    totalLiabilitiesPaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    totalLiabilitiesFormatted: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  },
+  equity: {
+    items: Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(
+      () => ({
+        accountId: faker.string.alpha({ length: { min: 10, max: 20 } }),
+        accountCode: faker.string.alpha({ length: { min: 10, max: 20 } }),
+        accountName: faker.string.alpha({ length: { min: 10, max: 20 } }),
+        balancePaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+        balanceFormatted: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      }),
+    ),
+    currentPeriodNetIncomePaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    currentPeriodNetIncomeFormatted: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    totalEquityPaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    totalEquityFormatted: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  },
+  totalLiabilitiesAndEquityPaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  totalLiabilitiesAndEquityFormatted: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  isBalanced: faker.datatype.boolean(),
+  differencePaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  ...overrideResponse,
+});
 
-export const getNotificationsControllerMarkAsReadResponseMock = (
-  overrideResponse: Partial<InAppNotificationResponseDto> = {},
-): InAppNotificationResponseDto => ({
-  id: faker.string.alpha({ length: { min: 10, max: 20 } }),
-  companyId: faker.string.alpha({ length: { min: 10, max: 20 } }),
-  userId: faker.string.alpha({ length: { min: 10, max: 20 } }),
-  eventCode: faker.string.alpha({ length: { min: 10, max: 20 } }),
-  title: faker.string.alpha({ length: { min: 10, max: 20 } }),
-  body: faker.string.alpha({ length: { min: 10, max: 20 } }),
-  data: faker.helpers.arrayElement([{}, undefined]),
-  isRead: faker.datatype.boolean(),
-  readAt: faker.helpers.arrayElement([{}, undefined]),
-  createdAt: faker.string.alpha({ length: { min: 10, max: 20 } }),
+export const getReportsControllerExportBalanceSheetResponseMock = (
+  overrideResponse: Partial<ReportExportJobResponseDto> = {},
+): ReportExportJobResponseDto => ({
+  jobId: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  status: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  message: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  ...overrideResponse,
+});
+
+export const getReportsControllerGetIncomeStatementResponseMock = (
+  overrideResponse: Partial<IncomeStatementReportDto> = {},
+): IncomeStatementReportDto => ({
+  startDate: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  endDate: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  revenues: Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(
+    () => ({
+      accountId: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      accountCode: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      accountName: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      amountPaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      amountFormatted: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    }),
+  ),
+  totalRevenuePaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  totalRevenueFormatted: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  costOfSales: Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(
+    () => ({
+      accountId: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      accountCode: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      accountName: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      amountPaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      amountFormatted: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    }),
+  ),
+  totalCostOfSalesPaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  totalCostOfSalesFormatted: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  grossProfitPaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  grossProfitFormatted: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  grossProfitMarginPct: faker.number.float({ min: undefined, max: undefined, fractionDigits: 2 }),
+  operatingExpenses: Array.from(
+    { length: faker.number.int({ min: 1, max: 10 }) },
+    (_, i) => i + 1,
+  ).map(() => ({
+    accountId: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    accountCode: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    accountName: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    amountPaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    amountFormatted: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  })),
+  totalOperatingExpensesPaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  totalOperatingExpensesFormatted: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  netProfitPaisa: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  netProfitFormatted: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  netProfitMarginPct: faker.number.float({ min: undefined, max: undefined, fractionDigits: 2 }),
+  ...overrideResponse,
+});
+
+export const getReportsControllerExportIncomeStatementResponseMock = (
+  overrideResponse: Partial<ReportExportJobResponseDto> = {},
+): ReportExportJobResponseDto => ({
+  jobId: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  status: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  message: faker.string.alpha({ length: { min: 10, max: 20 } }),
   ...overrideResponse,
 });
 
@@ -1031,6 +2814,1421 @@ export const getUserAdminControllerReset2FaMockHandler = (
   );
 };
 
+export const getApprovalsControllerGetInboxMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/approvals/inbox',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getApprovalsControllerGetSentMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/approvals/sent',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getApprovalsControllerCheckExpiryMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/approvals/check-expiry',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getApprovalsControllerGetRulesMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/approvals/rules',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getApprovalsControllerCreateRuleMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/approvals/rules',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 201 });
+    },
+    options,
+  );
+};
+
+export const getApprovalsControllerUpdateRuleMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.patch>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.patch(
+    '*/api/v1/approvals/rules/:id',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getApprovalsControllerDeleteRuleMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.delete>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.delete(
+    '*/api/v1/approvals/rules/:id',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getApprovalsControllerGetApprovalByIdMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/approvals/:id',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getApprovalsControllerApproveMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/approvals/:id/approve',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getApprovalsControllerRejectMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/approvals/:id/reject',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getApprovalsControllerOverrideMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/approvals/:id/override',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getCoaControllerGetAccountsMockHandler = (
+  overrideResponse?:
+    | AccountResponseDto[]
+    | ((
+        info: Parameters<Parameters<typeof http.get>[1]>[0],
+      ) => Promise<AccountResponseDto[]> | AccountResponseDto[]),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/accounting/coa',
+    async (info) => {
+      await delay(1000);
+
+      return new HttpResponse(
+        JSON.stringify(
+          overrideResponse !== undefined
+            ? typeof overrideResponse === 'function'
+              ? await overrideResponse(info)
+              : overrideResponse
+            : getCoaControllerGetAccountsResponseMock(),
+        ),
+        { status: 200, headers: { 'Content-Type': 'application/json' } },
+      );
+    },
+    options,
+  );
+};
+
+export const getCoaControllerCreateAccountMockHandler = (
+  overrideResponse?:
+    | AccountResponseDto
+    | ((
+        info: Parameters<Parameters<typeof http.post>[1]>[0],
+      ) => Promise<AccountResponseDto> | AccountResponseDto),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/accounting/coa',
+    async (info) => {
+      await delay(1000);
+
+      return new HttpResponse(
+        JSON.stringify(
+          overrideResponse !== undefined
+            ? typeof overrideResponse === 'function'
+              ? await overrideResponse(info)
+              : overrideResponse
+            : getCoaControllerCreateAccountResponseMock(),
+        ),
+        { status: 201, headers: { 'Content-Type': 'application/json' } },
+      );
+    },
+    options,
+  );
+};
+
+export const getCoaControllerGetAccountByIdMockHandler = (
+  overrideResponse?:
+    | AccountResponseDto
+    | ((
+        info: Parameters<Parameters<typeof http.get>[1]>[0],
+      ) => Promise<AccountResponseDto> | AccountResponseDto),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/accounting/coa/:id',
+    async (info) => {
+      await delay(1000);
+
+      return new HttpResponse(
+        JSON.stringify(
+          overrideResponse !== undefined
+            ? typeof overrideResponse === 'function'
+              ? await overrideResponse(info)
+              : overrideResponse
+            : getCoaControllerGetAccountByIdResponseMock(),
+        ),
+        { status: 200, headers: { 'Content-Type': 'application/json' } },
+      );
+    },
+    options,
+  );
+};
+
+export const getCoaControllerUpdateAccountMockHandler = (
+  overrideResponse?:
+    | AccountResponseDto
+    | ((
+        info: Parameters<Parameters<typeof http.patch>[1]>[0],
+      ) => Promise<AccountResponseDto> | AccountResponseDto),
+  options?: RequestHandlerOptions,
+) => {
+  return http.patch(
+    '*/api/v1/accounting/coa/:id',
+    async (info) => {
+      await delay(1000);
+
+      return new HttpResponse(
+        JSON.stringify(
+          overrideResponse !== undefined
+            ? typeof overrideResponse === 'function'
+              ? await overrideResponse(info)
+              : overrideResponse
+            : getCoaControllerUpdateAccountResponseMock(),
+        ),
+        { status: 200, headers: { 'Content-Type': 'application/json' } },
+      );
+    },
+    options,
+  );
+};
+
+export const getCoaControllerGetAccountBalanceMockHandler = (
+  overrideResponse?:
+    | AccountBalanceResponseDto
+    | ((
+        info: Parameters<Parameters<typeof http.get>[1]>[0],
+      ) => Promise<AccountBalanceResponseDto> | AccountBalanceResponseDto),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/accounting/coa/:id/balance',
+    async (info) => {
+      await delay(1000);
+
+      return new HttpResponse(
+        JSON.stringify(
+          overrideResponse !== undefined
+            ? typeof overrideResponse === 'function'
+              ? await overrideResponse(info)
+              : overrideResponse
+            : getCoaControllerGetAccountBalanceResponseMock(),
+        ),
+        { status: 200, headers: { 'Content-Type': 'application/json' } },
+      );
+    },
+    options,
+  );
+};
+
+export const getPeriodControllerGetFiscalYearsMockHandler = (
+  overrideResponse?:
+    | FiscalYearResponseDto[]
+    | ((
+        info: Parameters<Parameters<typeof http.get>[1]>[0],
+      ) => Promise<FiscalYearResponseDto[]> | FiscalYearResponseDto[]),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/accounting/fiscal-years',
+    async (info) => {
+      await delay(1000);
+
+      return new HttpResponse(
+        JSON.stringify(
+          overrideResponse !== undefined
+            ? typeof overrideResponse === 'function'
+              ? await overrideResponse(info)
+              : overrideResponse
+            : getPeriodControllerGetFiscalYearsResponseMock(),
+        ),
+        { status: 200, headers: { 'Content-Type': 'application/json' } },
+      );
+    },
+    options,
+  );
+};
+
+export const getPeriodControllerGetFiscalYearByIdMockHandler = (
+  overrideResponse?:
+    | FiscalYearResponseDto
+    | ((
+        info: Parameters<Parameters<typeof http.get>[1]>[0],
+      ) => Promise<FiscalYearResponseDto> | FiscalYearResponseDto),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/accounting/fiscal-years/:id',
+    async (info) => {
+      await delay(1000);
+
+      return new HttpResponse(
+        JSON.stringify(
+          overrideResponse !== undefined
+            ? typeof overrideResponse === 'function'
+              ? await overrideResponse(info)
+              : overrideResponse
+            : getPeriodControllerGetFiscalYearByIdResponseMock(),
+        ),
+        { status: 200, headers: { 'Content-Type': 'application/json' } },
+      );
+    },
+    options,
+  );
+};
+
+export const getPeriodControllerGetPeriodsMockHandler = (
+  overrideResponse?:
+    | AccountingPeriodResponseDto[]
+    | ((
+        info: Parameters<Parameters<typeof http.get>[1]>[0],
+      ) => Promise<AccountingPeriodResponseDto[]> | AccountingPeriodResponseDto[]),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/accounting/periods',
+    async (info) => {
+      await delay(1000);
+
+      return new HttpResponse(
+        JSON.stringify(
+          overrideResponse !== undefined
+            ? typeof overrideResponse === 'function'
+              ? await overrideResponse(info)
+              : overrideResponse
+            : getPeriodControllerGetPeriodsResponseMock(),
+        ),
+        { status: 200, headers: { 'Content-Type': 'application/json' } },
+      );
+    },
+    options,
+  );
+};
+
+export const getPeriodControllerGetPeriodByIdMockHandler = (
+  overrideResponse?:
+    | AccountingPeriodResponseDto
+    | ((
+        info: Parameters<Parameters<typeof http.get>[1]>[0],
+      ) => Promise<AccountingPeriodResponseDto> | AccountingPeriodResponseDto),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/accounting/periods/:id',
+    async (info) => {
+      await delay(1000);
+
+      return new HttpResponse(
+        JSON.stringify(
+          overrideResponse !== undefined
+            ? typeof overrideResponse === 'function'
+              ? await overrideResponse(info)
+              : overrideResponse
+            : getPeriodControllerGetPeriodByIdResponseMock(),
+        ),
+        { status: 200, headers: { 'Content-Type': 'application/json' } },
+      );
+    },
+    options,
+  );
+};
+
+export const getPeriodControllerClosePeriodMockHandler = (
+  overrideResponse?:
+    | AccountingPeriodResponseDto
+    | ((
+        info: Parameters<Parameters<typeof http.post>[1]>[0],
+      ) => Promise<AccountingPeriodResponseDto> | AccountingPeriodResponseDto),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/accounting/periods/:id/close',
+    async (info) => {
+      await delay(1000);
+
+      return new HttpResponse(
+        JSON.stringify(
+          overrideResponse !== undefined
+            ? typeof overrideResponse === 'function'
+              ? await overrideResponse(info)
+              : overrideResponse
+            : getPeriodControllerClosePeriodResponseMock(),
+        ),
+        { status: 200, headers: { 'Content-Type': 'application/json' } },
+      );
+    },
+    options,
+  );
+};
+
+export const getPeriodControllerReopenPeriodMockHandler = (
+  overrideResponse?:
+    | AccountingPeriodResponseDto
+    | ((
+        info: Parameters<Parameters<typeof http.post>[1]>[0],
+      ) => Promise<AccountingPeriodResponseDto> | AccountingPeriodResponseDto),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/accounting/periods/:id/reopen',
+    async (info) => {
+      await delay(1000);
+
+      return new HttpResponse(
+        JSON.stringify(
+          overrideResponse !== undefined
+            ? typeof overrideResponse === 'function'
+              ? await overrideResponse(info)
+              : overrideResponse
+            : getPeriodControllerReopenPeriodResponseMock(),
+        ),
+        { status: 200, headers: { 'Content-Type': 'application/json' } },
+      );
+    },
+    options,
+  );
+};
+
+export const getPeriodControllerLockPeriodMockHandler = (
+  overrideResponse?:
+    | AccountingPeriodResponseDto
+    | ((
+        info: Parameters<Parameters<typeof http.post>[1]>[0],
+      ) => Promise<AccountingPeriodResponseDto> | AccountingPeriodResponseDto),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/accounting/periods/:id/lock',
+    async (info) => {
+      await delay(1000);
+
+      return new HttpResponse(
+        JSON.stringify(
+          overrideResponse !== undefined
+            ? typeof overrideResponse === 'function'
+              ? await overrideResponse(info)
+              : overrideResponse
+            : getPeriodControllerLockPeriodResponseMock(),
+        ),
+        { status: 200, headers: { 'Content-Type': 'application/json' } },
+      );
+    },
+    options,
+  );
+};
+
+export const getJournalControllerGetJournalsMockHandler = (
+  overrideResponse?:
+    | JournalResponseDto[]
+    | ((
+        info: Parameters<Parameters<typeof http.get>[1]>[0],
+      ) => Promise<JournalResponseDto[]> | JournalResponseDto[]),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/accounting/journals',
+    async (info) => {
+      await delay(1000);
+
+      return new HttpResponse(
+        JSON.stringify(
+          overrideResponse !== undefined
+            ? typeof overrideResponse === 'function'
+              ? await overrideResponse(info)
+              : overrideResponse
+            : getJournalControllerGetJournalsResponseMock(),
+        ),
+        { status: 200, headers: { 'Content-Type': 'application/json' } },
+      );
+    },
+    options,
+  );
+};
+
+export const getJournalControllerGetJournalByIdMockHandler = (
+  overrideResponse?:
+    | JournalResponseDto
+    | ((
+        info: Parameters<Parameters<typeof http.get>[1]>[0],
+      ) => Promise<JournalResponseDto> | JournalResponseDto),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/accounting/journals/:id',
+    async (info) => {
+      await delay(1000);
+
+      return new HttpResponse(
+        JSON.stringify(
+          overrideResponse !== undefined
+            ? typeof overrideResponse === 'function'
+              ? await overrideResponse(info)
+              : overrideResponse
+            : getJournalControllerGetJournalByIdResponseMock(),
+        ),
+        { status: 200, headers: { 'Content-Type': 'application/json' } },
+      );
+    },
+    options,
+  );
+};
+
+export const getJournalControllerCreateDraftMockHandler = (
+  overrideResponse?:
+    | JournalResponseDto
+    | ((
+        info: Parameters<Parameters<typeof http.post>[1]>[0],
+      ) => Promise<JournalResponseDto> | JournalResponseDto),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/accounting/journals/draft',
+    async (info) => {
+      await delay(1000);
+
+      return new HttpResponse(
+        JSON.stringify(
+          overrideResponse !== undefined
+            ? typeof overrideResponse === 'function'
+              ? await overrideResponse(info)
+              : overrideResponse
+            : getJournalControllerCreateDraftResponseMock(),
+        ),
+        { status: 201, headers: { 'Content-Type': 'application/json' } },
+      );
+    },
+    options,
+  );
+};
+
+export const getJournalControllerCreateAndPostMockHandler = (
+  overrideResponse?:
+    | JournalResponseDto
+    | ((
+        info: Parameters<Parameters<typeof http.post>[1]>[0],
+      ) => Promise<JournalResponseDto> | JournalResponseDto),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/accounting/journals/post',
+    async (info) => {
+      await delay(1000);
+
+      return new HttpResponse(
+        JSON.stringify(
+          overrideResponse !== undefined
+            ? typeof overrideResponse === 'function'
+              ? await overrideResponse(info)
+              : overrideResponse
+            : getJournalControllerCreateAndPostResponseMock(),
+        ),
+        { status: 200, headers: { 'Content-Type': 'application/json' } },
+      );
+    },
+    options,
+  );
+};
+
+export const getJournalControllerPostDraftMockHandler = (
+  overrideResponse?:
+    | JournalResponseDto
+    | ((
+        info: Parameters<Parameters<typeof http.post>[1]>[0],
+      ) => Promise<JournalResponseDto> | JournalResponseDto),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/accounting/journals/:id/post',
+    async (info) => {
+      await delay(1000);
+
+      return new HttpResponse(
+        JSON.stringify(
+          overrideResponse !== undefined
+            ? typeof overrideResponse === 'function'
+              ? await overrideResponse(info)
+              : overrideResponse
+            : getJournalControllerPostDraftResponseMock(),
+        ),
+        { status: 200, headers: { 'Content-Type': 'application/json' } },
+      );
+    },
+    options,
+  );
+};
+
+export const getJournalControllerReverseAndCorrectMockHandler = (
+  overrideResponse?:
+    | JournalResponseDto
+    | ((
+        info: Parameters<Parameters<typeof http.post>[1]>[0],
+      ) => Promise<JournalResponseDto> | JournalResponseDto),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/accounting/journals/:id/reverse',
+    async (info) => {
+      await delay(1000);
+
+      return new HttpResponse(
+        JSON.stringify(
+          overrideResponse !== undefined
+            ? typeof overrideResponse === 'function'
+              ? await overrideResponse(info)
+              : overrideResponse
+            : getJournalControllerReverseAndCorrectResponseMock(),
+        ),
+        { status: 200, headers: { 'Content-Type': 'application/json' } },
+      );
+    },
+    options,
+  );
+};
+
+export const getLedgerControllerGetLedgerMockHandler = (
+  overrideResponse?:
+    | LedgerReportDto
+    | ((
+        info: Parameters<Parameters<typeof http.get>[1]>[0],
+      ) => Promise<LedgerReportDto> | LedgerReportDto),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/accounting/ledger',
+    async (info) => {
+      await delay(1000);
+
+      return new HttpResponse(
+        JSON.stringify(
+          overrideResponse !== undefined
+            ? typeof overrideResponse === 'function'
+              ? await overrideResponse(info)
+              : overrideResponse
+            : getLedgerControllerGetLedgerResponseMock(),
+        ),
+        { status: 200, headers: { 'Content-Type': 'application/json' } },
+      );
+    },
+    options,
+  );
+};
+
+export const getLedgerControllerGetAccountLedgerMockHandler = (
+  overrideResponse?:
+    | LedgerReportDto
+    | ((
+        info: Parameters<Parameters<typeof http.get>[1]>[0],
+      ) => Promise<LedgerReportDto> | LedgerReportDto),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/accounting/ledger/accounts/:accountId',
+    async (info) => {
+      await delay(1000);
+
+      return new HttpResponse(
+        JSON.stringify(
+          overrideResponse !== undefined
+            ? typeof overrideResponse === 'function'
+              ? await overrideResponse(info)
+              : overrideResponse
+            : getLedgerControllerGetAccountLedgerResponseMock(),
+        ),
+        { status: 200, headers: { 'Content-Type': 'application/json' } },
+      );
+    },
+    options,
+  );
+};
+
+export const getLedgerControllerExportLedgerMockHandler = (
+  overrideResponse?:
+    | ExportJobResponseDto
+    | ((
+        info: Parameters<Parameters<typeof http.post>[1]>[0],
+      ) => Promise<ExportJobResponseDto> | ExportJobResponseDto),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/accounting/ledger/export',
+    async (info) => {
+      await delay(1000);
+
+      return new HttpResponse(
+        JSON.stringify(
+          overrideResponse !== undefined
+            ? typeof overrideResponse === 'function'
+              ? await overrideResponse(info)
+              : overrideResponse
+            : getLedgerControllerExportLedgerResponseMock(),
+        ),
+        { status: 202, headers: { 'Content-Type': 'application/json' } },
+      );
+    },
+    options,
+  );
+};
+
+export const getPostingRulesControllerFindAllMockHandler = (
+  overrideResponse?:
+    | PostingRuleResponseDto[]
+    | ((
+        info: Parameters<Parameters<typeof http.get>[1]>[0],
+      ) => Promise<PostingRuleResponseDto[]> | PostingRuleResponseDto[]),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/accounting/posting-rules',
+    async (info) => {
+      await delay(1000);
+
+      return new HttpResponse(
+        JSON.stringify(
+          overrideResponse !== undefined
+            ? typeof overrideResponse === 'function'
+              ? await overrideResponse(info)
+              : overrideResponse
+            : getPostingRulesControllerFindAllResponseMock(),
+        ),
+        { status: 200, headers: { 'Content-Type': 'application/json' } },
+      );
+    },
+    options,
+  );
+};
+
+export const getPostingRulesControllerFindByEventTypeMockHandler = (
+  overrideResponse?:
+    | PostingRuleResponseDto
+    | ((
+        info: Parameters<Parameters<typeof http.get>[1]>[0],
+      ) => Promise<PostingRuleResponseDto> | PostingRuleResponseDto),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/accounting/posting-rules/:eventType',
+    async (info) => {
+      await delay(1000);
+
+      return new HttpResponse(
+        JSON.stringify(
+          overrideResponse !== undefined
+            ? typeof overrideResponse === 'function'
+              ? await overrideResponse(info)
+              : overrideResponse
+            : getPostingRulesControllerFindByEventTypeResponseMock(),
+        ),
+        { status: 200, headers: { 'Content-Type': 'application/json' } },
+      );
+    },
+    options,
+  );
+};
+
+export const getPostingRulesControllerUpdateMockHandler = (
+  overrideResponse?:
+    | PostingRuleResponseDto
+    | ((
+        info: Parameters<Parameters<typeof http.patch>[1]>[0],
+      ) => Promise<PostingRuleResponseDto> | PostingRuleResponseDto),
+  options?: RequestHandlerOptions,
+) => {
+  return http.patch(
+    '*/api/v1/accounting/posting-rules/:eventType',
+    async (info) => {
+      await delay(1000);
+
+      return new HttpResponse(
+        JSON.stringify(
+          overrideResponse !== undefined
+            ? typeof overrideResponse === 'function'
+              ? await overrideResponse(info)
+              : overrideResponse
+            : getPostingRulesControllerUpdateResponseMock(),
+        ),
+        { status: 200, headers: { 'Content-Type': 'application/json' } },
+      );
+    },
+    options,
+  );
+};
+
+export const getPostingRulesControllerDeleteMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.delete>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.delete(
+    '*/api/v1/accounting/posting-rules/:eventType',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 204 });
+    },
+    options,
+  );
+};
+
+export const getPostingRulesControllerResetToDefaultsMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/accounting/posting-rules/reset',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 204 });
+    },
+    options,
+  );
+};
+
+export const getCashBankControllerListGlobalBanksMockHandler = (
+  overrideResponse?:
+    | BankRefDto[]
+    | ((
+        info: Parameters<Parameters<typeof http.get>[1]>[0],
+      ) => Promise<BankRefDto[]> | BankRefDto[]),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/accounting/cashbank/banks',
+    async (info) => {
+      await delay(1000);
+
+      return new HttpResponse(
+        JSON.stringify(
+          overrideResponse !== undefined
+            ? typeof overrideResponse === 'function'
+              ? await overrideResponse(info)
+              : overrideResponse
+            : getCashBankControllerListGlobalBanksResponseMock(),
+        ),
+        { status: 200, headers: { 'Content-Type': 'application/json' } },
+      );
+    },
+    options,
+  );
+};
+
+export const getCashBankControllerListBranchesMockHandler = (
+  overrideResponse?:
+    | BankBranchRefDto[]
+    | ((
+        info: Parameters<Parameters<typeof http.get>[1]>[0],
+      ) => Promise<BankBranchRefDto[]> | BankBranchRefDto[]),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/accounting/cashbank/banks/:bankId/branches',
+    async (info) => {
+      await delay(1000);
+
+      return new HttpResponse(
+        JSON.stringify(
+          overrideResponse !== undefined
+            ? typeof overrideResponse === 'function'
+              ? await overrideResponse(info)
+              : overrideResponse
+            : getCashBankControllerListBranchesResponseMock(),
+        ),
+        { status: 200, headers: { 'Content-Type': 'application/json' } },
+      );
+    },
+    options,
+  );
+};
+
+export const getCashBankControllerCreateAccountMockHandler = (
+  overrideResponse?:
+    | BankAccountResponseDto
+    | ((
+        info: Parameters<Parameters<typeof http.post>[1]>[0],
+      ) => Promise<BankAccountResponseDto> | BankAccountResponseDto),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/accounting/cashbank/accounts',
+    async (info) => {
+      await delay(1000);
+
+      return new HttpResponse(
+        JSON.stringify(
+          overrideResponse !== undefined
+            ? typeof overrideResponse === 'function'
+              ? await overrideResponse(info)
+              : overrideResponse
+            : getCashBankControllerCreateAccountResponseMock(),
+        ),
+        { status: 201, headers: { 'Content-Type': 'application/json' } },
+      );
+    },
+    options,
+  );
+};
+
+export const getCashBankControllerListAccountsMockHandler = (
+  overrideResponse?:
+    | BankAccountResponseDto[]
+    | ((
+        info: Parameters<Parameters<typeof http.get>[1]>[0],
+      ) => Promise<BankAccountResponseDto[]> | BankAccountResponseDto[]),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/accounting/cashbank/accounts',
+    async (info) => {
+      await delay(1000);
+
+      return new HttpResponse(
+        JSON.stringify(
+          overrideResponse !== undefined
+            ? typeof overrideResponse === 'function'
+              ? await overrideResponse(info)
+              : overrideResponse
+            : getCashBankControllerListAccountsResponseMock(),
+        ),
+        { status: 200, headers: { 'Content-Type': 'application/json' } },
+      );
+    },
+    options,
+  );
+};
+
+export const getCashBankControllerGetAccountMockHandler = (
+  overrideResponse?:
+    | BankAccountResponseDto
+    | ((
+        info: Parameters<Parameters<typeof http.get>[1]>[0],
+      ) => Promise<BankAccountResponseDto> | BankAccountResponseDto),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/accounting/cashbank/accounts/:id',
+    async (info) => {
+      await delay(1000);
+
+      return new HttpResponse(
+        JSON.stringify(
+          overrideResponse !== undefined
+            ? typeof overrideResponse === 'function'
+              ? await overrideResponse(info)
+              : overrideResponse
+            : getCashBankControllerGetAccountResponseMock(),
+        ),
+        { status: 200, headers: { 'Content-Type': 'application/json' } },
+      );
+    },
+    options,
+  );
+};
+
+export const getCashBankControllerUpdateAccountMockHandler = (
+  overrideResponse?:
+    | BankAccountResponseDto
+    | ((
+        info: Parameters<Parameters<typeof http.patch>[1]>[0],
+      ) => Promise<BankAccountResponseDto> | BankAccountResponseDto),
+  options?: RequestHandlerOptions,
+) => {
+  return http.patch(
+    '*/api/v1/accounting/cashbank/accounts/:id',
+    async (info) => {
+      await delay(1000);
+
+      return new HttpResponse(
+        JSON.stringify(
+          overrideResponse !== undefined
+            ? typeof overrideResponse === 'function'
+              ? await overrideResponse(info)
+              : overrideResponse
+            : getCashBankControllerUpdateAccountResponseMock(),
+        ),
+        { status: 200, headers: { 'Content-Type': 'application/json' } },
+      );
+    },
+    options,
+  );
+};
+
+export const getCashBankControllerTransferMockHandler = (
+  overrideResponse?:
+    | CashTransferResponseDto
+    | ((
+        info: Parameters<Parameters<typeof http.post>[1]>[0],
+      ) => Promise<CashTransferResponseDto> | CashTransferResponseDto),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/accounting/cashbank/transfers',
+    async (info) => {
+      await delay(1000);
+
+      return new HttpResponse(
+        JSON.stringify(
+          overrideResponse !== undefined
+            ? typeof overrideResponse === 'function'
+              ? await overrideResponse(info)
+              : overrideResponse
+            : getCashBankControllerTransferResponseMock(),
+        ),
+        { status: 201, headers: { 'Content-Type': 'application/json' } },
+      );
+    },
+    options,
+  );
+};
+
+export const getCashBankControllerListTransfersMockHandler = (
+  overrideResponse?:
+    | CashTransferResponseDto[]
+    | ((
+        info: Parameters<Parameters<typeof http.get>[1]>[0],
+      ) => Promise<CashTransferResponseDto[]> | CashTransferResponseDto[]),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/accounting/cashbank/transfers',
+    async (info) => {
+      await delay(1000);
+
+      return new HttpResponse(
+        JSON.stringify(
+          overrideResponse !== undefined
+            ? typeof overrideResponse === 'function'
+              ? await overrideResponse(info)
+              : overrideResponse
+            : getCashBankControllerListTransfersResponseMock(),
+        ),
+        { status: 200, headers: { 'Content-Type': 'application/json' } },
+      );
+    },
+    options,
+  );
+};
+
+export const getCashBankControllerGetTransferMockHandler = (
+  overrideResponse?:
+    | CashTransferResponseDto
+    | ((
+        info: Parameters<Parameters<typeof http.get>[1]>[0],
+      ) => Promise<CashTransferResponseDto> | CashTransferResponseDto),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/accounting/cashbank/transfers/:id',
+    async (info) => {
+      await delay(1000);
+
+      return new HttpResponse(
+        JSON.stringify(
+          overrideResponse !== undefined
+            ? typeof overrideResponse === 'function'
+              ? await overrideResponse(info)
+              : overrideResponse
+            : getCashBankControllerGetTransferResponseMock(),
+        ),
+        { status: 200, headers: { 'Content-Type': 'application/json' } },
+      );
+    },
+    options,
+  );
+};
+
+export const getCashBankControllerCreateReconciliationMockHandler = (
+  overrideResponse?:
+    | BankReconciliationResponseDto
+    | ((
+        info: Parameters<Parameters<typeof http.post>[1]>[0],
+      ) => Promise<BankReconciliationResponseDto> | BankReconciliationResponseDto),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/accounting/cashbank/reconciliations',
+    async (info) => {
+      await delay(1000);
+
+      return new HttpResponse(
+        JSON.stringify(
+          overrideResponse !== undefined
+            ? typeof overrideResponse === 'function'
+              ? await overrideResponse(info)
+              : overrideResponse
+            : getCashBankControllerCreateReconciliationResponseMock(),
+        ),
+        { status: 201, headers: { 'Content-Type': 'application/json' } },
+      );
+    },
+    options,
+  );
+};
+
+export const getCashBankControllerListReconciliationsMockHandler = (
+  overrideResponse?:
+    | BankReconciliationResponseDto[]
+    | ((
+        info: Parameters<Parameters<typeof http.get>[1]>[0],
+      ) => Promise<BankReconciliationResponseDto[]> | BankReconciliationResponseDto[]),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/accounting/cashbank/reconciliations',
+    async (info) => {
+      await delay(1000);
+
+      return new HttpResponse(
+        JSON.stringify(
+          overrideResponse !== undefined
+            ? typeof overrideResponse === 'function'
+              ? await overrideResponse(info)
+              : overrideResponse
+            : getCashBankControllerListReconciliationsResponseMock(),
+        ),
+        { status: 200, headers: { 'Content-Type': 'application/json' } },
+      );
+    },
+    options,
+  );
+};
+
+export const getCashBankControllerGetReconciliationMockHandler = (
+  overrideResponse?:
+    | BankReconciliationResponseDto
+    | ((
+        info: Parameters<Parameters<typeof http.get>[1]>[0],
+      ) => Promise<BankReconciliationResponseDto> | BankReconciliationResponseDto),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/accounting/cashbank/reconciliations/:id',
+    async (info) => {
+      await delay(1000);
+
+      return new HttpResponse(
+        JSON.stringify(
+          overrideResponse !== undefined
+            ? typeof overrideResponse === 'function'
+              ? await overrideResponse(info)
+              : overrideResponse
+            : getCashBankControllerGetReconciliationResponseMock(),
+        ),
+        { status: 200, headers: { 'Content-Type': 'application/json' } },
+      );
+    },
+    options,
+  );
+};
+
+export const getCashBankControllerGetUnreconciledLinesMockHandler = (
+  overrideResponse?:
+    | UnreconciledLineDto[]
+    | ((
+        info: Parameters<Parameters<typeof http.get>[1]>[0],
+      ) => Promise<UnreconciledLineDto[]> | UnreconciledLineDto[]),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/accounting/cashbank/reconciliations/:id/unreconciled-lines',
+    async (info) => {
+      await delay(1000);
+
+      return new HttpResponse(
+        JSON.stringify(
+          overrideResponse !== undefined
+            ? typeof overrideResponse === 'function'
+              ? await overrideResponse(info)
+              : overrideResponse
+            : getCashBankControllerGetUnreconciledLinesResponseMock(),
+        ),
+        { status: 200, headers: { 'Content-Type': 'application/json' } },
+      );
+    },
+    options,
+  );
+};
+
+export const getCashBankControllerMatchItemsMockHandler = (
+  overrideResponse?:
+    | BankReconciliationResponseDto
+    | ((
+        info: Parameters<Parameters<typeof http.post>[1]>[0],
+      ) => Promise<BankReconciliationResponseDto> | BankReconciliationResponseDto),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/accounting/cashbank/reconciliations/:id/match',
+    async (info) => {
+      await delay(1000);
+
+      return new HttpResponse(
+        JSON.stringify(
+          overrideResponse !== undefined
+            ? typeof overrideResponse === 'function'
+              ? await overrideResponse(info)
+              : overrideResponse
+            : getCashBankControllerMatchItemsResponseMock(),
+        ),
+        { status: 200, headers: { 'Content-Type': 'application/json' } },
+      );
+    },
+    options,
+  );
+};
+
+export const getCashBankControllerCompleteReconciliationMockHandler = (
+  overrideResponse?:
+    | BankReconciliationResponseDto
+    | ((
+        info: Parameters<Parameters<typeof http.post>[1]>[0],
+      ) => Promise<BankReconciliationResponseDto> | BankReconciliationResponseDto),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/accounting/cashbank/reconciliations/:id/complete',
+    async (info) => {
+      await delay(1000);
+
+      return new HttpResponse(
+        JSON.stringify(
+          overrideResponse !== undefined
+            ? typeof overrideResponse === 'function'
+              ? await overrideResponse(info)
+              : overrideResponse
+            : getCashBankControllerCompleteReconciliationResponseMock(),
+        ),
+        { status: 200, headers: { 'Content-Type': 'application/json' } },
+      );
+    },
+    options,
+  );
+};
+
+export const getPaymentControllerCreateDraftPaymentMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/collection/payments/draft',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 201 });
+    },
+    options,
+  );
+};
+
+export const getPaymentControllerPostPaymentMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/collection/payments/:id/post',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getPaymentControllerListPaymentsMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/collection/payments',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getPaymentControllerGetPaymentByIdMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/collection/payments/:id',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
 export const getCompanyControllerGetProfileMockHandler = (
   overrideResponse?:
     | void
@@ -1248,6 +4446,726 @@ export const getCompanyControllerDeleteDepartmentMockHandler = (
 ) => {
   return http.delete(
     '*/api/v1/company/departments/:id',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getCustomerControllerCreateCustomerMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/crm/customers',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 201 });
+    },
+    options,
+  );
+};
+
+export const getCustomerControllerListCustomersMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/crm/customers',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getCustomerControllerGetCustomerByIdMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/crm/customers/:id',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getCustomerControllerUpdateCustomerMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.patch>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.patch(
+    '*/api/v1/crm/customers/:id',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getCustomerControllerDeleteCustomerMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.delete>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.delete(
+    '*/api/v1/crm/customers/:id',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getCustomerControllerGetCustomerTimelineMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/crm/customers/:id/timeline',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getCustomerControllerAddContactMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/crm/customers/:id/contacts',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 201 });
+    },
+    options,
+  );
+};
+
+export const getCustomerControllerDeleteContactMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.delete>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.delete(
+    '*/api/v1/crm/customers/:id/contacts/:contactId',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getCustomerControllerAddAddressMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/crm/customers/:id/addresses',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 201 });
+    },
+    options,
+  );
+};
+
+export const getCustomerControllerDeleteAddressMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.delete>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.delete(
+    '*/api/v1/crm/customers/:id/addresses/:addressId',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getCustomerControllerAddNomineeMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/crm/customers/:id/nominees',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 201 });
+    },
+    options,
+  );
+};
+
+export const getCustomerControllerDeleteNomineeMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.delete>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.delete(
+    '*/api/v1/crm/customers/:id/nominees/:nomineeId',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getCustomerControllerAddCoBuyerMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/crm/customers/:id/co-buyers',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 201 });
+    },
+    options,
+  );
+};
+
+export const getCustomerControllerDeleteCoBuyerMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.delete>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.delete(
+    '*/api/v1/crm/customers/:id/co-buyers/:coBuyerId',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getCustomerControllerVerifyKycMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/crm/customers/:id/kyc-verify',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getCustomerControllerAttachDocumentMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/crm/customers/:id/documents',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 201 });
+    },
+    options,
+  );
+};
+
+export const getCrmControllerCreateLeadMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/crm/leads',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 201 });
+    },
+    options,
+  );
+};
+
+export const getCrmControllerListLeadsMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/crm/leads',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getCrmControllerGetLeadByIdMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/crm/leads/:id',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getCrmControllerUpdateLeadMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.patch>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.patch(
+    '*/api/v1/crm/leads/:id',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getCrmControllerChangeLeadStatusMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.patch>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.patch(
+    '*/api/v1/crm/leads/:id/status',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getCrmControllerAssignLeadMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/crm/leads/:id/assign',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getCrmControllerConvertLeadMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/crm/leads/:id/convert',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getFollowUpControllerCreateFollowUpMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/crm/follow-ups',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 201 });
+    },
+    options,
+  );
+};
+
+export const getFollowUpControllerListFollowUpsMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/crm/follow-ups',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getFollowUpControllerGetFollowUpByIdMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/crm/follow-ups/:id',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getFollowUpControllerUpdateFollowUpMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.patch>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.patch(
+    '*/api/v1/crm/follow-ups/:id',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getFollowUpControllerDeleteFollowUpMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.delete>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.delete(
+    '*/api/v1/crm/follow-ups/:id',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getFollowUpControllerCompleteFollowUpMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/crm/follow-ups/:id/complete',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getFollowUpControllerProcessOverdueMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/crm/follow-ups/process-overdue',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getNotificationsControllerGetInboxMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/notifications',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getNotificationsControllerGetUnreadCountMockHandler = (
+  overrideResponse?:
+    | UnreadCountResponseDto
+    | ((
+        info: Parameters<Parameters<typeof http.get>[1]>[0],
+      ) => Promise<UnreadCountResponseDto> | UnreadCountResponseDto),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/notifications/unread-count',
+    async (info) => {
+      await delay(1000);
+
+      return new HttpResponse(
+        JSON.stringify(
+          overrideResponse !== undefined
+            ? typeof overrideResponse === 'function'
+              ? await overrideResponse(info)
+              : overrideResponse
+            : getNotificationsControllerGetUnreadCountResponseMock(),
+        ),
+        { status: 200, headers: { 'Content-Type': 'application/json' } },
+      );
+    },
+    options,
+  );
+};
+
+export const getNotificationsControllerGetPreferencesMockHandler = (
+  overrideResponse?:
+    | NotificationPreferenceResponseDto[]
+    | ((
+        info: Parameters<Parameters<typeof http.get>[1]>[0],
+      ) => Promise<NotificationPreferenceResponseDto[]> | NotificationPreferenceResponseDto[]),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/notifications/preferences',
+    async (info) => {
+      await delay(1000);
+
+      return new HttpResponse(
+        JSON.stringify(
+          overrideResponse !== undefined
+            ? typeof overrideResponse === 'function'
+              ? await overrideResponse(info)
+              : overrideResponse
+            : getNotificationsControllerGetPreferencesResponseMock(),
+        ),
+        { status: 200, headers: { 'Content-Type': 'application/json' } },
+      );
+    },
+    options,
+  );
+};
+
+export const getNotificationsControllerUpdatePreferencesMockHandler = (
+  overrideResponse?:
+    | NotificationPreferenceResponseDto[]
+    | ((
+        info: Parameters<Parameters<typeof http.put>[1]>[0],
+      ) => Promise<NotificationPreferenceResponseDto[]> | NotificationPreferenceResponseDto[]),
+  options?: RequestHandlerOptions,
+) => {
+  return http.put(
+    '*/api/v1/notifications/preferences',
+    async (info) => {
+      await delay(1000);
+
+      return new HttpResponse(
+        JSON.stringify(
+          overrideResponse !== undefined
+            ? typeof overrideResponse === 'function'
+              ? await overrideResponse(info)
+              : overrideResponse
+            : getNotificationsControllerUpdatePreferencesResponseMock(),
+        ),
+        { status: 200, headers: { 'Content-Type': 'application/json' } },
+      );
+    },
+    options,
+  );
+};
+
+export const getNotificationsControllerMarkAsReadMockHandler = (
+  overrideResponse?:
+    | InAppNotificationResponseDto
+    | ((
+        info: Parameters<Parameters<typeof http.patch>[1]>[0],
+      ) => Promise<InAppNotificationResponseDto> | InAppNotificationResponseDto),
+  options?: RequestHandlerOptions,
+) => {
+  return http.patch(
+    '*/api/v1/notifications/:id/read',
+    async (info) => {
+      await delay(1000);
+
+      return new HttpResponse(
+        JSON.stringify(
+          overrideResponse !== undefined
+            ? typeof overrideResponse === 'function'
+              ? await overrideResponse(info)
+              : overrideResponse
+            : getNotificationsControllerMarkAsReadResponseMock(),
+        ),
+        { status: 200, headers: { 'Content-Type': 'application/json' } },
+      );
+    },
+    options,
+  );
+};
+
+export const getNotificationsControllerMarkAllReadMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/notifications/mark-all-read',
     async (info) => {
       await delay(1000);
       if (typeof overrideResponse === 'function') {
@@ -1760,156 +5678,6 @@ export const getSystemLicenseControllerIssueLicenseMockHandler = (
   );
 };
 
-export const getNotificationsControllerGetInboxMockHandler = (
-  overrideResponse?:
-    | void
-    | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<void> | void),
-  options?: RequestHandlerOptions,
-) => {
-  return http.get(
-    '*/api/v1/notifications',
-    async (info) => {
-      await delay(1000);
-      if (typeof overrideResponse === 'function') {
-        await overrideResponse(info);
-      }
-      return new HttpResponse(null, { status: 200 });
-    },
-    options,
-  );
-};
-
-export const getNotificationsControllerGetUnreadCountMockHandler = (
-  overrideResponse?:
-    | UnreadCountResponseDto
-    | ((
-        info: Parameters<Parameters<typeof http.get>[1]>[0],
-      ) => Promise<UnreadCountResponseDto> | UnreadCountResponseDto),
-  options?: RequestHandlerOptions,
-) => {
-  return http.get(
-    '*/api/v1/notifications/unread-count',
-    async (info) => {
-      await delay(1000);
-
-      return new HttpResponse(
-        JSON.stringify(
-          overrideResponse !== undefined
-            ? typeof overrideResponse === 'function'
-              ? await overrideResponse(info)
-              : overrideResponse
-            : getNotificationsControllerGetUnreadCountResponseMock(),
-        ),
-        { status: 200, headers: { 'Content-Type': 'application/json' } },
-      );
-    },
-    options,
-  );
-};
-
-export const getNotificationsControllerGetPreferencesMockHandler = (
-  overrideResponse?:
-    | NotificationPreferenceResponseDto[]
-    | ((
-        info: Parameters<Parameters<typeof http.get>[1]>[0],
-      ) => Promise<NotificationPreferenceResponseDto[]> | NotificationPreferenceResponseDto[]),
-  options?: RequestHandlerOptions,
-) => {
-  return http.get(
-    '*/api/v1/notifications/preferences',
-    async (info) => {
-      await delay(1000);
-
-      return new HttpResponse(
-        JSON.stringify(
-          overrideResponse !== undefined
-            ? typeof overrideResponse === 'function'
-              ? await overrideResponse(info)
-              : overrideResponse
-            : getNotificationsControllerGetPreferencesResponseMock(),
-        ),
-        { status: 200, headers: { 'Content-Type': 'application/json' } },
-      );
-    },
-    options,
-  );
-};
-
-export const getNotificationsControllerUpdatePreferencesMockHandler = (
-  overrideResponse?:
-    | NotificationPreferenceResponseDto[]
-    | ((
-        info: Parameters<Parameters<typeof http.put>[1]>[0],
-      ) => Promise<NotificationPreferenceResponseDto[]> | NotificationPreferenceResponseDto[]),
-  options?: RequestHandlerOptions,
-) => {
-  return http.put(
-    '*/api/v1/notifications/preferences',
-    async (info) => {
-      await delay(1000);
-
-      return new HttpResponse(
-        JSON.stringify(
-          overrideResponse !== undefined
-            ? typeof overrideResponse === 'function'
-              ? await overrideResponse(info)
-              : overrideResponse
-            : getNotificationsControllerUpdatePreferencesResponseMock(),
-        ),
-        { status: 200, headers: { 'Content-Type': 'application/json' } },
-      );
-    },
-    options,
-  );
-};
-
-export const getNotificationsControllerMarkAsReadMockHandler = (
-  overrideResponse?:
-    | InAppNotificationResponseDto
-    | ((
-        info: Parameters<Parameters<typeof http.patch>[1]>[0],
-      ) => Promise<InAppNotificationResponseDto> | InAppNotificationResponseDto),
-  options?: RequestHandlerOptions,
-) => {
-  return http.patch(
-    '*/api/v1/notifications/:id/read',
-    async (info) => {
-      await delay(1000);
-
-      return new HttpResponse(
-        JSON.stringify(
-          overrideResponse !== undefined
-            ? typeof overrideResponse === 'function'
-              ? await overrideResponse(info)
-              : overrideResponse
-            : getNotificationsControllerMarkAsReadResponseMock(),
-        ),
-        { status: 200, headers: { 'Content-Type': 'application/json' } },
-      );
-    },
-    options,
-  );
-};
-
-export const getNotificationsControllerMarkAllReadMockHandler = (
-  overrideResponse?:
-    | void
-    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
-  options?: RequestHandlerOptions,
-) => {
-  return http.post(
-    '*/api/v1/notifications/mark-all-read',
-    async (info) => {
-      await delay(1000);
-      if (typeof overrideResponse === 'function') {
-        await overrideResponse(info);
-      }
-      return new HttpResponse(null, { status: 200 });
-    },
-    options,
-  );
-};
-
 export const getProjectControllerCreateProjectMockHandler = (
   overrideResponse?:
     | void
@@ -2309,6 +6077,858 @@ export const getPropertyControllerOverrideStatusMockHandler = (
   );
 };
 
+export const getReportsControllerGetTrialBalanceMockHandler = (
+  overrideResponse?:
+    | TrialBalanceReportDto
+    | ((
+        info: Parameters<Parameters<typeof http.get>[1]>[0],
+      ) => Promise<TrialBalanceReportDto> | TrialBalanceReportDto),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/reports/trial-balance',
+    async (info) => {
+      await delay(1000);
+
+      return new HttpResponse(
+        JSON.stringify(
+          overrideResponse !== undefined
+            ? typeof overrideResponse === 'function'
+              ? await overrideResponse(info)
+              : overrideResponse
+            : getReportsControllerGetTrialBalanceResponseMock(),
+        ),
+        { status: 200, headers: { 'Content-Type': 'application/json' } },
+      );
+    },
+    options,
+  );
+};
+
+export const getReportsControllerExportTrialBalanceMockHandler = (
+  overrideResponse?:
+    | ReportExportJobResponseDto
+    | ((
+        info: Parameters<Parameters<typeof http.post>[1]>[0],
+      ) => Promise<ReportExportJobResponseDto> | ReportExportJobResponseDto),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/reports/trial-balance/export',
+    async (info) => {
+      await delay(1000);
+
+      return new HttpResponse(
+        JSON.stringify(
+          overrideResponse !== undefined
+            ? typeof overrideResponse === 'function'
+              ? await overrideResponse(info)
+              : overrideResponse
+            : getReportsControllerExportTrialBalanceResponseMock(),
+        ),
+        { status: 202, headers: { 'Content-Type': 'application/json' } },
+      );
+    },
+    options,
+  );
+};
+
+export const getReportsControllerGetBalanceSheetMockHandler = (
+  overrideResponse?:
+    | BalanceSheetReportDto
+    | ((
+        info: Parameters<Parameters<typeof http.get>[1]>[0],
+      ) => Promise<BalanceSheetReportDto> | BalanceSheetReportDto),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/reports/balance-sheet',
+    async (info) => {
+      await delay(1000);
+
+      return new HttpResponse(
+        JSON.stringify(
+          overrideResponse !== undefined
+            ? typeof overrideResponse === 'function'
+              ? await overrideResponse(info)
+              : overrideResponse
+            : getReportsControllerGetBalanceSheetResponseMock(),
+        ),
+        { status: 200, headers: { 'Content-Type': 'application/json' } },
+      );
+    },
+    options,
+  );
+};
+
+export const getReportsControllerExportBalanceSheetMockHandler = (
+  overrideResponse?:
+    | ReportExportJobResponseDto
+    | ((
+        info: Parameters<Parameters<typeof http.post>[1]>[0],
+      ) => Promise<ReportExportJobResponseDto> | ReportExportJobResponseDto),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/reports/balance-sheet/export',
+    async (info) => {
+      await delay(1000);
+
+      return new HttpResponse(
+        JSON.stringify(
+          overrideResponse !== undefined
+            ? typeof overrideResponse === 'function'
+              ? await overrideResponse(info)
+              : overrideResponse
+            : getReportsControllerExportBalanceSheetResponseMock(),
+        ),
+        { status: 202, headers: { 'Content-Type': 'application/json' } },
+      );
+    },
+    options,
+  );
+};
+
+export const getReportsControllerGetIncomeStatementMockHandler = (
+  overrideResponse?:
+    | IncomeStatementReportDto
+    | ((
+        info: Parameters<Parameters<typeof http.get>[1]>[0],
+      ) => Promise<IncomeStatementReportDto> | IncomeStatementReportDto),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/reports/income-statement',
+    async (info) => {
+      await delay(1000);
+
+      return new HttpResponse(
+        JSON.stringify(
+          overrideResponse !== undefined
+            ? typeof overrideResponse === 'function'
+              ? await overrideResponse(info)
+              : overrideResponse
+            : getReportsControllerGetIncomeStatementResponseMock(),
+        ),
+        { status: 200, headers: { 'Content-Type': 'application/json' } },
+      );
+    },
+    options,
+  );
+};
+
+export const getReportsControllerExportIncomeStatementMockHandler = (
+  overrideResponse?:
+    | ReportExportJobResponseDto
+    | ((
+        info: Parameters<Parameters<typeof http.post>[1]>[0],
+      ) => Promise<ReportExportJobResponseDto> | ReportExportJobResponseDto),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/reports/income-statement/export',
+    async (info) => {
+      await delay(1000);
+
+      return new HttpResponse(
+        JSON.stringify(
+          overrideResponse !== undefined
+            ? typeof overrideResponse === 'function'
+              ? await overrideResponse(info)
+              : overrideResponse
+            : getReportsControllerExportIncomeStatementResponseMock(),
+        ),
+        { status: 202, headers: { 'Content-Type': 'application/json' } },
+      );
+    },
+    options,
+  );
+};
+
+export const getPaymentPlanControllerPreviewScheduleMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/sales/payment-plans/preview',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getPaymentPlanControllerGetTemplatesMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/sales/payment-plans',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getPaymentPlanControllerCreateTemplateMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/sales/payment-plans',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 201 });
+    },
+    options,
+  );
+};
+
+export const getPaymentPlanControllerGetTemplateByIdMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/sales/payment-plans/:id',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getPaymentPlanControllerUpdateTemplateMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.patch>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.patch(
+    '*/api/v1/sales/payment-plans/:id',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getPaymentPlanControllerDeleteTemplateMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.delete>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.delete(
+    '*/api/v1/sales/payment-plans/:id',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getChargeControllerCalculateChargesMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/sales/charges/calculate',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getChargeControllerGetChargeTypesMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/sales/charges',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getChargeControllerCreateChargeTypeMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/sales/charges',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 201 });
+    },
+    options,
+  );
+};
+
+export const getChargeControllerGetChargeTypeByIdMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/sales/charges/:id',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getChargeControllerUpdateChargeTypeMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.patch>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.patch(
+    '*/api/v1/sales/charges/:id',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getChargeControllerDeleteChargeTypeMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.delete>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.delete(
+    '*/api/v1/sales/charges/:id',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getQuotationControllerCreateQuotationMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/sales/quotations',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 201 });
+    },
+    options,
+  );
+};
+
+export const getQuotationControllerGetQuotationsMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/sales/quotations',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getQuotationControllerCheckExpiryMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/sales/quotations/check-expiry',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getQuotationControllerGetQuotationByIdMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/sales/quotations/:id',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getQuotationControllerUpdateQuotationMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.patch>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.patch(
+    '*/api/v1/sales/quotations/:id',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getQuotationControllerDeleteQuotationMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.delete>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.delete(
+    '*/api/v1/sales/quotations/:id',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getQuotationControllerDownloadPdfMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/sales/quotations/:id/pdf',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getQuotationControllerSendQuotationMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/sales/quotations/:id/send',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getQuotationControllerApproveQuotationMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/sales/quotations/:id/approve',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getQuotationControllerRejectQuotationMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/sales/quotations/:id/reject',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getBookingControllerCreateBookingMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/sales/bookings',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 201 });
+    },
+    options,
+  );
+};
+
+export const getBookingControllerListBookingsMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/sales/bookings',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getBookingControllerGetBookingMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/sales/bookings/:id',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getBookingControllerProcessExpirationsMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/sales/bookings/process-expirations',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getBookingControllerCancelBookingMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/sales/bookings/:id/cancel',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getAgreementControllerCreateTemplateMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/sales/agreements/templates',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 201 });
+    },
+    options,
+  );
+};
+
+export const getAgreementControllerGetTemplatesMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/sales/agreements/templates',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getAgreementControllerGenerateAgreementMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/sales/agreements/generate',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 201 });
+    },
+    options,
+  );
+};
+
+export const getAgreementControllerListAgreementsMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/sales/agreements',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getAgreementControllerGetAgreementMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/sales/agreements/:id',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getAgreementControllerUpdateAgreementMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.put>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.put(
+    '*/api/v1/sales/agreements/:id',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getAgreementControllerSignAndLockAgreementMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/sales/agreements/:id/sign-and-lock',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getAgreementControllerCreateVersionMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/sales/agreements/:id/version',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 201 });
+    },
+    options,
+  );
+};
+
+export const getAgreementControllerGetPdfMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/sales/agreements/:id/pdf',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
 export const getSettingsControllerGetAllSettingsMockHandler = (
   overrideResponse?:
     | void
@@ -2690,6 +7310,62 @@ export const getExzaEstateEnterpriseAPIMock = () => [
   getUserAdminControllerUpdateUserBranchesMockHandler(),
   getUserAdminControllerResetPasswordMockHandler(),
   getUserAdminControllerReset2FaMockHandler(),
+  getApprovalsControllerGetInboxMockHandler(),
+  getApprovalsControllerGetSentMockHandler(),
+  getApprovalsControllerCheckExpiryMockHandler(),
+  getApprovalsControllerGetRulesMockHandler(),
+  getApprovalsControllerCreateRuleMockHandler(),
+  getApprovalsControllerUpdateRuleMockHandler(),
+  getApprovalsControllerDeleteRuleMockHandler(),
+  getApprovalsControllerGetApprovalByIdMockHandler(),
+  getApprovalsControllerApproveMockHandler(),
+  getApprovalsControllerRejectMockHandler(),
+  getApprovalsControllerOverrideMockHandler(),
+  getCoaControllerGetAccountsMockHandler(),
+  getCoaControllerCreateAccountMockHandler(),
+  getCoaControllerGetAccountByIdMockHandler(),
+  getCoaControllerUpdateAccountMockHandler(),
+  getCoaControllerGetAccountBalanceMockHandler(),
+  getPeriodControllerGetFiscalYearsMockHandler(),
+  getPeriodControllerGetFiscalYearByIdMockHandler(),
+  getPeriodControllerGetPeriodsMockHandler(),
+  getPeriodControllerGetPeriodByIdMockHandler(),
+  getPeriodControllerClosePeriodMockHandler(),
+  getPeriodControllerReopenPeriodMockHandler(),
+  getPeriodControllerLockPeriodMockHandler(),
+  getJournalControllerGetJournalsMockHandler(),
+  getJournalControllerGetJournalByIdMockHandler(),
+  getJournalControllerCreateDraftMockHandler(),
+  getJournalControllerCreateAndPostMockHandler(),
+  getJournalControllerPostDraftMockHandler(),
+  getJournalControllerReverseAndCorrectMockHandler(),
+  getLedgerControllerGetLedgerMockHandler(),
+  getLedgerControllerGetAccountLedgerMockHandler(),
+  getLedgerControllerExportLedgerMockHandler(),
+  getPostingRulesControllerFindAllMockHandler(),
+  getPostingRulesControllerFindByEventTypeMockHandler(),
+  getPostingRulesControllerUpdateMockHandler(),
+  getPostingRulesControllerDeleteMockHandler(),
+  getPostingRulesControllerResetToDefaultsMockHandler(),
+  getCashBankControllerListGlobalBanksMockHandler(),
+  getCashBankControllerListBranchesMockHandler(),
+  getCashBankControllerCreateAccountMockHandler(),
+  getCashBankControllerListAccountsMockHandler(),
+  getCashBankControllerGetAccountMockHandler(),
+  getCashBankControllerUpdateAccountMockHandler(),
+  getCashBankControllerTransferMockHandler(),
+  getCashBankControllerListTransfersMockHandler(),
+  getCashBankControllerGetTransferMockHandler(),
+  getCashBankControllerCreateReconciliationMockHandler(),
+  getCashBankControllerListReconciliationsMockHandler(),
+  getCashBankControllerGetReconciliationMockHandler(),
+  getCashBankControllerGetUnreconciledLinesMockHandler(),
+  getCashBankControllerMatchItemsMockHandler(),
+  getCashBankControllerCompleteReconciliationMockHandler(),
+  getPaymentControllerCreateDraftPaymentMockHandler(),
+  getPaymentControllerPostPaymentMockHandler(),
+  getPaymentControllerListPaymentsMockHandler(),
+  getPaymentControllerGetPaymentByIdMockHandler(),
   getCompanyControllerGetProfileMockHandler(),
   getCompanyControllerUpdateProfileMockHandler(),
   getCompanyControllerListBranchesMockHandler(),
@@ -2702,6 +7378,42 @@ export const getExzaEstateEnterpriseAPIMock = () => [
   getCompanyControllerGetDepartmentMockHandler(),
   getCompanyControllerUpdateDepartmentMockHandler(),
   getCompanyControllerDeleteDepartmentMockHandler(),
+  getCustomerControllerCreateCustomerMockHandler(),
+  getCustomerControllerListCustomersMockHandler(),
+  getCustomerControllerGetCustomerByIdMockHandler(),
+  getCustomerControllerUpdateCustomerMockHandler(),
+  getCustomerControllerDeleteCustomerMockHandler(),
+  getCustomerControllerGetCustomerTimelineMockHandler(),
+  getCustomerControllerAddContactMockHandler(),
+  getCustomerControllerDeleteContactMockHandler(),
+  getCustomerControllerAddAddressMockHandler(),
+  getCustomerControllerDeleteAddressMockHandler(),
+  getCustomerControllerAddNomineeMockHandler(),
+  getCustomerControllerDeleteNomineeMockHandler(),
+  getCustomerControllerAddCoBuyerMockHandler(),
+  getCustomerControllerDeleteCoBuyerMockHandler(),
+  getCustomerControllerVerifyKycMockHandler(),
+  getCustomerControllerAttachDocumentMockHandler(),
+  getCrmControllerCreateLeadMockHandler(),
+  getCrmControllerListLeadsMockHandler(),
+  getCrmControllerGetLeadByIdMockHandler(),
+  getCrmControllerUpdateLeadMockHandler(),
+  getCrmControllerChangeLeadStatusMockHandler(),
+  getCrmControllerAssignLeadMockHandler(),
+  getCrmControllerConvertLeadMockHandler(),
+  getFollowUpControllerCreateFollowUpMockHandler(),
+  getFollowUpControllerListFollowUpsMockHandler(),
+  getFollowUpControllerGetFollowUpByIdMockHandler(),
+  getFollowUpControllerUpdateFollowUpMockHandler(),
+  getFollowUpControllerDeleteFollowUpMockHandler(),
+  getFollowUpControllerCompleteFollowUpMockHandler(),
+  getFollowUpControllerProcessOverdueMockHandler(),
+  getNotificationsControllerGetInboxMockHandler(),
+  getNotificationsControllerGetUnreadCountMockHandler(),
+  getNotificationsControllerGetPreferencesMockHandler(),
+  getNotificationsControllerUpdatePreferencesMockHandler(),
+  getNotificationsControllerMarkAsReadMockHandler(),
+  getNotificationsControllerMarkAllReadMockHandler(),
   getDocumentsControllerPresignUploadMockHandler(),
   getDocumentsControllerProcessExpiryMockHandler(),
   getDocumentsControllerCreateDocumentMockHandler(),
@@ -2726,12 +7438,6 @@ export const getExzaEstateEnterpriseAPIMock = () => [
   getLicenseControllerTransferLicenseMockHandler(),
   getLicenseControllerGetCurrentLicenseMockHandler(),
   getSystemLicenseControllerIssueLicenseMockHandler(),
-  getNotificationsControllerGetInboxMockHandler(),
-  getNotificationsControllerGetUnreadCountMockHandler(),
-  getNotificationsControllerGetPreferencesMockHandler(),
-  getNotificationsControllerUpdatePreferencesMockHandler(),
-  getNotificationsControllerMarkAsReadMockHandler(),
-  getNotificationsControllerMarkAllReadMockHandler(),
   getProjectControllerCreateProjectMockHandler(),
   getProjectControllerListProjectsMockHandler(),
   getProjectControllerGetProjectSummaryMockHandler(),
@@ -2753,6 +7459,48 @@ export const getExzaEstateEnterpriseAPIMock = () => [
   getPropertyControllerBlockPropertyMockHandler(),
   getPropertyControllerUnblockPropertyMockHandler(),
   getPropertyControllerOverrideStatusMockHandler(),
+  getReportsControllerGetTrialBalanceMockHandler(),
+  getReportsControllerExportTrialBalanceMockHandler(),
+  getReportsControllerGetBalanceSheetMockHandler(),
+  getReportsControllerExportBalanceSheetMockHandler(),
+  getReportsControllerGetIncomeStatementMockHandler(),
+  getReportsControllerExportIncomeStatementMockHandler(),
+  getPaymentPlanControllerPreviewScheduleMockHandler(),
+  getPaymentPlanControllerGetTemplatesMockHandler(),
+  getPaymentPlanControllerCreateTemplateMockHandler(),
+  getPaymentPlanControllerGetTemplateByIdMockHandler(),
+  getPaymentPlanControllerUpdateTemplateMockHandler(),
+  getPaymentPlanControllerDeleteTemplateMockHandler(),
+  getChargeControllerCalculateChargesMockHandler(),
+  getChargeControllerGetChargeTypesMockHandler(),
+  getChargeControllerCreateChargeTypeMockHandler(),
+  getChargeControllerGetChargeTypeByIdMockHandler(),
+  getChargeControllerUpdateChargeTypeMockHandler(),
+  getChargeControllerDeleteChargeTypeMockHandler(),
+  getQuotationControllerCreateQuotationMockHandler(),
+  getQuotationControllerGetQuotationsMockHandler(),
+  getQuotationControllerCheckExpiryMockHandler(),
+  getQuotationControllerGetQuotationByIdMockHandler(),
+  getQuotationControllerUpdateQuotationMockHandler(),
+  getQuotationControllerDeleteQuotationMockHandler(),
+  getQuotationControllerDownloadPdfMockHandler(),
+  getQuotationControllerSendQuotationMockHandler(),
+  getQuotationControllerApproveQuotationMockHandler(),
+  getQuotationControllerRejectQuotationMockHandler(),
+  getBookingControllerCreateBookingMockHandler(),
+  getBookingControllerListBookingsMockHandler(),
+  getBookingControllerGetBookingMockHandler(),
+  getBookingControllerProcessExpirationsMockHandler(),
+  getBookingControllerCancelBookingMockHandler(),
+  getAgreementControllerCreateTemplateMockHandler(),
+  getAgreementControllerGetTemplatesMockHandler(),
+  getAgreementControllerGenerateAgreementMockHandler(),
+  getAgreementControllerListAgreementsMockHandler(),
+  getAgreementControllerGetAgreementMockHandler(),
+  getAgreementControllerUpdateAgreementMockHandler(),
+  getAgreementControllerSignAndLockAgreementMockHandler(),
+  getAgreementControllerCreateVersionMockHandler(),
+  getAgreementControllerGetPdfMockHandler(),
   getSettingsControllerGetAllSettingsMockHandler(),
   getSettingsControllerUpdateBatchMockHandler(),
   getSettingsControllerGetSettingMockHandler(),
