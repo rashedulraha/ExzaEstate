@@ -1,0 +1,22 @@
+meta {
+  name: Hold Property
+  type: http
+  seq: 7
+}
+
+post {
+  url: {{baseUrl}}/properties/{{propertyId}}/hold
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+body:json {
+  {
+    "holdExpiresAt": "2026-12-31T23:59:59.000Z",
+    "reason": "Prospective VIP buyer negotiation hold"
+  }
+}

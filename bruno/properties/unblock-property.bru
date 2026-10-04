@@ -1,0 +1,15 @@
+meta {
+  name: Unblock Property
+  type: http
+  seq: 10
+}
+
+post {
+  url: {{baseUrl}}/properties/{{propertyId}}/unblock
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}

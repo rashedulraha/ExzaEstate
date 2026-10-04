@@ -1,0 +1,15 @@
+meta {
+  name: Delete Property
+  type: http
+  seq: 5
+}
+
+delete {
+  url: {{baseUrl}}/properties/{{propertyId}}
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}

@@ -1,0 +1,36 @@
+meta {
+  name: Pricing Preview
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{baseUrl}}/properties/pricing-preview
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+body:json {
+  {
+    "basePricePaisa": "1000000000",
+    "premiumPaisa": "100000000",
+    "discountPct": 5.0,
+    "charges": [
+      {
+        "code": "PARKING",
+        "name": "Covered Parking Spot",
+        "amountPaisa": "50000000"
+      },
+      {
+        "code": "UTILITY",
+        "name": "Gas & Electricity Connection",
+        "amountPaisa": "25000000"
+      }
+    ],
+    "discountLimitPct": 5.0
+  }
+}

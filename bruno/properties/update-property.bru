@@ -1,0 +1,23 @@
+meta {
+  name: Update Property
+  type: http
+  seq: 4
+}
+
+patch {
+  url: {{baseUrl}}/properties/{{propertyId}}
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+body:json {
+  {
+    "title": "3BHK Premium Corner Flat",
+    "basePricePaisa": "1250000000",
+    "premiumPaisa": "60000000"
+  }
+}

@@ -1,0 +1,22 @@
+meta {
+  name: Override Property Status
+  type: http
+  seq: 11
+}
+
+patch {
+  url: {{baseUrl}}/properties/{{propertyId}}/status/override
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+body:json {
+  {
+    "targetStatus": "Available",
+    "reason": "Executive MD override following customer cancellation verification"
+  }
+}

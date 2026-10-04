@@ -10,6 +10,7 @@ import { DocumentsModule } from './modules/documents/documents.module.js';
 import { HealthModule } from './modules/health/health.module.js';
 import { LandModule } from './modules/land/land.module.js';
 import { ProjectModule } from './modules/project/project.module.js';
+import { PropertyModule } from './modules/property/property.module.js';
 import { LicenseModule } from './modules/license/license.module.js';
 import { NotificationsModule } from './modules/notifications/notifications.module.js';
 import { SettingsModule } from './modules/settings/settings.module.js';
@@ -32,6 +33,7 @@ import { SystemAdminModule } from './modules/system-admin/system-admin.module.js
     LicenseModule,
     NotificationsModule,
     ProjectModule,
+    PropertyModule,
     SettingsModule,
     SystemAdminModule,
   ],

@@ -542,7 +542,7 @@ These are applied as defaults in `architecture.md` v4 but are still **"Needs sig
 
 #### A2.2 — Property CRUD, Pricing Breakdown & Status API
 
-- **Status:** [ ] · **Tier:** 1 · **Size:** L (4 steps) · **Priority:** P0
+- **Status:** [x] · **Tier:** 1 · **Size:** L (4 steps) · **Priority:** P0
 - **Depends:** A2.1, A1.5
 - **Reads:** `prd.md` MOD-PROPERTY, §9.1–§9.2, BR-01, BR-11; `architecture.md` §10 (RULE-PROPERTY-STATUS), §6.2; `permissions-matrix.md` (`property:*`, `property:override-status`).
 - **Touches:** `apps/backend/src/modules/property/**`, demo-seed step.

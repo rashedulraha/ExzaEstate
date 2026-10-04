@@ -81,7 +81,7 @@ Tick a box only after the verification rules above are met. Dependencies are def
 ### Phase A2 + B1 — Golden Vertical Slice (Property)
 
 - [x] `A2.1` Property Data Model, Hierarchy & RLS
-- [ ] `A2.2` Property CRUD, Pricing Breakdown & Status API
+- [x] `A2.2` Property CRUD, Pricing Breakdown & Status API
 - [ ] `A2.3` OpenAPI Export, Generated Client & HTTP Layer
 - [ ] `A2.4` Conformance Sweep: Backend Golden Module
 - [ ] `B1.1` Desktop Shell (Cloud mode), `app-core` & Auth Screens
@@ -373,3 +373,11 @@ Tick a box only after the verification rules above are met. Dependencies are def
 3. Verification command & result: pnpm --filter @exzaestate/backend test test/property/property-model.spec.ts (8/8 passed, Tier 1 fail-first verified); full backend test suite (289/289 passed across 59 files); pnpm check:all (all 35 tenant tables verified with RLS, 105 routes decorated); oxlint (0 errors, 0 warnings), dependency-cruiser (0 violations), zero cycles, turbo typecheck (9 packages clean), prettier format clean
 4. Open questions: None (Gate D-04 confirmed default vertical slices recorded in Sign-off Register)
 5. Next task ID: A2.2
+
+### [2026-10-04] A2.2 Property CRUD, Pricing Breakdown & Status API
+
+1. Task ID & status: A2.2 [x]
+2. Files created / modified: apps/backend/src/modules/property/\*_, apps/backend/src/app.module.ts, apps/backend/test/property/{property-pricing,property-crud,property-status,property-history}.spec.ts, apps/backend/test/property/property-test.helper.ts, bruno/properties/_.bru, agent/PROGRESS.md, agent/task.md
+3. Verification command & result: pnpm --filter @exzaestate/backend test test/property/ (33/33 passed across 5 test suites; Tier 1 fail-first verified for S1, S2, S3, S4); full backend test suite (314/314 passed across 63 files); pnpm check:all (all 35 tenant tables verified with RLS, 113 routes decorated); oxlint (0 errors, 0 warnings), dependency-cruiser (0 violations), zero cycles, turbo typecheck (9 packages clean), prettier format clean
+4. Open questions: None (Zero gated decisions for A2.2; RULE-PROPERTY-STATUS enforced)
+5. Next task ID: A2.3

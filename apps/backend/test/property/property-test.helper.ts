@@ -7,12 +7,14 @@ import { DatabaseModule } from '../../src/database/database.module.js';
 import { PrismaService } from '../../src/database/prisma.service.js';
 import { SystemPrisma } from '../../src/database/system-prisma.service.js';
 import { TenantDb } from '../../src/database/tenant-db.service.js';
+import { AuditService } from '../../src/platform/audit/audit.service.js';
 
 export interface PropertyTestContext {
   moduleRef: TestingModule;
   tenantDb: TenantDb;
   prismaService: PrismaService;
   systemPrisma: SystemPrisma;
+  auditService: AuditService;
   companyAId: string;
   companyBId: string;
   testUserId: string;
@@ -86,24 +88,26 @@ export async function setupPropertyTestContext(): Promise<PropertyTestContext> {
     }
   });
 
+  const requestContext = moduleRef.get<RequestContext>(RequestContext);
+  const auditService = new AuditService(requestContext);
+
   const cleanup = async () => {
     if (prismaService) {
       await prismaService.$transaction(async (tx) => {
         await tx.$executeRaw`SELECT set_config('app.current_company_id', ${companyAId}, true)`;
         await tx
           .$executeRawUnsafe(
-            `DELETE FROM properties WHERE company_id = '${companyAId}' AND code LIKE 'PROP-TEST-%'`,
+            `DELETE FROM property_status_history WHERE company_id = '${companyAId}'`,
           )
           .catch(() => {});
         await tx
-          .$executeRawUnsafe(
-            `DELETE FROM property_floors WHERE company_id = '${companyAId}' AND code LIKE 'FL-TEST-%'`,
-          )
+          .$executeRawUnsafe(`DELETE FROM properties WHERE company_id = '${companyAId}'`)
           .catch(() => {});
         await tx
-          .$executeRawUnsafe(
-            `DELETE FROM property_blocks WHERE company_id = '${companyAId}' AND code LIKE 'BLK-TEST-%'`,
-          )
+          .$executeRawUnsafe(`DELETE FROM property_floors WHERE company_id = '${companyAId}'`)
+          .catch(() => {});
+        await tx
+          .$executeRawUnsafe(`DELETE FROM property_blocks WHERE company_id = '${companyAId}'`)
           .catch(() => {});
       });
       await prismaService.onModuleDestroy();
@@ -119,10 +123,41 @@ export async function setupPropertyTestContext(): Promise<PropertyTestContext> {
     tenantDb,
     prismaService,
     systemPrisma,
+    auditService,
     companyAId,
     companyBId,
     testUserId,
     projectAId,
     cleanup,
   };
+}
+
+export async function seedPropertyTestHierarchy(ctx: PropertyTestContext) {
+  return ctx.tenantDb.withCompany(ctx.companyAId, async (tx) => {
+    const block = await tx.propertyBlock.create({
+      data: {
+        companyId: ctx.companyAId,
+        projectId: ctx.projectAId,
+        code: `BLK-${Date.now()}`,
+        name: 'Block Alpha',
+        type: 'BLOCK',
+        createdById: ctx.testUserId,
+      },
+    });
+
+    const floor = await tx.propertyFloor.create({
+      data: {
+        companyId: ctx.companyAId,
+        projectId: ctx.projectAId,
+        blockId: block.id,
+        code: `FL-${Date.now()}`,
+        name: 'Floor 1',
+        floorNumber: 1,
+        type: 'FLOOR',
+        createdById: ctx.testUserId,
+      },
+    });
+
+    return { blockId: block.id, floorId: floor.id };
+  });
 }

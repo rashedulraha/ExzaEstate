@@ -1,0 +1,15 @@
+meta {
+  name: Get Property By ID
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/properties/{{propertyId}}
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}

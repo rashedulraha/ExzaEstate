@@ -1,0 +1,31 @@
+meta {
+  name: Create Property
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/properties
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+body:json {
+  {
+    "projectId": "{{projectId}}",
+    "code": "FLAT-5A",
+    "title": "3BHK Luxury South-Facing Flat",
+    "type": "FLAT",
+    "areaSqft": "1450.5000",
+    "facing": "SOUTH",
+    "basePricePaisa": "1200000000",
+    "premiumPaisa": "50000000",
+    "discountLimitPct": "5.00",
+    "ownerType": "COMPANY",
+    "description": "Standard 3BHK flat on 5th floor"
+  }
+}

@@ -1,0 +1,21 @@
+meta {
+  name: Block Property
+  type: http
+  seq: 9
+}
+
+post {
+  url: {{baseUrl}}/properties/{{propertyId}}/block
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+body:json {
+  {
+    "reason": "Demarcation dispute under review by survey team"
+  }
+}

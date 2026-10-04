@@ -1,0 +1,15 @@
+meta {
+  name: Get Property Status History
+  type: http
+  seq: 12
+}
+
+get {
+  url: {{baseUrl}}/properties/{{propertyId}}/history
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
