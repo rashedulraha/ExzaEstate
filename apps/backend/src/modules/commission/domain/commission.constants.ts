@@ -1,0 +1,25 @@
+export const COMMISSION_STATUS = {
+  EARNED: 'EARNED',
+  APPROVED: 'APPROVED',
+  PAID: 'PAID',
+  REVERSED: 'REVERSED',
+} as const;
+
+export type CommissionStatus = (typeof COMMISSION_STATUS)[keyof typeof COMMISSION_STATUS];
+
+export const COMMISSION_CALC_TYPE = {
+  PERCENT_NET_PRICE: 'PERCENT_NET_PRICE',
+  FIXED_AMOUNT: 'FIXED_AMOUNT',
+  PERCENT_COLLECTED: 'PERCENT_COLLECTED',
+} as const;
+
+export type CommissionCalcType = (typeof COMMISSION_CALC_TYPE)[keyof typeof COMMISSION_CALC_TYPE];
+
+export const COMMISSION_TRIGGER_EVENT = {
+  ON_CONFIRMED: 'ON_CONFIRMED',
+  ON_AGREEMENT: 'ON_AGREEMENT',
+  ON_COLLECTION_PCT: 'ON_COLLECTION_PCT',
+} as const;
+
+export type CommissionTriggerEvent =
+  (typeof COMMISSION_TRIGGER_EVENT)[keyof typeof COMMISSION_TRIGGER_EVENT];

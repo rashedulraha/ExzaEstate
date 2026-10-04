@@ -1,0 +1,135 @@
+// Vendor & Procurement models (Phase A8.2)
+// PRD MOD-VENDOR, FLOW-12, accounting-rules.md §3.6, §3.10
+
+model Vendor {
+  id                String          @id @default(uuid(7)) @db.Uuid
+  companyId         String          @map("company_id") @db.Uuid
+  vendorNumber      String          @map("vendor_number") @db.VarChar(64)
+  name              String          @db.VarChar(255)
+  contactPerson     String?         @map("contact_person") @db.VarChar(255)
+  phone             String?         @db.VarChar(64)
+  email             String?         @db.VarChar(255)
+  address           String?         @db.Text
+  tradeLicenseNo    String?         @map("trade_license_no") @db.VarChar(128)
+  tin               String?         @db.VarChar(128)
+  bin               String?         @db.VarChar(128)
+
+  bankName          String?         @map("bank_name") @db.VarChar(128)
+  bankBranch        String?         @map("bank_branch") @db.VarChar(128)
+  bankAccountNumber String?         @map("bank_account_number") @db.VarChar(512) // FieldCrypto encrypted
+  routingNumber     String?         @map("routing_number") @db.VarChar(64)
+
+  isActive          Boolean         @default(true) @map("is_active")
+  totalBilledPaisa  BigInt          @default(0) @map("total_billed_paisa") @db.BigInt
+  totalPaidPaisa    BigInt          @default(0) @map("total_paid_paisa") @db.BigInt
+  outstandingPaisa  BigInt          @default(0) @map("outstanding_paisa") @db.BigInt
+
+  createdAt         DateTime        @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt         DateTime        @updatedAt @map("updated_at") @db.Timestamptz
+  deletedAt         DateTime?       @map("deleted_at") @db.Timestamptz
+
+  bills             VendorBill[]
+  payments          VendorPayment[]
+
+  @@unique([companyId, vendorNumber])
+  @@index([companyId])
+  @@index([companyId, isActive])
+  @@map("vendors")
+}
+
+model VendorBill {
+  id                  String                    @id @default(uuid(7)) @db.Uuid
+  companyId           String                    @map("company_id") @db.Uuid
+  billNumber          String                    @map("bill_number") @db.VarChar(64)
+  vendorId            String                    @map("vendor_id") @db.Uuid
+  projectId           String?                   @map("project_id") @db.Uuid
+  billDate            DateTime                  @default(now()) @map("bill_date") @db.Date
+  dueDate             DateTime?                 @map("due_date") @db.Date
+
+  totalAmountPaisa    BigInt                    @map("total_amount_paisa") @db.BigInt
+  taxWithholdingPaisa BigInt                    @default(0) @map("tax_withholding_paisa") @db.BigInt // TDS
+  vatWithholdingPaisa BigInt                    @default(0) @map("vat_withholding_paisa") @db.BigInt // VDS
+  netPayablePaisa     BigInt                    @map("net_payable_paisa") @db.BigInt
+  paidAmountPaisa     BigInt                    @default(0) @map("paid_amount_paisa") @db.BigInt
+
+  status              String                    @default("DRAFT") @db.VarChar(32) // DRAFT, POSTED, PARTIALLY_PAID, PAID, CANCELLED
+  notes               String?                   @db.Text
+  journalId           String?                   @map("journal_id") @db.Uuid
+
+  createdAt           DateTime                  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt           DateTime                  @updatedAt @map("updated_at") @db.Timestamptz
+  deletedAt           DateTime?                 @map("deleted_at") @db.Timestamptz
+
+  vendor              Vendor                    @relation(fields: [vendorId], references: [id])
+  lines               VendorBillLine[]
+  allocations         VendorPaymentAllocation[]
+
+  @@unique([companyId, billNumber])
+  @@index([companyId])
+  @@index([companyId, status])
+  @@index([companyId, vendorId])
+  @@index([companyId, projectId])
+  @@map("vendor_bills")
+}
+
+model VendorBillLine {
+  id          String     @id @default(uuid(7)) @db.Uuid
+  companyId   String     @map("company_id") @db.Uuid
+  billId      String     @map("bill_id") @db.Uuid
+  accountCode String     @default("1210") @map("account_code") @db.VarChar(32)
+  description String     @db.VarChar(255)
+  amountPaisa BigInt     @map("amount_paisa") @db.BigInt
+  costCenter  String?    @map("cost_center") @db.VarChar(64)
+  projectId   String?    @map("project_id") @db.Uuid
+
+  bill        VendorBill @relation(fields: [billId], references: [id], onDelete: Cascade)
+
+  @@index([companyId])
+  @@index([companyId, billId])
+  @@map("vendor_bill_lines")
+}
+
+model VendorPayment {
+  id              String                    @id @default(uuid(7)) @db.Uuid
+  companyId       String                    @map("company_id") @db.Uuid
+  paymentNumber   String                    @map("payment_number") @db.VarChar(64)
+  vendorId        String                    @map("vendor_id") @db.Uuid
+  paymentDate     DateTime                  @default(now()) @map("payment_date") @db.Date
+  amountPaisa     BigInt                    @map("amount_paisa") @db.BigInt
+  paymentMethod   String                    @default("BANK_TRANSFER") @map("payment_method") @db.VarChar(32)
+  bankAccountId   String?                   @map("bank_account_id") @db.Uuid
+  bankAccountCode String?                   @map("bank_account_code") @db.VarChar(32)
+  reference       String?                   @db.VarChar(128)
+  journalId       String?                   @map("journal_id") @db.Uuid
+  status          String                    @default("PAID") @db.VarChar(32) // DRAFT, APPROVED, PAID, CANCELLED
+  notes           String?                   @db.Text
+
+  createdAt       DateTime                  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt       DateTime                  @updatedAt @map("updated_at") @db.Timestamptz
+  deletedAt       DateTime?                 @map("deleted_at") @db.Timestamptz
+
+  vendor          Vendor                    @relation(fields: [vendorId], references: [id])
+  allocations     VendorPaymentAllocation[]
+
+  @@unique([companyId, paymentNumber])
+  @@index([companyId])
+  @@index([companyId, vendorId])
+  @@index([companyId, status])
+  @@map("vendor_payments")
+}
+
+model VendorPaymentAllocation {
+  id          String        @id @default(uuid(7)) @db.Uuid
+  companyId   String        @map("company_id") @db.Uuid
+  paymentId   String        @map("payment_id") @db.Uuid
+  billId      String        @map("bill_id") @db.Uuid
+  amountPaisa BigInt        @map("amount_paisa") @db.BigInt
+
+  payment     VendorPayment @relation(fields: [paymentId], references: [id], onDelete: Cascade)
+  bill        VendorBill    @relation(fields: [billId], references: [id], onDelete: Cascade)
+
+  @@index([companyId])
+  @@index([companyId, paymentId])
+  @@index([companyId, billId])
+  @@map("vendor_payment_allocations")
+}

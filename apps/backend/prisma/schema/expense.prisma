@@ -1,0 +1,115 @@
+// Expense & Budget models (Phase A8.1 & A8.4)
+// PRD MOD-EXPENSE, FLOW-11, AT-07, AT-37; accounting-rules.md §3.5
+
+model ExpenseCategory {
+  id          String           @id @default(uuid(7)) @db.Uuid
+  companyId   String           @map("company_id") @db.Uuid
+  code        String           @db.VarChar(64)
+  name        String           @db.VarChar(128)
+  accountCode String           @default("5500") @map("account_code") @db.VarChar(32)
+  description String?          @db.Text
+  isActive    Boolean          @default(true) @map("is_active")
+  createdAt   DateTime         @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt   DateTime         @updatedAt @map("updated_at") @db.Timestamptz
+  deletedAt   DateTime?        @map("deleted_at") @db.Timestamptz
+
+  vouchers    ExpenseVoucher[]
+  budgets     ExpenseBudget[]
+
+  @@unique([companyId, code])
+  @@index([companyId])
+  @@index([companyId, isActive])
+  @@map("expense_categories")
+}
+
+model ExpenseVoucher {
+  id                 String              @id @default(uuid(7)) @db.Uuid
+  companyId          String              @map("company_id") @db.Uuid
+  voucherNumber      String              @map("voucher_number") @db.VarChar(64)
+  categoryId         String              @map("category_id") @db.Uuid
+  projectId          String?             @map("project_id") @db.Uuid
+  costCenter         String?             @map("cost_center") @db.VarChar(64)
+  payeeName          String              @map("payee_name") @db.VarChar(255)
+  vendorId           String?             @map("vendor_id") @db.Uuid
+  amountPaisa        BigInt              @map("amount_paisa") @db.BigInt
+  description        String              @db.Text
+  expenseDate        DateTime            @default(now()) @map("expense_date") @db.Date
+  status             String              @default("DRAFT") @db.VarChar(32) // DRAFT, SUBMITTED, APPROVED, VERIFIED, PAID, REJECTED, CANCELLED
+
+  approvalId         String?             @map("approval_id") @db.Uuid
+  requiresMdApproval Boolean             @default(false) @map("requires_md_approval")
+  paymentMethod      String?             @default("BANK_TRANSFER") @map("payment_method") @db.VarChar(32) // CASH, BANK_TRANSFER, CHEQUE
+  paidLater          Boolean             @default(false) @map("paid_later")
+  bankAccountId      String?             @map("bank_account_id") @db.Uuid
+  bankAccountCode    String?             @map("bank_account_code") @db.VarChar(32)
+  journalId          String?             @map("journal_id") @db.Uuid
+
+  submittedAt        DateTime?           @map("submitted_at") @db.Timestamptz
+  approvedAt         DateTime?           @map("approved_at") @db.Timestamptz
+  verifiedAt         DateTime?           @map("verified_at") @db.Timestamptz
+  paidAt             DateTime?           @map("paid_at") @db.Timestamptz
+  rejectedAt         DateTime?           @map("rejected_at") @db.Timestamptz
+  rejectionReason    String?             @map("rejection_reason") @db.Text
+
+  createdById        String?             @map("created_by_id") @db.Uuid
+  approvedById       String?             @map("approved_by_id") @db.Uuid
+  verifiedById       String?             @map("verified_by_id") @db.Uuid
+  paidById           String?             @map("paid_by_id") @db.Uuid
+
+  createdAt          DateTime            @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt          DateTime            @updatedAt @map("updated_at") @db.Timestamptz
+  deletedAt          DateTime?           @map("deleted_at") @db.Timestamptz
+
+  category           ExpenseCategory     @relation(fields: [categoryId], references: [id])
+  attachments        ExpenseAttachment[]
+
+  @@unique([companyId, voucherNumber])
+  @@index([companyId])
+  @@index([companyId, status])
+  @@index([companyId, projectId])
+  @@index([companyId, categoryId])
+  @@index([companyId, expenseDate])
+  @@map("expense_vouchers")
+}
+
+model ExpenseAttachment {
+  id         String         @id @default(uuid(7)) @db.Uuid
+  companyId  String         @map("company_id") @db.Uuid
+  voucherId  String         @map("voucher_id") @db.Uuid
+  fileName   String         @map("file_name") @db.VarChar(255)
+  fileUrl    String         @map("file_url") @db.VarChar(512)
+  fileSize   BigInt         @default(0) @map("file_size") @db.BigInt
+  mimeType   String         @map("mime_type") @db.VarChar(128)
+  createdAt  DateTime       @default(now()) @map("created_at") @db.Timestamptz
+
+  voucher    ExpenseVoucher @relation(fields: [voucherId], references: [id], onDelete: Cascade)
+
+  @@index([companyId])
+  @@index([companyId, voucherId])
+  @@map("expense_attachments")
+}
+
+model ExpenseBudget {
+  id                 String           @id @default(uuid(7)) @db.Uuid
+  companyId          String           @map("company_id") @db.Uuid
+  projectId          String?          @map("project_id") @db.Uuid
+  categoryId         String?          @map("category_id") @db.Uuid
+  fiscalYear         String           @map("fiscal_year") @db.VarChar(16)
+  budgetAmountPaisa  BigInt           @map("budget_amount_paisa") @db.BigInt
+  actualSpendPaisa   BigInt           @default(0) @map("actual_spend_paisa") @db.BigInt
+  alert70Sent        Boolean          @default(false) @map("alert_70_sent")
+  alert85Sent        Boolean          @default(false) @map("alert_85_sent")
+  alert100Sent       Boolean          @default(false) @map("alert_100_sent")
+
+  createdAt          DateTime         @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt          DateTime         @updatedAt @map("updated_at") @db.Timestamptz
+  deletedAt          DateTime?        @map("deleted_at") @db.Timestamptz
+
+  category           ExpenseCategory? @relation(fields: [categoryId], references: [id])
+
+  @@index([companyId])
+  @@index([companyId, fiscalYear])
+  @@index([companyId, projectId])
+  @@index([companyId, categoryId])
+  @@map("expense_budgets")
+}
