@@ -20,6 +20,7 @@ export class HealthController {
           type: 'object',
           properties: {
             status: { type: 'string', example: 'ok' },
+            minSupportedClientVersion: { type: 'string', example: '0.1.0' },
           },
         },
       },

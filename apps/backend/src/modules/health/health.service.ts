@@ -1,4 +1,5 @@
 import { Inject, Injectable, Optional, ServiceUnavailableException } from '@nestjs/common';
+import { ConfigService } from '../../config/config.service.js';
 import { PrismaService } from '../../database/prisma.service.js';
 import { StorageService } from '../../platform/storage/storage.service.js';
 import type { CacheStore } from '../../ports/cache-store.port.js';
@@ -6,6 +7,7 @@ import { CACHE_STORE } from '../../ports/tokens.js';
 
 export interface HealthCheckResult {
   status: 'ok';
+  minSupportedClientVersion: string;
   details?: {
     database: { status: 'up' | 'down'; message?: string };
     redis: { status: 'up' | 'down'; message?: string };
@@ -19,6 +21,7 @@ export class HealthService {
     @Optional() private readonly prismaService?: PrismaService,
     @Optional() @Inject(CACHE_STORE) private readonly cacheStore?: CacheStore,
     @Optional() private readonly storageService?: StorageService,
+    @Optional() private readonly configService?: ConfigService,
   ) {}
 
   async check(): Promise<HealthCheckResult> {
@@ -77,6 +80,9 @@ export class HealthService {
       });
     }
 
-    return { status: 'ok' };
+    return {
+      status: 'ok',
+      minSupportedClientVersion: this.configService?.minSupportedClientVersion ?? '0.1.0',
+    };
   }
 }

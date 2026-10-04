@@ -1,28 +1,10 @@
 import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Headers,
-  HttpCode,
-  HttpStatus,
-  Ip,
-  Param,
-  Post,
-  Req,
-  Res,
-  UseGuards,
+  Body, Controller, Delete, Get, Headers, HttpCode, HttpStatus, Ip, Param, Post, Req, Res, UseGuards,
 } from '@nestjs/common';
 import type { Request, Response } from 'express';
-import {
-  CurrentUser,
-  type AuthenticatedUser,
-} from '../../common/decorators/current-user.decorator.js';
+import { CurrentUser, type AuthenticatedUser } from '../../common/decorators/current-user.decorator.js';
 import { Public } from '../../common/decorators/public.decorator.js';
-import {
-  ForbiddenException,
-  UnauthorizedException,
-} from '../../common/exceptions/app.exception.js';
+import { ForbiddenException, UnauthorizedException } from '../../common/exceptions/app.exception.js';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard.js';
 import { ConfigService } from '../../config/config.service.js';
 import { AuthService } from './auth.service.js';
@@ -92,6 +74,7 @@ export class AuthController {
       return {
         accessToken: result.tokens.accessToken,
         user: result.user,
+        minSupportedClientVersion: this.configService.minSupportedClientVersion,
       };
     }
 
@@ -99,6 +82,7 @@ export class AuthController {
       accessToken: result.tokens.accessToken,
       refreshToken: result.tokens.refreshToken,
       user: result.user,
+      minSupportedClientVersion: this.configService.minSupportedClientVersion,
     };
   }
 
@@ -141,12 +125,14 @@ export class AuthController {
 
       return {
         accessToken: tokens.accessToken,
+        minSupportedClientVersion: this.configService.minSupportedClientVersion,
       };
     }
 
     return {
       accessToken: tokens.accessToken,
       refreshToken: tokens.refreshToken,
+      minSupportedClientVersion: this.configService.minSupportedClientVersion,
     };
   }
 
@@ -201,7 +187,11 @@ export class AuthController {
 
   @Get('me')
   async getMe(@CurrentUser() user: AuthenticatedUser) {
-    return this.authService.getMe(user.userId, user.companyId);
+    const me = await this.authService.getMe(user.userId, user.companyId);
+    return {
+      ...me,
+      minSupportedClientVersion: this.configService.minSupportedClientVersion,
+    };
   }
 
   @Public()
@@ -227,6 +217,7 @@ export class AuthController {
       return {
         accessToken: result.tokens.accessToken,
         user: result.user,
+        minSupportedClientVersion: this.configService.minSupportedClientVersion,
       };
     }
 
@@ -234,6 +225,7 @@ export class AuthController {
       accessToken: result.tokens.accessToken,
       refreshToken: result.tokens.refreshToken,
       user: result.user,
+      minSupportedClientVersion: this.configService.minSupportedClientVersion,
     };
   }
 
