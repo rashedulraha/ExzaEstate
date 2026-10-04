@@ -16,6 +16,8 @@
     "format:check": "prettier --check .",
     "typecheck": "turbo run typecheck",
     "test": "turbo run test",
+    "start:dev": "node --env-file=.env --import ./scripts/swc-register.mjs apps/backend/src/main.ts",
+    "start:local": "node --env-file=.env --import ./scripts/swc-register.mjs apps/backend/src/main.local.ts",
     "db:seed": "pnpm --filter @exzaestate/backend seed",
     "db:seed:demo": "pnpm --filter @exzaestate/backend seed:demo",
     "gen:api": "node --import ./scripts/swc-register.mjs apps/backend/src/openapi-export.ts && pnpm --filter @exzaestate/api-client gen && prettier --write packages/api-client/openapi.json",

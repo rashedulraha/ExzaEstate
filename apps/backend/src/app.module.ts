@@ -30,10 +30,12 @@ import { RealtimeModule } from './modules/realtime/realtime.module.js';
 import { DashboardModule } from './modules/dashboard/dashboard.module.js';
 import { SearchModule } from './modules/search/search.module.js';
 import { LocalDataModule } from './modules/local-data/local-data.module.js';
+import { AdaptersModule } from './adapters/adapters.module.js';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
+    AdaptersModule.forRoot((process.env.RUNTIME_MODE as 'cloud' | 'local') || 'cloud'),
     ClsModule.forRoot({
       global: true,
       middleware: { mount: true },
