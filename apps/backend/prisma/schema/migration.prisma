@@ -1,0 +1,45 @@
+// Go-Live Migration (Task A7.9 - Go-Live Migration Opening Balances & Legacy Bookings)
+// PRD MOD-MIGRATION, FLOW-03, AT-29; accounting-rules.md §3
+
+model MigrationBatch {
+  id               String    @id @default(uuid(7)) @db.Uuid
+  companyId        String    @map("company_id") @db.Uuid
+  batchNumber      String    @map("batch_number") @db.VarChar(64)
+  status           String    @default("Draft") @db.VarChar(32) // Draft, Finalized
+  goLiveDate       DateTime  @map("go_live_date") @db.Date
+  notes            String?   @db.Text
+  openingJournalId String?   @map("opening_journal_id") @db.Uuid
+  finalizedAt      DateTime? @map("finalized_at") @db.Timestamptz
+  finalizedById    String?   @map("finalized_by_id") @db.Uuid
+  createdById      String    @map("created_by_id") @db.Uuid
+  createdAt        DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt        DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+
+  legacyBookings   LegacyBookingRecord[]
+
+  @@unique([companyId, batchNumber])
+  @@index([companyId, status])
+  @@map("migration_batches")
+}
+
+model LegacyBookingRecord {
+  id                 String   @id @default(uuid(7)) @db.Uuid
+  companyId          String   @map("company_id") @db.Uuid
+  batchId            String   @map("batch_id") @db.Uuid
+  bookingId          String?  @map("booking_id") @db.Uuid
+  customerId         String   @map("customer_id") @db.Uuid
+  legacyBookingNo    String   @map("legacy_booking_no") @db.VarChar(64)
+  netPricePaisa      BigInt   @map("net_price_paisa") @db.BigInt
+  totalPaidPaisa     BigInt   @map("total_paid_paisa") @db.BigInt
+  outstandingPaisa   BigInt   @map("outstanding_paisa") @db.BigInt
+  historicalPayments Json     @default("[]") @map("historical_payments") @db.JsonB
+  createdById        String   @map("created_by_id") @db.Uuid
+  createdAt          DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+  batch              MigrationBatch @relation(fields: [batchId], references: [id])
+  customer           Customer       @relation(fields: [customerId], references: [id])
+
+  @@index([companyId, batchId])
+  @@index([companyId, customerId])
+  @@map("legacy_booking_records")
+}
