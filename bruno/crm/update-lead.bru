@@ -1,0 +1,22 @@
+meta {
+  name: Update Lead
+  type: http
+  seq: 4
+}
+
+patch {
+  url: {{baseUrl}}/crm/leads/{{leadId}}
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+body:json {
+  {
+    "interestNotes": "Client visited office and discussed payment plan options.",
+    "budgetPaisa": "1800000000"
+  }
+}

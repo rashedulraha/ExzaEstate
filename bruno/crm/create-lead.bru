@@ -1,0 +1,28 @@
+meta {
+  name: Create Lead
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/crm/leads
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+body:json {
+  {
+    "name": "Engr. Kabir Hossain",
+    "phone": "+8801711122233",
+    "email": "kabir.hossain@example.com",
+    "source": "Facebook",
+    "budgetPaisa": "1500000000",
+    "preferredPropertyType": "Flat",
+    "interestNotes": "Looking for 3BHK south facing flat in Dhanmondi.",
+    "allowDuplicate": false
+  }
+}

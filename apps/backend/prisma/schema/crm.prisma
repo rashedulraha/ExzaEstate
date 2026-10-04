@@ -1,0 +1,96 @@
+// CRM & Lead models (Task A3.1 - Lead Capture, Sources & Pipeline)
+// PRD MOD-CRM, §9.5, FLOW-05, AT-16; architecture.md §11, §12.4
+
+model Lead {
+  id                    String    @id @default(uuid(7)) @db.Uuid
+  companyId             String    @map("company_id") @db.Uuid
+  leadNumber            String    @map("lead_number") @db.VarChar(64)
+  name                  String    @db.VarChar(255)
+  phone                 String    @db.VarChar(32)
+  email                 String?   @db.VarChar(255)
+  source                String    @db.VarChar(64) // One of LEAD_SOURCES (Facebook, Referral, Walk-in, etc.)
+  status                String    @default("New") @db.VarChar(32) // One of LEAD_STATUSES
+  lostReason            String?   @map("lost_reason") @db.Text
+  interestNotes         String?   @map("interest_notes") @db.Text
+  preferredProjectId    String?   @map("preferred_project_id") @db.Uuid
+  preferredPropertyType String?   @map("preferred_property_type") @db.VarChar(64)
+  budgetPaisa           BigInt?   @map("budget_paisa") @db.BigInt
+  assignedToId          String?   @map("assigned_to_id") @db.Uuid
+  branchId              String?   @map("branch_id") @db.Uuid
+  createdById           String?   @map("created_by_id") @db.Uuid
+  updatedById           String?   @map("updated_by_id") @db.Uuid
+  deletedAt             DateTime? @map("deleted_at") @db.Timestamptz
+  createdAt             DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt             DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+
+  statusHistory LeadStatusHistory[]
+  followUps     FollowUp[]
+
+  @@unique([companyId, leadNumber])
+  @@index([companyId])
+  @@index([companyId, phone])
+  @@index([companyId, email])
+  @@index([companyId, status])
+  @@index([companyId, source])
+  @@index([companyId, assignedToId])
+  @@index([companyId, branchId])
+  @@index([companyId, preferredProjectId])
+  @@index([companyId, createdAt])
+  @@map("crm_leads")
+}
+
+model LeadStatusHistory {
+  id          String   @id @default(uuid(7)) @db.Uuid
+  companyId   String   @map("company_id") @db.Uuid
+  leadId      String   @map("lead_id") @db.Uuid
+  fromStatus  String?  @map("from_status") @db.VarChar(32)
+  toStatus    String   @map("to_status") @db.VarChar(32)
+  reason      String?  @db.Text
+  changedById String?  @map("changed_by_id") @db.Uuid
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+  lead Lead @relation(fields: [leadId], references: [id], onDelete: Cascade)
+
+  @@index([companyId])
+  @@index([companyId, leadId])
+  @@index([companyId, leadId, createdAt])
+  @@map("crm_lead_status_history")
+}
+
+// Follow-up model (Task A3.2 - Follow-Ups & Overdue Alerts)
+// PRD MOD-FOLLOWUP; architecture.md §5.6, §8.2, §11
+model FollowUp {
+  id               String    @id @default(uuid(7)) @db.Uuid
+  companyId        String    @map("company_id") @db.Uuid
+  leadId           String?   @map("lead_id") @db.Uuid
+  customerId       String?   @map("customer_id") @db.Uuid
+  type             String    @db.VarChar(32) // One of FOLLOW_UP_TYPES (CALL, SMS, EMAIL, MEETING, SITE_VISIT, WHATSAPP, TASK)
+  status           String    @default("PENDING") @db.VarChar(32) // PENDING, COMPLETED, CANCELLED, MISSED
+  priority         String    @default("MEDIUM") @db.VarChar(16) // LOW, MEDIUM, HIGH, URGENT
+  dueDate          DateTime  @map("due_date") @db.Date // Interpreted in company timezone (YYYY-MM-DD)
+  dueTime          String?   @map("due_time") @db.VarChar(8) // Optional "HH:mm"
+  notes            String?   @db.Text
+  outcome          String?   @db.Text
+  completedAt      DateTime? @map("completed_at") @db.Timestamptz
+  completedById    String?   @map("completed_by_id") @db.Uuid
+  nextFollowUpDate DateTime? @map("next_follow_up_date") @db.Date
+  assignedToId     String    @map("assigned_to_id") @db.Uuid
+  createdById      String?   @map("created_by_id") @db.Uuid
+  updatedById      String?   @map("updated_by_id") @db.Uuid
+  deletedAt        DateTime? @map("deleted_at") @db.Timestamptz
+  createdAt        DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt        DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+
+  lead     Lead?     @relation(fields: [leadId], references: [id], onDelete: SetNull)
+  customer Customer? @relation(fields: [customerId], references: [id], onDelete: SetNull)
+
+  @@index([companyId])
+  @@index([companyId, leadId])
+  @@index([companyId, customerId])
+  @@index([companyId, assignedToId])
+  @@index([companyId, status])
+  @@index([companyId, dueDate])
+  @@index([companyId, status, dueDate])
+  @@index([companyId, createdAt])
+  @@map("crm_follow_ups")
+}

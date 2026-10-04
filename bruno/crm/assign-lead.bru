@@ -1,0 +1,21 @@
+meta {
+  name: Assign Lead
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{baseUrl}}/crm/leads/{{leadId}}/assign
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+body:json {
+  {
+    "assignedToId": "{{assignedToUserId}}"
+  }
+}

@@ -1,0 +1,22 @@
+meta {
+  name: Change Lead Status
+  type: http
+  seq: 5
+}
+
+patch {
+  url: {{baseUrl}}/crm/leads/{{leadId}}/status
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+body:json {
+  {
+    "toStatus": "Contacted",
+    "reason": "Called client via phone, sent project catalog on WhatsApp."
+  }
+}
