@@ -1,0 +1,26 @@
+meta {
+  name: Create Follow-up
+  type: http
+  seq: 7
+}
+
+post {
+  url: {{baseUrl}}/crm/follow-ups
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+body:json {
+  {
+    "leadId": "{{leadId}}",
+    "type": "CALL",
+    "priority": "HIGH",
+    "dueDate": "2026-10-15",
+    "dueTime": "14:30",
+    "notes": "Follow up regarding 3BHK flat quotation and site visit."
+  }
+}

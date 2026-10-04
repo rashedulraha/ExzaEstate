@@ -94,4 +94,16 @@ export const DEFAULT_NOTIFICATION_TEMPLATES: readonly DefaultTemplateDefinition[
     title: 'Security Alert: {{eventType}}',
     body: 'Security anomaly detected: {{eventType}} with severity {{severity}}.',
   },
+  {
+    eventCode: 'followup.overdue',
+    channel: 'IN_APP',
+    title: 'Follow-Up Overdue: {{leadName}}',
+    body: 'Follow-up interaction ({{followUpType}}) for {{leadName}} was due on {{dueDate}} and is now overdue.',
+  },
+  {
+    eventCode: 'followup.reminder',
+    channel: 'IN_APP',
+    title: 'Follow-Up Reminder: {{leadName}}',
+    body: 'Follow-up interaction ({{followUpType}}) for {{leadName}} is scheduled on {{dueDate}}.',
+  },
 ] as const;

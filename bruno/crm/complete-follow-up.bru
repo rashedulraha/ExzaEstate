@@ -1,0 +1,24 @@
+meta {
+  name: Complete Follow-up
+  type: http
+  seq: 11
+}
+
+post {
+  url: {{baseUrl}}/crm/follow-ups/{{followUpId}}/complete
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+body:json {
+  {
+    "outcome": "Client visited site and approved unit A-4. Scheduling agreement discussion.",
+    "nextFollowUpDate": "2026-10-22",
+    "nextFollowUpType": "MEETING",
+    "nextFollowUpNotes": "Agreement draft review at head office."
+  }
+}

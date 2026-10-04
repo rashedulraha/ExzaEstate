@@ -1,0 +1,23 @@
+meta {
+  name: Update Follow-up
+  type: http
+  seq: 10
+}
+
+patch {
+  url: {{baseUrl}}/crm/follow-ups/{{followUpId}}
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+body:json {
+  {
+    "priority": "URGENT",
+    "dueDate": "2026-10-18",
+    "notes": "Rescheduled as client requested meeting over the weekend."
+  }
+}

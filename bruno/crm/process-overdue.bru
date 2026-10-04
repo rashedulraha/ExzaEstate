@@ -1,0 +1,15 @@
+meta {
+  name: Process Overdue Follow-ups
+  type: http
+  seq: 12
+}
+
+post {
+  url: {{baseUrl}}/crm/follow-ups/process-overdue
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
