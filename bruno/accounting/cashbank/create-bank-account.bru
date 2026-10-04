@@ -1,0 +1,31 @@
+meta {
+  name: Create Bank Account
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/api/v1/accounting/cashbank/accounts
+  body: json
+  auth: bearer
+}
+
+headers {
+  Content-Type: application/json
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "accountType": "BANK",
+    "name": "Dutch-Bangla Bank Corporate Account",
+    "accountNumber": "1071100012345",
+    "routingNumber": "090261623",
+    "swiftCode": "DBBLBDDH",
+    "currency": "BDT",
+    "initialBalancePaisa": "0"
+  }
+}

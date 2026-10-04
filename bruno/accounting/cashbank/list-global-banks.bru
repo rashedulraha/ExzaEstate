@@ -1,0 +1,15 @@
+meta {
+  name: List Global Reference Banks
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/api/v1/accounting/cashbank/banks
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}

@@ -1,0 +1,30 @@
+meta {
+  name: Create Cash Transfer
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/api/v1/accounting/cashbank/transfers
+  body: json
+  auth: bearer
+}
+
+headers {
+  Content-Type: application/json
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "sourceBankAccountId": "01a10000-0000-0000-0000-000000000001",
+    "destinationBankAccountId": "01a10000-0000-0000-0000-000000000002",
+    "amountPaisa": "50000000",
+    "transferDate": "2026-10-04",
+    "referenceNumber": "TRF-CHQ-1002",
+    "narration": "Petty cash replenishment from corporate bank account"
+  }
+}

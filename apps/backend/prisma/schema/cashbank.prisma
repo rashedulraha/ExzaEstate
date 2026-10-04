@@ -1,0 +1,138 @@
+// Cash and Bank Module (Phase A6.5)
+// PRD MOD-CASHBANK; accounting-rules.md §3.9, §3.2; architecture.md §5.5
+
+// Global Banks Reference (ARCH-GLOBAL-DATA, architecture.md §5.5)
+model Bank {
+  id        String   @id @default(uuid(7)) @db.Uuid
+  name      String   @db.VarChar(128)
+  code      String   @unique @db.VarChar(32) // e.g. "DBBL", "BRAC", "EBL", "SCB", "IBBL"
+  swiftCode String?  @map("swift_code") @db.VarChar(32)
+  isActive  Boolean  @default(true) @map("is_active")
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz
+
+  branches     BankBranch[]
+  bankAccounts BankAccount[]
+
+  @@map("banks")
+}
+
+model BankBranch {
+  id            String   @id @default(uuid(7)) @db.Uuid
+  bankId        String   @map("bank_id") @db.Uuid
+  name          String   @db.VarChar(128)
+  routingNumber String   @unique @map("routing_number") @db.VarChar(32)
+  district      String?  @db.VarChar(64)
+  isActive      Boolean  @default(true) @map("is_active")
+  createdAt     DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt     DateTime @updatedAt @map("updated_at") @db.Timestamptz
+
+  bank         Bank          @relation(fields: [bankId], references: [id], onDelete: Restrict)
+  bankAccounts BankAccount[]
+
+  @@index([bankId])
+  @@map("bank_branches")
+}
+
+model BankAccount {
+  id                  String   @id @default(uuid(7)) @db.Uuid
+  companyId           String   @map("company_id") @db.Uuid
+  accountType         String   @default("BANK") @map("account_type") @db.VarChar(32) // BANK | CASH | WALLET
+  name                String   @db.VarChar(128)
+  accountNumberEnc    String?  @map("account_number_enc") @db.Text
+  accountNumberBidx   String?  @map("account_number_bidx") @db.VarChar(64)
+  accountNumberMasked String?  @map("account_number_masked") @db.VarChar(32)
+  bankId              String?  @map("bank_id") @db.Uuid
+  branchId            String?  @map("branch_id") @db.Uuid
+  routingNumber       String?  @map("routing_number") @db.VarChar(32)
+  swiftCode           String?  @map("swift_code") @db.VarChar(32)
+  currency            String   @default("BDT") @db.VarChar(8)
+  coaAccountId        String   @map("coa_account_id") @db.Uuid
+  coaAccountCode      String   @map("coa_account_code") @db.VarChar(16)
+  initialBalancePaisa BigInt   @default(0) @map("initial_balance_paisa")
+  isActive            Boolean  @default(true) @map("is_active")
+  createdAt           DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt           DateTime @updatedAt @map("updated_at") @db.Timestamptz
+
+  bank            Bank?                @relation(fields: [bankId], references: [id], onDelete: Restrict)
+  branch          BankBranch?          @relation(fields: [branchId], references: [id], onDelete: Restrict)
+  coaAccount      Account              @relation(fields: [coaAccountId], references: [id], onDelete: Restrict)
+  transfersFrom   CashTransfer[]       @relation("TransferSource")
+  transfersTo     CashTransfer[]       @relation("TransferDestination")
+  reconciliations BankReconciliation[]
+
+  @@unique([companyId, coaAccountId])
+  @@index([companyId, accountType])
+  @@index([companyId, isActive])
+  @@index([companyId, accountNumberBidx])
+  @@map("bank_accounts")
+}
+
+model CashTransfer {
+  id                       String   @id @default(uuid(7)) @db.Uuid
+  companyId                String   @map("company_id") @db.Uuid
+  transferNumber           String   @map("transfer_number") @db.VarChar(64)
+  sourceBankAccountId      String   @map("source_bank_account_id") @db.Uuid
+  destinationBankAccountId String   @map("destination_bank_account_id") @db.Uuid
+  amountPaisa              BigInt   @map("amount_paisa")
+  transferDate             DateTime @map("transfer_date") @db.Date
+  referenceNumber          String?  @map("reference_number") @db.VarChar(128)
+  narration                String?  @db.Text
+  journalId                String   @unique @map("journal_id") @db.Uuid
+  createdById              String   @map("created_by_id") @db.Uuid
+  createdAt                DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt                DateTime @updatedAt @map("updated_at") @db.Timestamptz
+
+  sourceAccount      BankAccount @relation("TransferSource", fields: [sourceBankAccountId], references: [id], onDelete: Restrict)
+  destinationAccount BankAccount @relation("TransferDestination", fields: [destinationBankAccountId], references: [id], onDelete: Restrict)
+  journal            Journal     @relation(fields: [journalId], references: [id], onDelete: Restrict)
+
+  @@unique([companyId, transferNumber])
+  @@index([companyId, transferDate])
+  @@index([companyId, sourceBankAccountId])
+  @@index([companyId, destinationBankAccountId])
+  @@map("cash_transfers")
+}
+
+model BankReconciliation {
+  id                     String    @id @default(uuid(7)) @db.Uuid
+  companyId              String    @map("company_id") @db.Uuid
+  bankAccountId          String    @map("bank_account_id") @db.Uuid
+  statementDate          DateTime  @map("statement_date") @db.Date
+  statementBalancePaisa  BigInt    @map("statement_balance_paisa")
+  bookBalancePaisa       BigInt    @map("book_balance_paisa")
+  reconciledBalancePaisa BigInt    @default(0) @map("reconciled_balance_paisa")
+  differencePaisa        BigInt    @default(0) @map("difference_paisa")
+  status                 String    @default("Draft") @db.VarChar(32) // Draft | Completed
+  completedAt            DateTime? @map("completed_at") @db.Timestamptz
+  completedById          String?   @map("completed_by_id") @db.Uuid
+  notes                  String?   @db.Text
+  createdAt              DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt              DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+
+  bankAccount BankAccount              @relation(fields: [bankAccountId], references: [id], onDelete: Restrict)
+  items       BankReconciliationItem[]
+
+  @@index([companyId, bankAccountId])
+  @@index([companyId, statementDate])
+  @@map("bank_reconciliations")
+}
+
+model BankReconciliationItem {
+  id               String   @id @default(uuid(7)) @db.Uuid
+  companyId        String   @map("company_id") @db.Uuid
+  reconciliationId String   @map("reconciliation_id") @db.Uuid
+  journalLineId    String   @map("journal_line_id") @db.Uuid
+  clearedDate      DateTime @map("cleared_date") @db.Date
+  isCleared        Boolean  @default(true) @map("is_cleared")
+  notes            String?  @db.Text
+  createdAt        DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt        DateTime @updatedAt @map("updated_at") @db.Timestamptz
+
+  reconciliation BankReconciliation @relation(fields: [reconciliationId], references: [id], onDelete: Cascade)
+  journalLine    JournalLine        @relation(fields: [journalLineId], references: [id], onDelete: Restrict)
+
+  @@unique([companyId, journalLineId])
+  @@index([companyId, reconciliationId])
+  @@map("bank_reconciliation_items")
+}
