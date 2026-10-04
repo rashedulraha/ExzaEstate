@@ -1,0 +1,26 @@
+meta {
+  name: Post Payment
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/api/v1/collection/payments/{{paymentId}}/post
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accountantToken}}
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "postingDate": "2026-10-04",
+    "notes": "Verified bank deposit slip and posted"
+  }
+}

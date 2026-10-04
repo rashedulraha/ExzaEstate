@@ -1,0 +1,99 @@
+// Collection & Payments schema (Phase A5.2)
+// PRD MOD-PAYMENT, §9.4; permissions-matrix.md §3; architecture.md §10 (RULE-IMMUTABLE)
+
+model Payment {
+  id                   String                 @id @default(uuid(7)) @db.Uuid
+  companyId            String                 @map("company_id") @db.Uuid
+  paymentNumber        String                 @map("payment_number") @db.VarChar(64)
+  bookingId            String?                @map("booking_id") @db.Uuid
+  customerId           String                 @map("customer_id") @db.Uuid
+  propertyId           String?                @map("property_id") @db.Uuid
+  projectId            String?                @map("project_id") @db.Uuid
+
+  amountPaisa          BigInt                 @map("amount_paisa") @db.BigInt
+  paymentType          String                 @default("BOOKING_MONEY") @map("payment_type") @db.VarChar(32) // BOOKING_MONEY, DOWN_PAYMENT, INSTALLMENT, CHARGE, OTHER
+  paymentMethod        String                 @default("BANK") @map("payment_method") @db.VarChar(32) // CASH, BANK, CHEQUE, BKASH, NAGAD, CARD, GATEWAY, OTHER
+  status               String                 @default("Draft") @map("status") @db.VarChar(32) // Draft, Received, Posted, Reversed, Cancelled
+  isDraft              Boolean                @default(true) @map("is_draft")
+
+  // Method-specific fields (FLOW-07)
+  bankName             String?                @map("bank_name") @db.VarChar(128)
+  bankBranch           String?                @map("bank_branch") @db.VarChar(128)
+  accountNumber        String?                @map("account_number") @db.VarChar(64)
+  chequeNumber         String?                @map("cheque_number") @db.VarChar(64)
+  chequeDate           DateTime?              @map("cheque_date") @db.Date
+  chequeStatus         String?                @map("cheque_status") @db.VarChar(32) // Pending, Cleared, Bounced
+  transactionReference String?                @map("transaction_reference") @db.VarChar(128)
+  cardType             String?                @map("card_type") @db.VarChar(32)
+  cardLast4            String?                @map("card_last_4") @db.VarChar(4)
+  posTerminalId        String?                @map("pos_terminal_id") @db.VarChar(64)
+
+  // Allocation targets
+  allocationTarget     String?                @map("allocation_target") @db.VarChar(64) // BOOKING_AMOUNT, DOWNPAYMENT, INSTALLMENT, LATE_FEE, CUSTOMER_ADVANCE
+  targetInstallmentId  String?                @map("target_installment_id") @db.Uuid
+
+  // Accounting and receipt linkage
+  receiptId            String?                @map("receipt_id") @db.Uuid
+  journalId            String?                @map("journal_id") @db.Uuid
+  paymentDate          DateTime               @default(now()) @map("payment_date") @db.Date
+  receivedAt           DateTime?              @map("received_at") @db.Timestamptz
+  postedAt             DateTime?              @map("posted_at") @db.Timestamptz
+  postedById           String?                @map("posted_by_id") @db.Uuid
+
+  notes                String?                @map("notes") @db.Text
+  cancellationReason   String?                @map("cancellation_reason") @db.Text
+  cancelledAt          DateTime?              @map("cancelled_at") @db.Timestamptz
+  cancelledById        String?                @map("cancelled_by_id") @db.Uuid
+
+  createdAt            DateTime               @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt            DateTime               @updatedAt @map("updated_at") @db.Timestamptz
+  createdById          String                 @map("created_by_id") @db.Uuid
+  updatedById          String?                @map("updated_by_id") @db.Uuid
+
+  // Relations
+  booking              Booking?               @relation(fields: [bookingId], references: [id])
+  customer             Customer               @relation(fields: [customerId], references: [id])
+  statusHistory        PaymentStatusHistory[]
+  reversals            PaymentReversal[]
+
+  @@unique([companyId, paymentNumber], name: "company_payment_number_unique")
+  @@index([companyId, status, createdAt])
+  @@index([companyId, bookingId])
+  @@index([companyId, customerId])
+  @@index([companyId, paymentDate])
+  @@map("payments")
+}
+
+model PaymentStatusHistory {
+  id          String   @id @default(uuid(7)) @db.Uuid
+  companyId   String   @map("company_id") @db.Uuid
+  paymentId   String   @map("payment_id") @db.Uuid
+  fromStatus  String?  @map("from_status") @db.VarChar(32)
+  toStatus    String   @map("to_status") @db.VarChar(32)
+  reason      String?  @map("reason") @db.Text
+  changedById String?  @map("changed_by_id") @db.Uuid
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+  payment     Payment  @relation(fields: [paymentId], references: [id], onDelete: Cascade)
+
+  @@index([companyId, paymentId])
+  @@map("payment_status_history")
+}
+
+model PaymentReversal {
+  id             String   @id @default(uuid(7)) @db.Uuid
+  companyId      String   @map("company_id") @db.Uuid
+  paymentId      String   @map("payment_id") @db.Uuid
+  reversalNumber String   @map("reversal_number") @db.VarChar(64)
+  reason         String   @map("reason") @db.Text
+  approvalId     String?  @map("approval_id") @db.Uuid
+  journalId      String?  @map("journal_id") @db.Uuid
+  reversedById   String   @map("reversed_by_id") @db.Uuid
+  createdAt      DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+  payment        Payment  @relation(fields: [paymentId], references: [id])
+
+  @@unique([companyId, reversalNumber], name: "company_payment_reversal_number_unique")
+  @@index([companyId, paymentId])
+  @@map("payment_reversals")
+}
