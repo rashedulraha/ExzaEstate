@@ -1,0 +1,177 @@
+// Accounting Module (Phase A6 - Double-Entry Accounting Core)
+// PRD MOD-COA, MOD-PERIOD, MOD-ARAP; architecture.md §10, §11; accounting-rules.md §1, §3.11
+
+model Account {
+  id          String   @id @default(uuid(7)) @db.Uuid
+  companyId   String   @map("company_id") @db.Uuid
+  code        String   @db.VarChar(16)
+  name        String   @db.VarChar(128)
+  type        String   @db.VarChar(32) // ASSET | LIABILITY | EQUITY | INCOME | EXPENSE
+  parentId    String?  @map("parent_id") @db.Uuid
+  isGroup     Boolean  @default(false) @map("is_group")
+  isSystem    Boolean  @default(false) @map("is_system")
+  partyType   String?  @map("party_type") @db.VarChar(32) // CUSTOMER | VENDOR | BROKER | null
+  isActive    Boolean  @default(true) @map("is_active")
+  description String?  @db.Text
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt   DateTime @updatedAt @map("updated_at") @db.Timestamptz
+
+  parent       Account?      @relation("AccountHierarchy", fields: [parentId], references: [id], onDelete: Restrict)
+  children     Account[]     @relation("AccountHierarchy")
+  journalLines JournalLine[]
+  bankAccounts BankAccount[]
+
+  @@unique([companyId, code])
+  @@index([companyId, type])
+  @@index([companyId, parentId])
+  @@index([companyId, isActive])
+  @@map("accounts")
+}
+
+model FiscalYear {
+  id        String   @id @default(uuid(7)) @db.Uuid
+  companyId String   @map("company_id") @db.Uuid
+  name      String   @db.VarChar(64) // e.g. "FY 2026-2027"
+  startDate DateTime @map("start_date") @db.Date
+  endDate   DateTime @map("end_date") @db.Date
+  isClosed  Boolean  @default(false) @map("is_closed")
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz
+
+  periods AccountingPeriod[]
+
+  @@unique([companyId, name])
+  @@index([companyId, startDate, endDate])
+  @@map("fiscal_years")
+}
+
+model AccountingPeriod {
+  id           String    @id @default(uuid(7)) @db.Uuid
+  companyId    String    @map("company_id") @db.Uuid
+  fiscalYearId String    @map("fiscal_year_id") @db.Uuid
+  periodNumber Int       @map("period_number") @db.Integer // 1..12
+  name         String    @db.VarChar(64) // e.g. "July 2026", "January 2027"
+  startDate    DateTime  @map("start_date") @db.Date
+  endDate      DateTime  @map("end_date") @db.Date
+  status       String    @default("Open") @db.VarChar(32) // Open | Closed | Locked
+  closedAt     DateTime? @map("closed_at") @db.Timestamptz
+  closedById   String?   @map("closed_by_id") @db.Uuid
+  reopenedAt   DateTime? @map("reopened_at") @db.Timestamptz
+  reopenedById String?   @map("reopened_by_id") @db.Uuid
+  reopenReason String?   @map("reopen_reason") @db.Text
+  createdAt    DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt    DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+
+  fiscalYear FiscalYear @relation(fields: [fiscalYearId], references: [id], onDelete: Cascade)
+  journals   Journal[]
+
+  @@unique([companyId, fiscalYearId, periodNumber])
+  @@index([companyId, status])
+  @@index([companyId, startDate, endDate])
+  @@map("accounting_periods")
+}
+
+model Journal {
+  id                String    @id @default(uuid(7)) @db.Uuid
+  companyId         String    @map("company_id") @db.Uuid
+  journalNumber     String    @map("journal_number") @db.VarChar(64)
+  type              String    @default("GENERAL") @db.VarChar(32) // GENERAL | OPENING | SYSTEM | REVERSAL
+  status            String    @default("Draft") @db.VarChar(32)   // Draft | Review | Posted | Locked
+  postingDate       DateTime  @map("posting_date") @db.Date
+  periodId          String?   @map("period_id") @db.Uuid
+  narration         String    @db.Text
+  reference         String?   @db.VarChar(128)
+  sourceModule      String?   @map("source_module") @db.VarChar(64)
+  sourceDocumentId  String?   @map("source_document_id") @db.Uuid
+  sourceEventType   String?   @map("source_event_type") @db.VarChar(64)
+  totalAmount       BigInt    @default(0) @map("total_amount")
+  reversalOfId      String?   @map("reversal_of_id") @db.Uuid
+  postedAt          DateTime? @map("posted_at") @db.Timestamptz
+  postedById        String?   @map("posted_by_id") @db.Uuid
+  createdAt         DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt         DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+  createdById       String?   @map("created_by_id") @db.Uuid
+  updatedById       String?   @map("updated_by_id") @db.Uuid
+
+  lines             JournalLine[]
+  period            AccountingPeriod?  @relation(fields: [periodId], references: [id], onDelete: SetNull)
+  reversalOf        Journal?           @relation("JournalReversalHistory", fields: [reversalOfId], references: [id], onDelete: Restrict)
+  reversals         Journal[]          @relation("JournalReversalHistory")
+  reversalRecord    JournalReversal?   @relation("ReversalRecordOriginal")
+  createdAsReversal JournalReversal?   @relation("ReversalRecordReversal")
+  cashTransfer      CashTransfer?
+
+  @@unique([companyId, journalNumber])
+  @@index([companyId, status])
+  @@index([companyId, type])
+  @@index([companyId, postingDate])
+  @@index([companyId, reversalOfId])
+  @@index([companyId, sourceDocumentId])
+  @@index([companyId, sourceEventType])
+  @@map("journals")
+}
+
+model JournalLine {
+  id          String   @id @default(uuid(7)) @db.Uuid
+  companyId   String   @map("company_id") @db.Uuid
+  journalId   String   @map("journal_id") @db.Uuid
+  lineNumber  Int      @map("line_number") @db.Integer
+  accountId   String   @map("account_id") @db.Uuid
+  debitPaisa  BigInt   @default(0) @map("debit_paisa")
+  creditPaisa BigInt   @default(0) @map("credit_paisa")
+  description String?  @db.Text
+  partyType   String?  @map("party_type") @db.VarChar(32) // CUSTOMER | VENDOR | BROKER
+  partyId     String?  @map("party_id") @db.Uuid
+  costCenter  String?  @map("cost_center") @db.VarChar(64)
+  projectId   String?  @map("project_id") @db.Uuid
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt   DateTime @updatedAt @map("updated_at") @db.Timestamptz
+
+  journal             Journal                  @relation(fields: [journalId], references: [id], onDelete: Cascade)
+  account             Account                  @relation(fields: [accountId], references: [id], onDelete: Restrict)
+  reconciliationItems BankReconciliationItem[]
+
+  @@unique([companyId, journalId, lineNumber])
+  @@index([companyId, accountId])
+  @@index([companyId, journalId])
+  @@index([companyId, partyType, partyId])
+  @@index([companyId, projectId])
+  @@map("journal_lines")
+}
+
+model JournalReversal {
+  id                String   @id @default(uuid(7)) @db.Uuid
+  companyId         String   @map("company_id") @db.Uuid
+  originalJournalId String   @unique @map("original_journal_id") @db.Uuid
+  reversalJournalId String   @unique @map("reversal_journal_id") @db.Uuid
+  reason            String   @db.Text
+  reversedAt        DateTime @default(now()) @map("reversed_at") @db.Timestamptz
+  reversedById      String   @map("reversed_by_id") @db.Uuid
+  createdAt         DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+  originalJournal Journal @relation("ReversalRecordOriginal", fields: [originalJournalId], references: [id], onDelete: Restrict)
+  reversalJournal Journal @relation("ReversalRecordReversal", fields: [reversalJournalId], references: [id], onDelete: Restrict)
+
+  @@index([companyId, originalJournalId])
+  @@index([companyId, reversalJournalId])
+  @@map("journal_reversals")
+}
+
+model PostingRule {
+  id                String   @id @default(uuid(7)) @db.Uuid
+  companyId         String   @map("company_id") @db.Uuid
+  eventType         String   @map("event_type") @db.VarChar(64)
+  ruleName          String   @map("rule_name") @db.VarChar(128)
+  description       String?  @db.Text
+  debitAccountCode  String?  @map("debit_account_code") @db.VarChar(16)
+  creditAccountCode String?  @map("credit_account_code") @db.VarChar(16)
+  accountMappings   Json     @default("{}") @map("account_mappings") @db.JsonB
+  isActive          Boolean  @default(true) @map("is_active")
+  createdAt         DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt         DateTime @updatedAt @map("updated_at") @db.Timestamptz
+
+  @@unique([companyId, eventType])
+  @@index([companyId, isActive])
+  @@map("posting_rules")
+}
+

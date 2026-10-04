@@ -1,0 +1,25 @@
+meta {
+  name: Create Custom Account
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/api/v1/accounting/coa
+  body: json
+  auth: bearer
+}
+
+body:json {
+  {
+    "code": "1025",
+    "name": "Standard Chartered Principal Branch",
+    "type": "ASSET",
+    "isGroup": false,
+    "description": "Operating checking account"
+  }
+}
+
+auth:bearer {
+  token: {{token}}
+}

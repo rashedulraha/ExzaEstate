@@ -1,0 +1,21 @@
+meta {
+  name: List Chart of Accounts
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/api/v1/accounting/coa
+  body: none
+  auth: bearer
+}
+
+params:query {
+  ~type: ASSET
+  ~isActive: true
+  ~search: Bank
+}
+
+auth:bearer {
+  token: {{token}}
+}

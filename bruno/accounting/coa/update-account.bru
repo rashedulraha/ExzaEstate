@@ -1,0 +1,22 @@
+meta {
+  name: Update Account
+  type: http
+  seq: 5
+}
+
+patch {
+  url: {{baseUrl}}/api/v1/accounting/coa/{{accountId}}
+  body: json
+  auth: bearer
+}
+
+body:json {
+  {
+    "name": "Standard Chartered Gulshan Branch",
+    "description": "Updated branch location"
+  }
+}
+
+auth:bearer {
+  token: {{token}}
+}
