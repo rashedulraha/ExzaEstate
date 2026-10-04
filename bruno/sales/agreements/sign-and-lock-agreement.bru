@@ -1,0 +1,21 @@
+meta {
+  name: Sign and Lock Agreement
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/sales/agreements/{{agreementId}}/sign-and-lock
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+body:json {
+  {
+    "notes": "Signed by MD and Customer in Banani corporate office"
+  }
+}

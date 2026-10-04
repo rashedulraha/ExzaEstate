@@ -1,0 +1,58 @@
+// Agreement models (Phase A5 - Agreements & Versioning)
+// PRD MOD-AGREEMENT, §9.1, §9.5, FLOW-08; architecture.md §7.1, §10
+
+model AgreementTemplate {
+  id           String      @id @default(uuid(7)) @db.Uuid
+  companyId    String      @map("company_id") @db.Uuid
+  code         String      @db.VarChar(64)
+  name         String      @db.VarChar(255)
+  templateBody String      @map("template_body") @db.Text
+  isDefault    Boolean     @default(false) @map("is_default")
+  isActive     Boolean     @default(true) @map("is_active")
+
+  createdById  String?     @map("created_by_id") @db.Uuid
+  updatedById  String?     @map("updated_by_id") @db.Uuid
+  createdAt    DateTime    @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt    DateTime    @updatedAt @map("updated_at") @db.Timestamptz
+
+  agreements   Agreement[]
+
+  @@unique([companyId, code])
+  @@index([companyId])
+  @@map("agreement_templates")
+}
+
+model Agreement {
+  id              String             @id @default(uuid(7)) @db.Uuid
+  companyId       String             @map("company_id") @db.Uuid
+  agreementNumber String             @map("agreement_number") @db.VarChar(64)
+  bookingId       String             @map("booking_id") @db.Uuid
+  templateId      String?            @map("template_id") @db.Uuid
+  version         Int                @default(1)
+  status          String             @default("Draft") @db.VarChar(32) // Draft, Generated, Signed & Locked, Superseded
+  title           String             @db.VarChar(255)
+  content         String             @db.Text
+  terms           String?            @db.Text
+  signedAt        DateTime?          @map("signed_at") @db.Timestamptz
+  signedById      String?            @map("signed_by_id") @db.Uuid
+  documentId      String?            @map("document_id") @db.Uuid
+  supersededById  String?            @map("superseded_by_id") @db.Uuid
+  notes           String?            @db.Text
+
+  createdById     String?            @map("created_by_id") @db.Uuid
+  updatedById     String?            @map("updated_by_id") @db.Uuid
+  deletedAt       DateTime?          @map("deleted_at") @db.Timestamptz
+  createdAt       DateTime           @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt       DateTime           @updatedAt @map("updated_at") @db.Timestamptz
+
+  template        AgreementTemplate? @relation(fields: [templateId], references: [id], onDelete: SetNull)
+  booking         Booking            @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  supersededBy    Agreement?         @relation("AgreementVersion", fields: [supersededById], references: [id], onDelete: SetNull)
+  supersededFrom  Agreement[]        @relation("AgreementVersion")
+
+  @@unique([companyId, agreementNumber, version])
+  @@index([companyId])
+  @@index([companyId, bookingId])
+  @@index([companyId, status])
+  @@map("agreements")
+}

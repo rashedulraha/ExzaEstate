@@ -1,0 +1,25 @@
+meta {
+  name: Create Agreement Template
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/sales/agreements/templates
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+body:json {
+  {
+    "code": "ALLOTMENT_STD",
+    "name": "Standard Allotment Agreement",
+    "templateBody": "This Agreement is made on {{booking_date}} between {{company_name}} and {{customer_name}} for {{property_title}}...",
+    "isDefault": true,
+    "isActive": true
+  }
+}

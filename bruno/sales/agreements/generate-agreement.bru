@@ -1,0 +1,23 @@
+meta {
+  name: Generate Agreement
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/sales/agreements/generate
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+body:json {
+  {
+    "bookingId": "b0000000-0000-0000-0000-000000000001",
+    "title": "Deed of Agreement for Allotment & Sale",
+    "terms": "Possession within 36 months of confirmation"
+  }
+}

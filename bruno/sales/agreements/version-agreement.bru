@@ -1,0 +1,22 @@
+meta {
+  name: Version Agreement
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/sales/agreements/{{agreementId}}/version
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+body:json {
+  {
+    "reason": "Amended car parking bay specification per mutual consent",
+    "title": "Deed of Agreement (Addendum 1)"
+  }
+}
