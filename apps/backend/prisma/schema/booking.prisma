@@ -1,0 +1,137 @@
+// Booking models (Phase A5 - Bookings & Concurrency Guards)
+// PRD MOD-BOOKING, §9.1, FLOW-06; architecture.md §7.1, §10, §22.3
+
+model Booking {
+  id                         String    @id @default(uuid(7)) @db.Uuid
+  companyId                  String    @map("company_id") @db.Uuid
+  bookingNumber              String    @map("booking_number") @db.VarChar(64)
+  propertyId                 String    @map("property_id") @db.Uuid
+  customerId                 String    @map("customer_id") @db.Uuid
+  leadId                     String?   @map("lead_id") @db.Uuid
+  quotationId                String?   @map("quotation_id") @db.Uuid
+  salesExecutiveId           String    @map("sales_executive_id") @db.Uuid
+  brokerId                   String?   @map("broker_id") @db.Uuid
+  status                     String    @default("REQUESTED") @db.VarChar(32) // REQUESTED, PENDING_APPROVAL, CONFIRMED, AGREEMENT_PENDING, AGREEMENT_COMPLETED, COMPLETED, CANCELLED, TRANSFERRED
+
+  // Pricing breakdown
+  basePricePaisa             BigInt    @default(0) @map("base_price_paisa") @db.BigInt
+  totalPricePaisa            BigInt    @default(0) @map("total_price_paisa") @db.BigInt
+  discountAmountPaisa        BigInt    @default(0) @map("discount_amount_paisa") @db.BigInt
+  discountPercentage         Decimal?  @map("discount_percentage") @db.Decimal(5, 2)
+  netPricePaisa              BigInt    @default(0) @map("net_price_paisa") @db.BigInt
+  bookingAmountPaisa         BigInt    @default(0) @map("booking_amount_paisa") @db.BigInt
+  downPaymentPaisa           BigInt    @default(0) @map("down_payment_paisa") @db.BigInt
+  totalPaidPaisa             BigInt    @default(0) @map("total_paid_paisa") @db.BigInt
+
+  // Approval linkage
+  approvalId                 String?   @map("approval_id") @db.Uuid
+  approvalStatus             String?   @map("approval_status") @db.VarChar(32) // PENDING, APPROVED, REJECTED, AUTO_APPROVED
+
+  // Payment plan & charges snapshot
+  paymentPlanTemplateId      String?   @map("payment_plan_template_id") @db.Uuid
+  paymentPlanConfig          Json?     @map("payment_plan_config") @db.JsonB
+  chargesSnapshot            Json?     @map("charges_snapshot") @db.JsonB
+
+  // Dates and hold
+  bookingDate                DateTime  @default(now()) @map("booking_date") @db.Timestamptz
+  reservationHoldHours       Int       @default(72) @map("reservation_hold_hours")
+  reservationExpiresAt       DateTime? @map("reservation_expires_at") @db.Timestamptz
+  confirmedAt                DateTime? @map("confirmed_at") @db.Timestamptz
+  cancelledAt                DateTime? @map("cancelled_at") @db.Timestamptz
+  cancellationReason         String?   @map("cancellation_reason") @db.Text
+  cancellationDeductionPaisa BigInt?   @map("cancellation_deduction_paisa") @db.BigInt
+  refundAmountPaisa          BigInt?   @map("refund_amount_paisa") @db.BigInt
+  transferredAt              DateTime? @map("transferred_at") @db.Timestamptz
+  successorBookingId         String?   @map("successor_booking_id") @db.Uuid
+  predecessorBookingId       String?   @map("predecessor_booking_id") @db.Uuid
+
+  // Operational flags
+  isLegacy                   Boolean   @default(false) @map("is_legacy")
+  isTransfer                 Boolean   @default(false) @map("is_transfer")
+
+  notes                      String?   @db.Text
+  terms                      String?   @db.Text
+
+  createdById                String?   @map("created_by_id") @db.Uuid
+  updatedById                String?   @map("updated_by_id") @db.Uuid
+  deletedAt                  DateTime? @map("deleted_at") @db.Timestamptz
+  createdAt                  DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt                  DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+
+  customers                  BookingCustomer[]
+  charges                    BookingCharge[]
+  statusHistory              BookingStatusHistory[]
+  payments                   Payment[]
+  agreements                 Agreement[]
+
+  @@unique([companyId, bookingNumber])
+  @@index([companyId])
+  @@index([companyId, status])
+  @@index([companyId, propertyId])
+  @@index([companyId, customerId])
+  @@index([companyId, quotationId])
+  @@index([companyId, salesExecutiveId])
+  @@index([companyId, reservationExpiresAt])
+  @@index([companyId, createdAt])
+  @@map("bookings")
+}
+
+model BookingCustomer {
+  id              String    @id @default(uuid(7)) @db.Uuid
+  companyId       String    @map("company_id") @db.Uuid
+  bookingId       String    @map("booking_id") @db.Uuid
+  customerId      String    @map("customer_id") @db.Uuid
+  sharePercentage Decimal   @default(100.0) @map("share_percentage") @db.Decimal(5, 2)
+  isPrimary       Boolean   @default(true) @map("is_primary")
+  createdAt       DateTime  @default(now()) @map("created_at") @db.Timestamptz
+
+  booking         Booking   @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  @@unique([companyId, bookingId, customerId])
+  @@index([companyId])
+  @@index([companyId, bookingId])
+  @@index([companyId, customerId])
+  @@map("booking_customers")
+}
+
+model BookingCharge {
+  id               String    @id @default(uuid(7)) @db.Uuid
+  companyId        String    @map("company_id") @db.Uuid
+  bookingId        String    @map("booking_id") @db.Uuid
+  chargeTypeId     String?   @map("charge_type_id") @db.Uuid
+  name             String    @db.VarChar(255)
+  calculationType  String    @map("calculation_type") @db.VarChar(32) // FIXED, PERCENTAGE
+  rate             Decimal?  @db.Decimal(10, 4)
+  amountPaisa      BigInt    @map("amount_paisa") @db.BigInt
+  vatRate          Decimal   @default(0) @map("vat_rate") @db.Decimal(5, 2)
+  vatAmountPaisa   BigInt    @default(0) @map("vat_amount_paisa") @db.BigInt
+  totalAmountPaisa BigInt    @map("total_amount_paisa") @db.BigInt
+  isIncludedInNet  Boolean   @default(false) @map("is_included_in_net")
+  payableStage     String    @map("payable_stage") @db.VarChar(32) // AT_BOOKING, IN_SCHEDULE, AT_HANDOVER
+  paidAmountPaisa  BigInt    @default(0) @map("paid_amount_paisa") @db.BigInt
+  createdAt        DateTime  @default(now()) @map("created_at") @db.Timestamptz
+
+  booking          Booking   @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  @@index([companyId])
+  @@index([companyId, bookingId])
+  @@map("booking_charges")
+}
+
+model BookingStatusHistory {
+  id          String   @id @default(uuid(7)) @db.Uuid
+  companyId   String   @map("company_id") @db.Uuid
+  bookingId   String   @map("booking_id") @db.Uuid
+  fromStatus  String?  @map("from_status") @db.VarChar(32)
+  toStatus    String   @map("to_status") @db.VarChar(32)
+  reason      String?  @db.Text
+  changedById String?  @map("changed_by_id") @db.Uuid
+  metadata    Json?    @default("{}") @db.JsonB
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+  booking     Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  @@index([companyId])
+  @@index([companyId, bookingId])
+  @@map("booking_status_history")
+}

@@ -1,0 +1,29 @@
+meta {
+  name: Create Booking
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/sales/bookings
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+headers {
+  Idempotency-Key: bkg-req-001
+}
+
+body:json {
+  {
+    "propertyId": "d0000000-0000-0000-0000-000000000001",
+    "customerId": "c0000000-0000-0000-0000-000000000001",
+    "paymentPlanTemplateId": "b0000000-0000-0000-0000-000000000001",
+    "reservationHoldHours": 72,
+    "notes": "VIP booking via showroom visit"
+  }
+}

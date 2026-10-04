@@ -1,0 +1,22 @@
+meta {
+  name: Cancel Booking
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/sales/bookings/{{bookingId}}/cancel
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+body:json {
+  {
+    "reason": "Customer requested cancellation prior to confirmation due to relocation",
+    "cancellationPolicyStatus": "Available"
+  }
+}
