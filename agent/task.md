@@ -50,7 +50,7 @@
 ```mermaid
 graph TD
     A0["A0 Platform & Monorepo Foundations (A0.1–A0.12)"] --> A1["A1 Master Data, Platform Admin & Foundation Modules (A1.1–A1.8)"]
-    A1 --> A2["A2+B1 Golden Vertical Slice — Property Inventory (A2.1–A2.4, B1.1–B1.4)"]
+    A1 --> A2["A2 Property Inventory Backend (A2.1–A2.4)"]
     A2 --> A3["A3 CRM, Leads & Customers (A3.1–A3.4)"]
     A3 --> A4["A4 Payment Plans, Quotations & Approvals (A4.1–A4.4)"]
     A4 --> A5["A5 Bookings & Concurrency (A5.1–A5.5)"]
@@ -60,8 +60,7 @@ graph TD
     A7 --> A8["A8 Expenses, Vendors, Commission & P1 Operations (A8.1–A8.6)"]
     A8 --> A9["A9 Realtime, Notifications, Dashboards, Search & Gates (A9.1–A9.7)"]
     A9 --> A10["A10 Local Standalone & Migration (A10.1–A10.4)"]
-    A9 --> PartB["Part B Desktop complete (B2–B11; B9 also needs A10)"]
-    A10 --> PartB
+    A10 --> PartB["Part B Desktop complete (B1–B11)"]
     PartB --> PartC["Part C Web mirror (C1–C5)"]
     PartC --> P2["Release v1.x — P2 modules (P2.1–P2.5)"]
 ```
@@ -73,7 +72,7 @@ graph TD
 - **A0.10 provisioning is a registry**: later phases add their own default data (COA, posting rules, periods, approval rules, land factors) as `ProvisioningStep`s, because those tables do not exist at A0.10.
 - **New tasks** close gaps found in the spec audit: CI/CD (A0.11), security hardening (A0.12), platform admin + licensing (A1.5), documents (A1.6), audit query (A1.7), notifications core (A1.8), reservation expiry (A5.5), go-live migration (A7.9), overdue job (A7.8), budgets (A8.4), booking transfer (A8.5), profitability (A8.6), global search (A9.4), CSV import (A9.5), Golden Flow gate (A9.6), Desktop Local launcher (B9), Desktop licensing (B10), pre-launch gate (C5), P2 cards.
 - **Milestones:** **A-M1 (P0)** closes at A9.6 (Golden Flow via Bruno + all P0 `AT-*` green). **A-M2 (P1)** closes at A9.7 together with all P1 `AT-*` (`prd.md` §1.2).
-- **Part B vs Part A.** `prd.md` §1.1 says Part A is finished before Part B; `architecture.md` §0.1/D-04 inserts the golden vertical slice (A2+B1) first. This file follows `architecture.md` for B1 only; B2+ start after the Part A P0/P1 gates (A9.7) as in `prd.md`; only B9 (Local launcher) additionally needs A10. Owner confirmation is recorded in §4.1 (D-04).
+- **Backend First Discipline (Part A → Part B → Part C):** Per `AGENTS.md` §4 and owner decision (2026-10-04), Part A (Backend A0–A10) must be 100% completed, verified, and tested first before beginning Part B (Desktop Client B1–B11) and Part C (Web Client C1–C5). B1 (Desktop Shell, Design System & Property Pages) is positioned at the start of Part B.
 
 ---
 
@@ -566,7 +565,7 @@ These are applied as defaults in `architecture.md` v4 but are still **"Needs sig
 
 #### A2.4 — Conformance Sweep: Backend Golden Module
 
-- **Status:** [ ] · **Tier:** 2 · **Size:** S (2 steps) · **Priority:** P0
+- **Status:** [x] · **Tier:** 2 · **Size:** S (2 steps) · **Priority:** P0
 - **Depends:** A2.3
 - **Reads:** `architecture.md` §7.1, §18.1, §18.2; `rules.md` §12.
 - **Touches:** `apps/backend/src/modules/property/**` only (plus the log entry).
@@ -574,54 +573,14 @@ These are applied as defaults in `architecture.md` v4 but are still **"Needs sig
 - **Acceptance:** no deviation left; the module can be cited as the backend template.
 - **Done:** DoD-BE.
 
-#### B1.1 — Desktop Shell (Cloud mode), `app-core` & Auth Screens
-
-- **Status:** [ ] · **Tier:** 3 · **Size:** L (4 steps) · **Priority:** P0 · 🔒 D-06
-- **Depends:** A2.3
-- **Reads:** `architecture.md` §4.3, §12.1, §12.3, §12.5, §12.6; `design.md` §5; `security.md` §15 (Tauri); `rules.md` §4.
-- **Touches:** `apps/desktop/**`, `packages/app-core/**`, `packages/features/src/auth/**`, `packages/features/src/routes.tsx`.
-- **Steps:** **S1** Vite 8 + React 19 + React Router 8 shell mounting the single route tree from `packages/features`. **S2** `app-core`: `AuthProvider`, `PlatformProvider` + adapter interfaces, `usePermission`/`PermissionGate`, global error handler (`errors.<CODE>` via `t()`), `ApiConfig`. **S3** Tauri 2 shell: OS-keychain `SecureStorage`, minimal capability file, strict CSP. **S4** Login, TOTP enrolment, step-up modal, session-expired flow. Verify: `{desktop} build && {features} test auth`.
-- **Acceptance:** login against the real backend; refresh token only in the OS keychain; `@tauri-apps/*` imported only under `apps/desktop/src/platform/`.
-- **Done:** DoD-UI.
-
-#### B1.2 — Design System Tokens & Signature Components
-
-- **Status:** [ ] · **Tier:** 3 · **Size:** L (4 steps) · **Priority:** P0
-- **Depends:** B1.1
-- **Reads:** `design.md` §0–§14; `tech-versions.md` §2.6; `architecture.md` §12.4.
-- **Touches:** `packages/ui/**`.
-- **Steps:** **S1** `theme.css` (Tailwind 4 `@theme`, light default, dark optional) + **self-hosted fonts** (no CDN, `security.md` §15). **S2** primitives: `Button, Input, Select, FormField, Dialog, Drawer, DataTable (virtualised), StatusBadge, Skeleton, Toast`. **S3** layout: `AppShell, Sidebar, Header, Breadcrumbs, CommandPalette`, plus the six state primitives (loading/empty/filtered-empty/error/offline/no-permission). **S4** signature `PlanView` (`design.md` §7.1). Verify: `{ui} test && {ui} typecheck`.
-- **Acceptance:** contrast checks pass; status colours come only from the design-token status map; no arbitrary Tailwind colour classes.
-- **Done:** DoD-UI.
-
-#### B1.3 — Property Feature Pages
-
-- **Status:** [ ] · **Tier:** 3 · **Size:** L (4 steps) · **Priority:** P0
-- **Depends:** B1.2, A2.4
-- **Reads:** `golden-module-frontend.md` (entire); `design.md` §4.4, §6, §7.1; `architecture.md` §12.4–§12.5, §22.2.
-- **Touches:** `packages/features/src/property/**`.
-- **Steps:** build exactly the layout in `golden-module-frontend.md`: **S1** `PropertyDataTable` + `usePropertyList`. **S2** `PropertyPlanView` + `PropertyDrawer`. **S3** `PropertyFormModal` (RHF + Zod, price via shared `Money`/preview endpoint) + `usePropertyActions`. **S4** `PropertyStatusOverrideModal` (`<PermissionGate permission={PERMISSIONS.PROPERTY_OVERRIDE_STATUS}>`), routes + barrel. Verify: `{features} test property`.
-- **Acceptance:** Table ↔ Plan toggle works on seeded data; `formatMoney`/`formatDate('Asia/Dhaka')` everywhere; all 6 states present.
-- **Done:** DoD-UI.
-
-#### B1.4 — Golden Slice Review Gate & Playwright E2E
-
-- **Status:** [ ] · **Tier:** 3 · **Size:** M (3 steps) · **Priority:** P0
-- **Depends:** B1.3
-- **Reads:** `architecture.md` §16, §18.1; `golden-module-frontend.md`; `rules.md` §6.
-- **Touches:** `e2e/**`, `packages/features/src/property/**` (fixes only).
-- **Steps:** **S1** Playwright flow on the real backend: login → list → plan view → create → override status. **S2** conformance checklist for the frontend template. **S3** **Human review & approval** — stop and wait. Verify: `pnpm test:e2e --grep @golden`.
-- **Acceptance:** owner approves in writing (recorded in `agent/PROGRESS.md`); until then no other module's frontend may start.
-- **Done:** DoD-UI.
-
 ---
 
 ### Phase A3 — CRM, Leads & Customers
 
 #### A3.1 — Lead Capture, Sources & Pipeline
 
-- **Status:** [ ] · **Tier:** 2 · **Size:** L (4 steps) · **Priority:** P0
-- **Depends:** A1.2, A1.8, B1.4
+- **Status:** [x] · **Tier:** 2 · **Size:** L (4 steps) · **Priority:** P0
+- **Depends:** A2.4, A1.2, A1.8
 - **Reads:** `prd.md` MOD-CRM, §9.5 (lead statuses), FLOW-05, AT-16; `permissions-matrix.md` §4 (scope rules).
 - **Touches:** `apps/backend/src/modules/crm/**`, `apps/backend/prisma/schema/crm.prisma`, demo-seed step.
 - **Steps:** **S1** lead model + sources + duplicate detection by phone. **S2** pipeline state machine in `domain/` (`New → … → Customer/Lost`). **S3** assignment + scoped lists (`OWN/TEAM/BRANCH/ALL`) with `pg_trgm` search. **S4** Bruno + isolation/scope tests. Verify: `{be} test crm`.
@@ -630,7 +589,7 @@ These are applied as defaults in `architecture.md` v4 but are still **"Needs sig
 
 #### A3.2 — Follow-Ups & Overdue Alerts
 
-- **Status:** [ ] · **Tier:** 2 · **Size:** M (3 steps) · **Priority:** P0
+- **Status:** [x] · **Tier:** 2 · **Size:** M (3 steps) · **Priority:** P0
 - **Depends:** A3.1
 - **Reads:** `prd.md` MOD-FOLLOWUP; `architecture.md` §5.6, §8.2.
 - **Touches:** `apps/backend/src/modules/crm/**`, `apps/backend/src/jobs/**`.
@@ -640,7 +599,7 @@ These are applied as defaults in `architecture.md` v4 but are still **"Needs sig
 
 #### A3.3 — Customer 360 & KYC
 
-- **Status:** [ ] · **Tier:** 1 · **Size:** L (4 steps) · **Priority:** P0 · 🔒 D-10
+- **Status:** [x] · **Tier:** 1 · **Size:** L (4 steps) · **Priority:** P0 · 🔒 D-10
 - **Depends:** A3.1, A1.6, A0.12
 - **Reads:** `prd.md` MOD-CUSTOMER; `architecture.md` §14 (encryption/PII); `security.md` §6, §15.
 - **Touches:** `apps/backend/src/modules/crm/**` (customer sub-module) or `modules/customer/**`, `apps/backend/prisma/schema/customer.prisma`, demo-seed step.
@@ -650,7 +609,7 @@ These are applied as defaults in `architecture.md` v4 but are still **"Needs sig
 
 #### A3.4 — Lead→Customer Conversion & Activity Timeline
 
-- **Status:** [ ] · **Tier:** 2 · **Size:** S (2 steps) · **Priority:** P0
+- **Status:** [x] · **Tier:** 2 · **Size:** S (2 steps) · **Priority:** P0
 - **Depends:** A3.1, A3.3
 - **Reads:** `prd.md` FLOW-05, MOD-CUSTOMER.
 - **Touches:** `apps/backend/src/modules/crm/**`.
@@ -664,7 +623,7 @@ These are applied as defaults in `architecture.md` v4 but are still **"Needs sig
 
 #### A4.1 — Payment Plan Templates & Installment Calculation Engine
 
-- **Status:** [ ] · **Tier:** 1 · **Size:** L (4 steps) · **Priority:** P0
+- **Status:** [x] · **Tier:** 1 · **Size:** L (4 steps) · **Priority:** P0
 - **Depends:** A2.2, A0.2
 - **Reads:** `accounting-rules.md` §5; `prd.md` MOD-PAYPLAN, MOD-INSTALLMENT, AT-23; `architecture.md` §9.1, §11.
 - **Touches:** `apps/backend/src/modules/sales/domain/**`, `apps/backend/src/modules/sales/payment-plan/**`, `apps/backend/prisma/schema/sales.prisma`, demo-seed step.
@@ -675,7 +634,7 @@ These are applied as defaults in `architecture.md` v4 but are still **"Needs sig
 
 #### A4.2 — Charge Types & Fees Catalogue
 
-- **Status:** [ ] · **Tier:** 2 · **Size:** M (3 steps) · **Priority:** P0
+- **Status:** [x] · **Tier:** 2 · **Size:** M (3 steps) · **Priority:** P0
 - **Depends:** A1.1
 - **Reads:** `prd.md` MOD-CHARGES, §17 (`vat_rate_by_charge_type`); `accounting-rules.md` §2 (VAT).
 - **Touches:** `apps/backend/src/modules/sales/charges/**`.
@@ -685,7 +644,7 @@ These are applied as defaults in `architecture.md` v4 but are still **"Needs sig
 
 #### A4.3 — Quotation Generation & Branded PDF
 
-- **Status:** [ ] · **Tier:** 2 · **Size:** L (4 steps) · **Priority:** P0
+- **Status:** [x] · **Tier:** 2 · **Size:** L (4 steps) · **Priority:** P0
 - **Depends:** A4.1, A4.2, A3.3, A1.6
 - **Reads:** `prd.md` MOD-QUOTATION, §9.5; `design.md` §12; `architecture.md` §15, §20.2.
 - **Touches:** `apps/backend/src/modules/sales/quotation/**`, `apps/backend/src/modules/sales/pdf/**`.
@@ -695,7 +654,7 @@ These are applied as defaults in `architecture.md` v4 but are still **"Needs sig
 
 #### A4.4 — Generic Approval Engine & Discount Matrix
 
-- **Status:** [ ] · **Tier:** 1 · **Size:** XL (5 steps) · **Priority:** P0 · 🔒 D-08
+- **Status:** [x] · **Tier:** 1 · **Size:** XL (5 steps) · **Priority:** P0 · 🔒 D-08
 - **Depends:** A4.3, A1.8, A0.12
 - **Reads:** `architecture.md` §7.3; `prd.md` MOD-APPROVAL, MOD-DISCOUNT, §5.6, BR-05, AT-06, AT-24; `permissions-matrix.md` §1, §4 (rules 3–4); `security.md` §15.
 - **Touches:** `apps/backend/src/modules/approvals/**`, `apps/backend/src/modules/sales/approval-handlers/**`, `apps/backend/prisma/schema/approvals.prisma`, provisioning step (approval rules), demo-seed step.
@@ -715,7 +674,7 @@ These are applied as defaults in `architecture.md` v4 but are still **"Needs sig
 
 #### A5.1 — Booking State Machine & Validation Pipeline
 
-- **Status:** [ ] · **Tier:** 1 · **Size:** L (4 steps) · **Priority:** P0
+- **Status:** [x] · **Tier:** 1 · **Size:** L (4 steps) · **Priority:** P0
 - **Depends:** A4.4, A2.2, A3.3
 - **Reads:** `prd.md` MOD-BOOKING, §9.1, FLOW-06, BR-01, BR-05, BR-19, AT-17; `architecture.md` §7.1 (`domain/`), §10, §22.3.
 - **Touches:** `apps/backend/src/modules/sales/booking/**`, `apps/backend/prisma/schema/sales.prisma`, demo-seed step.
@@ -729,7 +688,7 @@ These are applied as defaults in `architecture.md` v4 but are still **"Needs sig
 
 #### A5.2 — Payment Entity & Draft Booking Payments
 
-- **Status:** [ ] · **Tier:** 1 · **Size:** M (3 steps) · **Priority:** P0
+- **Status:** [x] · **Tier:** 1 · **Size:** M (3 steps) · **Priority:** P0
 - **Depends:** A5.1
 - **Reads:** `prd.md` MOD-PAYMENT, §9.4; `permissions-matrix.md` §3 (`payment:create-draft`); `architecture.md` §10 (RULE-IMMUTABLE).
 - **Touches:** `apps/backend/src/modules/collection/payment/**`, `apps/backend/prisma/schema/collection.prisma`, `apps/backend/prisma/migrations/**` (immutability trigger).
@@ -739,7 +698,7 @@ These are applied as defaults in `architecture.md` v4 but are still **"Needs sig
 
 #### A5.3 — Concurrency Guard: Row Lock & Partial Unique Index
 
-- **Status:** [ ] · **Tier:** 1 · **Size:** M (3 steps) · **Priority:** P0
+- **Status:** [x] · **Tier:** 1 · **Size:** M (3 steps) · **Priority:** P0
 - **Depends:** A5.1
 - **Reads:** `architecture.md` §10 (RULE-BOOKING-RACE), §22.4; `prd.md` BR-01, AT-01–AT-03.
 - **Touches:** `apps/backend/prisma/migrations/**`, `apps/backend/src/modules/sales/booking/**`, `apps/backend/test/**`, `scripts/check-booking-index.mjs`.
@@ -749,7 +708,7 @@ These are applied as defaults in `architecture.md` v4 but are still **"Needs sig
 
 #### A5.4 — Agreement Generation, Locking & Versioning
 
-- **Status:** [ ] · **Tier:** 2 · **Size:** L (4 steps) · **Priority:** P0
+- **Status:** [x] · **Tier:** 2 · **Size:** L (4 steps) · **Priority:** P0
 - **Depends:** A5.1, A1.6, A4.3
 - **Reads:** `prd.md` MOD-AGREEMENT, FLOW-08, §9.1, §9.5; `design.md` §12.
 - **Touches:** `apps/backend/src/modules/sales/agreement/**`.
@@ -759,7 +718,7 @@ These are applied as defaults in `architecture.md` v4 but are still **"Needs sig
 
 #### A5.5 — Reservation Expiry Job
 
-- **Status:** [ ] · **Tier:** 1 · **Size:** M (3 steps) · **Priority:** P0
+- **Status:** [x] · **Tier:** 1 · **Size:** M (3 steps) · **Priority:** P0
 - **Depends:** A5.1, A1.8, A0.7
 - **Reads:** `prd.md` FLOW-06, BR-17, AT-11, §17 (`reservation_hold_hours`, `nightly_job_time`).
 - **Touches:** `apps/backend/src/modules/sales/booking/jobs/**`.
@@ -777,7 +736,7 @@ These are applied as defaults in `architecture.md` v4 but are still **"Needs sig
 
 #### A6.1 — Chart of Accounts & Account Balances
 
-- **Status:** [ ] · **Tier:** 1 · **Size:** M (3 steps) · **Priority:** P0
+- **Status:** [x] · **Tier:** 1 · **Size:** M (3 steps) · **Priority:** P0
 - **Depends:** A1.4, A0.10
 - **Reads:** `accounting-rules.md` §1; `prd.md` MOD-COA, MOD-ARAP; `architecture.md` §10, §11.
 - **Touches:** `apps/backend/src/modules/accounting/coa/**`, `apps/backend/prisma/schema/accounting.prisma`, provisioning step (default COA 1000–5900 incl. 2600), demo-seed step.
@@ -787,7 +746,7 @@ These are applied as defaults in `architecture.md` v4 but are still **"Needs sig
 
 #### A6.2 — Fiscal Years & Periods (Period Close/Reopen)
 
-- **Status:** [ ] · **Tier:** 1 · **Size:** M (3 steps) · **Priority:** P0
+- **Status:** [x] · **Tier:** 1 · **Size:** M (3 steps) · **Priority:** P0
 - **Depends:** A6.1, A0.9
 - **Reads:** `architecture.md` §10 (RULE-PERIOD), §11 (fiscal year); `prd.md` MOD-PERIOD, FLOW-13, BR-08, AT-10; `accounting-rules.md` §3.11.
 - **Touches:** `apps/backend/src/modules/accounting/period/**`, provisioning step (current fiscal year + 12 periods), demo-seed step.
@@ -797,7 +756,7 @@ These are applied as defaults in `architecture.md` v4 but are still **"Needs sig
 
 #### A6.3 — Journal Engine, Immutability & Reversals
 
-- **Status:** [ ] · **Tier:** 1 · **Size:** XL (5 steps) · **Priority:** P0
+- **Status:** [x] · **Tier:** 1 · **Size:** XL (5 steps) · **Priority:** P0
 - **Depends:** A6.2
 - **Reads:** `architecture.md` §10 (RULE-DOUBLE-ENTRY, RULE-IMMUTABLE), §22.4; `prd.md` MOD-JOURNAL, BR-02–BR-04, AT-26; `accounting-rules.md` §3.3, §4.
 - **Touches:** `apps/backend/src/modules/accounting/journal/**`, `apps/backend/prisma/migrations/**` (triggers/grants), `apps/backend/prisma/schema/accounting.prisma`.
@@ -812,7 +771,7 @@ These are applied as defaults in `architecture.md` v4 but are still **"Needs sig
 
 #### A6.4 — Posting Rules Registry & `PostingService`
 
-- **Status:** [ ] · **Tier:** 1 · **Size:** XL (5 steps) · **Priority:** P0 · (OQ-06)
+- **Status:** [x] · **Tier:** 1 · **Size:** XL (5 steps) · **Priority:** P0 · (OQ-06)
 - **Depends:** A6.3
 - **Reads:** `accounting-rules.md` §1–§3 (all), §2 (policy settings); `architecture.md` §10 (RULE-POSTING); `prd.md` MOD-EVENTS, BR-06, AT-04, AT-04b, AT-25.
 - **Touches:** `apps/backend/src/modules/accounting/posting-rules/**`, `apps/backend/src/modules/accounting/posting/**`, provisioning step (posting-rule mapping), demo-seed step.
@@ -828,7 +787,7 @@ These are applied as defaults in `architecture.md` v4 but are still **"Needs sig
 
 #### A6.5 — Cash & Bank Accounts, Transfers & Reconciliation
 
-- **Status:** [ ] · **Tier:** 1 · **Size:** M (3 steps) · **Priority:** P0
+- **Status:** [x] · **Tier:** 1 · **Size:** M (3 steps) · **Priority:** P0
 - **Depends:** A6.4
 - **Reads:** `prd.md` MOD-CASHBANK; `accounting-rules.md` §3.9, §3.2 (bank children of 1020); `architecture.md` §5.5 (global banks).
 - **Touches:** `apps/backend/src/modules/accounting/cashbank/**`, demo-seed step.
@@ -838,7 +797,7 @@ These are applied as defaults in `architecture.md` v4 but are still **"Needs sig
 
 #### A6.6 — Financial Reports: Ledger, Trial Balance, Balance Sheet, Income Statement
 
-- **Status:** [ ] · **Tier:** 2 · **Size:** M (3 steps) · **Priority:** P0
+- **Status:** [x] · **Tier:** 2 · **Size:** M (3 steps) · **Priority:** P0
 - **Depends:** A6.4
 - **Reads:** `prd.md` MOD-REPORTS, §18; `accounting-rules.md` §4; `architecture.md` §7.2 (read-only query classes).
 - **Touches:** `apps/backend/src/modules/reports/queries/**`, `apps/backend/src/modules/accounting/ledger/**`.
@@ -1137,6 +1096,46 @@ These are applied as defaults in `architecture.md` v4 but are still **"Needs sig
 ## 9. Part B — Desktop Client (and shared frontend packages)
 
 > Every Part B card: **Tier 3 · Priority per module · DoD-UI**. Follow `golden-module-frontend.md` file layout (`pages/`, `components/`, `hooks/`, `schemas/`, `<feature>.routes.tsx`, `index.ts`) under `packages/features/src/<feature>/`. Use only generated hooks from `@exzaestate/api-client`, only `@exzaestate/ui` components, `formatMoney/formatDate` from `@exzaestate/shared`, `<PermissionGate>`/`usePermission`, and real data from `pnpm db:seed:demo`. Screens never contain business rules (`BR-12`). Each screen lists its six states (loading, empty, filtered-empty, error, offline, no-permission).
+
+#### B1.1 — Desktop Shell (Cloud mode), `app-core` & Auth Screens
+
+- **Status:** [ ] · **Tier:** 3 · **Size:** L (4 steps) · **Priority:** P0 · 🔒 D-06
+- **Depends:** A9.7, A10.4
+- **Reads:** `architecture.md` §4.3, §12.1, §12.3, §12.5, §12.6; `design.md` §5; `security.md` §15 (Tauri); `rules.md` §4.
+- **Touches:** `apps/desktop/**`, `packages/app-core/**`, `packages/features/src/auth/**`, `packages/features/src/routes.tsx`.
+- **Steps:** **S1** Vite 8 + React 19 + React Router 8 shell mounting the single route tree from `packages/features`. **S2** `app-core`: `AuthProvider`, `PlatformProvider` + adapter interfaces, `usePermission`/`PermissionGate`, global error handler (`errors.<CODE>` via `t()`), `ApiConfig`. **S3** Tauri 2 shell: OS-keychain `SecureStorage`, minimal capability file, strict CSP. **S4** Login, TOTP enrolment, step-up modal, session-expired flow. Verify: `{desktop} build && {features} test auth`.
+- **Acceptance:** login against the real backend; refresh token only in the OS keychain; `@tauri-apps/*` imported only under `apps/desktop/src/platform/`.
+- **Done:** DoD-UI.
+
+#### B1.2 — Design System Tokens & Signature Components
+
+- **Status:** [ ] · **Tier:** 3 · **Size:** L (4 steps) · **Priority:** P0
+- **Depends:** B1.1
+- **Reads:** `design.md` §0–§14; `tech-versions.md` §2.6; `architecture.md` §12.4.
+- **Touches:** `packages/ui/**`.
+- **Steps:** **S1** `theme.css` (Tailwind 4 `@theme`, light default, dark optional) + **self-hosted fonts** (no CDN, `security.md` §15). **S2** primitives: `Button, Input, Select, FormField, Dialog, Drawer, DataTable (virtualised), StatusBadge, Skeleton, Toast` with Shadcn/Radix accessible foundations. **S3** layout: `AppShell, Sidebar, Header, Breadcrumbs, CommandPalette`, plus the six state primitives (loading/empty/filtered-empty/error/offline/no-permission). **S4** signature `PlanView` (`design.md` §7.1). Verify: `{ui} test && {ui} typecheck`.
+- **Acceptance:** contrast checks pass; status colours come only from the design-token status map; no arbitrary Tailwind colour classes.
+- **Done:** DoD-UI.
+
+#### B1.3 — Property Feature Pages
+
+- **Status:** [ ] · **Tier:** 3 · **Size:** L (4 steps) · **Priority:** P0
+- **Depends:** B1.2
+- **Reads:** `golden-module-frontend.md` (entire); `design.md` §4.4, §6, §7.1; `architecture.md` §12.4–§12.5, §22.2.
+- **Touches:** `packages/features/src/property/**`.
+- **Steps:** build exactly the layout in `golden-module-frontend.md`: **S1** `PropertyDataTable` + `usePropertyList`. **S2** `PropertyPlanView` + `PropertyDrawer`. **S3** `PropertyFormModal` (RHF + Zod, price via shared `Money`/preview endpoint) + `usePropertyActions`. **S4** `PropertyStatusOverrideModal` (`<PermissionGate permission={PERMISSIONS.PROPERTY_OVERRIDE_STATUS}>`), routes + barrel. Verify: `{features} test property`.
+- **Acceptance:** Table ↔ Plan toggle works on seeded data; `formatMoney`/`formatDate('Asia/Dhaka')` everywhere; all 6 states present.
+- **Done:** DoD-UI.
+
+#### B1.4 — Golden Slice Review Gate & Playwright E2E
+
+- **Status:** [ ] · **Tier:** 3 · **Size:** M (3 steps) · **Priority:** P0
+- **Depends:** B1.3
+- **Reads:** `architecture.md` §16, §18.1; `golden-module-frontend.md`; `rules.md` §6.
+- **Touches:** `e2e/**`, `packages/features/src/property/**` (fixes only).
+- **Steps:** **S1** Playwright flow on the real backend: login → list → plan view → create → override status. **S2** conformance checklist for the frontend template. **S3** **Human review & approval** — stop and wait. Verify: `pnpm test:e2e --grep @golden`.
+- **Acceptance:** owner approves in writing (recorded in `agent/PROGRESS.md`); until then no other module's frontend may start.
+- **Done:** DoD-UI.
 
 #### B2 — CRM, Leads & Customer 360 Screens
 
