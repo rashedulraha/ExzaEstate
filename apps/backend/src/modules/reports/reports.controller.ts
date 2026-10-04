@@ -20,8 +20,11 @@ import { PermissionsGuard } from '../../common/guards/permissions.guard.js';
 import { BalanceSheetReportDto } from './dto/balance-sheet-response.dto.js';
 import { ExportReportDto, ReportExportJobResponseDto } from './dto/export-report.dto.js';
 import { IncomeStatementReportDto } from './dto/income-statement-response.dto.js';
+import { ProjectProfitabilityReportDto } from './dto/profitability-response.dto.js';
 import { QueryBalanceSheetDto } from './dto/query-balance-sheet.dto.js';
 import { QueryIncomeStatementDto } from './dto/query-income-statement.dto.js';
+import { QueryKpiFilterDto } from './dto/query-kpi-filter.dto.js';
+import { QueryProfitabilityDto } from './dto/query-profitability.dto.js';
 import { QueryTrialBalanceDto } from './dto/query-trial-balance.dto.js';
 import { TrialBalanceReportDto } from './dto/trial-balance-response.dto.js';
 import { ReportsService } from './reports.service.js';
@@ -101,4 +104,58 @@ export class ReportsController {
   ): Promise<ReportExportJobResponseDto> {
     return this.reportsService.exportReport(user.companyId, user.userId, 'INCOME_STATEMENT', dto);
   }
+
+  @Get('profitability')
+  @RequirePermission(PERMISSIONS.REPORT_VIEW)
+  @ApiOperation({ summary: 'Generate Project Profitability report' })
+  @ApiResponse({ status: 200, type: ProjectProfitabilityReportDto })
+  async getProjectProfitability(
+    @CurrentUser() user: AuthenticatedUser,
+    @Query() query: QueryProfitabilityDto,
+  ): Promise<ProjectProfitabilityReportDto> {
+    return this.reportsService.getProjectProfitability(user.companyId, query);
+  }
+
+  @Post('profitability/export')
+  @HttpCode(HttpStatus.ACCEPTED)
+  @RequirePermission(PERMISSIONS.REPORT_EXPORT)
+  @ApiOperation({ summary: 'Queue asynchronous export of Project Profitability report' })
+  @ApiResponse({ status: 202, type: ReportExportJobResponseDto })
+  async exportProfitability(
+    @CurrentUser() user: AuthenticatedUser,
+    @Body() dto: ExportReportDto,
+  ): Promise<ReportExportJobResponseDto> {
+    return this.reportsService.exportReport(user.companyId, user.userId, 'PROJECT_PROFITABILITY', dto);
+  }
+
+  @Get('sales')
+  @RequirePermission(PERMISSIONS.REPORT_VIEW)
+  @ApiOperation({ summary: 'Generate Sales Report' })
+  async getSalesReport(
+    @CurrentUser() user: AuthenticatedUser,
+    @Query() query: QueryKpiFilterDto,
+  ) {
+    return this.reportsService.getSalesReport(user.companyId, query);
+  }
+
+  @Get('collection')
+  @RequirePermission(PERMISSIONS.REPORT_VIEW)
+  @ApiOperation({ summary: 'Generate Collection Report' })
+  async getCollectionReport(
+    @CurrentUser() user: AuthenticatedUser,
+    @Query() query: QueryKpiFilterDto,
+  ) {
+    return this.reportsService.getCollectionReport(user.companyId, query);
+  }
+
+  @Get('inventory')
+  @RequirePermission(PERMISSIONS.REPORT_VIEW)
+  @ApiOperation({ summary: 'Generate Property Inventory Status Report' })
+  async getInventoryReport(
+    @CurrentUser() user: AuthenticatedUser,
+    @Query() query: QueryKpiFilterDto,
+  ) {
+    return this.reportsService.getInventoryReport(user.companyId, query);
+  }
 }
+

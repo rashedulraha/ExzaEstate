@@ -1,0 +1,31 @@
+// Booking Transfer models (Phase A8.5)
+// PRD MOD-TRANSFER, FLOW-10, BR-14, AT-35
+
+model BookingTransfer {
+  id                   String    @id @default(uuid(7)) @db.Uuid
+  companyId            String    @map("company_id") @db.Uuid
+  transferNumber       String    @map("transfer_number") @db.VarChar(64)
+  originalBookingId    String    @map("original_booking_id") @db.Uuid
+  transfereeCustomerId String    @map("transferee_customer_id") @db.Uuid
+  newBookingId         String?   @map("new_booking_id") @db.Uuid
+  transferFeePaisa     BigInt    @default(0) @map("transfer_fee_paisa") @db.BigInt
+  reason               String?   @db.Text
+  status               String    @default("REQUESTED") @db.VarChar(32) // REQUESTED, APPROVED, REJECTED, COMPLETED
+
+  approvalId           String?   @map("approval_id") @db.Uuid
+  approvedById         String?   @map("approved_by_id") @db.Uuid
+  approvedAt           DateTime? @map("approved_at") @db.Timestamptz
+  completedAt          DateTime? @map("completed_at") @db.Timestamptz
+  journalId            String?   @map("journal_id") @db.Uuid
+
+  createdAt            DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt            DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+  deletedAt            DateTime? @map("deleted_at") @db.Timestamptz
+
+  @@unique([companyId, transferNumber])
+  @@index([companyId])
+  @@index([companyId, originalBookingId])
+  @@index([companyId, transfereeCustomerId])
+  @@index([companyId, status])
+  @@map("booking_transfers")
+}
