@@ -1,0 +1,25 @@
+meta {
+  name: Reopen Accounting Period
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{baseUrl}}/api/v1/accounting/periods/:id/reopen
+  body: json
+  auth: bearer
+}
+
+params:path {
+  id: 
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "reason": "Auditor adjustment entries required for year-end closing"
+  }
+}

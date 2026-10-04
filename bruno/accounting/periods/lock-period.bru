@@ -1,0 +1,19 @@
+meta {
+  name: Lock Accounting Period
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{baseUrl}}/api/v1/accounting/periods/:id/lock
+  body: none
+  auth: bearer
+}
+
+params:path {
+  id: 
+}
+
+auth:bearer {
+  token: {{token}}
+}

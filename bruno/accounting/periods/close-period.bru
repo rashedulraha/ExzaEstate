@@ -1,0 +1,25 @@
+meta {
+  name: Close Accounting Period
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/api/v1/accounting/periods/:id/close
+  body: json
+  auth: bearer
+}
+
+params:path {
+  id: 
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "notes": "Month-end closing reconciled"
+  }
+}

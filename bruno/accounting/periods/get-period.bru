@@ -1,0 +1,19 @@
+meta {
+  name: Get Accounting Period
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/api/v1/accounting/periods/:id
+  body: none
+  auth: bearer
+}
+
+params:path {
+  id: 
+}
+
+auth:bearer {
+  token: {{token}}
+}
