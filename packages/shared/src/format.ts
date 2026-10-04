@@ -198,3 +198,93 @@ export function isOverdueBusinessDate(
   }
   return dueStr < todayStr;
 }
+
+const ONES = [
+  '', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine',
+  'Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen',
+];
+
+const TENS = ['', '', 'Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety'];
+
+function convertBelowThousand(n: number): string {
+  let str = '';
+  if (n >= 100) {
+    str += `${ONES[Math.floor(n / 100)]} Hundred `;
+    n %= 100;
+  }
+  if (n >= 20) {
+    str += `${TENS[Math.floor(n / 10)]} `;
+    n %= 10;
+  }
+  if (n > 0) {
+    str += `${ONES[n]} `;
+  }
+  return str.trim();
+}
+
+function convertTakaToWords(taka: bigint): string {
+  if (taka === 0n) return 'Zero';
+  let remaining = taka;
+  const parts: string[] = [];
+
+  const crore = remaining / 10000000n;
+  if (crore > 0n) {
+    parts.push(`${convertTakaToWords(crore)} Crore`);
+    remaining %= 10000000n;
+  }
+
+  const lakh = Number(remaining / 100000n);
+  if (lakh > 0) {
+    parts.push(`${convertBelowThousand(lakh)} Lakh`);
+    remaining %= 100000n;
+  }
+
+  const thousand = Number(remaining / 1000n);
+  if (thousand > 0) {
+    parts.push(`${convertBelowThousand(thousand)} Thousand`);
+    remaining %= 1000n;
+  }
+
+  const hundred = Number(remaining);
+  if (hundred > 0) {
+    parts.push(convertBelowThousand(hundred));
+  }
+
+  return parts.join(' ').trim();
+}
+
+import { amountToBnWords } from './bengali-words.js';
+export { amountToBnWords };
+
+/**
+ * Converts BigInt paisa into Bangladeshi currency wording in English or Bengali.
+ * Examples:
+ *   500000000n, 'en' -> "Fifty Lakh Taka Only"
+ *   500000000n, 'bn' -> "পঞ্চাশ লক্ষ টাকা মাত্র"
+ */
+export function amountToWords(paisa: bigint, language: 'en' | 'bn' = 'en'): string {
+  if (language === 'bn') {
+    return amountToBnWords(paisa);
+  }
+
+  const isNegative = paisa < 0n;
+  const absPaisa = isNegative ? -paisa : paisa;
+  const taka = absPaisa / 100n;
+  const remPaisa = Number(absPaisa % 100n);
+
+  const prefix = isNegative ? 'Negative ' : '';
+  const takaWords = convertTakaToWords(taka);
+  const paisaWords = remPaisa > 0 ? convertBelowThousand(remPaisa) : '';
+
+  if (taka === 0n && remPaisa > 0) {
+    return `${prefix}${paisaWords} Paisa Only`;
+  }
+
+  if (remPaisa > 0) {
+    return `${prefix}${takaWords} Taka and ${paisaWords} Paisa Only`;
+  }
+
+  return `${prefix}${takaWords} Taka Only`;
+}
+
+
