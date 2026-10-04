@@ -1,0 +1,110 @@
+// Property and Inventory models (Task A2.1 - Property Data Model, Hierarchy & RLS)
+// PRD MOD-PROPERTY, §9.2; architecture.md §5.3, §11, §18.1
+
+model PropertyBlock {
+  id          String    @id @default(uuid(7)) @db.Uuid
+  companyId   String    @map("company_id") @db.Uuid
+  projectId   String    @map("project_id") @db.Uuid
+  code        String    @db.VarChar(64)
+  name        String    @db.VarChar(255)
+  type        String    @default("BLOCK") @db.VarChar(32) // BLOCK, ZONE, TOWER, SECTOR
+  description String?   @db.Text
+  deletedAt   DateTime? @map("deleted_at") @db.Timestamptz
+  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt   DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+  createdById String?   @map("created_by_id") @db.Uuid
+  updatedById String?   @map("updated_by_id") @db.Uuid
+
+  floors      PropertyFloor[]
+  properties  Property[]
+
+  @@unique([companyId, projectId, code])
+  @@index([companyId])
+  @@index([companyId, projectId])
+  @@map("property_blocks")
+}
+
+model PropertyFloor {
+  id          String    @id @default(uuid(7)) @db.Uuid
+  companyId   String    @map("company_id") @db.Uuid
+  projectId   String    @map("project_id") @db.Uuid
+  blockId     String    @map("block_id") @db.Uuid
+  code        String    @db.VarChar(64)
+  name        String    @db.VarChar(255)
+  floorNumber Int?      @map("floor_number")
+  type        String    @default("FLOOR") @db.VarChar(32) // FLOOR, ROAD
+  description String?   @db.Text
+  deletedAt   DateTime? @map("deleted_at") @db.Timestamptz
+  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt   DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+  createdById String?   @map("created_by_id") @db.Uuid
+  updatedById String?   @map("updated_by_id") @db.Uuid
+
+  block       PropertyBlock @relation(fields: [blockId], references: [id], onDelete: Cascade)
+  properties  Property[]
+
+  @@unique([companyId, blockId, code])
+  @@index([companyId])
+  @@index([companyId, projectId])
+  @@index([companyId, blockId])
+  @@map("property_floors")
+}
+
+model Property {
+  id               String    @id @default(uuid(7)) @db.Uuid
+  companyId        String    @map("company_id") @db.Uuid
+  projectId        String    @map("project_id") @db.Uuid
+  blockId          String?   @map("block_id") @db.Uuid
+  floorId          String?   @map("floor_id") @db.Uuid
+  code             String    @db.VarChar(64)
+  title            String?   @db.VarChar(255)
+  type             String    @db.VarChar(32) // PLOT, FLAT, SHOP, OFFICE, PARKING
+  status           String    @default("Available") @db.VarChar(32) // Available, Hold, Reserved, Booked, Sold, Blocked
+  areaSqft         Decimal   @map("area_sqft") @db.Decimal(18, 4)
+  facing           String?   @db.VarChar(32) // NORTH, SOUTH, EAST, WEST, NORTH_EAST, SOUTH_EAST, NORTH_WEST, SOUTH_WEST
+  basePricePaisa   BigInt    @default(0) @map("base_price_paisa") @db.BigInt
+  premiumPaisa     BigInt    @default(0) @map("premium_paisa") @db.BigInt
+  discountLimitPct Decimal   @default(0) @map("discount_limit_pct") @db.Decimal(5, 2)
+  netPricePaisa    BigInt    @default(0) @map("net_price_paisa") @db.BigInt
+  ownerType        String    @default("COMPANY") @map("owner_type") @db.VarChar(32) // COMPANY, LANDOWNER
+  holdExpiresAt    DateTime? @map("hold_expires_at") @db.Timestamptz
+  blockReason      String?   @map("block_reason") @db.Text
+  description      String?   @db.Text
+  metadata         Json?     @default("{}") @db.JsonB
+  deletedAt        DateTime? @map("deleted_at") @db.Timestamptz
+  createdAt        DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt        DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+  createdById      String?   @map("created_by_id") @db.Uuid
+  updatedById      String?   @map("updated_by_id") @db.Uuid
+
+  block            PropertyBlock?          @relation(fields: [blockId], references: [id], onDelete: SetNull)
+  floor            PropertyFloor?          @relation(fields: [floorId], references: [id], onDelete: SetNull)
+  statusHistory    PropertyStatusHistory[]
+
+  @@unique([companyId, projectId, code])
+  @@index([companyId])
+  @@index([companyId, projectId])
+  @@index([companyId, blockId])
+  @@index([companyId, floorId])
+  @@index([companyId, status])
+  @@index([companyId, type])
+  @@map("properties")
+}
+
+model PropertyStatusHistory {
+  id          String   @id @default(uuid(7)) @db.Uuid
+  companyId   String   @map("company_id") @db.Uuid
+  propertyId  String   @map("property_id") @db.Uuid
+  fromStatus  String?  @map("from_status") @db.VarChar(32)
+  toStatus    String   @map("to_status") @db.VarChar(32)
+  reason      String?  @db.Text
+  changedById String?  @map("changed_by_id") @db.Uuid
+  metadata    Json?    @default("{}") @db.JsonB
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+  property    Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+
+  @@index([companyId])
+  @@index([companyId, propertyId])
+  @@map("property_status_history")
+}

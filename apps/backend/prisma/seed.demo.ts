@@ -7,8 +7,15 @@ import { RequestContext } from '../src/common/context/request-context.service.js
 import { CompanyBranchStep } from '../src/platform/tenant-provisioning/steps/company-branch.step.js';
 import { RolesPermissionsStep } from '../src/platform/tenant-provisioning/steps/roles-permissions.step.js';
 import { ManagingDirectorStep } from '../src/platform/tenant-provisioning/steps/managing-director.step.js';
+import { DefaultDepartmentsStep } from '../src/platform/tenant-provisioning/steps/default-departments.step.js';
+import { DefaultSettingsStep } from '../src/platform/tenant-provisioning/steps/default-settings.step.js';
+import { DefaultNumberingStep } from '../src/platform/tenant-provisioning/steps/default-numbering.step.js';
+import { DefaultTemplatesStep } from '../src/platform/tenant-provisioning/steps/default-templates.step.js';
 import { TenantProvisioningService } from '../src/platform/tenant-provisioning/tenant-provisioning.service.js';
 import { DemoStaffStep } from '../src/platform/tenant-provisioning/demo-seed/steps/demo-staff.step.js';
+import { DemoLandStep } from '../src/platform/tenant-provisioning/demo-seed/steps/demo-land.step.js';
+import { DemoProjectStep } from '../src/platform/tenant-provisioning/demo-seed/steps/demo-project.step.js';
+import { DemoPropertyStep } from '../src/platform/tenant-provisioning/demo-seed/steps/demo-property.step.js';
 import { DemoSeedService } from '../src/platform/tenant-provisioning/demo-seed/demo-seed.service.js';
 
 // Load environment variables via native Node.js API
@@ -41,6 +48,10 @@ async function runDemoSeed() {
   const companyBranchStep = new CompanyBranchStep();
   const rolesPermissionsStep = new RolesPermissionsStep();
   const managingDirectorStep = new ManagingDirectorStep();
+  const defaultDepartmentsStep = new DefaultDepartmentsStep();
+  const defaultSettingsStep = new DefaultSettingsStep();
+  const defaultNumberingStep = new DefaultNumberingStep();
+  const defaultTemplatesStep = new DefaultTemplatesStep();
 
   const provisioningService = new TenantProvisioningService(
     tenantDb,
@@ -48,11 +59,25 @@ async function runDemoSeed() {
     companyBranchStep,
     rolesPermissionsStep,
     managingDirectorStep,
+    defaultDepartmentsStep,
+    defaultSettingsStep,
+    defaultNumberingStep,
+    defaultTemplatesStep,
   );
   provisioningService.onModuleInit();
 
   const demoStaffStep = new DemoStaffStep();
-  const demoSeedService = new DemoSeedService(tenantDb, provisioningService, demoStaffStep);
+  const demoLandStep = new DemoLandStep();
+  const demoProjectStep = new DemoProjectStep();
+  const demoPropertyStep = new DemoPropertyStep();
+  const demoSeedService = new DemoSeedService(
+    tenantDb,
+    provisioningService,
+    demoStaffStep,
+    demoLandStep,
+    demoProjectStep,
+    demoPropertyStep,
+  );
   demoSeedService.onModuleInit();
 
   try {

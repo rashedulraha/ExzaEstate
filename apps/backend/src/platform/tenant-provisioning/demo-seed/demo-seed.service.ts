@@ -9,6 +9,7 @@ import { DemoSeedContext, DemoSeedStep } from './demo-seed-step.interface.js';
 import { DemoStaffStep } from './steps/demo-staff.step.js';
 import { DemoLandStep } from './steps/demo-land.step.js';
 import { DemoProjectStep } from './steps/demo-project.step.js';
+import { DemoPropertyStep } from './steps/demo-property.step.js';
 
 export * from './demo-seed-step.interface.js';
 
@@ -23,19 +24,23 @@ export class DemoSeedService implements OnModuleInit {
     private readonly demoStaffStep: DemoStaffStep,
     private readonly demoLandStep: DemoLandStep,
     private readonly demoProjectStep: DemoProjectStep,
+    private readonly demoPropertyStep: DemoPropertyStep,
   ) {
     this.registerStep(this.demoStaffStep);
     this.registerStep(this.demoLandStep);
     this.registerStep(this.demoProjectStep);
+    this.registerStep(this.demoPropertyStep);
   }
 
   onModuleInit(): void {
     this.registerStep(this.demoStaffStep);
     this.registerStep(this.demoLandStep);
     this.registerStep(this.demoProjectStep);
+    this.registerStep(this.demoPropertyStep);
   }
 
   registerStep(step: DemoSeedStep): void {
+    if (!step) return;
     const existingIndex = this.steps.findIndex((s) => s.name === step.name);
     if (existingIndex >= 0) {
       this.steps[existingIndex] = step;

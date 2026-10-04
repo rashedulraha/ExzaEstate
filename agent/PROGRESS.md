@@ -14,8 +14,8 @@
 ## Current Status
 
 - **Active Phase:** Phase A2 + B1 — Golden Vertical Slice (Property)
-- **Next Task to Execute:** `A2.1 Property Data Model, Hierarchy & RLS`
-- **Tasks complete:** 20 / 88 (P2 cards excluded)
+- **Next Task to Execute:** `A2.2 Property CRUD, Pricing Breakdown & Status API`
+- **Tasks complete:** 21 / 88 (P2 cards excluded)
 - **Blockers:** None
 - **Owner action items before/while coding:**
   - Copy the new `task.md` (v6) into `agent/task.md`.
@@ -26,25 +26,25 @@
 
 ## Sign-off Register (owner answers are recorded here)
 
-| ID         | Question                                              | Gates       | Answer                                                  | Date       |
-| ---------- | ----------------------------------------------------- | ----------- | ------------------------------------------------------- | ---------- |
-| D-06       | `packages/app-core` separate from `ui`                | A0.1        | Confirmed (default: separate package)                   | 2026-10-03 |
-| D-05       | NestJS Express adapter                                | A0.3        | Confirmed (default: Express adapter)                    | 2026-10-03 |
-| D-09       | Separate system realm for Super Admin                 | A0.5, A1.5  | Confirmed (default: system realm)                       | 2026-10-03 |
-| D-07       | Idempotency row inside the business transaction       | A0.6        | Confirmed (default: inside tx)                          | 2026-10-03 |
-| D-11       | Monthly partitions for audit/outbox/notification logs | A0.6        | Confirmed (default: monthly partition)                  | 2026-10-03 |
-| D-10       | App-level encryption + blind index (NID, bank no.)    | A0.12, A3.3 | Confirmed (default: app-level encryption + blind index) | 2026-10-03 |
-| D-04       | Vertical slices (golden module first)                 | A2.1        | _pending_                                               |            |
-| D-13       | Additive-only `/v1`, `X-Client-Version`, 426          | A2.3, A9.7  | _pending_                                               |            |
-| D-08       | `APPROVAL_REQUIRED` = HTTP 409                        | A4.4        | _pending_                                               |            |
-| D-14       | `events/` renamed `realtime/`                         | A9.1        | _pending_                                               |            |
-| D-01/02/03 | Bundled PostgreSQL / bundled Chromium / Node sidecar  | A10.1, B9   | _pending_                                               |            |
-| D-12       | Local→Cloud import design                             | A10.4       | _pending_                                               |            |
-| D-15       | Licence transfer limit, fingerprint tolerance         | A1.5, B10   | Confirmed (default: limit 2/yr, fingerprint >= 2 of 3)  | 2026-10-04 |
-| OQ-04      | In-transaction `PaymentPostedHook`                    | A7.2        | _pending_                                               |            |
-| OQ-06      | `ON_HANDOVER` posting treatment                       | A6.4        | _pending (accountant)_                                  |            |
-| OQ-07      | CAPTCHA provider (default Turnstile)                  | A0.12       | _pending_                                               |            |
-| OQ-09      | No Super Admin UI in v1                               | B8          | _pending_                                               |            |
+| ID         | Question                                              | Gates       | Answer                                                     | Date       |
+| ---------- | ----------------------------------------------------- | ----------- | ---------------------------------------------------------- | ---------- |
+| D-06       | `packages/app-core` separate from `ui`                | A0.1        | Confirmed (default: separate package)                      | 2026-10-03 |
+| D-05       | NestJS Express adapter                                | A0.3        | Confirmed (default: Express adapter)                       | 2026-10-03 |
+| D-09       | Separate system realm for Super Admin                 | A0.5, A1.5  | Confirmed (default: system realm)                          | 2026-10-03 |
+| D-07       | Idempotency row inside the business transaction       | A0.6        | Confirmed (default: inside tx)                             | 2026-10-03 |
+| D-11       | Monthly partitions for audit/outbox/notification logs | A0.6        | Confirmed (default: monthly partition)                     | 2026-10-03 |
+| D-10       | App-level encryption + blind index (NID, bank no.)    | A0.12, A3.3 | Confirmed (default: app-level encryption + blind index)    | 2026-10-03 |
+| D-04       | Vertical slices (golden module first)                 | A2.1        | Confirmed (default: vertical slices / golden module first) | 2026-10-04 |
+| D-13       | Additive-only `/v1`, `X-Client-Version`, 426          | A2.3, A9.7  | _pending_                                                  |            |
+| D-08       | `APPROVAL_REQUIRED` = HTTP 409                        | A4.4        | _pending_                                                  |            |
+| D-14       | `events/` renamed `realtime/`                         | A9.1        | _pending_                                                  |            |
+| D-01/02/03 | Bundled PostgreSQL / bundled Chromium / Node sidecar  | A10.1, B9   | _pending_                                                  |            |
+| D-12       | Local→Cloud import design                             | A10.4       | _pending_                                                  |            |
+| D-15       | Licence transfer limit, fingerprint tolerance         | A1.5, B10   | Confirmed (default: limit 2/yr, fingerprint >= 2 of 3)     | 2026-10-04 |
+| OQ-04      | In-transaction `PaymentPostedHook`                    | A7.2        | _pending_                                                  |            |
+| OQ-06      | `ON_HANDOVER` posting treatment                       | A6.4        | _pending (accountant)_                                     |            |
+| OQ-07      | CAPTCHA provider (default Turnstile)                  | A0.12       | _pending_                                                  |            |
+| OQ-09      | No Super Admin UI in v1                               | B8          | _pending_                                                  |            |
 
 ---
 
@@ -80,7 +80,7 @@ Tick a box only after the verification rules above are met. Dependencies are def
 
 ### Phase A2 + B1 — Golden Vertical Slice (Property)
 
-- [ ] `A2.1` Property Data Model, Hierarchy & RLS
+- [x] `A2.1` Property Data Model, Hierarchy & RLS
 - [ ] `A2.2` Property CRUD, Pricing Breakdown & Status API
 - [ ] `A2.3` OpenAPI Export, Generated Client & HTTP Layer
 - [ ] `A2.4` Conformance Sweep: Backend Golden Module
@@ -365,3 +365,11 @@ Tick a box only after the verification rules above are met. Dependencies are def
 3. Verification command & result: pnpm --filter @exzaestate/backend test test/notifications/ (13/13 passed across notifications.spec.ts); full backend test suite (281/281 passed across 58 files); pnpm check:all (all 31 tenant tables verified with RLS, 105 routes decorated); oxlint (0 errors, 0 warnings), dependency-cruiser (0 violations), zero cycles, turbo typecheck (9 packages clean), prettier format clean
 4. Open questions: None (Zero gated decisions for A1.8; Phase A1 complete)
 5. Next task ID: A2.1
+
+### [2026-10-04] A2.1 Property Data Model, Hierarchy & RLS
+
+1. Task ID & status: A2.1 [x]
+2. Files created / modified: apps/backend/prisma/schema/property.prisma, apps/backend/prisma/migrations/20261004000008_property_hierarchy_and_rls/migration.sql, apps/backend/src/platform/tenant-provisioning/demo-seed/steps/demo-property.{data,step}.ts, apps/backend/src/platform/tenant-provisioning/demo-seed/demo-seed.service.ts, apps/backend/src/platform/tenant-provisioning/tenant-provisioning.{module,service}.ts, apps/backend/prisma/seed.{ts,demo.ts}, apps/backend/test/factories/property.factory.ts, apps/backend/test/factories/index.ts, apps/backend/test/property/property-model.spec.ts, apps/backend/test/property/property-test.helper.ts, agent/PROGRESS.md, agent/task.md
+3. Verification command & result: pnpm --filter @exzaestate/backend test test/property/property-model.spec.ts (8/8 passed, Tier 1 fail-first verified); full backend test suite (289/289 passed across 59 files); pnpm check:all (all 35 tenant tables verified with RLS, 105 routes decorated); oxlint (0 errors, 0 warnings), dependency-cruiser (0 violations), zero cycles, turbo typecheck (9 packages clean), prettier format clean
+4. Open questions: None (Gate D-04 confirmed default vertical slices recorded in Sign-off Register)
+5. Next task ID: A2.2

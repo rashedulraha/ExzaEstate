@@ -7,6 +7,10 @@ import { RequestContext } from '../src/common/context/request-context.service.js
 import { CompanyBranchStep } from '../src/platform/tenant-provisioning/steps/company-branch.step.js';
 import { RolesPermissionsStep } from '../src/platform/tenant-provisioning/steps/roles-permissions.step.js';
 import { ManagingDirectorStep } from '../src/platform/tenant-provisioning/steps/managing-director.step.js';
+import { DefaultDepartmentsStep } from '../src/platform/tenant-provisioning/steps/default-departments.step.js';
+import { DefaultSettingsStep } from '../src/platform/tenant-provisioning/steps/default-settings.step.js';
+import { DefaultNumberingStep } from '../src/platform/tenant-provisioning/steps/default-numbering.step.js';
+import { DefaultTemplatesStep } from '../src/platform/tenant-provisioning/steps/default-templates.step.js';
 import {
   ProvisionCompanyDto,
   TenantProvisioningService,
@@ -43,6 +47,10 @@ async function runSeed() {
   const companyBranchStep = new CompanyBranchStep();
   const rolesPermissionsStep = new RolesPermissionsStep();
   const managingDirectorStep = new ManagingDirectorStep();
+  const defaultDepartmentsStep = new DefaultDepartmentsStep();
+  const defaultSettingsStep = new DefaultSettingsStep();
+  const defaultNumberingStep = new DefaultNumberingStep();
+  const defaultTemplatesStep = new DefaultTemplatesStep();
 
   const provisioningService = new TenantProvisioningService(
     tenantDb,
@@ -50,6 +58,10 @@ async function runSeed() {
     companyBranchStep,
     rolesPermissionsStep,
     managingDirectorStep,
+    defaultDepartmentsStep,
+    defaultSettingsStep,
+    defaultNumberingStep,
+    defaultTemplatesStep,
   );
   provisioningService.onModuleInit();
 

@@ -11,6 +11,7 @@ import { TenantProvisioningService } from './tenant-provisioning.service.js';
 import { DemoStaffStep } from './demo-seed/steps/demo-staff.step.js';
 import { DemoLandStep } from './demo-seed/steps/demo-land.step.js';
 import { DemoProjectStep } from './demo-seed/steps/demo-project.step.js';
+import { DemoPropertyStep } from './demo-seed/steps/demo-property.step.js';
 import { DemoSeedService } from './demo-seed/demo-seed.service.js';
 
 @Module({
@@ -27,6 +28,7 @@ import { DemoSeedService } from './demo-seed/demo-seed.service.js';
     DemoStaffStep,
     DemoLandStep,
     DemoProjectStep,
+    DemoPropertyStep,
     DemoSeedService,
   ],
   exports: [
@@ -41,6 +43,7 @@ import { DemoSeedService } from './demo-seed/demo-seed.service.js';
     DemoStaffStep,
     DemoLandStep,
     DemoProjectStep,
+    DemoPropertyStep,
     DemoSeedService,
   ],
 })

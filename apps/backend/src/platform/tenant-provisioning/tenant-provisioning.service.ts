@@ -59,6 +59,7 @@ export class TenantProvisioningService implements OnModuleInit {
    * Steps are maintained sorted by ascending order.
    */
   registerStep(step: ProvisioningStep): void {
+    if (!step) return;
     const existingIndex = this.steps.findIndex((s) => s.name === step.name);
     if (existingIndex >= 0) {
       this.steps[existingIndex] = step;

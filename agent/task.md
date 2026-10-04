@@ -532,7 +532,7 @@ These are applied as defaults in `architecture.md` v4 but are still **"Needs sig
 
 #### A2.1 — Property Data Model, Hierarchy & RLS
 
-- **Status:** [ ] · **Tier:** 1 · **Size:** M (3 steps) · **Priority:** P0 · 🔒 D-04
+- **Status:** [x] · **Tier:** 1 · **Size:** M (3 steps) · **Priority:** P0 · 🔒 D-04
 - **Depends:** A1.4
 - **Reads:** `prd.md` MOD-PROPERTY, §9.2; `architecture.md` §5.3, §11, §18.1; `golden-module-frontend.md`.
 - **Touches:** `apps/backend/prisma/schema/property.prisma`, `apps/backend/prisma/migrations/**`, `apps/backend/test/**`, demo-seed step.
