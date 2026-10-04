@@ -1,0 +1,23 @@
+meta {
+  name: Export Income Statement
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{baseUrl}}/api/v1/reports/income-statement/export
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "format": "CSV",
+    "startDate": "2026-07-01",
+    "endDate": "2027-06-30"
+  }
+}

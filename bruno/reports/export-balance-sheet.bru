@@ -1,0 +1,22 @@
+meta {
+  name: Export Balance Sheet
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/api/v1/reports/balance-sheet/export
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "format": "PDF",
+    "asOfDate": "2027-06-30"
+  }
+}

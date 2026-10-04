@@ -1,0 +1,24 @@
+meta {
+  name: Export General Ledger
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/api/v1/accounting/ledger/export
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "format": "PDF",
+    "accountCode": "1010",
+    "startDate": "2026-07-01",
+    "endDate": "2027-06-30"
+  }
+}

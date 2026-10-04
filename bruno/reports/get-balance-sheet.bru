@@ -1,0 +1,15 @@
+meta {
+  name: Get Balance Sheet
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/api/v1/reports/balance-sheet?asOfDate=2027-06-30
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}

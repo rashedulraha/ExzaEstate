@@ -1,0 +1,15 @@
+meta {
+  name: Get Income Statement
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{baseUrl}}/api/v1/reports/income-statement?startDate=2026-07-01&endDate=2027-06-30
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}

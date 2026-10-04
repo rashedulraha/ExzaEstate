@@ -1,0 +1,23 @@
+meta {
+  name: Export Trial Balance
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/api/v1/reports/trial-balance/export
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "format": "EXCEL",
+    "startDate": "2026-07-01",
+    "endDate": "2027-06-30"
+  }
+}

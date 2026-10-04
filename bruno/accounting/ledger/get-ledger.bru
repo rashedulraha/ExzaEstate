@@ -1,0 +1,15 @@
+meta {
+  name: Query General Ledger
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/api/v1/accounting/ledger?accountCode=1010&startDate=2026-07-01&endDate=2027-06-30
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}

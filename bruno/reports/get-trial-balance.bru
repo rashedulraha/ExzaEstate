@@ -1,0 +1,15 @@
+meta {
+  name: Get Trial Balance
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/api/v1/reports/trial-balance?startDate=2026-07-01&endDate=2027-06-30
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
