@@ -1,0 +1,66 @@
+/**
+ * Meridian Design System Tokens
+ * Source of truth: agent/design.md
+ */
+
+export const THEME_TOKENS = {
+  light: {
+    primary: '#1A1A2E',
+    primaryDeep: '#111122',
+    primaryLight: '#2D2D4A',
+    primaryFg: '#1A1A2E',
+    action: '#1A1A2E',
+    onAction: '#FFFFFF',
+    focus: '#1A1A2E',
+    accent: '#C8A951',
+    accentText: '#7A6223',
+    accentSubtle: '#EDE4C8',
+    bg: '#F5F5F7',
+    surface: '#FFFFFF',
+    surfaceElevated: '#FFFFFF',
+    surfaceSunken: '#EBEBF0',
+    surfaceDark: '#1A1A2E',
+    text: '#1D1D1F',
+    text2: '#424245',
+    textMuted: '#68686D',
+    textDisabled: '#AEAEB2',
+    border: '#E5E5EA',
+    borderInput: '#86868B',
+    success: '#197444',
+    warning: '#7C6200',
+    danger: '#B83429',
+    info: '#2563B1',
+    special: '#7A39E8',
+    void: '#5F6572',
+  },
+  dark: {
+    bg: '#111113',
+    surface: '#1C1C1E',
+    surfaceElevated: '#2C2C2E',
+    surfaceSunken: '#0D0D0F',
+    text: '#F5F5F7',
+    text2: '#B8B8BD',
+    textMuted: '#98989D',
+    border: 'rgba(255, 255, 255, 0.08)',
+    borderInput: '#7C7C80',
+    primaryFg: '#A5A5E0',
+    action: '#E5E5EA',
+    onAction: '#1A1A2E',
+    focus: '#D4B85C',
+    accent: '#D4B85C',
+    accentText: '#D4B85C',
+    success: '#34D399',
+    warning: '#FBBF24',
+    danger: '#F97F7F',
+    info: '#63A7FA',
+    special: '#AE94FA',
+    void: '#9EA5B1',
+  },
+} as const;
+
+export const RADII = {
+  button: '8px',
+  card: '12px',
+  modal: '16px',
+  full: '9999px',
+} as const;
