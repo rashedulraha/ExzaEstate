@@ -3,17 +3,20 @@ import {
   ConflictException,
   Injectable,
   NotFoundException,
+  Optional,
 } from '@nestjs/common';
 import { ERROR_CODES } from '@exzaestate/shared';
 import { TenantDb } from '../../database/tenant-db.service.js';
 import type { TenantPrisma } from '../../database/tenant-prisma.js';
 import { AuditService } from '../../platform/audit/audit.service.js';
+import { OutboxService } from '../../platform/outbox/outbox.service.js';
 import {
   buildPropertyCreateData,
   buildPropertyUpdateData,
   buildPropertyWhereClause,
   formatPropertyResponse,
 } from './property-builder.util.js';
+import { PROPERTY_EVENTS } from './property.events.js';
 import type { CreatePropertyDto } from './dto/create-property.dto.js';
 import type {
   PaginatedPropertyResponseDto,
@@ -32,6 +35,7 @@ export class PropertyService {
   constructor(
     private readonly tenantDb: TenantDb,
     private readonly auditService: AuditService,
+    @Optional() private readonly outboxService?: OutboxService,
   ) {}
 
   async createProperty(
@@ -80,6 +84,20 @@ export class PropertyService {
         after: formatted as unknown as Record<string, unknown>,
       });
 
+      if (this.outboxService) {
+        await this.outboxService.emit(tx, PROPERTY_EVENTS.CREATED, {
+          propertyId: property.id,
+          companyId,
+          projectId: property.projectId,
+          code: property.code,
+          type: property.type,
+          status: property.status,
+          netPricePaisa: property.netPricePaisa.toString(),
+          createdById: userId,
+          timestamp: new Date().toISOString(),
+        });
+      }
+
       return formatted;
     });
   }
@@ -99,7 +117,7 @@ export class PropertyService {
     }
 
     return this.tenantDb.withCompany(companyId, async (tx) => {
-      const existing = await tx.property.findUnique({
+      const existing = await tx.property.findFirst({
         where: { id, companyId, deletedAt: null },
         include: PROPERTY_INCLUDE,
       });
@@ -112,7 +130,7 @@ export class PropertyService {
 
       const updateData = buildPropertyUpdateData(dto, existing, userId);
       const updated = await tx.property.update({
-        where: { id, companyId },
+        where: { id },
         data: updateData,
         include: PROPERTY_INCLUDE,
       });
@@ -127,6 +145,17 @@ export class PropertyService {
         before: formattedBefore as unknown as Record<string, unknown>,
         after: formattedAfter as unknown as Record<string, unknown>,
       });
+
+      if (this.outboxService) {
+        await this.outboxService.emit(tx, PROPERTY_EVENTS.UPDATED, {
+          propertyId: id,
+          companyId,
+          projectId: updated.projectId,
+          code: updated.code,
+          updatedById: userId,
+          timestamp: new Date().toISOString(),
+        });
+      }
 
       return formattedAfter;
     });
@@ -168,7 +197,7 @@ export class PropertyService {
 
   async getPropertyById(companyId: string, id: string): Promise<PropertyResponseDto> {
     return this.tenantDb.withCompany(companyId, async (tx) => {
-      const property = await tx.property.findUnique({
+      const property = await tx.property.findFirst({
         where: { id, companyId, deletedAt: null },
         include: PROPERTY_INCLUDE,
       });
@@ -184,7 +213,7 @@ export class PropertyService {
 
   async deleteProperty(companyId: string, id: string, userId?: string): Promise<void> {
     return this.tenantDb.withCompany(companyId, async (tx) => {
-      const property = await tx.property.findUnique({
+      const property = await tx.property.findFirst({
         where: { id, companyId, deletedAt: null },
       });
       if (!property) {
@@ -202,7 +231,7 @@ export class PropertyService {
       }
 
       await tx.property.update({
-        where: { id, companyId },
+        where: { id },
         data: {
           deletedAt: new Date(),
           ...(userId && { updatedById: userId }),
@@ -214,6 +243,15 @@ export class PropertyService {
         entity: 'Property',
         entityId: id,
       });
+
+      if (this.outboxService) {
+        await this.outboxService.emit(tx, PROPERTY_EVENTS.DELETED, {
+          propertyId: id,
+          companyId,
+          deletedById: userId,
+          timestamp: new Date().toISOString(),
+        });
+      }
     });
   }
 
@@ -222,7 +260,7 @@ export class PropertyService {
     companyId: string,
     dto: CreatePropertyDto,
   ): Promise<void> {
-    const project = await tx.project.findUnique({
+    const project = await tx.project.findFirst({
       where: { id: dto.projectId, companyId, deletedAt: null },
     });
     if (!project) {
@@ -230,7 +268,7 @@ export class PropertyService {
     }
 
     if (dto.blockId) {
-      const block = await tx.propertyBlock.findUnique({
+      const block = await tx.propertyBlock.findFirst({
         where: { id: dto.blockId, companyId, deletedAt: null },
       });
       if (!block || block.projectId !== dto.projectId) {
@@ -242,13 +280,19 @@ export class PropertyService {
     }
 
     if (dto.floorId) {
-      const floor = await tx.propertyFloor.findUnique({
+      const floor = await tx.propertyFloor.findFirst({
         where: { id: dto.floorId, companyId, deletedAt: null },
       });
       if (!floor) {
         throw new NotFoundException({
           code: ERROR_CODES.NOT_FOUND,
           message: 'Property floor not found',
+        });
+      }
+      if (dto.blockId && floor.blockId !== dto.blockId) {
+        throw new BadRequestException({
+          code: ERROR_CODES.VALIDATION_ERROR,
+          message: 'Property floor does not belong to specified block',
         });
       }
     }

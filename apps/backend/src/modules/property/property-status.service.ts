@@ -3,85 +3,46 @@ import {
   ConflictException,
   Injectable,
   NotFoundException,
+  Optional,
 } from '@nestjs/common';
 import type { Prisma } from '@prisma/client';
 import { ERROR_CODES } from '@exzaestate/shared';
 import { TenantDb } from '../../database/tenant-db.service.js';
 import type { TenantPrisma } from '../../database/tenant-prisma.js';
 import { AuditService } from '../../platform/audit/audit.service.js';
-import { formatPropertyResponse } from './property-builder.util.js';
+import { OutboxService } from '../../platform/outbox/outbox.service.js';
+import {
+  ALLOWED_STATUS_ACTIONS,
+  type BookingStatusEventInput,
+  type TransitionParams,
+  mapBookingStatusToPropertyStatus,
+  validateStatusTransition,
+} from './domain/property-status-machine.js';
+import {
+  PROPERTY_INCLUDE,
+  buildTransitionUpdateData,
+  formatPropertyResponse,
+} from './property-builder.util.js';
+import { PROPERTY_EVENTS } from './property.events.js';
 import type {
   PropertyResponseDto,
   PropertyStatusHistoryResponseDto,
 } from './dto/property-response.dto.js';
-import {
-  CANONICAL_PROPERTY_STATUSES,
-  type CanonicalPropertyStatus,
-} from './dto/query-property.dto.js';
+import { CANONICAL_PROPERTY_STATUSES } from './dto/query-property.dto.js';
 import type {
   BlockPropertyDto,
   HoldPropertyDto,
   StatusOverrideDto,
 } from './dto/status-action.dto.js';
 
-export interface BookingStatusEvent {
-  bookingId: string;
-  status:
-    | 'REQUESTED'
-    | 'PENDING_APPROVAL'
-    | 'CONFIRMED'
-    | 'AGREEMENT_PENDING'
-    | 'AGREEMENT_COMPLETED'
-    | 'COMPLETED'
-    | 'CANCELLED'
-    | 'TRANSFERRED';
-  actorId?: string;
-  reason?: string;
-  cancellationPropertyStatus?: 'Available' | 'Blocked';
-}
-
-interface TransitionParams {
-  toStatus: CanonicalPropertyStatus;
-  allowedFromStatuses?: CanonicalPropertyStatus[];
-  reason: string;
-  action: string;
-  userId?: string;
-  holdExpiresAt?: Date | null;
-  blockReason?: string | null;
-  metadata?: Record<string, unknown>;
-}
-
-const PROPERTY_INCLUDE = {
-  block: { select: { id: true, code: true, name: true } },
-  floor: { select: { id: true, code: true, name: true, floorNumber: true } },
-} as const;
-
-function mapBookingStatusToPropertyStatus(
-  status: BookingStatusEvent['status'],
-  cancellationStatus: 'Available' | 'Blocked' = 'Available',
-): CanonicalPropertyStatus | null {
-  switch (status) {
-    case 'REQUESTED':
-    case 'PENDING_APPROVAL':
-      return 'Reserved';
-    case 'CONFIRMED':
-    case 'AGREEMENT_PENDING':
-    case 'AGREEMENT_COMPLETED':
-      return 'Booked';
-    case 'COMPLETED':
-      return 'Sold';
-    case 'CANCELLED':
-      return cancellationStatus;
-    case 'TRANSFERRED':
-      return null;
-  }
-}
+export type BookingStatusEvent = BookingStatusEventInput;
 
 @Injectable()
 export class PropertyStatusService {
   constructor(
     private readonly tenantDb: TenantDb,
     private readonly auditService: AuditService,
+    @Optional() private readonly outboxService?: OutboxService,
   ) {}
 
   async applyBookingEvent(
@@ -96,7 +57,7 @@ export class PropertyStatusService {
     );
     if (!targetStatus) return;
 
-    const property = await tx.property.findUnique({
+    const property = await tx.property.findFirst({
       where: { id: propertyId, companyId, deletedAt: null },
     });
     if (!property) {
@@ -123,10 +84,10 @@ export class PropertyStatusService {
       const property = await this.findProperty(tx, companyId, propertyId);
       const holdExpiresAt = dto.holdExpiresAt ? new Date(dto.holdExpiresAt) : null;
       return this.performTransition(tx, companyId, property, {
-        toStatus: 'Hold',
-        allowedFromStatuses: ['Available'],
+        toStatus: ALLOWED_STATUS_ACTIONS.HOLD.to,
+        allowedFromStatuses: ALLOWED_STATUS_ACTIONS.HOLD.from,
         reason: dto.reason ?? 'Placed on management hold',
-        action: 'PROPERTY_HOLD',
+        action: ALLOWED_STATUS_ACTIONS.HOLD.action,
         userId,
         holdExpiresAt,
       });
@@ -141,10 +102,10 @@ export class PropertyStatusService {
     return this.tenantDb.withCompany(companyId, async (tx) => {
       const property = await this.findProperty(tx, companyId, propertyId);
       return this.performTransition(tx, companyId, property, {
-        toStatus: 'Available',
-        allowedFromStatuses: ['Hold'],
+        toStatus: ALLOWED_STATUS_ACTIONS.RELEASE_HOLD.to,
+        allowedFromStatuses: ALLOWED_STATUS_ACTIONS.RELEASE_HOLD.from,
         reason: 'Management hold released',
-        action: 'PROPERTY_HOLD_RELEASED',
+        action: ALLOWED_STATUS_ACTIONS.RELEASE_HOLD.action,
         userId,
         holdExpiresAt: null,
       });
@@ -168,10 +129,10 @@ export class PropertyStatusService {
     return this.tenantDb.withCompany(companyId, async (tx) => {
       const property = await this.findProperty(tx, companyId, propertyId);
       return this.performTransition(tx, companyId, property, {
-        toStatus: 'Blocked',
-        allowedFromStatuses: ['Available', 'Hold'],
+        toStatus: ALLOWED_STATUS_ACTIONS.BLOCK.to,
+        allowedFromStatuses: ALLOWED_STATUS_ACTIONS.BLOCK.from,
         reason,
-        action: 'PROPERTY_BLOCKED',
+        action: ALLOWED_STATUS_ACTIONS.BLOCK.action,
         userId,
         blockReason: reason,
       });
@@ -186,10 +147,10 @@ export class PropertyStatusService {
     return this.tenantDb.withCompany(companyId, async (tx) => {
       const property = await this.findProperty(tx, companyId, propertyId);
       return this.performTransition(tx, companyId, property, {
-        toStatus: 'Available',
-        allowedFromStatuses: ['Blocked'],
+        toStatus: ALLOWED_STATUS_ACTIONS.UNBLOCK.to,
+        allowedFromStatuses: ALLOWED_STATUS_ACTIONS.UNBLOCK.from,
         reason: 'Property unblocked',
-        action: 'PROPERTY_UNBLOCKED',
+        action: ALLOWED_STATUS_ACTIONS.UNBLOCK.action,
         userId,
         blockReason: null,
       });
@@ -252,7 +213,7 @@ export class PropertyStatusService {
   }
 
   private async findProperty(tx: TenantPrisma, companyId: string, propertyId: string) {
-    const property = await tx.property.findUnique({
+    const property = await tx.property.findFirst({
       where: { id: propertyId, companyId, deletedAt: null },
       include: PROPERTY_INCLUDE,
     });
@@ -260,6 +221,37 @@ export class PropertyStatusService {
       throw new NotFoundException({ code: ERROR_CODES.NOT_FOUND, message: 'Property not found' });
     }
     return property;
+  }
+
+  private async recordTransitionAudit(
+    tx: TenantPrisma,
+    companyId: string,
+    propertyId: string,
+    fromStatus: string,
+    params: TransitionParams,
+  ): Promise<void> {
+    await this.auditService.record(tx, {
+      action: params.action,
+      entity: 'Property',
+      entityId: propertyId,
+      before: { status: fromStatus },
+      after: { status: params.toStatus },
+      reason: params.reason,
+    });
+
+    if (this.outboxService) {
+      await this.outboxService.emit(tx, PROPERTY_EVENTS.STATUS_CHANGED, {
+        propertyId,
+        companyId,
+        fromStatus,
+        toStatus: params.toStatus,
+        action: params.action,
+        reason: params.reason,
+        actorId: params.userId ?? null,
+        metadata: params.metadata ?? {},
+        timestamp: new Date().toISOString(),
+      });
+    }
   }
 
   private async performTransition(
@@ -273,25 +265,22 @@ export class PropertyStatusService {
     },
     params: TransitionParams,
   ): Promise<PropertyResponseDto> {
-    if (
-      params.allowedFromStatuses &&
-      !params.allowedFromStatuses.includes(property.status as CanonicalPropertyStatus)
-    ) {
+    const transitionCheck = validateStatusTransition(
+      property.status,
+      params.toStatus,
+      params.allowedFromStatuses,
+    );
+    if (!transitionCheck.valid) {
       throw new ConflictException({
         code: ERROR_CODES.CONFLICT,
-        message: `Cannot transition property from "${property.status}" to "${params.toStatus}"`,
+        message:
+          transitionCheck.error ?? `Cannot transition property status to "${params.toStatus}"`,
       });
     }
 
-    const data: Prisma.PropertyUpdateInput = {
-      status: params.toStatus,
-      ...(params.userId && { updatedById: params.userId }),
-    };
-    if (params.holdExpiresAt !== undefined) data.holdExpiresAt = params.holdExpiresAt;
-    if (params.blockReason !== undefined) data.blockReason = params.blockReason;
-
+    const data = buildTransitionUpdateData(params);
     const updated = await tx.property.update({
-      where: { id: property.id, companyId },
+      where: { id: property.id },
       data,
       include: PROPERTY_INCLUDE,
     });
@@ -308,14 +297,7 @@ export class PropertyStatusService {
       },
     });
 
-    await this.auditService.record(tx, {
-      action: params.action,
-      entity: 'Property',
-      entityId: property.id,
-      before: { status: property.status },
-      after: { status: params.toStatus },
-      reason: params.reason,
-    });
+    await this.recordTransitionAudit(tx, companyId, property.id, property.status, params);
 
     return formatPropertyResponse(updated);
   }

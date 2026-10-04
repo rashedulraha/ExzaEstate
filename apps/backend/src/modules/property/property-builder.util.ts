@@ -1,16 +1,19 @@
 import { Decimal } from '@prisma/client/runtime/client.js';
 import type { Prisma } from '@prisma/client';
 import { calculateNetPrice } from './domain/property-pricing.js';
+import type { TransitionParams } from './domain/property-status-machine.js';
 import type { CreatePropertyDto } from './dto/create-property.dto.js';
 import type { PropertyResponseDto } from './dto/property-response.dto.js';
 import type { QueryPropertyDto } from './dto/query-property.dto.js';
 import type { UpdatePropertyDto } from './dto/update-property.dto.js';
 
+export const PROPERTY_INCLUDE = {
+  block: { select: { id: true, code: true, name: true } },
+  floor: { select: { id: true, code: true, name: true, floorNumber: true } },
+} as const;
+
 type PropertyWithRelations = Prisma.PropertyGetPayload<{
-  include: {
-    block: { select: { id: true; code: true; name: true } };
-    floor: { select: { id: true; code: true; name: true; floorNumber: true } };
-  };
+  include: typeof PROPERTY_INCLUDE;
 }>;
 
 export function formatPropertyResponse(p: PropertyWithRelations): PropertyResponseDto {
@@ -135,6 +138,16 @@ export function buildPropertyUpdateData(
   assignPropertyDetails(data, dto);
   assignLocationAndMeta(data, dto);
 
+  return data;
+}
+
+export function buildTransitionUpdateData(params: TransitionParams): Prisma.PropertyUpdateInput {
+  const data: Prisma.PropertyUpdateInput = {
+    status: params.toStatus,
+    ...(params.userId && { updatedById: params.userId }),
+  };
+  if (params.holdExpiresAt !== undefined) data.holdExpiresAt = params.holdExpiresAt;
+  if (params.blockReason !== undefined) data.blockReason = params.blockReason;
   return data;
 }
 
