@@ -1,0 +1,15 @@
+meta {
+  name: Trigger Expiry Check
+  type: http
+  seq: 9
+}
+
+post {
+  url: {{baseUrl}}/approvals/check-expiry
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}

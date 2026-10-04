@@ -1,0 +1,92 @@
+model ApprovalRule {
+  id                 String    @id @default(uuid(7)) @db.Uuid
+  companyId          String    @map("company_id") @db.Uuid
+  type               String
+  name               String
+  description        String?
+  minAmountPaisa     BigInt    @default(0) @map("min_amount_paisa")
+  maxAmountPaisa     BigInt?   @map("max_amount_paisa")
+  minPercentage      Decimal?  @map("min_percentage") @db.Decimal(5, 2)
+  maxPercentage      Decimal?  @map("max_percentage") @db.Decimal(5, 2)
+  projectId          String?   @map("project_id") @db.Uuid
+  branchId           String?   @map("branch_id") @db.Uuid
+  requiredPermission String    @map("required_permission")
+  stepOrder          Int       @default(1) @map("step_order")
+  slaHours           Int       @default(24) @map("sla_hours")
+  isActive           Boolean   @default(true) @map("is_active")
+  createdAt          DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt          DateTime  @updatedAt @map("updated_at") @db.Timestamptz(6)
+  deletedAt          DateTime? @map("deleted_at") @db.Timestamptz(6)
+
+  @@index([companyId, type, isActive])
+  @@index([companyId, projectId])
+  @@index([companyId, branchId])
+  @@map("approval_rules")
+}
+
+model Approval {
+  id                   String    @id @default(uuid(7)) @db.Uuid
+  companyId            String    @map("company_id") @db.Uuid
+  approvalNumber       String    @map("approval_number")
+  type                 String
+  status               String    @default("PENDING")
+  requesterId          String    @map("requester_id") @db.Uuid
+  title                String
+  description          String?
+  entityType           String?   @map("entity_type")
+  entityId             String?   @map("entity_id") @db.Uuid
+  projectId            String?   @map("project_id") @db.Uuid
+  branchId             String?   @map("branch_id") @db.Uuid
+  amountPaisa          BigInt?   @map("amount_paisa")
+  percentage           Decimal?  @db.Decimal(5, 2)
+  payload              Json
+  currentStepOrder     Int       @default(1) @map("current_step_order")
+  totalSteps           Int       @default(1) @map("total_steps")
+  isAutoApproved       Boolean   @default(false) @map("is_auto_approved")
+  expiresAt            DateTime  @map("expires_at") @db.Timestamptz(6)
+  completedAt          DateTime? @map("completed_at") @db.Timestamptz(6)
+  finalDecision        String?   @map("final_decision")
+  rejectionReason      String?   @map("rejection_reason")
+  overrideFirstUserId  String?   @map("override_first_user_id") @db.Uuid
+  overrideFirstAt      DateTime? @map("override_first_at") @db.Timestamptz(6)
+  overrideFirstReason  String?   @map("override_first_reason")
+  overrideSecondUserId String?   @map("override_second_user_id") @db.Uuid
+  overrideSecondAt     DateTime? @map("override_second_at") @db.Timestamptz(6)
+  overrideSecondReason String?   @map("override_second_reason")
+  createdAt            DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt            DateTime  @updatedAt @map("updated_at") @db.Timestamptz(6)
+  deletedAt            DateTime? @map("deleted_at") @db.Timestamptz(6)
+
+  steps ApprovalStep[]
+
+  @@unique([companyId, approvalNumber])
+  @@index([companyId, status])
+  @@index([companyId, requesterId])
+  @@index([companyId, type])
+  @@index([companyId, entityType, entityId])
+  @@index([companyId, expiresAt])
+  @@map("approvals")
+}
+
+model ApprovalStep {
+  id                 String    @id @default(uuid(7)) @db.Uuid
+  approvalId         String    @map("approval_id") @db.Uuid
+  companyId          String    @map("company_id") @db.Uuid
+  stepOrder          Int       @map("step_order")
+  name               String
+  status             String    @default("PENDING")
+  requiredPermission String    @map("required_permission")
+  approverId         String?   @map("approver_id") @db.Uuid
+  decidedAt          DateTime? @map("decided_at") @db.Timestamptz(6)
+  decision           String?
+  comments           String?
+  dueAt              DateTime? @map("due_at") @db.Timestamptz(6)
+  createdAt          DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt          DateTime  @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  approval Approval @relation(fields: [approvalId], references: [id], onDelete: Cascade)
+
+  @@index([companyId, status])
+  @@index([approvalId, stepOrder])
+  @@map("approval_steps")
+}

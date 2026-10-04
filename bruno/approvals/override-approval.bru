@@ -1,0 +1,29 @@
+meta {
+  name: Joint Override Approval
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{baseUrl}}/approvals/:id/override
+  body: json
+  auth: bearer
+}
+
+params:path {
+  id: 00000000-0000-0000-0000-000000000000
+}
+
+headers {
+  Content-Type: application/json
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+body:json {
+  {
+    "overrideReason": "Special executive joint approval by MD and GM for VIP client"
+  }
+}

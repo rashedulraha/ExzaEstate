@@ -1,0 +1,33 @@
+meta {
+  name: Create Approval Rule
+  type: http
+  seq: 8
+}
+
+post {
+  url: {{baseUrl}}/approvals/rules
+  body: json
+  auth: bearer
+}
+
+headers {
+  Content-Type: application/json
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+body:json {
+  {
+    "approvalType": "DISCOUNT",
+    "requiredPermission": "discount:approve-tier1",
+    "stepOrder": 1,
+    "minAmount": "0",
+    "maxAmount": "20000000",
+    "minPercentage": 0,
+    "maxPercentage": 2.0,
+    "requiresStepUp": false,
+    "isActive": true
+  }
+}

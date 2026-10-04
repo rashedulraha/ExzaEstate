@@ -1,0 +1,15 @@
+meta {
+  name: List Approval Rules
+  type: http
+  seq: 7
+}
+
+get {
+  url: {{baseUrl}}/approvals/rules
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}

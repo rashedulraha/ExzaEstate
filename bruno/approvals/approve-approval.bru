@@ -1,0 +1,29 @@
+meta {
+  name: Approve Approval
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/approvals/:id/approve
+  body: json
+  auth: bearer
+}
+
+params:path {
+  id: 00000000-0000-0000-0000-000000000000
+}
+
+headers {
+  Content-Type: application/json
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+body:json {
+  {
+    "comment": "Approved following financial margin review"
+  }
+}

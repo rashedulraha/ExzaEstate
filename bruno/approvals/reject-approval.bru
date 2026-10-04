@@ -1,0 +1,29 @@
+meta {
+  name: Reject Approval
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{baseUrl}}/approvals/:id/reject
+  body: json
+  auth: bearer
+}
+
+params:path {
+  id: 00000000-0000-0000-0000-000000000000
+}
+
+headers {
+  Content-Type: application/json
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+body:json {
+  {
+    "rejectionReason": "Discount requested is beyond current quarterly commercial targets"
+  }
+}
