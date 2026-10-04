@@ -10,6 +10,11 @@ import { DemoStaffStep } from './steps/demo-staff.step.js';
 import { DemoLandStep } from './steps/demo-land.step.js';
 import { DemoProjectStep } from './steps/demo-project.step.js';
 import { DemoPropertyStep } from './steps/demo-property.step.js';
+import { DemoCrmStep } from './steps/demo-crm.step.js';
+import { DemoCustomerStep } from './steps/demo-customer.step.js';
+import { DemoPaymentPlanStep } from './steps/demo-payment-plan.step.js';
+import { DemoChargeStep } from './steps/demo-charge.step.js';
+import { DemoQuotationStep } from './steps/demo-quotation.step.js';
 
 export * from './demo-seed-step.interface.js';
 
@@ -25,11 +30,21 @@ export class DemoSeedService implements OnModuleInit {
     private readonly demoLandStep: DemoLandStep,
     private readonly demoProjectStep: DemoProjectStep,
     private readonly demoPropertyStep: DemoPropertyStep,
+    private readonly demoCrmStep: DemoCrmStep,
+    private readonly demoCustomerStep: DemoCustomerStep,
+    private readonly demoPaymentPlanStep: DemoPaymentPlanStep,
+    private readonly demoChargeStep: DemoChargeStep,
+    private readonly demoQuotationStep: DemoQuotationStep,
   ) {
     this.registerStep(this.demoStaffStep);
     this.registerStep(this.demoLandStep);
     this.registerStep(this.demoProjectStep);
     this.registerStep(this.demoPropertyStep);
+    this.registerStep(this.demoCrmStep);
+    this.registerStep(this.demoCustomerStep);
+    this.registerStep(this.demoPaymentPlanStep);
+    this.registerStep(this.demoChargeStep);
+    this.registerStep(this.demoQuotationStep);
   }
 
   onModuleInit(): void {
@@ -37,6 +52,11 @@ export class DemoSeedService implements OnModuleInit {
     this.registerStep(this.demoLandStep);
     this.registerStep(this.demoProjectStep);
     this.registerStep(this.demoPropertyStep);
+    this.registerStep(this.demoCrmStep);
+    this.registerStep(this.demoCustomerStep);
+    this.registerStep(this.demoPaymentPlanStep);
+    this.registerStep(this.demoChargeStep);
+    this.registerStep(this.demoQuotationStep);
   }
 
   registerStep(step: DemoSeedStep): void {

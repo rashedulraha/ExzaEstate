@@ -1,32 +1,32 @@
 // Project and Cost Center models (Task A1.4 - Project & Cost Center Management)
 
 model Project {
-  id                     String      @id @default(uuid(7)) @db.Uuid
-  companyId              String      @map("company_id") @db.Uuid
-  code                   String      @db.VarChar(64)
-  name                   String      @db.VarChar(255)
-  type                   String      @db.VarChar(64)
-  status                 String      @default("PLANNING") @db.VarChar(32)
-  landId                 String?     @map("land_id") @db.Uuid
-  projectManagerId       String?     @map("project_manager_id") @db.Uuid
-  location               String?     @db.VarChar(255)
-  district               String?     @db.VarChar(128)
-  upazila                String?     @db.VarChar(128)
-  address                String?     @db.Text
-  startDate              DateTime?   @map("start_date") @db.Date
-  endDate                DateTime?   @map("end_date") @db.Date
-  expectedCompletionDate DateTime?   @map("expected_completion_date") @db.Date
-  masterPlanUrl          String?     @map("master_plan_url") @db.VarChar(512)
-  galleryUrls            Json?       @default("[]") @map("gallery_urls") @db.JsonB
-  description            String?     @db.Text
-  estimatedBudgetPaisa   BigInt?     @map("estimated_budget_paisa") @db.BigInt
-  createdById            String?     @map("created_by_id") @db.Uuid
-  updatedById            String?     @map("updated_by_id") @db.Uuid
-  deletedAt              DateTime?   @map("deleted_at") @db.Timestamptz
-  createdAt              DateTime    @default(now()) @map("created_at") @db.Timestamptz
-  updatedAt              DateTime    @updatedAt @map("updated_at") @db.Timestamptz
+  id                     String    @id @default(uuid(7)) @db.Uuid
+  companyId              String    @map("company_id") @db.Uuid
+  code                   String    @db.VarChar(64)
+  name                   String    @db.VarChar(255)
+  type                   String    @db.VarChar(64)
+  status                 String    @default("PLANNING") @db.VarChar(32)
+  landId                 String?   @map("land_id") @db.Uuid
+  projectManagerId       String?   @map("project_manager_id") @db.Uuid
+  location               String?   @db.VarChar(255)
+  district               String?   @db.VarChar(128)
+  upazila                String?   @db.VarChar(128)
+  address                String?   @db.Text
+  startDate              DateTime? @map("start_date") @db.Date
+  endDate                DateTime? @map("end_date") @db.Date
+  expectedCompletionDate DateTime? @map("expected_completion_date") @db.Date
+  masterPlanUrl          String?   @map("master_plan_url") @db.VarChar(512)
+  galleryUrls            Json?     @default("[]") @map("gallery_urls") @db.JsonB
+  description            String?   @db.Text
+  estimatedBudgetPaisa   BigInt?   @map("estimated_budget_paisa") @db.BigInt
+  createdById            String?   @map("created_by_id") @db.Uuid
+  updatedById            String?   @map("updated_by_id") @db.Uuid
+  deletedAt              DateTime? @map("deleted_at") @db.Timestamptz
+  createdAt              DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt              DateTime  @updatedAt @map("updated_at") @db.Timestamptz
 
-  costCenter             CostCenter?
+  costCenter CostCenter?
 
   @@unique([companyId, code])
   @@index([companyId])
@@ -48,7 +48,7 @@ model CostCenter {
   createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz
   updatedAt   DateTime  @updatedAt @map("updated_at") @db.Timestamptz
 
-  project     Project?  @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  project Project? @relation(fields: [projectId], references: [id], onDelete: SetNull)
 
   @@unique([companyId, code])
   @@index([companyId])

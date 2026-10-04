@@ -11,12 +11,23 @@ import { DefaultDepartmentsStep } from '../src/platform/tenant-provisioning/step
 import { DefaultSettingsStep } from '../src/platform/tenant-provisioning/steps/default-settings.step.js';
 import { DefaultNumberingStep } from '../src/platform/tenant-provisioning/steps/default-numbering.step.js';
 import { DefaultTemplatesStep } from '../src/platform/tenant-provisioning/steps/default-templates.step.js';
+import { DefaultApprovalRulesStep } from '../src/platform/tenant-provisioning/steps/default-approval-rules.step.js';
+import { DefaultCoaStep } from '../src/platform/tenant-provisioning/steps/default-coa.step.js';
+import { DefaultPeriodsStep } from '../src/platform/tenant-provisioning/steps/default-periods.step.js';
+import { DefaultPostingRulesStep } from '../src/platform/tenant-provisioning/steps/default-posting-rules.step.js';
+import { DefaultBanksStep } from '../src/platform/tenant-provisioning/steps/default-banks.step.js';
 import { TenantProvisioningService } from '../src/platform/tenant-provisioning/tenant-provisioning.service.js';
 import { DemoStaffStep } from '../src/platform/tenant-provisioning/demo-seed/steps/demo-staff.step.js';
 import { DemoLandStep } from '../src/platform/tenant-provisioning/demo-seed/steps/demo-land.step.js';
 import { DemoProjectStep } from '../src/platform/tenant-provisioning/demo-seed/steps/demo-project.step.js';
 import { DemoPropertyStep } from '../src/platform/tenant-provisioning/demo-seed/steps/demo-property.step.js';
+import { DemoCrmStep } from '../src/platform/tenant-provisioning/demo-seed/steps/demo-crm.step.js';
+import { DemoCustomerStep } from '../src/platform/tenant-provisioning/demo-seed/steps/demo-customer.step.js';
+import { DemoPaymentPlanStep } from '../src/platform/tenant-provisioning/demo-seed/steps/demo-payment-plan.step.js';
+import { DemoChargeStep } from '../src/platform/tenant-provisioning/demo-seed/steps/demo-charge.step.js';
+import { DemoQuotationStep } from '../src/platform/tenant-provisioning/demo-seed/steps/demo-quotation.step.js';
 import { DemoSeedService } from '../src/platform/tenant-provisioning/demo-seed/demo-seed.service.js';
+import { FieldCryptoService } from '../src/platform/security/field-crypto.service.js';
 
 // Load environment variables via native Node.js API
 if (typeof process.loadEnvFile === 'function') {
@@ -52,6 +63,14 @@ async function runDemoSeed() {
   const defaultSettingsStep = new DefaultSettingsStep();
   const defaultNumberingStep = new DefaultNumberingStep();
   const defaultTemplatesStep = new DefaultTemplatesStep();
+  const defaultApprovalRulesStep = new DefaultApprovalRulesStep();
+  const defaultCoaStep = new DefaultCoaStep();
+  const defaultPeriodsStep = new DefaultPeriodsStep();
+  const defaultPostingRulesStep = new DefaultPostingRulesStep();
+  const defaultBanksStep = new DefaultBanksStep();
+
+  await defaultBanksStep.seedGlobalBanks(systemPrisma);
+  console.log('✓ Global banks and branches reference data seeded');
 
   const provisioningService = new TenantProvisioningService(
     tenantDb,
@@ -63,6 +82,10 @@ async function runDemoSeed() {
     defaultSettingsStep,
     defaultNumberingStep,
     defaultTemplatesStep,
+    defaultApprovalRulesStep,
+    defaultCoaStep,
+    defaultPeriodsStep,
+    defaultPostingRulesStep,
   );
   provisioningService.onModuleInit();
 
@@ -70,6 +93,13 @@ async function runDemoSeed() {
   const demoLandStep = new DemoLandStep();
   const demoProjectStep = new DemoProjectStep();
   const demoPropertyStep = new DemoPropertyStep();
+  const demoCrmStep = new DemoCrmStep();
+  const fieldCrypto = new FieldCryptoService(configService);
+  const demoCustomerStep = new DemoCustomerStep(fieldCrypto);
+  const demoPaymentPlanStep = new DemoPaymentPlanStep();
+  const demoChargeStep = new DemoChargeStep();
+  const demoQuotationStep = new DemoQuotationStep();
+
   const demoSeedService = new DemoSeedService(
     tenantDb,
     provisioningService,
@@ -77,6 +107,11 @@ async function runDemoSeed() {
     demoLandStep,
     demoProjectStep,
     demoPropertyStep,
+    demoCrmStep,
+    demoCustomerStep,
+    demoPaymentPlanStep,
+    demoChargeStep,
+    demoQuotationStep,
   );
   demoSeedService.onModuleInit();
 

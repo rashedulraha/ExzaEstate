@@ -5,6 +5,7 @@ export const QUEUE_NAMES = {
   APPROVAL_EXPIRY: 'approval-expiry',
   DOCUMENT_SCAN: 'document-scan',
   DOCUMENT_EXPIRY: 'document-expiry',
+  RESERVATION_EXPIRY: 'reservation-expiry',
   OUTBOX_MAINTENANCE: 'outbox-maintenance',
   TENANT_IMPORT: 'tenant-import',
 } as const;

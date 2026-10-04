@@ -2,7 +2,7 @@
 // Insert-only table tracking security-relevant events separate from audit_logs.
 
 model SecurityEvent {
-  id        String   @default(uuid(7)) @id @db.Uuid
+  id        String   @id @default(uuid(7)) @db.Uuid
   companyId String   @map("company_id") @db.Uuid
   userId    String?  @map("user_id") @db.Uuid
   eventType String   @map("event_type") @db.VarChar(64)

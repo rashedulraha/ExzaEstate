@@ -15,6 +15,10 @@ import { DefaultDepartmentsStep } from './steps/default-departments.step.js';
 import { DefaultSettingsStep } from './steps/default-settings.step.js';
 import { DefaultNumberingStep } from './steps/default-numbering.step.js';
 import { DefaultTemplatesStep } from './steps/default-templates.step.js';
+import { DefaultApprovalRulesStep } from './steps/default-approval-rules.step.js';
+import { DefaultCoaStep } from './steps/default-coa.step.js';
+import { DefaultPeriodsStep } from './steps/default-periods.step.js';
+import { DefaultPostingRulesStep } from './steps/default-posting-rules.step.js';
 
 export * from './provisioning-step.interface.js';
 
@@ -33,6 +37,10 @@ export class TenantProvisioningService implements OnModuleInit {
     private readonly defaultSettingsStep: DefaultSettingsStep,
     private readonly defaultNumberingStep: DefaultNumberingStep,
     private readonly defaultTemplatesStep: DefaultTemplatesStep,
+    private readonly defaultApprovalRulesStep: DefaultApprovalRulesStep,
+    private readonly defaultCoaStep: DefaultCoaStep,
+    private readonly defaultPeriodsStep: DefaultPeriodsStep,
+    private readonly defaultPostingRulesStep: DefaultPostingRulesStep,
   ) {
     this.registerStep(this.companyBranchStep);
     this.registerStep(this.rolesPermissionsStep);
@@ -41,6 +49,10 @@ export class TenantProvisioningService implements OnModuleInit {
     this.registerStep(this.defaultSettingsStep);
     this.registerStep(this.defaultNumberingStep);
     this.registerStep(this.defaultTemplatesStep);
+    this.registerStep(this.defaultApprovalRulesStep);
+    this.registerStep(this.defaultCoaStep);
+    this.registerStep(this.defaultPeriodsStep);
+    this.registerStep(this.defaultPostingRulesStep);
   }
 
   onModuleInit(): void {
@@ -52,6 +64,10 @@ export class TenantProvisioningService implements OnModuleInit {
     this.registerStep(this.defaultSettingsStep);
     this.registerStep(this.defaultNumberingStep);
     this.registerStep(this.defaultTemplatesStep);
+    this.registerStep(this.defaultApprovalRulesStep);
+    this.registerStep(this.defaultCoaStep);
+    this.registerStep(this.defaultPeriodsStep);
+    this.registerStep(this.defaultPostingRulesStep);
   }
 
   /**

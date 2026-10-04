@@ -2,25 +2,25 @@
 // Tenant-scoped models with RLS, signed by Ed25519
 
 model License {
-  id           String            @id @default(uuid(7)) @db.Uuid
-  companyId    String            @map("company_id") @db.Uuid
-  plan         String            @db.VarChar(64)
-  status       String            @default("ACTIVE") @db.VarChar(32)
-  licenseKey   String            @unique @map("license_key") @db.VarChar(255)
-  signature    String            @db.Text
-  kid          String            @db.VarChar(64)
-  machineId    String?           @map("machine_id") @db.VarChar(255)
-  validFrom    DateTime          @default(now()) @map("valid_from") @db.Timestamptz
-  validUntil   DateTime          @map("valid_until") @db.Timestamptz
-  graceDays    Int               @default(15) @map("grace_days")
-  maxSeats     Int               @default(10) @map("max_seats")
-  maxBranches  Int               @default(1) @map("max_branches")
-  maxProjects  Int               @default(5) @map("max_projects")
-  createdAt    DateTime          @default(now()) @map("created_at") @db.Timestamptz
-  updatedAt    DateTime          @updatedAt @map("updated_at") @db.Timestamptz
-  deletedAt    DateTime?         @map("deleted_at") @db.Timestamptz
+  id          String    @id @default(uuid(7)) @db.Uuid
+  companyId   String    @map("company_id") @db.Uuid
+  plan        String    @db.VarChar(64)
+  status      String    @default("ACTIVE") @db.VarChar(32)
+  licenseKey  String    @unique @map("license_key") @db.VarChar(255)
+  signature   String    @db.Text
+  kid         String    @db.VarChar(64)
+  machineId   String?   @map("machine_id") @db.VarChar(255)
+  validFrom   DateTime  @default(now()) @map("valid_from") @db.Timestamptz
+  validUntil  DateTime  @map("valid_until") @db.Timestamptz
+  graceDays   Int       @default(15) @map("grace_days")
+  maxSeats    Int       @default(10) @map("max_seats")
+  maxBranches Int       @default(1) @map("max_branches")
+  maxProjects Int       @default(5) @map("max_projects")
+  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt   DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+  deletedAt   DateTime? @map("deleted_at") @db.Timestamptz
 
-  transfers    LicenseTransfer[]
+  transfers LicenseTransfer[]
 
   @@unique([companyId, licenseKey])
   @@index([companyId])
@@ -29,16 +29,16 @@ model License {
 }
 
 model LicenseTransfer {
-  id                 String   @id @default(uuid(7)) @db.Uuid
-  companyId          String   @map("company_id") @db.Uuid
-  licenseId          String   @map("license_id") @db.Uuid
-  previousMachineId  String   @map("previous_machine_id") @db.VarChar(255)
-  newMachineId       String   @map("new_machine_id") @db.VarChar(255)
-  status             String   @default("COMPLETED") @db.VarChar(32)
-  reason             String?  @db.Text
-  createdAt          DateTime @default(now()) @map("created_at") @db.Timestamptz
+  id                String   @id @default(uuid(7)) @db.Uuid
+  companyId         String   @map("company_id") @db.Uuid
+  licenseId         String   @map("license_id") @db.Uuid
+  previousMachineId String   @map("previous_machine_id") @db.VarChar(255)
+  newMachineId      String   @map("new_machine_id") @db.VarChar(255)
+  status            String   @default("COMPLETED") @db.VarChar(32)
+  reason            String?  @db.Text
+  createdAt         DateTime @default(now()) @map("created_at") @db.Timestamptz
 
-  license            License  @relation(fields: [licenseId], references: [id], onDelete: Cascade)
+  license License @relation(fields: [licenseId], references: [id], onDelete: Cascade)
 
   @@index([companyId])
   @@index([licenseId])

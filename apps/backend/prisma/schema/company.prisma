@@ -29,22 +29,22 @@ model Company {
 }
 
 model Branch {
-  id           String        @id @default(uuid(7)) @db.Uuid
-  companyId    String        @map("company_id") @db.Uuid
-  name         String        @db.VarChar(255)
-  code         String        @db.VarChar(64)
-  address      String?       @db.Text
-  phone        String?       @db.VarChar(64)
-  email        String?       @db.VarChar(255)
-  isHeadOffice Boolean       @default(false) @map("is_head_office")
-  isActive     Boolean       @default(true) @map("is_active")
-  deletedAt    DateTime?     @map("deleted_at") @db.Timestamptz
-  createdAt    DateTime      @default(now()) @map("created_at") @db.Timestamptz
-  updatedAt    DateTime      @updatedAt @map("updated_at") @db.Timestamptz
+  id           String    @id @default(uuid(7)) @db.Uuid
+  companyId    String    @map("company_id") @db.Uuid
+  name         String    @db.VarChar(255)
+  code         String    @db.VarChar(64)
+  address      String?   @db.Text
+  phone        String?   @db.VarChar(64)
+  email        String?   @db.VarChar(255)
+  isHeadOffice Boolean   @default(false) @map("is_head_office")
+  isActive     Boolean   @default(true) @map("is_active")
+  deletedAt    DateTime? @map("deleted_at") @db.Timestamptz
+  createdAt    DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt    DateTime  @updatedAt @map("updated_at") @db.Timestamptz
 
-  company      Company       @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  departments  Department[]
-  employees    Employee[]
+  company     Company      @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  departments Department[]
+  employees   Employee[]
 
   @@unique([companyId, code])
   @@index([companyId])
@@ -62,8 +62,8 @@ model Department {
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz
   updatedAt DateTime  @updatedAt @map("updated_at") @db.Timestamptz
 
-  company   Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  branch    Branch?   @relation(fields: [branchId], references: [id], onDelete: SetNull)
+  company   Company    @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  branch    Branch?    @relation(fields: [branchId], references: [id], onDelete: SetNull)
   employees Employee[]
 
   @@unique([companyId, code])

@@ -1,25 +1,25 @@
 // Documents and Versioning models (Task A1.6 - Documents Module)
 
 model Document {
-  id                 String            @id @default(uuid(7)) @db.Uuid
-  companyId          String            @map("company_id") @db.Uuid
-  title              String            @db.VarChar(255)
-  description        String?           @db.Text
-  entityType         String            @map("entity_type") @db.VarChar(64)
-  entityId           String            @map("entity_id") @db.Uuid
-  category           String?           @db.VarChar(64)
-  isPrivate          Boolean           @default(false) @map("is_private")
-  requiredPermission String?           @map("required_permission") @db.VarChar(128)
-  currentVersion     Int               @default(1) @map("current_version")
-  expiresAt          DateTime?         @map("expires_at") @db.Timestamptz
-  isExpired          Boolean           @default(false) @map("is_expired")
-  status             String            @default("ACTIVE") @db.VarChar(32)
-  createdById        String?           @map("created_by_id") @db.Uuid
-  deletedAt          DateTime?         @map("deleted_at") @db.Timestamptz
-  createdAt          DateTime          @default(now()) @map("created_at") @db.Timestamptz
-  updatedAt          DateTime          @updatedAt @map("updated_at") @db.Timestamptz
+  id                 String    @id @default(uuid(7)) @db.Uuid
+  companyId          String    @map("company_id") @db.Uuid
+  title              String    @db.VarChar(255)
+  description        String?   @db.Text
+  entityType         String    @map("entity_type") @db.VarChar(64)
+  entityId           String    @map("entity_id") @db.Uuid
+  category           String?   @db.VarChar(64)
+  isPrivate          Boolean   @default(false) @map("is_private")
+  requiredPermission String?   @map("required_permission") @db.VarChar(128)
+  currentVersion     Int       @default(1) @map("current_version")
+  expiresAt          DateTime? @map("expires_at") @db.Timestamptz
+  isExpired          Boolean   @default(false) @map("is_expired")
+  status             String    @default("ACTIVE") @db.VarChar(32)
+  createdById        String?   @map("created_by_id") @db.Uuid
+  deletedAt          DateTime? @map("deleted_at") @db.Timestamptz
+  createdAt          DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt          DateTime  @updatedAt @map("updated_at") @db.Timestamptz
 
-  versions           DocumentVersion[]
+  versions DocumentVersion[]
 
   @@index([companyId])
   @@index([companyId, entityType, entityId])
@@ -42,7 +42,7 @@ model DocumentVersion {
   uploadedById String?  @map("uploaded_by_id") @db.Uuid
   createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz
 
-  document     Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  document Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
 
   @@unique([companyId, documentId, version])
   @@index([companyId, documentId])

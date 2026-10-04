@@ -15,8 +15,8 @@ model PropertyBlock {
   createdById String?   @map("created_by_id") @db.Uuid
   updatedById String?   @map("updated_by_id") @db.Uuid
 
-  floors      PropertyFloor[]
-  properties  Property[]
+  floors     PropertyFloor[]
+  properties Property[]
 
   @@unique([companyId, projectId, code])
   @@index([companyId])
@@ -40,8 +40,8 @@ model PropertyFloor {
   createdById String?   @map("created_by_id") @db.Uuid
   updatedById String?   @map("updated_by_id") @db.Uuid
 
-  block       PropertyBlock @relation(fields: [blockId], references: [id], onDelete: Cascade)
-  properties  Property[]
+  block      PropertyBlock @relation(fields: [blockId], references: [id], onDelete: Cascade)
+  properties Property[]
 
   @@unique([companyId, blockId, code])
   @@index([companyId])
@@ -77,9 +77,9 @@ model Property {
   createdById      String?   @map("created_by_id") @db.Uuid
   updatedById      String?   @map("updated_by_id") @db.Uuid
 
-  block            PropertyBlock?          @relation(fields: [blockId], references: [id], onDelete: SetNull)
-  floor            PropertyFloor?          @relation(fields: [floorId], references: [id], onDelete: SetNull)
-  statusHistory    PropertyStatusHistory[]
+  block         PropertyBlock?          @relation(fields: [blockId], references: [id], onDelete: SetNull)
+  floor         PropertyFloor?          @relation(fields: [floorId], references: [id], onDelete: SetNull)
+  statusHistory PropertyStatusHistory[]
 
   @@unique([companyId, projectId, code])
   @@index([companyId])
@@ -102,7 +102,7 @@ model PropertyStatusHistory {
   metadata    Json?    @default("{}") @db.JsonB
   createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz
 
-  property    Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  property Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
 
   @@index([companyId])
   @@index([companyId, propertyId])

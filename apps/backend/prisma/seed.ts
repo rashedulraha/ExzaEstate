@@ -11,6 +11,11 @@ import { DefaultDepartmentsStep } from '../src/platform/tenant-provisioning/step
 import { DefaultSettingsStep } from '../src/platform/tenant-provisioning/steps/default-settings.step.js';
 import { DefaultNumberingStep } from '../src/platform/tenant-provisioning/steps/default-numbering.step.js';
 import { DefaultTemplatesStep } from '../src/platform/tenant-provisioning/steps/default-templates.step.js';
+import { DefaultApprovalRulesStep } from '../src/platform/tenant-provisioning/steps/default-approval-rules.step.js';
+import { DefaultCoaStep } from '../src/platform/tenant-provisioning/steps/default-coa.step.js';
+import { DefaultPeriodsStep } from '../src/platform/tenant-provisioning/steps/default-periods.step.js';
+import { DefaultPostingRulesStep } from '../src/platform/tenant-provisioning/steps/default-posting-rules.step.js';
+import { DefaultBanksStep } from '../src/platform/tenant-provisioning/steps/default-banks.step.js';
 import {
   ProvisionCompanyDto,
   TenantProvisioningService,
@@ -51,6 +56,14 @@ async function runSeed() {
   const defaultSettingsStep = new DefaultSettingsStep();
   const defaultNumberingStep = new DefaultNumberingStep();
   const defaultTemplatesStep = new DefaultTemplatesStep();
+  const defaultApprovalRulesStep = new DefaultApprovalRulesStep();
+  const defaultCoaStep = new DefaultCoaStep();
+  const defaultPeriodsStep = new DefaultPeriodsStep();
+  const defaultPostingRulesStep = new DefaultPostingRulesStep();
+  const defaultBanksStep = new DefaultBanksStep();
+
+  await defaultBanksStep.seedGlobalBanks(systemPrisma);
+  console.log('✓ Global banks and branches reference data seeded');
 
   const provisioningService = new TenantProvisioningService(
     tenantDb,
@@ -62,6 +75,10 @@ async function runSeed() {
     defaultSettingsStep,
     defaultNumberingStep,
     defaultTemplatesStep,
+    defaultApprovalRulesStep,
+    defaultCoaStep,
+    defaultPeriodsStep,
+    defaultPostingRulesStep,
   );
   provisioningService.onModuleInit();
 

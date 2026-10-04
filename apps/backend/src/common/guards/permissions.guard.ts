@@ -71,6 +71,7 @@ export class PermissionsGuard implements CanActivate {
     this.clsService.set('permissions', resolved.permissions);
     this.clsService.set('scopes', resolved.scopes);
     this.clsService.set('branchIds', resolved.branchIds);
+    this.clsService.set('teamUserIds', resolved.teamUserIds);
 
     return true;
   }
