@@ -1,0 +1,21 @@
+meta {
+  name: Verify Customer KYC
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{baseUrl}}/crm/customers/{{customerId}}/kyc-verify
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+body:json {
+  {
+    "notes": "Verified NID original card and Dhanmondi utility bill. Nominee verified."
+  }
+}

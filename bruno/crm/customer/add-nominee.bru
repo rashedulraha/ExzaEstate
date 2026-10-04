@@ -1,0 +1,26 @@
+meta {
+  name: Add Customer Nominee
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{baseUrl}}/crm/customers/{{customerId}}/nominees
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+body:json {
+  {
+    "name": "Aryan Ahmed",
+    "relationship": "SON",
+    "phone": "+8801712000003",
+    "nid": "20182692019283748",
+    "sharePercentage": 50,
+    "isPowerOfAttorney": false
+  }
+}

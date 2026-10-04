@@ -1,0 +1,165 @@
+// Customer 360 & KYC Models (Task A3.3 - Customer 360 & KYC)
+// PRD MOD-CUSTOMER; architecture.md §11, §14; security.md §6, §15
+
+model Customer {
+  id                 String    @id @default(uuid(7)) @db.Uuid
+  companyId          String    @map("company_id") @db.Uuid
+  customerNumber     String    @map("customer_number") @db.VarChar(64)
+  customerType       String    @default("INDIVIDUAL") @map("customer_type") @db.VarChar(32) // INDIVIDUAL, COMPANY
+  name               String    @db.VarChar(255)
+  fatherOrSpouseName String?   @map("father_or_spouse_name") @db.VarChar(255)
+  motherName         String?   @map("mother_name") @db.VarChar(255)
+  dateOfBirth        DateTime? @map("date_of_birth") @db.Date
+  occupation         String?   @db.VarChar(128)
+  nationality        String    @default("Bangladeshi") @db.VarChar(64)
+  isNrb              Boolean   @default(false) @map("is_nrb")
+  phone              String    @db.VarChar(32)
+  email              String?   @db.VarChar(255)
+  photoUrl           String?   @map("photo_url") @db.VarChar(512)
+
+  // Encrypted PII fields (AES-256-GCM) with blind indexes (HMAC-SHA256)
+  nidEncrypted         String? @map("nid_encrypted") @db.Text
+  nidBidx              String? @map("nid_bidx") @db.VarChar(64)
+  passportEncrypted    String? @map("passport_encrypted") @db.Text
+  passportBidx         String? @map("passport_bidx") @db.VarChar(64)
+  tinEncrypted         String? @map("tin_encrypted") @db.Text
+  tinBidx              String? @map("tin_bidx") @db.VarChar(64)
+  bankAccountEncrypted String? @map("bank_account_encrypted") @db.Text
+  bankAccountBidx      String? @map("bank_account_bidx") @db.VarChar(64)
+  bankName             String? @map("bank_name") @db.VarChar(128)
+  bankBranch           String? @map("bank_branch") @db.VarChar(128)
+  bankRoutingNumber    String? @map("bank_routing_number") @db.VarChar(32)
+
+  // Foreign remittance informational fields for NRB
+  originalCurrency    String? @map("original_currency") @db.VarChar(8)
+  remittanceReference String? @map("remittance_reference") @db.VarChar(128)
+
+  // KYC completeness status
+  isKycCompleted   Boolean   @default(false) @map("is_kyc_completed")
+  kycCompletedAt   DateTime? @map("kyc_completed_at") @db.Timestamptz
+  kycCompletedById String?   @map("kyc_completed_by_id") @db.Uuid
+  kycNotes         String?   @map("kyc_notes") @db.Text
+
+  // Scoping, attribution and lifecycle
+  leadId       String?   @map("lead_id") @db.Uuid
+  branchId     String?   @map("branch_id") @db.Uuid
+  assignedToId String?   @map("assigned_to_id") @db.Uuid
+  createdById  String?   @map("created_by_id") @db.Uuid
+  updatedById  String?   @map("updated_by_id") @db.Uuid
+  deletedAt    DateTime? @map("deleted_at") @db.Timestamptz
+  createdAt    DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt    DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+
+  contacts  CustomerContact[]
+  addresses CustomerAddress[]
+  nominees  CustomerNominee[]
+  coBuyers  CustomerCoBuyer[]
+  followUps FollowUp[]
+  payments  Payment[]
+
+  @@unique([companyId, customerNumber])
+  @@index([companyId])
+  @@index([companyId, phone])
+  @@index([companyId, email])
+  @@index([companyId, nidBidx])
+  @@index([companyId, passportBidx])
+  @@index([companyId, tinBidx])
+  @@index([companyId, bankAccountBidx])
+  @@index([companyId, branchId])
+  @@index([companyId, assignedToId])
+  @@index([companyId, isKycCompleted])
+  @@index([companyId, createdAt])
+  @@map("crm_customers")
+}
+
+model CustomerContact {
+  id           String    @id @default(uuid(7)) @db.Uuid
+  companyId    String    @map("company_id") @db.Uuid
+  customerId   String    @map("customer_id") @db.Uuid
+  name         String    @db.VarChar(255)
+  relationship String?   @db.VarChar(64)
+  phone        String    @db.VarChar(32)
+  email        String?   @db.VarChar(255)
+  isPrimary    Boolean   @default(false) @map("is_primary")
+  deletedAt    DateTime? @map("deleted_at") @db.Timestamptz
+  createdAt    DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt    DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+
+  customer Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+
+  @@index([companyId])
+  @@index([companyId, customerId])
+  @@map("crm_customer_contacts")
+}
+
+model CustomerAddress {
+  id           String    @id @default(uuid(7)) @db.Uuid
+  companyId    String    @map("company_id") @db.Uuid
+  customerId   String    @map("customer_id") @db.Uuid
+  type         String    @db.VarChar(32) // PRESENT, PERMANENT, OFFICE, OVERSEAS
+  addressLine1 String    @map("address_line1") @db.VarChar(255)
+  addressLine2 String?   @map("address_line2") @db.VarChar(255)
+  city         String    @db.VarChar(64)
+  division     String?   @db.VarChar(64)
+  postalCode   String?   @map("postal_code") @db.VarChar(16)
+  country      String    @default("Bangladesh") @db.VarChar(64)
+  isPrimary    Boolean   @default(false) @map("is_primary")
+  deletedAt    DateTime? @map("deleted_at") @db.Timestamptz
+  createdAt    DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt    DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+
+  customer Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+
+  @@index([companyId])
+  @@index([companyId, customerId])
+  @@map("crm_customer_addresses")
+}
+
+model CustomerNominee {
+  id                String    @id @default(uuid(7)) @db.Uuid
+  companyId         String    @map("company_id") @db.Uuid
+  customerId        String    @map("customer_id") @db.Uuid
+  name              String    @db.VarChar(255)
+  relationship      String    @db.VarChar(64)
+  phone             String?   @db.VarChar(32)
+  email             String?   @db.VarChar(255)
+  nidEncrypted      String?   @map("nid_encrypted") @db.Text
+  nidBidx           String?   @map("nid_bidx") @db.VarChar(64)
+  address           String?   @db.Text
+  photoUrl          String?   @map("photo_url") @db.VarChar(512)
+  sharePercentage   Decimal   @default(100.00) @map("share_percentage") @db.Decimal(5, 2)
+  isPowerOfAttorney Boolean   @default(false) @map("is_power_of_attorney")
+  poaDocumentNumber String?   @map("poa_document_number") @db.VarChar(128)
+  deletedAt         DateTime? @map("deleted_at") @db.Timestamptz
+  createdAt         DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt         DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+
+  customer Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+
+  @@index([companyId])
+  @@index([companyId, customerId])
+  @@map("crm_customer_nominees")
+}
+
+model CustomerCoBuyer {
+  id                String    @id @default(uuid(7)) @db.Uuid
+  companyId         String    @map("company_id") @db.Uuid
+  primaryCustomerId String    @map("primary_customer_id") @db.Uuid
+  coBuyerCustomerId String?   @map("co_buyer_customer_id") @db.Uuid
+  name              String    @db.VarChar(255)
+  relationship      String?   @db.VarChar(64)
+  phone             String    @db.VarChar(32)
+  email             String?   @db.VarChar(255)
+  nidEncrypted      String?   @map("nid_encrypted") @db.Text
+  nidBidx           String?   @map("nid_bidx") @db.VarChar(64)
+  sharePercentage   Decimal   @default(50.00) @map("share_percentage") @db.Decimal(5, 2)
+  deletedAt         DateTime? @map("deleted_at") @db.Timestamptz
+  createdAt         DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt         DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+
+  customer Customer @relation(fields: [primaryCustomerId], references: [id], onDelete: Cascade)
+
+  @@index([companyId])
+  @@index([companyId, primaryCustomerId])
+  @@map("crm_customer_co_buyers")
+}

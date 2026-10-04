@@ -1,0 +1,15 @@
+meta {
+  name: Get Customer Activity Timeline
+  type: http
+  seq: 7
+}
+
+get {
+  url: {{baseUrl}}/crm/customers/{{customerId}}/timeline
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}

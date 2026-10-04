@@ -1,0 +1,21 @@
+meta {
+  name: List Customers
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/crm/customers?page=1&limit=20&search=Farhan
+  body: none
+  auth: bearer
+}
+
+params:query {
+  page: 1
+  limit: 20
+  search: Farhan
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}

@@ -1,0 +1,55 @@
+meta {
+  name: Create Customer
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/crm/customers
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+body:json {
+  {
+    "customerType": "INDIVIDUAL",
+    "name": "Engr. Farhan Ahmed",
+    "fatherOrSpouseName": "Late Nurul Ahmed",
+    "motherName": "Begum Rokeya Ahmed",
+    "dateOfBirth": "1985-06-15",
+    "occupation": "Software Architect",
+    "nationality": "Bangladeshi",
+    "isNrb": false,
+    "phone": "+8801712000001",
+    "email": "farhan.ahmed@example.com",
+    "nid": "19852692019283741",
+    "tin": "482910482910",
+    "bankName": "BRAC Bank PLC",
+    "bankBranch": "Dhanmondi Branch",
+    "bankAccount": "1501204829100001",
+    "bankRoutingNumber": "060261234",
+    "addresses": [
+      {
+        "type": "PRESENT",
+        "addressLine1": "House 42, Road 9/A, Dhanmondi R/A",
+        "city": "Dhaka",
+        "division": "Dhaka",
+        "postalCode": "1209",
+        "isPrimary": true
+      }
+    ],
+    "nominees": [
+      {
+        "name": "Tasnim Farhan",
+        "relationship": "WIFE",
+        "phone": "+8801712000002",
+        "nid": "19882692019283742",
+        "sharePercentage": 100
+      }
+    ]
+  }
+}
