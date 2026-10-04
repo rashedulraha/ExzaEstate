@@ -1,10 +1,12 @@
 import {
+  InstallmentWaivedPayload,
   LateFeeChargedPayload,
   LateFeeWaivedPayload,
   PostingJournalInstruction,
   PostingRuleHandler,
   PostingRuleRecord,
 } from './posting-rule.interface.js';
+
 
 export class LateFeeChargedRule implements PostingRuleHandler<LateFeeChargedPayload> {
   readonly eventType = 'LATE_FEE_CHARGED';
@@ -85,3 +87,45 @@ export class LateFeeWaivedRule implements PostingRuleHandler<LateFeeWaivedPayloa
     ];
   }
 }
+
+export class InstallmentWaivedRule implements PostingRuleHandler<InstallmentWaivedPayload> {
+  readonly eventType = 'INSTALLMENT_WAIVED';
+
+  buildInstructions(
+    payload: InstallmentWaivedPayload,
+    rule: PostingRuleRecord,
+  ): PostingJournalInstruction[] {
+    const waiverAmount = BigInt(payload.amountPaisa);
+    const receivableAccount = rule.accountMappings['receivable'] ?? '1100';
+    const discountAccount = rule.accountMappings['discount'] ?? '5900';
+
+    return [
+      {
+        narration: `Installment waiver adjustment: ${payload.reason ?? 'Approved waiver'}`,
+        reference: payload.reference,
+        sourceModule: 'collection',
+        sourceDocumentId: payload.installmentId,
+        sourceEventType: this.eventType,
+        postingDate: new Date(payload.postingDate),
+        type: 'SYSTEM',
+        lines: [
+          {
+            accountCode: discountAccount,
+            debitPaisa: waiverAmount,
+            description: 'Installment waiver allowed (discount/adjustment expense)',
+            projectId: payload.projectId,
+          },
+          {
+            accountCode: receivableAccount,
+            creditPaisa: waiverAmount,
+            description: 'Customer receivable reduction for waived installment',
+            partyType: 'CUSTOMER',
+            partyId: payload.customerId,
+            projectId: payload.projectId,
+          },
+        ],
+      },
+    ];
+  }
+}
+

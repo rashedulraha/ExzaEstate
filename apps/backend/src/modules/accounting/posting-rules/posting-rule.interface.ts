@@ -121,6 +121,18 @@ export interface LateFeeWaivedPayload {
   projectId?: string;
 }
 
+export interface InstallmentWaivedPayload {
+  installmentId: string;
+  bookingId: string;
+  customerId: string;
+  amountPaisa: bigint | string | number;
+  postingDate: Date | string;
+  reference?: string;
+  reason?: string;
+  projectId?: string;
+}
+
+
 export interface BookingCancelledPayload {
   bookingId: string;
   bookingNumber: string;
