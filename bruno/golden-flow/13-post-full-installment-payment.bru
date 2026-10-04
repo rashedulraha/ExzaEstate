@@ -1,0 +1,28 @@
+meta {
+  name: 13 - Post Remaining Installment Payment (Full)
+  type: http
+  seq: 13
+}
+
+post {
+  url: {{baseUrl}}/collection/payments
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accountantToken}}
+}
+
+body:json {
+  {
+    "bookingId": "{{bookingId}}",
+    "customerId": "{{customerId}}",
+    "amountPaisa": 200000000,
+    "paymentType": "INSTALLMENT",
+    "paymentMethod": "BANK",
+    "bankName": "City Bank Ltd",
+    "transactionReference": "TXN-CITY-992211",
+    "notes": "Full settlement of installment #1"
+  }
+}

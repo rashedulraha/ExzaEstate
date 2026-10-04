@@ -1,0 +1,29 @@
+meta {
+  name: 04 - Create Property
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/properties
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{adminToken}}
+}
+
+body:json {
+  {
+    "projectId": "{{projectId}}",
+    "code": "A-501",
+    "title": "5th Floor Luxury Suite",
+    "type": "FLAT",
+    "areaSqft": 2450.5,
+    "facing": "SOUTH_EAST",
+    "basePricePaisa": 2450000000,
+    "premiumPaisa": 50000000,
+    "discountLimitPct": 5.0
+  }
+}

@@ -1,0 +1,29 @@
+meta {
+  name: 05 - Create Customer 360
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{baseUrl}}/crm/customers
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{adminToken}}
+}
+
+body:json {
+  {
+    "name": "Dr. Shamsul Huq",
+    "phone": "+8801711998877",
+    "email": "dr.shamsul@example.com",
+    "customerType": "INDIVIDUAL",
+    "fatherOrSpouseName": "Late Nurul Huq",
+    "occupation": "Professor of Medicine",
+    "nationality": "Bangladeshi",
+    "nid": "19752691234567890",
+    "tin": "123456789012"
+  }
+}

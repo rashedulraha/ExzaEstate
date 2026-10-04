@@ -1,0 +1,21 @@
+meta {
+  name: 02 - Seed Default Chart of Accounts (COA)
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/accounting/coa/seed
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{adminToken}}
+}
+
+body:json {
+  {
+    "companyId": "{{companyId}}"
+  }
+}

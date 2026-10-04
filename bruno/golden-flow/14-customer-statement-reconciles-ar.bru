@@ -1,0 +1,15 @@
+meta {
+  name: 14 - Customer Statement Reconciles AR Ledger (AT-14)
+  type: http
+  seq: 14
+}
+
+get {
+  url: {{baseUrl}}/collection/statements/{{customerId}}
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{adminToken}}
+}

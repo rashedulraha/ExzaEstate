@@ -1,0 +1,15 @@
+meta {
+  name: 17 - Accounting Period Close (AT-10)
+  type: http
+  seq: 17
+}
+
+post {
+  url: {{baseUrl}}/accounting/periods/{{periodId}}/close
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{adminToken}}
+}

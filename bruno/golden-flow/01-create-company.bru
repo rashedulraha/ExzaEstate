@@ -1,0 +1,27 @@
+meta {
+  name: 01 - Create Company (Super Admin)
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/system/tenants
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{superAdminToken}}
+}
+
+body:json {
+  {
+    "companyName": "Golden Horizon Real Estate Ltd",
+    "companyCode": "GHRL",
+    "adminFullName": "Managing Director",
+    "adminEmail": "md@goldenhorizon.com.bd",
+    "adminPassword": "Password123!",
+    "licensePlan": "ENTERPRISE",
+    "validUntil": "2030-12-31T23:59:59Z"
+  }
+}

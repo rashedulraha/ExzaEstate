@@ -1,0 +1,15 @@
+meta {
+  name: 11 - Verify Immutable Receipt & Journal
+  type: http
+  seq: 11
+}
+
+get {
+  url: {{baseUrl}}/collection/receipts?bookingId={{bookingId}}
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{adminToken}}
+}

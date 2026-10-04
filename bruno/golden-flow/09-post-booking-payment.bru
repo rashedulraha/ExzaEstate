@@ -1,0 +1,28 @@
+meta {
+  name: 09 - Post Booking Money Payment (Accountant)
+  type: http
+  seq: 9
+}
+
+post {
+  url: {{baseUrl}}/collection/payments
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accountantToken}}
+}
+
+body:json {
+  {
+    "bookingId": "{{bookingId}}",
+    "customerId": "{{customerId}}",
+    "amountPaisa": 250000000,
+    "paymentType": "BOOKING_MONEY",
+    "paymentMethod": "BANK",
+    "bankName": "Eastern Bank Ltd",
+    "transactionReference": "TXN-EBL-887711",
+    "notes": "Booking confirmation payment (10% min threshold met)"
+  }
+}

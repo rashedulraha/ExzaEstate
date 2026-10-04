@@ -1,0 +1,28 @@
+meta {
+  name: 12 - Post Partial Installment Payment
+  type: http
+  seq: 12
+}
+
+post {
+  url: {{baseUrl}}/collection/payments
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accountantToken}}
+}
+
+body:json {
+  {
+    "bookingId": "{{bookingId}}",
+    "customerId": "{{customerId}}",
+    "amountPaisa": 100000000,
+    "paymentType": "INSTALLMENT",
+    "paymentMethod": "CHEQUE",
+    "chequeNumber": "CHQ-001928",
+    "bankName": "City Bank Ltd",
+    "notes": "Partial payment towards installment #1 (৳2,00,000 remaining)"
+  }
+}

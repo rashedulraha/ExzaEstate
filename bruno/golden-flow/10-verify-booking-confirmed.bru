@@ -1,0 +1,15 @@
+meta {
+  name: 10 - Verify Booking Confirmed & Schedule Generated
+  type: http
+  seq: 10
+}
+
+get {
+  url: {{baseUrl}}/sales/bookings/{{bookingId}}
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{adminToken}}
+}

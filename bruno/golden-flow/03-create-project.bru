@@ -1,0 +1,28 @@
+meta {
+  name: 03 - Create Project
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/projects
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{adminToken}}
+}
+
+body:json {
+  {
+    "code": "GHL-01",
+    "name": "Golden Heights Luxury",
+    "type": "APARTMENT",
+    "location": "Gulshan 2, Dhaka",
+    "district": "Dhaka",
+    "upazila": "Gulshan",
+    "startDate": "2026-01-01",
+    "expectedCompletionDate": "2028-12-31"
+  }
+}

@@ -1,0 +1,21 @@
+meta {
+  name: 07 - Approve Discount Request (GM / MD)
+  type: http
+  seq: 7
+}
+
+post {
+  url: {{baseUrl}}/approvals/{{approvalId}}/approve
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{adminToken}}
+}
+
+body:json {
+  {
+    "comments": "Approved 4% discount per promotional guideline"
+  }
+}

@@ -210,7 +210,7 @@ describe('Ed25519 License Signing & Verification (Task A1.5 - S3)', () => {
     expect(res.body.error.code).toBe('LICENSE_INVALID');
   });
 
-  it('S3.5: Expired license within 15-day grace period returns GRACE with days remaining', async () => {
+  it('AT-31: Expired license within 15-day grace period returns GRACE with days remaining', async () => {
     // Generate a license that expired 5 days ago (grace period is 15 days)
     const expiredPast5Days = new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString();
 

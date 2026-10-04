@@ -1,0 +1,25 @@
+meta {
+  name: 06 - Create Quotation (With Discount Request)
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{baseUrl}}/sales/quotations
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{adminToken}}
+}
+
+body:json {
+  {
+    "propertyId": "{{propertyId}}",
+    "customerId": "{{customerId}}",
+    "discountPercentage": 4.0,
+    "validUntil": "2026-10-31T23:59:59Z",
+    "notes": "Special professor discount approval requested"
+  }
+}

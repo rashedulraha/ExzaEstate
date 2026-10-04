@@ -1,0 +1,25 @@
+meta {
+  name: 08 - Request Booking (REQUESTED status)
+  type: http
+  seq: 8
+}
+
+post {
+  url: {{baseUrl}}/sales/bookings
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{adminToken}}
+}
+
+body:json {
+  {
+    "propertyId": "{{propertyId}}",
+    "customerId": "{{customerId}}",
+    "quotationId": "{{quotationId}}",
+    "reservationHoldHours": 72,
+    "notes": "Booking subject to 10% booking money payment"
+  }
+}

@@ -1,0 +1,22 @@
+meta {
+  name: 16 - Cancel Booking with 10% Deduction & Process Refund (AT-08)
+  type: http
+  seq: 16
+}
+
+post {
+  url: {{baseUrl}}/sales/bookings/{{secondBookingId}}/cancel
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{adminToken}}
+}
+
+body:json {
+  {
+    "cancellationReason": "Customer relocated abroad",
+    "deductionPercentage": 10.0
+  }
+}
