@@ -1,0 +1,25 @@
+meta {
+  name: Reject Quotation
+  type: http
+  seq: 8
+}
+
+post {
+  url: {{baseUrl}}/sales/quotations/:id/reject
+  body: json
+  auth: bearer
+}
+
+params:path {
+  id: {{quotationId}}
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+body:json {
+  {
+    "reason": "Discount exceeds board ceiling for residential units without prior clearance."
+  }
+}

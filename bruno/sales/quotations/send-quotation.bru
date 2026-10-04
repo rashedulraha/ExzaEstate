@@ -1,0 +1,19 @@
+meta {
+  name: Mark Quotation Sent
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{baseUrl}}/sales/quotations/:id/send
+  body: none
+  auth: bearer
+}
+
+params:path {
+  id: {{quotationId}}
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}

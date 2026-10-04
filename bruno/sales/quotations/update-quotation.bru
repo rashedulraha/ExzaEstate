@@ -1,0 +1,27 @@
+meta {
+  name: Update Quotation
+  type: http
+  seq: 4
+}
+
+patch {
+  url: {{baseUrl}}/sales/quotations/:id
+  body: json
+  auth: bearer
+}
+
+params:path {
+  id: {{quotationId}}
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+body:json {
+  {
+    "validUntil": "2026-11-15T00:00:00.000Z",
+    "notes": "Client requested extended validity for bank mortgage eligibility review.",
+    "terms": "1. Price includes utility connection charges.\n2. Valid until 15 Nov 2026.\n3. Subject to board ratification."
+  }
+}

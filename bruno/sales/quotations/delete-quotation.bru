@@ -1,0 +1,19 @@
+meta {
+  name: Delete Draft Quotation
+  type: http
+  seq: 10
+}
+
+delete {
+  url: {{baseUrl}}/sales/quotations/:id
+  body: none
+  auth: bearer
+}
+
+params:path {
+  id: {{quotationId}}
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}

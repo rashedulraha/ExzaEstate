@@ -1,0 +1,28 @@
+meta {
+  name: Create Quotation
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/sales/quotations
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+body:json {
+  {
+    "propertyId": "d0000000-0000-0000-0000-000000000001",
+    "customerId": "c0000000-0000-0000-0000-000000000001",
+    "paymentPlanTemplateId": "b0000000-0000-0000-0000-000000000001",
+    "validUntil": "2026-11-04T00:00:00.000Z",
+    "discountType": "FIXED",
+    "discountValuePaisa": "20000000",
+    "discountReason": "Inaugural corporate booking concession approved by sales director",
+    "terms": "1. Price includes utility connection charges.\n2. Non-binding quotation valid for 30 days.\n3. Does not constitute property reservation."
+  }
+}
