@@ -1,192 +1,12 @@
+import { ACCOUNT_TYPES } from '@exzaestate/shared';
 import {
-  ACCOUNT_PARTY_TYPES,
-  ACCOUNT_TYPES,
-  type AccountPartyType,
-  type AccountType,
-} from '@exzaestate/shared';
+  DEFAULT_ASSETS_LIAB_ACCOUNTS,
+  type DefaultAccountDefinition,
+} from './default-coa-assets-liab.data.js';
 
-export interface DefaultAccountDefinition {
-  code: string;
-  name: string;
-  type: AccountType;
-  parentCode: string | null;
-  isGroup: boolean;
-  isSystem: boolean;
-  partyType?: AccountPartyType | null;
-  description?: string;
-}
+export type { DefaultAccountDefinition };
 
-export const DEFAULT_CHART_OF_ACCOUNTS: DefaultAccountDefinition[] = [
-  // 1000 ASSETS
-  {
-    code: '1000',
-    name: 'Assets',
-    type: ACCOUNT_TYPES.ASSET,
-    parentCode: null,
-    isGroup: true,
-    isSystem: false,
-    description: 'Asset group',
-  },
-  {
-    code: '1010',
-    name: 'Cash in Hand',
-    type: ACCOUNT_TYPES.ASSET,
-    parentCode: '1000',
-    isGroup: false,
-    isSystem: true,
-    description: 'Cash in hand',
-  },
-  {
-    code: '1020',
-    name: 'Bank Accounts',
-    type: ACCOUNT_TYPES.ASSET,
-    parentCode: '1000',
-    isGroup: true,
-    isSystem: true,
-    description: 'Parent for bank accounts',
-  },
-  {
-    code: '1030',
-    name: 'Mobile Wallets (bKash/Nagad)',
-    type: ACCOUNT_TYPES.ASSET,
-    parentCode: '1000',
-    isGroup: false,
-    isSystem: true,
-    description: 'Mobile money wallets',
-  },
-  {
-    code: '1040',
-    name: 'Cheques in Hand (Uncleared)',
-    type: ACCOUNT_TYPES.ASSET,
-    parentCode: '1000',
-    isGroup: false,
-    isSystem: true,
-    description: 'Uncleared cheques',
-  },
-  {
-    code: '1100',
-    name: 'Customer Receivable',
-    type: ACCOUNT_TYPES.ASSET,
-    parentCode: '1000',
-    isGroup: false,
-    isSystem: true,
-    partyType: ACCOUNT_PARTY_TYPES.CUSTOMER,
-    description: 'Accounts receivable from customers',
-  },
-  {
-    code: '1150',
-    name: 'Advances to Vendors',
-    type: ACCOUNT_TYPES.ASSET,
-    parentCode: '1000',
-    isGroup: false,
-    isSystem: false,
-    description: 'Vendor advance payments',
-  },
-  {
-    code: '1200',
-    name: 'Land Inventory',
-    type: ACCOUNT_TYPES.ASSET,
-    parentCode: '1000',
-    isGroup: false,
-    isSystem: false,
-    description: 'Land purchase costs',
-  },
-  {
-    code: '1210',
-    name: 'Development Work in Progress',
-    type: ACCOUNT_TYPES.ASSET,
-    parentCode: '1000',
-    isGroup: false,
-    isSystem: false,
-    description: 'Project WIP cost center',
-  },
-  {
-    code: '1300',
-    name: 'Fixed Assets',
-    type: ACCOUNT_TYPES.ASSET,
-    parentCode: '1000',
-    isGroup: true,
-    isSystem: false,
-    description: 'Fixed assets group',
-  },
-
-  // 2000 LIABILITIES
-  {
-    code: '2000',
-    name: 'Liabilities',
-    type: ACCOUNT_TYPES.LIABILITY,
-    parentCode: null,
-    isGroup: true,
-    isSystem: false,
-    description: 'Liability group',
-  },
-  {
-    code: '1900',
-    name: 'Suspense — Unallocated Receipts',
-    type: ACCOUNT_TYPES.LIABILITY,
-    parentCode: '2000',
-    isGroup: false,
-    isSystem: true,
-    description: 'Unallocated incoming receipts suspense',
-  },
-  {
-    code: '2100',
-    name: 'Accounts Payable — Vendors',
-    type: ACCOUNT_TYPES.LIABILITY,
-    parentCode: '2000',
-    isGroup: false,
-    isSystem: true,
-    partyType: ACCOUNT_PARTY_TYPES.VENDOR,
-    description: 'Vendor accounts payable',
-  },
-  {
-    code: '2200',
-    name: 'Customer Advances / Credits',
-    type: ACCOUNT_TYPES.LIABILITY,
-    parentCode: '2000',
-    isGroup: false,
-    isSystem: true,
-    partyType: ACCOUNT_PARTY_TYPES.CUSTOMER,
-    description: 'Customer overpayments and advances',
-  },
-  {
-    code: '2300',
-    name: 'Commission Payable',
-    type: ACCOUNT_TYPES.LIABILITY,
-    parentCode: '2000',
-    isGroup: false,
-    isSystem: true,
-    partyType: ACCOUNT_PARTY_TYPES.BROKER,
-    description: 'Broker commission payable',
-  },
-  {
-    code: '2400',
-    name: 'VAT / Tax Payable',
-    type: ACCOUNT_TYPES.LIABILITY,
-    parentCode: '2000',
-    isGroup: false,
-    isSystem: true,
-    description: 'VAT and government tax payable',
-  },
-  {
-    code: '2500',
-    name: 'Refunds Payable',
-    type: ACCOUNT_TYPES.LIABILITY,
-    parentCode: '2000',
-    isGroup: false,
-    isSystem: true,
-    description: 'Pending cancellation refunds',
-  },
-  {
-    code: '2600',
-    name: 'Unearned Sales Revenue',
-    type: ACCOUNT_TYPES.LIABILITY,
-    parentCode: '2000',
-    isGroup: false,
-    isSystem: true,
-    description: 'Unearned revenue for milestone/handover recognition',
-  },
-
+const EQUITY_INCOME_EXPENSE_ACCOUNTS: DefaultAccountDefinition[] = [
   // 3000 EQUITY
   {
     code: '3000',
@@ -336,4 +156,9 @@ export const DEFAULT_CHART_OF_ACCOUNTS: DefaultAccountDefinition[] = [
     isSystem: true,
     description: 'Approved customer discounts',
   },
+];
+
+export const DEFAULT_CHART_OF_ACCOUNTS: DefaultAccountDefinition[] = [
+  ...DEFAULT_ASSETS_LIAB_ACCOUNTS,
+  ...EQUITY_INCOME_EXPENSE_ACCOUNTS,
 ];
