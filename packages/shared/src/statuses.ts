@@ -70,6 +70,15 @@ export const APPROVAL_STATUSES = {
 
 export type ApprovalStatus = (typeof APPROVAL_STATUSES)[keyof typeof APPROVAL_STATUSES];
 
+export const AGREEMENT_STATUSES = {
+  DRAFT: 'Draft',
+  GENERATED: 'Generated',
+  SIGNED_AND_LOCKED: 'Signed & Locked',
+  SUPERSEDED: 'Superseded',
+} as const;
+
+export type AgreementStatus = (typeof AGREEMENT_STATUSES)[keyof typeof AGREEMENT_STATUSES];
+
 export const INSTALLMENT_PAYMENT_STATES = {
   UNPAID: 'Unpaid',
   PARTIALLY_PAID: 'Partially Paid',
@@ -104,6 +113,24 @@ export const LEAD_STATUSES = {
 
 export type LeadStatus = (typeof LEAD_STATUSES)[keyof typeof LEAD_STATUSES];
 
+export const LEAD_SOURCES = {
+  FACEBOOK: 'Facebook',
+  INSTAGRAM: 'Instagram',
+  GOOGLE: 'Google',
+  WEBSITE: 'Website',
+  TIKTOK: 'TikTok',
+  YOUTUBE: 'YouTube',
+  REFERRAL: 'Referral',
+  BROKER: 'Broker',
+  WALK_IN: 'Walk-in',
+  PHONE: 'Phone',
+  WHATSAPP: 'WhatsApp',
+  EVENT: 'Event',
+  OTHER: 'Other',
+} as const;
+
+export type LeadSource = (typeof LEAD_SOURCES)[keyof typeof LEAD_SOURCES];
+
 export const QUOTATION_STATUSES = {
   DRAFT: 'Draft',
   PENDING_APPROVAL: 'Pending Approval',
@@ -126,6 +153,15 @@ export const JOURNAL_STATUSES = {
 
 export type JournalStatus = (typeof JOURNAL_STATUSES)[keyof typeof JOURNAL_STATUSES];
 
+export const JOURNAL_TYPES = {
+  GENERAL: 'GENERAL',
+  OPENING: 'OPENING',
+  SYSTEM: 'SYSTEM',
+  REVERSAL: 'REVERSAL',
+} as const;
+
+export type JournalType = (typeof JOURNAL_TYPES)[keyof typeof JOURNAL_TYPES];
+
 export const ACCOUNTING_PERIOD_STATUSES = {
   OPEN: 'Open',
   CLOSED: 'Closed',
@@ -134,3 +170,81 @@ export const ACCOUNTING_PERIOD_STATUSES = {
 
 export type AccountingPeriodStatus =
   (typeof ACCOUNTING_PERIOD_STATUSES)[keyof typeof ACCOUNTING_PERIOD_STATUSES];
+
+export const FOLLOW_UP_TYPES = {
+  CALL: 'CALL',
+  SMS: 'SMS',
+  EMAIL: 'EMAIL',
+  MEETING: 'MEETING',
+  SITE_VISIT: 'SITE_VISIT',
+  WHATSAPP: 'WHATSAPP',
+  TASK: 'TASK',
+} as const;
+
+export type FollowUpType = (typeof FOLLOW_UP_TYPES)[keyof typeof FOLLOW_UP_TYPES];
+
+export const FOLLOW_UP_STATUSES = {
+  PENDING: 'PENDING',
+  COMPLETED: 'COMPLETED',
+  CANCELLED: 'CANCELLED',
+  MISSED: 'MISSED',
+} as const;
+
+export type FollowUpStatus = (typeof FOLLOW_UP_STATUSES)[keyof typeof FOLLOW_UP_STATUSES];
+
+export const FOLLOW_UP_PRIORITIES = {
+  LOW: 'LOW',
+  MEDIUM: 'MEDIUM',
+  HIGH: 'HIGH',
+  URGENT: 'URGENT',
+} as const;
+
+export type FollowUpPriority = (typeof FOLLOW_UP_PRIORITIES)[keyof typeof FOLLOW_UP_PRIORITIES];
+
+export const CUSTOMER_TYPES = {
+  INDIVIDUAL: 'INDIVIDUAL',
+  COMPANY: 'COMPANY',
+} as const;
+
+export type CustomerType = (typeof CUSTOMER_TYPES)[keyof typeof CUSTOMER_TYPES];
+
+export const ADDRESS_TYPES = {
+  PRESENT: 'PRESENT',
+  PERMANENT: 'PERMANENT',
+  OFFICE: 'OFFICE',
+  OVERSEAS: 'OVERSEAS',
+} as const;
+
+export type AddressType = (typeof ADDRESS_TYPES)[keyof typeof ADDRESS_TYPES];
+
+export const NOMINEE_RELATIONSHIPS = {
+  SPOUSE: 'SPOUSE',
+  SON: 'SON',
+  DAUGHTER: 'DAUGHTER',
+  FATHER: 'FATHER',
+  MOTHER: 'MOTHER',
+  BROTHER: 'BROTHER',
+  SISTER: 'SISTER',
+  OTHER: 'OTHER',
+} as const;
+
+export type NomineeRelationship =
+  (typeof NOMINEE_RELATIONSHIPS)[keyof typeof NOMINEE_RELATIONSHIPS];
+
+export const ACCOUNT_TYPES = {
+  ASSET: 'ASSET',
+  LIABILITY: 'LIABILITY',
+  EQUITY: 'EQUITY',
+  INCOME: 'INCOME',
+  EXPENSE: 'EXPENSE',
+} as const;
+
+export type AccountType = (typeof ACCOUNT_TYPES)[keyof typeof ACCOUNT_TYPES];
+
+export const ACCOUNT_PARTY_TYPES = {
+  CUSTOMER: 'CUSTOMER',
+  VENDOR: 'VENDOR',
+  BROKER: 'BROKER',
+} as const;
+
+export type AccountPartyType = (typeof ACCOUNT_PARTY_TYPES)[keyof typeof ACCOUNT_PARTY_TYPES];

@@ -55,11 +55,19 @@ export const DOMAIN_EVENTS = {
   COMMISSION_APPROVED: 'commission.approved',
   COMMISSION_PAID: 'commission.paid',
 
-  // CRM
+  // CRM & Follow-ups
   LEAD_CREATED: 'lead.created',
   LEAD_CONTACTED: 'lead.contacted',
   LEAD_QUALIFIED: 'lead.qualified',
   LEAD_CONVERTED: 'lead.converted',
+  FOLLOW_UP_CREATED: 'followup.created',
+  FOLLOW_UP_COMPLETED: 'followup.completed',
+  FOLLOW_UP_OVERDUE: 'followup.overdue',
+  CUSTOMER_CREATED: 'customer.created',
+  CUSTOMER_UPDATED: 'customer.updated',
+  CUSTOMER_DELETED: 'customer.deleted',
+  CUSTOMER_KYC_VERIFIED: 'customer.kyc_verified',
+  CUSTOMER_PII_VIEWED: 'customer.pii_viewed',
 
   // Authentication & Security
   AUTH_REFRESH_TOKEN_REUSE: 'auth.refresh_token_reuse',

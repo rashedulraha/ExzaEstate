@@ -172,3 +172,29 @@ export function formatDate(
   const tzDate = new TZDate(dateObj, timezone);
   return dateFnsFormat(tzDate, formatPattern);
 }
+
+/**
+ * Returns today's business date (YYYY-MM-DD) in the specified company timezone.
+ * Defaults to 'Asia/Dhaka' per architecture.md §11.
+ */
+export function getTodayBusinessDate(timezone: string = 'Asia/Dhaka'): string {
+  const tzDate = new TZDate(new Date(), timezone);
+  return dateFnsFormat(tzDate, 'yyyy-MM-dd');
+}
+
+/**
+ * Checks whether a business date (YYYY-MM-DD or Date) is strictly before today in the specified timezone.
+ */
+export function isOverdueBusinessDate(
+  dueDate: Date | string,
+  timezone: string = 'Asia/Dhaka',
+): boolean {
+  const todayStr = getTodayBusinessDate(timezone);
+  let dueStr: string;
+  if (typeof dueDate === 'string') {
+    dueStr = dueDate.slice(0, 10);
+  } else {
+    dueStr = dateFnsFormat(new TZDate(dueDate, timezone), 'yyyy-MM-dd');
+  }
+  return dueStr < todayStr;
+}

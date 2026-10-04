@@ -33,6 +33,7 @@ export const PERMISSIONS = {
   AUDIT_VIEW_SENSITIVE: 'audit:view-sensitive',
   AUDIT_EXPORT: 'audit:export',
 
+  APPROVAL_VIEW: 'approval:view',
   APPROVAL_OVERRIDE: 'approval:override',
 
   // Organization Master Data
@@ -89,6 +90,8 @@ export const PERMISSIONS = {
   CUSTOMER_CREATE: 'customer:create',
   CUSTOMER_EDIT: 'customer:edit',
   CUSTOMER_DELETE: 'customer:delete',
+  CUSTOMER_VIEW_PII: 'customer:view-pii',
+  CUSTOMER_VERIFY_KYC: 'customer:verify-kyc',
 
   // Sales & Bookings
   QUOTATION_VIEW: 'quotation:view',
@@ -148,6 +151,9 @@ export const PERMISSIONS = {
   COA_VIEW: 'coa:view',
   COA_CREATE: 'coa:create',
   COA_EDIT: 'coa:edit',
+
+  POSTING_RULE_VIEW: 'posting-rule:view',
+  POSTING_RULE_EDIT: 'posting-rule:edit',
 
   JOURNAL_VIEW: 'journal:view',
   JOURNAL_CREATE: 'journal:create',
