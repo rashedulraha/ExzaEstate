@@ -1,0 +1,23 @@
+{
+  "$schema": "https://raw.githubusercontent.com/tauri-apps/tauri/refs/heads/v2/crates/tauri-utils/schema.json",
+  "identifier": "default",
+  "description": "Default least-privilege capability set for ExzaEstate desktop",
+  "windows": ["main"],
+  "permissions": [
+    "core:default",
+    "dialog:default",
+    "notification:default",
+    "updater:default",
+    {
+      "identifier": "shell:allow-open",
+      "allow": [
+        {
+          "href": "https://*"
+        },
+        {
+          "href": "http://*"
+        }
+      ]
+    }
+  ]
+}
