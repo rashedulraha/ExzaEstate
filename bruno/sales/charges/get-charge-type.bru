@@ -1,0 +1,19 @@
+meta {
+  name: Get Charge Type by ID
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/sales/charges/:id
+  body: none
+  auth: bearer
+}
+
+params:path {
+  id: {{chargeTypeId}}
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}

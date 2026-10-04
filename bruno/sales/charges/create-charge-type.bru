@@ -1,0 +1,30 @@
+meta {
+  name: Create Charge Type
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/sales/charges
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+body:json {
+  {
+    "code": "SOLAR_BACKUP",
+    "name": "Solar Power Backup & Green Levy (সৌর বিদ্যুৎ ব্যাকআপ)",
+    "description": "Shared rooftop solar photovoltaic generation system installation and battery backup levy.",
+    "calculationType": "FIXED",
+    "defaultAmountPaisa": "10000000",
+    "isIncludedInNetPrice": false,
+    "payableStage": "AT_HANDOVER",
+    "vatRatePct": 5.0,
+    "accountCode": "2050",
+    "isActive": true
+  }
+}

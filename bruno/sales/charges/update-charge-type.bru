@@ -1,0 +1,28 @@
+meta {
+  name: Update Charge Type
+  type: http
+  seq: 5
+}
+
+patch {
+  url: {{baseUrl}}/sales/charges/:id
+  body: json
+  auth: bearer
+}
+
+params:path {
+  id: {{chargeTypeId}}
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+body:json {
+  {
+    "name": "Updated Solar Power Backup",
+    "defaultAmountPaisa": "12000000",
+    "vatRatePct": 5.0,
+    "isActive": true
+  }
+}

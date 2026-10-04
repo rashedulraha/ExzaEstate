@@ -1,0 +1,19 @@
+meta {
+  name: Delete Charge Type
+  type: http
+  seq: 6
+}
+
+delete {
+  url: {{baseUrl}}/sales/charges/:id
+  body: none
+  auth: bearer
+}
+
+params:path {
+  id: {{chargeTypeId}}
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}

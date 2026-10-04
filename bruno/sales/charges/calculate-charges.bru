@@ -1,0 +1,50 @@
+meta {
+  name: Calculate Itemised Charges
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/sales/charges/calculate
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+body:json {
+  {
+    "netPricePaisa": "1000000000",
+    "charges": [
+      {
+        "name": "Utility Connection Fees",
+        "chargeTypeCode": "UTILITY",
+        "calculationType": "FIXED",
+        "amountPaisa": "15000000",
+        "vatRatePct": 5.0,
+        "isIncludedInNetPrice": false,
+        "payableStage": "AT_HANDOVER"
+      },
+      {
+        "name": "Registration & Stamp Duty",
+        "chargeTypeCode": "REGISTRATION",
+        "calculationType": "PERCENTAGE",
+        "ratePct": 8.0,
+        "vatRatePct": 0.0,
+        "isIncludedInNetPrice": false,
+        "payableStage": "AT_HANDOVER"
+      },
+      {
+        "name": "Car Parking Allocation",
+        "chargeTypeCode": "PARKING",
+        "calculationType": "FIXED",
+        "amountPaisa": "50000000",
+        "vatRatePct": 0.0,
+        "isIncludedInNetPrice": false,
+        "payableStage": "AT_BOOKING"
+      }
+    ]
+  }
+}
