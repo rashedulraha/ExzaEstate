@@ -69,6 +69,9 @@ jobs:
       - name: Verify API client contract generation and zero drift
         run: pnpm gen:api && git diff --exit-code packages/api-client/openapi.json packages/api-client/src/generated
 
+      - name: Verify OpenAPI contract additive-only & zero breaking changes
+        run: pnpm check:openapi-breaking
+
       - name: Run all architectural quality checks
         run: pnpm check:all
 

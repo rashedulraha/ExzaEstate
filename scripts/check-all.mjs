@@ -28,6 +28,8 @@ const checks = [
   { name: 'Controller Permission Decorators', script: 'check-permission-decorators.mjs' },
   { name: 'API Client Generator Check', script: 'check-gen-api.mjs' },
   { name: 'Booking Statuses Index Check', script: 'check-booking-statuses-index.mjs' },
+  { name: 'Acceptance Test Matrix Coverage', script: 'check-acceptance-matrix.mjs' },
+  { name: 'OpenAPI Breaking Change Check', script: 'check-openapi-breaking.mjs' },
 ];
 
 console.log('--- Running ExzaEstate Architectural Quality Gates ---');

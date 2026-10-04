@@ -23,6 +23,10 @@ describe('ConfigService & envSchema', () => {
     expect(config.PORT).toBe(3000);
     expect(config.DATABASE_URL).toBe(validMockEnv.DATABASE_URL);
     expect(config.SWAGGER_ENABLED).toBe(true);
+    expect(config.MIN_SUPPORTED_CLIENT_VERSION).toBe('0.1.0');
+
+    const service = new ConfigService(config);
+    expect(service.minSupportedClientVersion).toBe('0.1.0');
   });
 
   it('refuses to boot when DATABASE_URL is missing', () => {

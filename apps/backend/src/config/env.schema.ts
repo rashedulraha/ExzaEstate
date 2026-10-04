@@ -10,8 +10,8 @@ export const envSchema = z
     DATABASE_URL: z.string().min(1, 'DATABASE_URL is required'),
     MIGRATOR_DATABASE_URL: z.string().min(1).optional(),
 
-    // Redis configuration (BullMQ + Cache)
-    REDIS_URL: z.string().min(1, 'REDIS_URL is required'),
+    // Redis configuration (BullMQ + Cache; required in cloud mode)
+    REDIS_URL: z.string().optional(),
 
     // Authentication & JWT secrets
     JWT_ACCESS_SECRET: z.string().min(32, 'JWT_ACCESS_SECRET must be at least 32 characters'),
@@ -19,12 +19,12 @@ export const envSchema = z
     JWT_ACCESS_EXPIRES_IN: z.string().default('15m'),
     JWT_REFRESH_EXPIRES_IN: z.string().default('30d'),
 
-    // Storage configuration (S3 / MinIO)
-    STORAGE_ENDPOINT: z.string().min(1, 'STORAGE_ENDPOINT is required'),
+    // Storage configuration (S3 / MinIO; defaulted for standalone offline use)
+    STORAGE_ENDPOINT: z.string().default('http://localhost:9000'),
     STORAGE_REGION: z.string().min(1).default('us-east-1'),
-    STORAGE_BUCKET: z.string().min(1, 'STORAGE_BUCKET is required'),
-    STORAGE_ACCESS_KEY: z.string().min(1, 'STORAGE_ACCESS_KEY is required'),
-    STORAGE_SECRET_KEY: z.string().min(1, 'STORAGE_SECRET_KEY is required'),
+    STORAGE_BUCKET: z.string().default('exzaestate-documents'),
+    STORAGE_ACCESS_KEY: z.string().default('minioadmin'),
+    STORAGE_SECRET_KEY: z.string().default('minioadmin'),
     STORAGE_FORCE_PATH_STYLE: z
       .preprocess((val) => {
         if (typeof val === 'string') {
@@ -34,9 +34,15 @@ export const envSchema = z
       }, z.boolean())
       .default(true),
 
+    // Local Standalone API security (Task A10.2)
+    LOCAL_API_SECRET: z.string().optional(),
+
     // CORS & Logging
-    CORS_ORIGIN: z.string().default('http://localhost:5173,tauri://localhost'),
+    CORS_ORIGIN: z.string().default('http://localhost:5173,tauri://localhost,http://localhost:1420'),
     LOG_LEVEL: z.enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace']).default('info'),
+
+    // Client versioning compatibility (D-13)
+    MIN_SUPPORTED_CLIENT_VERSION: z.string().default('0.1.0'),
 
     // Swagger
     SWAGGER_ENABLED: z
@@ -53,6 +59,15 @@ export const envSchema = z
     SWAGGER_USER: z.string().optional(),
     SWAGGER_PASSWORD: z.string().optional(),
   })
+  .superRefine((data, ctx) => {
+    if (data.RUNTIME_MODE === 'cloud' && (!data.REDIS_URL || data.REDIS_URL.trim() === '')) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['REDIS_URL'],
+        message: 'REDIS_URL is required',
+      });
+    }
+  })
   .transform((data) => {
     // Determine default SWAGGER_ENABLED based on NODE_ENV if not explicitly specified
     const swaggerEnabled =
@@ -60,6 +75,7 @@ export const envSchema = z
 
     return {
       ...data,
+      REDIS_URL: data.REDIS_URL || 'redis://localhost:6379',
       SWAGGER_ENABLED: swaggerEnabled,
     };
   });

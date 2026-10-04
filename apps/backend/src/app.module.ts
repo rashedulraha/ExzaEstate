@@ -1,6 +1,7 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ClsModule } from 'nestjs-cls';
 import { RequestLoggingMiddleware } from './common/logging/request-logging.middleware.js';
+import { ClientVersionMiddleware } from './common/middleware/client-version.middleware.js';
 import { ConfigModule } from './config/config.module.js';
 import { ApprovalsModule } from './modules/approvals/approvals.module.js';
 import { AccountingModule } from './modules/accounting/accounting.module.js';
@@ -21,6 +22,14 @@ import { NotificationsModule } from './modules/notifications/notifications.modul
 import { SettingsModule } from './modules/settings/settings.module.js';
 import { SystemAdminModule } from './modules/system-admin/system-admin.module.js';
 import { ReportsModule } from './modules/reports/reports.module.js';
+import { MigrationModule } from './modules/migration/migration.module.js';
+import { ExpenseModule } from './modules/expense/expense.module.js';
+import { ProcurementModule } from './modules/procurement/procurement.module.js';
+import { CommissionModule } from './modules/commission/commission.module.js';
+import { RealtimeModule } from './modules/realtime/realtime.module.js';
+import { DashboardModule } from './modules/dashboard/dashboard.module.js';
+import { SearchModule } from './modules/search/search.module.js';
+import { LocalDataModule } from './modules/local-data/local-data.module.js';
 
 @Module({
   imports: [
@@ -48,10 +57,19 @@ import { ReportsModule } from './modules/reports/reports.module.js';
     SalesModule,
     SettingsModule,
     SystemAdminModule,
+    MigrationModule,
+    ExpenseModule,
+    ProcurementModule,
+    CommissionModule,
+    RealtimeModule,
+    DashboardModule,
+    SearchModule,
+    LocalDataModule,
   ],
 })
+
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer): void {
-    consumer.apply(RequestLoggingMiddleware).forRoutes('*');
+    consumer.apply(RequestLoggingMiddleware, ClientVersionMiddleware).forRoutes('*');
   }
 }

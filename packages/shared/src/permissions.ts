@@ -7,10 +7,14 @@ export const PERMISSIONS = {
   // Platform / System Realm (Super Admin)
   TENANT_ONBOARD: 'tenant:onboard',
   TENANT_SUSPEND: 'tenant:suspend',
+  TENANT_IMPORT: 'tenant:import',
   LICENSE_GENERATE: 'license:generate',
   LICENSE_VERIFY: 'license:verify',
   PLATFORM_HEALTH: 'platform:health',
   AUDIT_VIEW_SYSTEM: 'audit:view-system',
+  DATA_BACKUP: 'data:backup',
+  DATA_RESTORE: 'data:restore',
+  DATA_EXPORT: 'data:export',
 
   // Administration & Security
   USER_VIEW: 'user:view',
@@ -110,6 +114,7 @@ export const PERMISSIONS = {
   BOOKING_CANCEL: 'booking:cancel',
   BOOKING_APPROVE: 'booking:approve',
   BOOKING_REJECT: 'booking:reject',
+  BOOKING_TRANSFER: 'booking:transfer',
 
   AGREEMENT_VIEW: 'agreement:view',
   AGREEMENT_CREATE: 'agreement:create',

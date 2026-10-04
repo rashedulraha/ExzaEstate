@@ -100,4 +100,12 @@ export class ConfigService {
       password: this.config.SWAGGER_PASSWORD,
     };
   }
+
+  get minSupportedClientVersion(): string {
+    return this.config.MIN_SUPPORTED_CLIENT_VERSION;
+  }
+
+  get localApiSecret(): string | undefined {
+    return this.config.LOCAL_API_SECRET;
+  }
 }

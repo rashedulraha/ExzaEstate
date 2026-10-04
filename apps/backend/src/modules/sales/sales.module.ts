@@ -22,15 +22,34 @@ import { AgreementController } from './agreement/agreement.controller.js';
 import { AgreementService } from './agreement/agreement.service.js';
 import { AgreementLifecycleService } from './agreement/agreement-lifecycle.service.js';
 import { AgreementPdfService } from './agreement/pdf/agreement-pdf.service.js';
+import { CancellationController } from './cancellation/cancellation.controller.js';
+import { CancellationService } from './cancellation/cancellation.service.js';
+import { BookingTransferController } from './transfer/booking-transfer.controller.js';
+import { BookingTransferService } from './transfer/booking-transfer.service.js';
+import { CollectionModule } from '../collection/collection.module.js';
+import { PaymentPostedHookRegistry } from '../collection/payment/payment-posted.hook.js';
+import { PostingModule } from '../accounting/posting/posting.module.js';
+import { BookingConfirmationPaymentHook } from './booking/payment-hook.js';
+import type { OnModuleInit } from '@nestjs/common';
 
 @Module({
-  imports: [DatabaseModule, PlatformModule, AuthModule, ApprovalsModule, NotificationsModule],
+  imports: [
+    DatabaseModule,
+    PlatformModule,
+    AuthModule,
+    ApprovalsModule,
+    NotificationsModule,
+    CollectionModule,
+    PostingModule,
+  ],
   controllers: [
     PaymentPlanController,
     ChargeController,
     QuotationController,
     BookingController,
     AgreementController,
+    CancellationController,
+    BookingTransferController,
   ],
   providers: [
     PaymentPlanService,
@@ -45,6 +64,9 @@ import { AgreementPdfService } from './agreement/pdf/agreement-pdf.service.js';
     AgreementService,
     AgreementLifecycleService,
     AgreementPdfService,
+    BookingConfirmationPaymentHook,
+    CancellationService,
+    BookingTransferService,
   ],
   exports: [
     PaymentPlanService,
@@ -59,6 +81,19 @@ import { AgreementPdfService } from './agreement/pdf/agreement-pdf.service.js';
     AgreementService,
     AgreementLifecycleService,
     AgreementPdfService,
+    BookingConfirmationPaymentHook,
+    CancellationService,
+    BookingTransferService,
   ],
 })
-export class SalesModule {}
+
+export class SalesModule implements OnModuleInit {
+  constructor(
+    private readonly hookRegistry: PaymentPostedHookRegistry,
+    private readonly bookingConfirmationHook: BookingConfirmationPaymentHook,
+  ) {}
+
+  onModuleInit(): void {
+    this.hookRegistry.register(this.bookingConfirmationHook);
+  }
+}

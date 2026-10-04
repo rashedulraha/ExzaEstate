@@ -6,3 +6,4 @@ export * from './s3-object-storage.js';
 export * from './sms-stub-provider.js';
 export * from './smtp-email-provider.js';
 export * from './turnstile-captcha.adapter.js';
+export * from './bd-sms-gateway.adapter.js';
