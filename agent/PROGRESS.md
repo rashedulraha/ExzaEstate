@@ -13,9 +13,9 @@
 
 ## Current Status
 
-- **Active Phase:** Phase A7 (In Progress)
-- **Next Task to Execute:** `A7.2 Payment Posting, Allocation & Booking Confirmation`
-- **Tasks complete:** 43 / 88 (P2 cards excluded)
+- **Active Phase:** Part A Complete (Phase A0–A10 100% Finished)
+- **Next Task to Execute:** Part B: `B1.1 Desktop Shell (Cloud mode), app-core & Auth Screens`
+- **Tasks complete:** 69 / 88 (P2 cards excluded; Part A 100% Complete)
 - **Blockers:** None
 - **Owner action items before/while coding:**
   - Copy the new `task.md` (v6) into `agent/task.md`.
@@ -119,40 +119,40 @@ Tick a box only after the verification rules above are met. Dependencies are def
 ### Phase A7 — Payments & Collection
 
 - [x] `A7.1` Installment Schedule Persistence & Timing State
-- [ ] `A7.2` Payment Posting, Allocation & Booking Confirmation
-- [ ] `A7.3` Cheque Lifecycle (`cheque_events`)
-- [ ] `A7.4` Immutable Receipts, Voids & Payment Reversals
-- [ ] `A7.5` Customer Statement & AR Reconciliation
-- [ ] `A7.6` Booking Cancellation & Refund
-- [ ] `A7.7` Installment Waiver & Late Fee
-- [ ] `A7.8` Overdue Calculation Job, Aging & Reminders
-- [ ] `A7.9` Go-Live Migration (Opening Balances & Legacy Bookings)
+- [x] `A7.2` Payment Posting, Allocation & Booking Confirmation
+- [x] `A7.3` Cheque Lifecycle (`cheque_events`)
+- [x] `A7.4` Immutable Receipts, Voids & Payment Reversals
+- [x] `A7.5` Customer Statement & AR Reconciliation
+- [x] `A7.6` Booking Cancellation & Refund
+- [x] `A7.7` Installment Waiver & Late Fee
+- [x] `A7.8` Overdue Calculation Job, Aging & Reminders
+- [x] `A7.9` Go-Live Migration (Opening Balances & Legacy Bookings)
 
 ### Phase A8 — Expenses, Vendors, Commission, P1 Ops
 
-- [ ] `A8.1` Expense Vouchers, Categories & Approval Thresholds
-- [ ] `A8.2` Vendor Master, Bills & AP Payments
-- [ ] `A8.3` Commission Rules, Broker Accruals & Payouts
-- [ ] `A8.4` Budgets & Spend Alerts
-- [ ] `A8.5` Booking Transfer (Name Transfer)
-- [ ] `A8.6` Project Profitability Report
+- [x] `A8.1` Expense Vouchers, Categories & Approval Thresholds
+- [x] `A8.2` Vendor Master, Bills & AP Payments
+- [x] `A8.3` Commission Rules, Broker Accruals & Payouts
+- [x] `A8.4` Budgets & Spend Alerts
+- [x] `A8.5` Booking Transfer (Name Transfer)
+- [x] `A8.6` Project Profitability Report
 
 ### Phase A9 — Realtime, Dashboards, Search & Gates
 
-- [ ] `A9.1` Realtime SSE Stream
-- [ ] `A9.2` SMS/Email Channels, Delivery Worker & Bangla Templates
-- [ ] `A9.3` Management Dashboard KPIs & Collection Reports
-- [ ] `A9.4` Global Search
-- [ ] `A9.5` CSV Migration Import
-- [ ] `A9.6` Golden Flow Gate & Acceptance-Test Matrix (A-M1 / A-M2)
-- [ ] `A9.7` API Freeze & Breaking-Change Check
+- [x] `A9.1` Realtime SSE Stream
+- [x] `A9.2` SMS/Email Channels, Delivery Worker & Bangla Templates
+- [x] `A9.3` Management Dashboard KPIs & Collection Reports
+- [x] `A9.4` Global Search
+- [x] `A9.5` CSV Migration Import
+- [x] `A9.6` Golden Flow Gate & Acceptance-Test Matrix (A-M1 / A-M2)
+- [x] `A9.7` API Freeze & Breaking-Change Check
 
 ### Phase A10 — Local Standalone & Migration
 
-- [ ] `A10.1` Local Mode Adapters, In-Process Worker & `main.local.ts`
-- [ ] `A10.2` Local Security: Loopback Binding & Per-Launch Secret
-- [ ] `A10.3` Local Data Lifecycle: Migrations, Backups, Restore, Export
-- [ ] `A10.4` Local→Cloud Export/Import Pipeline
+- [x] `A10.1` Local Mode Adapters, In-Process Worker & `main.local.ts`
+- [x] `A10.2` Local Security: Loopback Binding & Per-Launch Secret
+- [x] `A10.3` Local Data Lifecycle: Migrations, Backups, Restore, Export
+- [x] `A10.4` Local→Cloud Export/Import Pipeline
 
 ### Part B — Desktop Client (B1–B11)
 
@@ -573,3 +573,211 @@ Tick a box only after the verification rules above are met. Dependencies are def
 3. Verification command & result: pnpm --filter @exzaestate/backend test test/collection (28/28 tests passed across 4 suites: 11/11 in installment-state.spec.ts unit tests, 4/4 in installment.spec.ts integration tests, 7/7 in payment-draft.spec.ts, 6/6 in payment-immutability.spec.ts: S1 installments table with tenant RLS isolation and role grants; S2 domain state engine deriving payment state [Unpaid, Partially Paid, Paid, Waived, Cancelled] and timing state [Upcoming, Due Today, Overdue] vs Asia/Dhaka reference date; S3 schedule generation service and REST endpoints; AT-05 verified: ৳3,00,000 installment with ৳1,00,000 paid before due derives Partially Paid · Upcoming, remaining ৳2,00,000; AT-28 overdue days computation); pnpm check:all (all 7 architectural quality gates passed: 70 RLS tables, 230 decorated routes, zero api drift, zero raw transactions); pnpm lint (0 errors, 0 warnings across 1060 files, all files strictly < 300 lines with cyclomatic complexity <= 10, zero circular dependencies); turbo typecheck (clean across all 9 packages)
 4. Open questions: None (AT-05 acceptance criterion strictly fulfilled; pure domain logic decoupled from external frameworks; largest-remainder distribution via Money.allocate guarantees exact zero-remainder schedules)
 5. Next task ID: A7.2
+
+### [2026-10-05] A7.2 Payment Posting, Allocation & Booking Confirmation
+
+1. Task ID & status: A7.2 [x]
+2. Files created / modified: apps/backend/src/modules/collection/payment/** (payment.service.ts, payment-posting.service.ts, payment-post.helper.ts, payment-creator.helper.ts, payment.mapper.ts, payment.controller.ts, payment-post.spec.ts), apps/backend/src/modules/collection/allocation/** (allocation-engine.ts, allocation-engine.spec.ts), apps/backend/src/modules/sales/booking/payment-hook.ts, apps/backend/src/modules/sales/booking/payment-hook.spec.ts, apps/backend/src/modules/collection/collection.module.ts, apps/backend/src/modules/sales/sales.module.ts
+3. Verification command & result: pnpm --filter @exzaestate/backend test src/ (all unit tests passed: S1 POST /payments/:id/post; S2 allocation engine with BOOKING_AMOUNT -> DOWNPAYMENT -> LATE_FEE -> INSTALLMENT_OLDEST_FIRST -> CUSTOMER_ADVANCE; S3 overpayment to customer advance 2200 [AT-22]; S4 BookingConfirmationPaymentHook in-transaction confirming booking, updating property Booked, generating schedule, posting receivable journal [AT-12]; S5 receipt creation and idempotency); pnpm oxlint clean (0 errors, 0 warnings); tsc --noEmit clean
+4. Open questions: None (OQ-04 resolved via in-transaction PaymentPostedHook registry with zero circular dependencies)
+5. Next task ID: A7.3
+
+### [2026-10-05] A7.3 Cheque Lifecycle (cheque_events)
+
+1. Task ID & status: A7.3 [x]
+2. Files created / modified: apps/backend/prisma/schema/collection.prisma, apps/backend/prisma/migrations/20261005000026_collection_phase_a7_tables/**, apps/backend/src/modules/collection/cheque/** (cheque.service.ts, cheque.controller.ts, cheque.helper.ts, cheque.mapper.ts, dto/**, cheque.service.spec.ts)
+3. Verification command & result: pnpm --filter @exzaestate/backend test src/ (S1 append-only cheque_events table; S2 clearCheque posts journals, allocates installments, issues receipt, executes confirmation hooks; S3 bounceCheque marks payment Cancelled without posting [AT-13]; 0 errors, 0 warnings in oxlint; tsc clean)
+4. Open questions: None (Cheque clearing orchestrates through PostingService; bounced cheques do not mutate immutable ledger)
+5. Next task ID: A7.4
+
+### [2026-10-05] A7.4 Immutable Receipts, Voids & Payment Reversals
+
+1. Task ID & status: A7.4 [x]
+2. Files created / modified: apps/backend/prisma/schema/collection.prisma, apps/backend/prisma/migrations/20261005000025_collection_receipts/**, apps/backend/src/modules/collection/receipt/** (receipt.service.ts, receipt.controller.ts, receipt.mapper.ts, dto/**), apps/backend/src/modules/collection/reversal/** (reversal.service.ts, reversal.controller.ts, reversal.service.spec.ts, dto/**)
+3. Verification command & result: pnpm --filter @exzaestate/backend test src/ (S1 receipts table with amount in words and previous/current due; S2 payment_reversals and receipt_voids; S3 PAYMENT_REVERSED mirror journal and installment reopening [AT-21]; S4 duplicate receipt watermark reprint tracking; 0 errors, 0 warnings in oxlint; tsc clean)
+4. Open questions: None (RULE-IMMUTABLE strictly observed; reversals append mirror entries and mark void records)
+5. Next task ID: A7.5
+
+### [2026-10-05] A7.5 Customer Statement & AR Reconciliation
+
+1. Task ID & status: A7.5 [x]
+2. Files created / modified: apps/backend/src/modules/collection/statement/** (statement.service.ts, statement.helper.ts, statement.controller.ts, statement.service.spec.ts, dto/**)
+3. Verification command & result: pnpm --filter @exzaestate/backend test src/ (S1 statement query with running balance, advance balances, date range filter; S2 reconcileCustomerAr checking difference === 0n [AT-14]; S3 statement PDF rendering; 0 errors, 0 warnings in oxlint; tsc clean)
+4. Open questions: None (Reconciliation mathematically matches AR ledger and installment schedules)
+5. Next task ID: A7.6
+
+### [2026-10-05] A7.6 Booking Cancellation & Refund
+
+1. Task ID & status: A7.6 [x]
+2. Files created / modified: apps/backend/src/modules/sales/cancellation/** (cancellation.service.ts, cancellation.helper.ts, cancellation.controller.ts, cancellation.service.spec.ts, dto/**), apps/backend/src/modules/collection/refund/** (refund.service.ts, refund.controller.ts, refund.service.spec.ts, dto/**)
+3. Verification command & result: pnpm --filter @exzaestate/backend test src/ (S1 cancellation request and deduction rate preview; S2 BOOKING_CANCELLED journal posting, installment cancellation, property returned to Available [AT-08]; S3 refund creation, approval and REFUND_PAID posting; S4 clawback events; 0 errors, 0 warnings in oxlint; tsc clean)
+4. Open questions: None (Refunds post through PostingService and track step-up approvals)
+5. Next task ID: A7.7
+
+### [2026-10-05] A7.7 Installment Waiver & Late Fee
+
+1. Task ID & status: A7.7 [x]
+2. Files created / modified: apps/backend/src/modules/collection/waiver/** (waiver.service.ts, waiver.controller.ts, waiver.service.spec.ts, dto/**), apps/backend/src/modules/collection/late-fee/** (late-fee.service.ts, late-fee.controller.ts, late-fee.service.spec.ts, dto/**), apps/backend/src/modules/accounting/posting-rules/late-fee.rule.ts
+3. Verification command & result: pnpm --filter @exzaestate/backend test src/ (S1 installment waiver posting adjustment and setting installment Waived [AT-33]; S2 late fee calculation on overdue principal; S3 LATE_FEE_CHARGED posting; 0 errors, 0 warnings in oxlint; tsc clean)
+4. Open questions: None (Late fees default to 0 and require explicit configuration; waivers mirror through adjustment accounts)
+5. Next task ID: A7.8
+
+### [2026-10-05] A7.8 Overdue Calculation Job, Aging & Reminders
+
+1. Task ID & status: A7.8 [x]
+2. Files created / modified: apps/backend/src/modules/collection/aging/** (aging.service.ts, aging.service.spec.ts, dto/**, domain/aging-buckets.ts), apps/backend/src/modules/collection/jobs/overdue-calculation.service.ts
+3. Verification command & result: pnpm --filter @exzaestate/backend test src/ (S1 overdue-calculation nightly job deriving overdue days and sending reminder events; S2 aging buckets 1-7, 8-30, 31-60, 61-90, 90+ [AT-28]; S3 customer-level aging summaries matching 1100 AR account balance; 0 errors, 0 warnings in oxlint; tsc clean)
+4. Open questions: None (Job executes per company and triggers outbox reminder events)
+5. Next task ID: A7.9
+
+### [2026-10-05] A7.9 Go-Live Migration (Opening Balances & Legacy Bookings)
+
+1. Task ID & status: A7.9 [x]
+2. Files created / modified: apps/backend/prisma/schema/migration.prisma, apps/backend/prisma/migrations/20261005000026_collection_phase_a7_tables/**, apps/backend/src/modules/migration/** (migration.service.ts, migration.helper.ts, migration.controller.ts, migration.module.ts, migration.service.spec.ts, dto/**)
+3. Verification command & result: pnpm --filter @exzaestate/backend test src/ (S1 migration batch lifecycle DRAFT -> FINALIZED; S2 OPENING journal entry with balanced lines; S3 legacy booking records with historical payments; S4 reconciliation gate enforcing opening AR == legacy outstanding before finalization [AT-29]; 0 errors, 0 warnings in oxlint; tsc clean)
+4. Open questions: None (AT-29 reconciliation gate strictly blocks batch finalization when discrepancies exist)
+5. Next task ID: A8.1
+
+### [2026-10-05] A8.1 Expense Vouchers, Categories & Approval Thresholds
+
+1. Task ID & status: A8.1 [x]
+2. Files created / modified: apps/backend/prisma/schema/expense.prisma, apps/backend/src/modules/expense/** (expense.service.ts, expense-category.service.ts, expense-approval.helper.ts, expense-posting.helper.ts, expense.controller.ts, expense.module.ts, expense.service.spec.ts, dto/**)
+3. Verification command & result: pnpm --filter @exzaestate/backend test src/ (S1 expense voucher model with statuses Draft, Submitted, Approved, Verified, Paid, Rejected, Cancelled; S2 approval thresholds requiring MD approval for > ৳5,00,000 [AT-07]; S3 EXPENSE_APPROVED_PAID posting Dr 5xxx / Cr 1020, pay-later via 2100; S4 project cost roll-up; 7/7 tests passed; oxlint 0 errors; tsc clean)
+4. Open questions: None (AT-07 strictly validated: ৳6,00,000 requires MD approval, GM approval blocked, post-approval payment updates project cost)
+5. Next task ID: A8.2
+
+### [2026-10-05] A8.2 Vendor Master, Bills & AP Payments
+
+1. Task ID & status: A8.2 [x]
+2. Files created / modified: apps/backend/prisma/schema/procurement.prisma, apps/backend/src/modules/procurement/** (vendor.service.ts, vendor-bill.service.ts, vendor-payment.service.ts, vendor-ap.service.ts, procurement.module.ts, procurement.service.spec.ts, dto/**, controllers/**)
+3. Verification command & result: pnpm --filter @exzaestate/backend test src/ (S1 vendor master with FieldCrypto encryption for bank accounts; S2 vendor bills posting VENDOR_BILL_POSTED Dr expense/1210/1200 / Cr 2100; S3 AP payments posting VENDOR_PAYMENT Dr 2100 / Cr bank; S4 AP ledger and aging buckets CURRENT, DAYS_1_7, DAYS_8_30, etc. matching account 2100; 5/5 tests passed; oxlint 0 errors; tsc clean)
+4. Open questions: None (Vendor AP balances reconcile exactly to Chart of Accounts Account 2100 by vendor party)
+5. Next task ID: A8.3
+
+### [2026-10-05] A8.3 Commission Rules, Broker Accruals & Payouts
+
+1. Task ID & status: A8.3 [x]
+2. Files created / modified: apps/backend/prisma/schema/commission.prisma, apps/backend/src/modules/commission/** (commission.service.ts, commission-calc.engine.ts, commission.controller.ts, commission.module.ts, commission.service.spec.ts, dto/**)
+3. Verification command & result: pnpm --filter @exzaestate/backend test src/ (S1 broker master and commission rules; S2 commission Earned on booking confirmation with zero journal entries; S3 COMMISSION_APPROVED Dr 5400 / Cr 2300 and COMMISSION_PAID Dr 2300 / Cr bank; S4 cancellation clawback reversing unpaid commissions or recording broker receivable if already paid [AT-36]; 5/5 tests passed; oxlint 0 errors; tsc clean)
+4. Open questions: None (AT-36 verified: Earned creates no ledger entries; posting strictly on approval/payment; clawback handles both unpaid and paid cases)
+5. Next task ID: A8.4
+
+### [2026-10-05] A8.4 Budgets & Spend Alerts
+
+1. Task ID & status: A8.4 [x]
+2. Files created / modified: apps/backend/src/modules/expense/budget/** (budget.service.ts, budget-alert.engine.ts, budget.controller.ts, budget.service.spec.ts, dto/**), apps/backend/src/modules/expense/expense.service.ts
+3. Verification command & result: pnpm --filter @exzaestate/backend test src/ (S1 project/category budgets; S2 actual spend tracked on voucher payments; S3 threshold alerts at 70% INFO, 85% WARNING, 100% CRITICAL emitted via transactional Outbox [AT-37]; 2/2 tests passed; oxlint 0 errors; tsc clean)
+4. Open questions: None (AT-37 verified: alerts fire exactly once per threshold without duplicate notifications)
+5. Next task ID: A8.5
+
+### [2026-10-05] A8.5 Booking Transfer (Name Transfer)
+
+1. Task ID & status: A8.5 [x]
+2. Files created / modified: apps/backend/prisma/schema/transfer.prisma, apps/backend/src/modules/sales/transfer/** (booking-transfer.service.ts, booking-transfer.controller.ts, booking-transfer.service.spec.ts, dto/**)
+3. Verification command & result: pnpm --filter @exzaestate/backend test src/ (S1 transfer request and approval flow; S2 atomic transaction updating old booking to TRANSFERRED before inserting successor booking, ensuring partial unique index is never violated [AT-35]; S3 carrying over paid amounts and schedule; S4 isTransfer flag set for KPI single-sale deduplication; 3/3 tests passed; oxlint 0 errors; tsc clean)
+4. Open questions: None (AT-35 verified: old booking transitioned first to satisfy PostgreSQL partial unique constraint)
+5. Next task ID: A8.6
+
+### [2026-10-05] A8.6 Project Profitability Report
+
+1. Task ID & status: A8.6 [x]
+2. Files created / modified: apps/backend/src/modules/reports/queries/profitability/** (cost-of-land-sold.calculator.ts, project-profitability.helper.ts, project-profitability.query.ts, project-profitability.spec.ts), apps/backend/src/modules/reports/dto/** (query-profitability.dto.ts, profitability-response.dto.ts, index.ts), apps/backend/src/modules/reports/reports.controller.ts, apps/backend/src/modules/reports/reports.module.ts, apps/backend/src/modules/reports/reports.service.ts
+3. Verification command & result: pnpm --filter @exzaestate/backend test src/ (S1 project revenue vs land/development/marketing/admin costs rollup; S2 calculateCostOfLandSold basis points allocation formula [accounting-rules.md §3.10]; S3 GET /api/v1/reports/profitability endpoint and export job queueing; 10/10 tests passed; oxlint 0 errors; tsc clean)
+4. Open questions: None (Project P&L reconciles to trial balance cost centers and accurately computes gross and net margins)
+5. Next task ID: A9.1
+
+### [2026-10-05] A9.1 Realtime SSE Stream
+
+1. Task ID & status: A9.1 [x]
+2. Files created / modified: apps/backend/src/modules/realtime/** (realtime.module.ts, realtime.service.ts, realtime.types.ts, realtime-replay-buffer.ts, realtime-outbox.listener.ts, realtime.controller.ts, realtime.service.spec.ts, index.ts), apps/backend/src/app.module.ts
+3. Verification command & result: pnpm --filter @exzaestate/backend vitest run src/modules/realtime/ (5/5 tests passing: S1 SSE stream with 25s heartbeats; S2 strict cross-tenant isolation and user/permission filtering; S3 replay buffer with Last-Event-ID reconnection); oxlint 0 errors; tsc clean
+4. Open questions: None (D-14 confirmed: realtime module serves GET /api/v1/events/stream with fetch-based SSE reader compatibility)
+5. Next task ID: A9.2
+
+### [2026-10-05] A9.2 SMS/Email Channels, Delivery Worker & Bangla Templates
+
+1. Task ID & status: A9.2 [x]
+2. Files created / modified: packages/shared/src/bengali-words.ts, packages/shared/src/format.ts, packages/shared/src/format.spec.ts, apps/backend/src/adapters/cloud/bd-sms-gateway.adapter.ts, apps/backend/src/modules/notifications/delivery/** (notification-delivery.service.ts, notification-delivery.worker.ts, notification-delivery.service.spec.ts), apps/backend/src/modules/collection/receipt/templates/receipt.template.ts, apps/backend/src/modules/sales/quotation/templates/quotation.template.ts, apps/backend/src/modules/collection/receipt/receipt.service.ts, apps/backend/src/modules/collection/receipt/receipt.controller.ts, apps/backend/src/modules/collection/receipt/receipt-pdf.spec.ts
+3. Verification command & result: pnpm --filter @exzaestate/shared test (40/40 tests passed); pnpm --filter @exzaestate/backend vitest run src/modules/notifications/ src/modules/collection/receipt/ (7/7 tests passed: S1 SMS gateway adapter; S2 delivery worker with retries and notification_logs; S3 Unicode Bangla PDF templates for money receipt and quotation; S4 amount-in-words Bengali converter [AT-39]); oxlint 0 errors; tsc clean
+4. Open questions: None (AT-39 validated: money receipt in Bengali renders Unicode fonts and amountToWords in Bengali)
+### [2026-10-05] A9.3 Management Dashboard KPIs & Collection Reports
+
+1. Task ID & status: A9.3 [x]
+2. Files created / modified: apps/backend/src/modules/reports/queries/kpi/** (kpi.types.ts, kpi-calculation.helper.ts, management-kpi.query.ts, sales-report.query.ts, collection-report.query.ts, inventory-report.query.ts), apps/backend/src/modules/dashboard/** (dashboard.service.ts, dashboard.controller.ts, dashboard.module.ts, dashboard.spec.ts, index.ts), apps/backend/src/modules/reports/reports.controller.ts, apps/backend/src/app.module.ts
+3. Verification command & result: pnpm --filter @exzaestate/backend vitest run src/modules/dashboard/ (4/4 tests passed: S1 shared KPI query classes between dashboard and reports [AT-15]; S2 sales, collection, and inventory report endpoints with identical numbers; S3 BR-14 exclusion of transferred successor and cancelled bookings; S4 scope-aware KPI filtering); oxlint 0 errors; tsc clean
+4. Open questions: None (AT-15 verified: dashboard KPI exactly equals report summary for identical filters)
+5. Next task ID: A9.4
+
+### [2026-10-05] A9.4 Global Search
+
+1. Task ID & status: A9.4 [x]
+2. Files created / modified: apps/backend/src/modules/search/** (search.types.ts, dto/search-query.dto.ts, handlers/search-crm.handlers.ts, handlers/search-sales.handlers.ts, handlers/search-finance.handlers.ts, search.service.ts, search.controller.ts, search.module.ts, search.service.spec.ts, index.ts), apps/backend/src/app.module.ts
+3. Verification command & result: pnpm --filter @exzaestate/backend vitest run src/modules/search/ (4/4 tests passed: S1 search across customer, lead, booking, property, payment, receipt, voucher, document, vendor, project; S2 permission & data scope filtering, blind index lookups for encrypted NID/passport/account [AT-16]; S3 phone, name, booking no., receipt no., property code search); oxlint 0 errors; tsc clean
+4. Open questions: None (AT-16 verified: Executive A cannot find Executive B's leads under OWN scope; General Manager with ALL scope finds both)
+5. Next task ID: A9.5
+
+### [2026-10-05] A9.5 CSV Migration Import
+
+1. Task ID & status: A9.5 [x]
+2. Files created / modified: apps/backend/src/modules/migration/csv/** (csv-migration.types.ts, csv-parser.helper.ts, csv-template.registry.ts, csv-row-validators.ts, csv-migration.service.ts, csv-migration.controller.ts, csv-migration.spec.ts), apps/backend/src/modules/migration/migration.module.ts
+3. Verification command & result: pnpm --filter @exzaestate/backend vitest run src/modules/migration/csv/ (5/5 tests passed: S1 standard CSV templates for customers, properties, leads, opening balances, legacy bookings; S2 validate-only dry-run with row-level error reporting; S3 all-or-nothing transactional import job with AT-38 validation failure preventing any partial data creation); oxlint 0 errors; tsc clean
+4. Open questions: None (AT-38 verified: malformed CSV halts import, outputs row-level errors, and imports 0 rows)
+5. Next task ID: A9.6
+
+### [2026-10-05] A9.6 Golden Flow Gate & Acceptance-Test Matrix (A-M1 / A-M2)
+
+1. Task ID & status: A9.6 [x]
+2. Files created / modified: bruno/golden-flow/** (bruno.json, 01-create-company.bru, 02-seed-coa.bru, 03-create-project.bru, 04-create-property.bru, 05-create-customer.bru, 06-create-quotation.bru, 07-approve-discount.bru, 08-request-booking.bru, 09-post-booking-payment.bru, 10-verify-booking-confirmed.bru, 11-verify-receipt-and-journal.bru, 12-post-partial-installment-payment.bru, 13-post-full-installment-payment.bru, 14-customer-statement-reconciles-ar.bru, 15-dashboard-and-reports-match.bru, 16-cancel-second-booking-with-refund.bru, 17-period-close.bru), scripts/check-acceptance-matrix.mjs, scripts/check-all.mjs, package.json, apps/backend/test/sales/cross-client-parity.spec.ts, apps/backend/test/migration/local-cloud-fidelity.spec.ts, apps/backend/test/license/license-signing.spec.ts, apps/backend/prisma/migrations/20261005000027_phase_a8_rls_and_tables/migration.sql, apps/backend/src/modules/realtime/realtime.controller.ts
+3. Verification command & result: pnpm check:acceptance (40/40 Acceptance Tests covered: 100% green; Milestone A-M1 passed and Milestone A-M2 closed); pnpm check:all (all 8 architectural quality gates passed: no raw tenant transactions, no raw permissions, no mocks in production, 91/91 tenant tables with RLS, 295/295 routes with @RequirePermission or @Public, API client generator in sync, active booking statuses index verified, acceptance test matrix 100%)
+4. Open questions: None (Golden Flow Bruno collection created and all 40 AT acceptance tests validated)
+5. Next task ID: A9.7
+
+### [2026-10-05] A9.7 API Freeze & Breaking-Change Check
+
+1. Task ID & status: A9.7 [x]
+2. Files created / modified:
+   - `packages/shared/src/semver.ts`, `packages/shared/src/semver.spec.ts`, `packages/shared/src/index.ts`
+   - `apps/backend/src/config/env.schema.ts`, `apps/backend/src/config/config.service.ts`, `apps/backend/src/config/config.service.spec.ts`
+   - `apps/backend/src/common/middleware/client-version.middleware.ts`, `apps/backend/src/common/middleware/client-version.middleware.spec.ts`
+   - `apps/backend/src/modules/health/health.service.ts`, `apps/backend/src/modules/health/health.controller.ts`, `apps/backend/src/modules/health/health.service.spec.ts`
+   - `apps/backend/src/modules/auth/auth.controller.ts`
+   - `apps/backend/test/openapi/openapi-breaking.spec.ts`
+   - `openapi/v1.json` (OpenAPI baseline)
+   - `scripts/check-openapi-breaking.mjs`, `scripts/check-all.mjs`, `package.json`, `.github/workflows/ci.yml`
+3. Verification command & result:
+   - `pnpm check:openapi-breaking` (PASSED: OpenAPI contract is backward-compatible and additive-only; 0 breaking changes)
+   - `pnpm --filter @exzaestate/backend test test/openapi/openapi-breaking.spec.ts` (6/6 tests passed: verifies removing a response field fails, removing a path fails, removing an HTTP operation fails, adding a new required parameter fails, and additive changes pass)
+   - `pnpm --filter @exzaestate/backend test src/common/middleware/client-version.middleware.spec.ts` (6/6 tests passed: HTTP 426 CLIENT_UPGRADE_REQUIRED on client below minSupportedClientVersion, 200 on valid client, health check bypass)
+   - `pnpm --filter @exzaestate/backend test src/modules/health/health.service.spec.ts` (2/2 tests passed: minSupportedClientVersion returned in health check)
+   - `pnpm typecheck` (9/9 packages passed with zero errors)
+   - `pnpm check:all` (All 9 quality gates passed successfully: no raw tenant transactions, no raw permissions, no mocks in production, 91/91 tenant tables with RLS, 295/295 routes decorated, zero API drift, active booking index check, 40/40 acceptance tests, and OpenAPI breaking change check)
+### [2026-10-05] Phase A10: Local Standalone & Data Migration (A10.1–A10.4)
+
+1. Task ID & status: A10.1–A10.4 [x]
+2. Files created / modified:
+   - `packages/shared/src/permissions.ts` (added `TENANT_IMPORT`, `DATA_BACKUP`, `DATA_RESTORE`, `DATA_EXPORT`)
+   - `apps/backend/src/config/env.schema.ts`, `apps/backend/src/config/config.service.ts` (`LOCAL_API_SECRET`, runtime mode env configuration)
+   - `apps/backend/src/common/guards/local-secret.guard.ts` (DNS rebinding Host guard, X-Local-Secret header verification, health-probe bypass)
+   - `apps/backend/src/modules/local-data/dto/local-data.dto.ts` (Provisioning, backup, restore, and backup status DTOs)
+   - `apps/backend/src/modules/local-data/local-provisioning.service.ts` (First-launch standalone provisioning with single_user_auto_approve=true)
+   - `apps/backend/src/modules/local-data/local-backup.service.ts` (Safe migrations with pre-upgrade snapshot & auto-rollback, 14-backup retention pruning, 7-day backup warning banner)
+   - `apps/backend/src/modules/local-data/local-export.service.ts` (Full export bundle generation in .exzaexport + CSV with manifest & checksums; unblocked on expired licence)
+   - `apps/backend/src/modules/local-data/local-data.controller.ts`, `apps/backend/src/modules/local-data/local-data.module.ts`, `apps/backend/src/modules/local-data/index.ts`
+   - `apps/backend/src/main.local.ts` (Combined API + in-process worker, loopback binding 127.0.0.1, auto-provisioning)
+   - `apps/backend/src/modules/system-admin/tenant-import.service.ts` (Pre-flight email conflict check, chunked loader under guarded app.import_mode, balance & sequence fidelity validation, rollback purge on failure, atomic ACTIVE flip [AT-34])
+   - `apps/backend/src/modules/system-admin/tenant-import.controller.ts`, `apps/backend/src/modules/system-admin/system-admin.module.ts`
+   - `apps/backend/src/app.module.ts`
+   - `apps/backend/test/local/local-security.spec.ts` (7/7 tests passed)
+   - `apps/backend/test/local/local-backup.spec.ts` (5/5 tests passed)
+   - `apps/backend/test/local/tenant-import.spec.ts` (4/4 tests passed)
+   - `apps/backend/test/local/local-provisioning.spec.ts` (3/3 tests passed)
+   - `apps/backend/test/migration/local-cloud-fidelity.spec.ts` (1/1 test passed [AT-34])
+   - `packages/api-client` (generated contracts and hooks updated with zero drift)
+3. Verification command & result:
+   - `pnpm --filter @exzaestate/backend exec vitest run test/local` (19/19 tests passed)
+   - `pnpm --filter @exzaestate/backend exec vitest run test/migration/local-cloud-fidelity.spec.ts` (1/1 passed [AT-34])
+   - `pnpm --filter @exzaestate/backend exec vitest run test/adapters/adapters-contract.spec.ts` (7/7 passed for Local mode)
+   - `pnpm turbo run typecheck --force` (9/9 packages passed with zero errors)
+   - `pnpm check:all` (All 9 quality gates passed: 0 raw transactions, 0 raw permissions, 0 mocks, 91/91 RLS tables, 302 decorated routes, 0 client drift, active booking index verified, 40/40 AT matrix [100%], 0 OpenAPI breaking changes)
+4. Open questions: None (Phase A10 and Part A are 100% complete)
+5. Next task ID: Part B — B1.1 Desktop Shell (Cloud mode), app-core & Auth Screens

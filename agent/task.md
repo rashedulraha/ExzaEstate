@@ -821,7 +821,7 @@ These are applied as defaults in `architecture.md` v4 but are still **"Needs sig
 
 #### A7.2 — Payment Posting, Allocation & Booking Confirmation
 
-- **Status:** [ ] · **Tier:** 1 · **Size:** XL (5 steps) · **Priority:** P0 · (OQ-04)
+- **Status:** [x] · **Tier:** 1 · **Size:** XL (5 steps) · **Priority:** P0 · (OQ-04)
 - **Depends:** A7.1, A5.1, A6.4
 - **Reads:** `prd.md` MOD-PAYMENT, FLOW-07, §17 (`allocation_order`, `auto_apply_advance`), BR-18, BR-19, AT-04, AT-05, AT-12, AT-22; `accounting-rules.md` §3.2; `architecture.md` §22.3.
 - **Touches:** `apps/backend/src/modules/collection/payment/**`, `apps/backend/src/modules/collection/allocation/**`, `apps/backend/src/modules/sales/booking/payment-hook.ts`.
@@ -837,7 +837,7 @@ These are applied as defaults in `architecture.md` v4 but are still **"Needs sig
 
 #### A7.3 — Cheque Lifecycle (`cheque_events`)
 
-- **Status:** [ ] · **Tier:** 1 · **Size:** M (3 steps) · **Priority:** P0
+- **Status:** [x] · **Tier:** 1 · **Size:** M (3 steps) · **Priority:** P0
 - **Depends:** A7.2
 - **Reads:** `accounting-rules.md` §3.2; `prd.md` §9.4, AT-13, §17 (`cheque_post_on`).
 - **Touches:** `apps/backend/src/modules/collection/cheque/**`, `apps/backend/prisma/schema/collection.prisma`.
@@ -847,7 +847,7 @@ These are applied as defaults in `architecture.md` v4 but are still **"Needs sig
 
 #### A7.4 — Immutable Receipts, Voids & Payment Reversals
 
-- **Status:** [ ] · **Tier:** 1 · **Size:** L (4 steps) · **Priority:** P0
+- **Status:** [x] · **Tier:** 1 · **Size:** L (4 steps) · **Priority:** P0
 - **Depends:** A7.2
 - **Reads:** `prd.md` MOD-RECEIPT, BR-03, BR-04, AT-21; `architecture.md` §10 (RULE-IMMUTABLE); `design.md` §12.
 - **Touches:** `apps/backend/src/modules/collection/receipt/**`, `apps/backend/src/modules/collection/reversal/**`, `apps/backend/prisma/migrations/**`.
@@ -857,7 +857,7 @@ These are applied as defaults in `architecture.md` v4 but are still **"Needs sig
 
 #### A7.5 — Customer Statement & AR Reconciliation
 
-- **Status:** [ ] · **Tier:** 1 · **Size:** M (3 steps) · **Priority:** P0
+- **Status:** [x] · **Tier:** 1 · **Size:** M (3 steps) · **Priority:** P0
 - **Depends:** A7.4, A6.6
 - **Reads:** `accounting-rules.md` §4; `prd.md` MOD-STATEMENT, BR-15, AT-14.
 - **Touches:** `apps/backend/src/modules/collection/statement/**`, `apps/backend/src/modules/reports/queries/**`.
@@ -867,7 +867,7 @@ These are applied as defaults in `architecture.md` v4 but are still **"Needs sig
 
 #### A7.6 — Booking Cancellation & Refund
 
-- **Status:** [ ] · **Tier:** 1 · **Size:** L (4 steps) · **Priority:** P0
+- **Status:** [x] · **Tier:** 1 · **Size:** L (4 steps) · **Priority:** P0
 - **Depends:** A7.4, A5.4
 - **Reads:** `accounting-rules.md` §3.7; `prd.md` MOD-CANCEL-REFUND, FLOW-09, BR-05, AT-08; `permissions-matrix.md` (`payment:refund`).
 - **Touches:** `apps/backend/src/modules/sales/cancellation/**`, `apps/backend/src/modules/collection/refund/**`, `apps/backend/prisma/schema/sales.prisma`.
@@ -877,7 +877,7 @@ These are applied as defaults in `architecture.md` v4 but are still **"Needs sig
 
 #### A7.7 — Installment Waiver & Late Fee
 
-- **Status:** [ ] · **Tier:** 1 · **Size:** M (3 steps) · **Priority:** P0 (late fee off by default)
+- **Status:** [x] · **Tier:** 1 · **Size:** M (3 steps) · **Priority:** P0 (late fee off by default)
 - **Depends:** A7.4
 - **Reads:** `prd.md` MOD-INSTALLMENT, AT-33, §17 (`late_fee_rate`, `late_fee_grace_days`); `accounting-rules.md` §3.4.
 - **Touches:** `apps/backend/src/modules/collection/waiver/**`, `apps/backend/src/modules/collection/late-fee/**`.
@@ -887,7 +887,7 @@ These are applied as defaults in `architecture.md` v4 but are still **"Needs sig
 
 #### A7.8 — Overdue Calculation Job, Aging & Reminders
 
-- **Status:** [ ] · **Tier:** 2 · **Size:** M (3 steps) · **Priority:** P0
+- **Status:** [x] · **Tier:** 2 · **Size:** M (3 steps) · **Priority:** P0
 - **Depends:** A7.1, A1.8, A0.7
 - **Reads:** `prd.md` MOD-AGING, AT-28, §17 (`reminder_schedule`, `nightly_job_time`); `accounting-rules.md` §4–§5; `architecture.md` §5.6.
 - **Touches:** `apps/backend/src/modules/collection/jobs/**`, `apps/backend/src/modules/collection/aging/**`.
@@ -897,7 +897,7 @@ These are applied as defaults in `architecture.md` v4 but are still **"Needs sig
 
 #### A7.9 — Go-Live Migration (Opening Balances & Legacy Bookings)
 
-- **Status:** [ ] · **Tier:** 1 · **Size:** L (4 steps) · **Priority:** P0 (manual) · CSV import is A9.5
+- **Status:** [x] · **Tier:** 1 · **Size:** L (4 steps) · **Priority:** P0 (manual) · CSV import is A9.5
 - **Depends:** A7.2, A6.3
 - **Reads:** `prd.md` MOD-MIGRATION, FLOW-03, AT-29; `accounting-rules.md` §3 (OPENING journal type).
 - **Touches:** `apps/backend/src/modules/migration/**`, `apps/backend/prisma/schema/migration.prisma`.
@@ -913,7 +913,7 @@ These are applied as defaults in `architecture.md` v4 but are still **"Needs sig
 
 #### A8.1 — Expense Vouchers, Categories & Approval Thresholds
 
-- **Status:** [ ] · **Tier:** 1 · **Size:** L (4 steps) · **Priority:** P0 (vouchers)
+- **Status:** [x] · **Tier:** 1 · **Size:** L (4 steps) · **Priority:** P0 (vouchers)
 - **Depends:** A6.4, A4.4, A1.4
 - **Reads:** `prd.md` MOD-EXPENSE, FLOW-11, AT-07, §17 (`expense_md_threshold`); `accounting-rules.md` §3.5; `permissions-matrix.md` (`expense:verify`).
 - **Touches:** `apps/backend/src/modules/expense/**`, `apps/backend/prisma/schema/expense.prisma`, demo-seed step.
@@ -923,7 +923,7 @@ These are applied as defaults in `architecture.md` v4 but are still **"Needs sig
 
 #### A8.2 — Vendor Master, Bills & AP Payments
 
-- **Status:** [ ] · **Tier:** 1 · **Size:** L (4 steps) · **Priority:** P1
+- **Status:** [x] · **Tier:** 1 · **Size:** L (4 steps) · **Priority:** P1
 - **Depends:** A8.1
 - **Reads:** `prd.md` MOD-VENDOR, MOD-ARAP (payable side); `accounting-rules.md` §3.6, §3.10.
 - **Touches:** `apps/backend/src/modules/procurement/vendor/**`, `apps/backend/src/modules/accounting/arap/**`.
@@ -933,7 +933,7 @@ These are applied as defaults in `architecture.md` v4 but are still **"Needs sig
 
 #### A8.3 — Commission Rules, Broker Accruals & Payouts
 
-- **Status:** [ ] · **Tier:** 1 · **Size:** L (4 steps) · **Priority:** P1
+- **Status:** [x] · **Tier:** 1 · **Size:** L (4 steps) · **Priority:** P1
 - **Depends:** A7.6, A8.2
 - **Reads:** `prd.md` MOD-COMMISSION, FLOW-14, AT-36, §17 (`commission_trigger`, `commission_clawback`); `accounting-rules.md` §3.8.
 - **Touches:** `apps/backend/src/modules/commission/**`.
@@ -943,7 +943,7 @@ These are applied as defaults in `architecture.md` v4 but are still **"Needs sig
 
 #### A8.4 — Budgets & Spend Alerts
 
-- **Status:** [ ] · **Tier:** 2 · **Size:** M (3 steps) · **Priority:** P1
+- **Status:** [x] · **Tier:** 2 · **Size:** M (3 steps) · **Priority:** P1
 - **Depends:** A8.1, A1.8
 - **Reads:** `prd.md` MOD-EXPENSE (budgets), AT-37, §17 (`budget_alert_levels`).
 - **Touches:** `apps/backend/src/modules/expense/budget/**`.
@@ -953,7 +953,7 @@ These are applied as defaults in `architecture.md` v4 but are still **"Needs sig
 
 #### A8.5 — Booking Transfer (Name Transfer)
 
-- **Status:** [ ] · **Tier:** 1 · **Size:** L (4 steps) · **Priority:** P1
+- **Status:** [x] · **Tier:** 1 · **Size:** L (4 steps) · **Priority:** P1
 - **Depends:** A7.6, A6.4
 - **Reads:** `prd.md` MOD-TRANSFER, FLOW-10, §9.1, BR-14, AT-35.
 - **Touches:** `apps/backend/src/modules/sales/transfer/**`.
@@ -963,7 +963,7 @@ These are applied as defaults in `architecture.md` v4 but are still **"Needs sig
 
 #### A8.6 — Project Profitability Report
 
-- **Status:** [ ] · **Tier:** 2 · **Size:** M (3 steps) · **Priority:** P1
+- **Status:** [x] · **Tier:** 2 · **Size:** M (3 steps) · **Priority:** P1
 - **Depends:** A8.1, A6.6, A8.2
 - **Reads:** `prd.md` MOD-PROFIT; `accounting-rules.md` §3.10 (`COST_OF_LAND_SOLD`).
 - **Touches:** `apps/backend/src/modules/reports/queries/profitability/**`.
@@ -977,7 +977,7 @@ These are applied as defaults in `architecture.md` v4 but are still **"Needs sig
 
 #### A9.1 — Realtime SSE Stream
 
-- **Status:** [ ] · **Tier:** 2 · **Size:** M (3 steps) · **Priority:** P0 · 🔒 D-14
+- **Status:** [x] · **Tier:** 2 · **Size:** M (3 steps) · **Priority:** P0 · 🔒 D-14
 - **Depends:** A0.7, A1.8
 - **Reads:** `architecture.md` §8.4, §7 (`realtime/`).
 - **Touches:** `apps/backend/src/modules/realtime/**`.
@@ -987,7 +987,7 @@ These are applied as defaults in `architecture.md` v4 but are still **"Needs sig
 
 #### A9.2 — SMS/Email Channels, Delivery Worker & Bangla Templates
 
-- **Status:** [ ] · **Tier:** 2 · **Size:** L (4 steps) · **Priority:** P1
+- **Status:** [x] · **Tier:** 2 · **Size:** L (4 steps) · **Priority:** P1
 - **Depends:** A1.8, A0.7, A4.3
 - **Reads:** `prd.md` MOD-NOTIFY, MOD-LOCALE, AT-39, §17 (`document_language`); `architecture.md` §7.4, §17 (Bangladesh specifics); `design.md` §3, §12.
 - **Touches:** `apps/backend/src/modules/notifications/**`, `apps/backend/src/adapters/**` (SMS gateway adapter), `apps/backend/src/modules/*/templates/**` (document templates).
@@ -997,7 +997,7 @@ These are applied as defaults in `architecture.md` v4 but are still **"Needs sig
 
 #### A9.3 — Management Dashboard KPIs & Collection Reports
 
-- **Status:** [ ] · **Tier:** 1 · **Size:** L (4 steps) · **Priority:** P0 (core) / P1 (full set)
+- **Status:** [x] · **Tier:** 1 · **Size:** L (4 steps) · **Priority:** P0 (core) / P1 (full set)
 - **Depends:** A7.8, A6.6, A8.6
 - **Reads:** `prd.md` MOD-DASH, MOD-REPORTS, §18, BR-14, AT-15; `architecture.md` §7.2 (read-only query classes), §21.
 - **Touches:** `apps/backend/src/modules/dashboard/**`, `apps/backend/src/modules/reports/**`.
@@ -1007,7 +1007,7 @@ These are applied as defaults in `architecture.md` v4 but are still **"Needs sig
 
 #### A9.4 — Global Search
 
-- **Status:** [ ] · **Tier:** 2 · **Size:** M (3 steps) · **Priority:** P0
+- **Status:** [x] · **Tier:** 2 · **Size:** M (3 steps) · **Priority:** P0
 - **Depends:** A3.3, A7.4, A2.2
 - **Reads:** `prd.md` MOD-SEARCH, AT-16; `architecture.md` §11 (`pg_trgm`), §12.4.
 - **Touches:** `apps/backend/src/modules/search/**`.
@@ -1017,7 +1017,7 @@ These are applied as defaults in `architecture.md` v4 but are still **"Needs sig
 
 #### A9.5 — CSV Migration Import
 
-- **Status:** [ ] · **Tier:** 2 · **Size:** M (3 steps) · **Priority:** P1
+- **Status:** [x] · **Tier:** 2 · **Size:** M (3 steps) · **Priority:** P1
 - **Depends:** A7.9, A1.6
 - **Reads:** `prd.md` MOD-MIGRATION (CSV), AT-38.
 - **Touches:** `apps/backend/src/modules/migration/csv/**`.
@@ -1027,7 +1027,7 @@ These are applied as defaults in `architecture.md` v4 but are still **"Needs sig
 
 #### A9.6 — Golden Flow Gate & Acceptance-Test Matrix (A-M1 / A-M2)
 
-- **Status:** [ ] · **Tier:** 1 · **Size:** M (3 steps) · **Priority:** P0
+- **Status:** [x] · **Tier:** 1 · **Size:** M (3 steps) · **Priority:** P0
 - **Depends:** A7.9, A8.5, A9.3, A9.4, A9.5
 - **Reads:** `prd.md` §1.2, §1.4, §15, §19; `architecture.md` §16.
 - **Touches:** `bruno/golden-flow/**`, `apps/backend/test/e2e/**`, `scripts/check-acceptance-matrix.mjs`.
@@ -1037,7 +1037,7 @@ These are applied as defaults in `architecture.md` v4 but are still **"Needs sig
 
 #### A9.7 — API Freeze & Breaking-Change Check
 
-- **Status:** [ ] · **Tier:** 2 · **Size:** S (2 steps) · **Priority:** P0 · 🔒 D-13
+- **Status:** [x] · **Tier:** 2 · **Size:** S (2 steps) · **Priority:** P0 · 🔒 D-13
 - **Depends:** A9.6
 - **Reads:** `architecture.md` §6.3, §12.2.
 - **Touches:** `.github/workflows/ci.yml`, `openapi/**`.
@@ -1053,7 +1053,7 @@ These are applied as defaults in `architecture.md` v4 but are still **"Needs sig
 
 #### A10.1 — Local Mode Adapters, In-Process Worker & `main.local.ts`
 
-- **Status:** [ ] · **Tier:** 1 · **Size:** L (4 steps) · **Priority:** P1 · 🔒 D-01, D-02
+- **Status:** [x] · **Tier:** 1 · **Size:** L (4 steps) · **Priority:** P1 · 🔒 D-01, D-02
 - **Depends:** A0.7, A9.7
 - **Reads:** `architecture.md` §20.1–§20.3, §20.7; `prd.md` §11.
 - **Touches:** `apps/backend/src/adapters/local/**`, `apps/backend/src/main.local.ts`, `apps/backend/src/config/**`.
@@ -1063,7 +1063,7 @@ These are applied as defaults in `architecture.md` v4 but are still **"Needs sig
 
 #### A10.2 — Local Security: Loopback Binding & Per-Launch Secret
 
-- **Status:** [ ] · **Tier:** 1 · **Size:** M (3 steps) · **Priority:** P1
+- **Status:** [x] · **Tier:** 1 · **Size:** M (3 steps) · **Priority:** P1
 - **Depends:** A10.1
 - **Reads:** `architecture.md` §20.4; `security.md` §10.
 - **Touches:** `apps/backend/src/common/guards/local-secret.guard.ts`, `apps/backend/src/main.local.ts`.
@@ -1073,7 +1073,7 @@ These are applied as defaults in `architecture.md` v4 but are still **"Needs sig
 
 #### A10.3 — Local Data Lifecycle: Migrations, Backups, Restore, Export
 
-- **Status:** [ ] · **Tier:** 1 · **Size:** L (4 steps) · **Priority:** P1
+- **Status:** [x] · **Tier:** 1 · **Size:** L (4 steps) · **Priority:** P1
 - **Depends:** A10.1
 - **Reads:** `architecture.md` §20.5, §12.8 (item 6); `security.md` §12.
 - **Touches:** `apps/backend/src/modules/local-data/**`, `apps/backend/src/cli/**`.
@@ -1083,7 +1083,7 @@ These are applied as defaults in `architecture.md` v4 but are still **"Needs sig
 
 #### A10.4 — Local→Cloud Export/Import Pipeline
 
-- **Status:** [ ] · **Tier:** 1 · **Size:** XL (5 steps) · **Priority:** P1 · 🔒 D-12
+- **Status:** [x] · **Tier:** 1 · **Size:** XL (5 steps) · **Priority:** P1 · 🔒 D-12
 - **Depends:** A10.3, A1.5
 - **Reads:** `architecture.md` §20.6; `prd.md` §11.2, AT-34; `security.md` §15.
 - **Touches:** `apps/backend/src/modules/system-admin/import/**`, `apps/backend/src/modules/local-data/export/**`.
