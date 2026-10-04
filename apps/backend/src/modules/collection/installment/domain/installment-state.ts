@@ -1,3 +1,7 @@
+export type {
+  InstallmentPaymentState,
+  InstallmentTimingState,
+} from '@exzaestate/shared';
 import {
   INSTALLMENT_PAYMENT_STATES,
   INSTALLMENT_TIMING_STATES,

@@ -49,13 +49,15 @@ export class PaymentController {
   @HttpCode(HttpStatus.OK)
   @RequirePermission(PERMISSIONS.PAYMENT_POST)
   @ApiOperation({ summary: 'Post a payment to confirm receipt and lock immutably' })
+  @ApiHeader({ name: 'Idempotency-Key', required: false })
   async postPayment(
     @CurrentUser('companyId') companyId: string,
     @CurrentUser('userId') userId: string,
     @Param('id') paymentId: string,
     @Body() dto: PostPaymentDto,
+    @Headers('idempotency-key') idempotencyKey?: string,
   ): Promise<PaymentResponseDto> {
-    return this.paymentService.postPayment(companyId, userId, paymentId, dto);
+    return this.paymentService.postPayment(companyId, userId, paymentId, dto, idempotencyKey);
   }
 
   @Get()

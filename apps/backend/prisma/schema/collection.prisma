@@ -54,8 +54,10 @@ model Payment {
   booking              Booking?               @relation(fields: [bookingId], references: [id])
   customer             Customer               @relation(fields: [customerId], references: [id])
   targetInstallment    Installment?           @relation(fields: [targetInstallmentId], references: [id])
+  receipt              Receipt?
   statusHistory        PaymentStatusHistory[]
   reversals            PaymentReversal[]
+  chequeEvents         ChequeEvent[]
 
   @@unique([companyId, paymentNumber], name: "company_payment_number_unique")
   @@index([companyId, status, createdAt])
@@ -90,6 +92,8 @@ model Installment {
 
   booking              Booking                @relation(fields: [bookingId], references: [id], onDelete: Cascade)
   payments             Payment[]
+  waivers              InstallmentWaiver[]
+  lateFeeRecords       LateFeeRecord[]
 
   @@unique([companyId, bookingId, installmentNumber])
   @@index([companyId])
@@ -131,4 +135,148 @@ model PaymentReversal {
   @@unique([companyId, reversalNumber], name: "company_payment_reversal_number_unique")
   @@index([companyId, paymentId])
   @@map("payment_reversals")
+}
+
+model Receipt {
+  id               String    @id @default(uuid(7)) @db.Uuid
+  companyId        String    @map("company_id") @db.Uuid
+  receiptNumber    String    @map("receipt_number") @db.VarChar(64)
+  paymentId        String    @unique @map("payment_id") @db.Uuid
+  bookingId        String?   @map("booking_id") @db.Uuid
+  customerId       String    @map("customer_id") @db.Uuid
+  propertyId       String?   @map("property_id") @db.Uuid
+  projectId        String?   @map("project_id") @db.Uuid
+  amountPaisa      BigInt    @map("amount_paisa") @db.BigInt
+  amountInWords    String    @map("amount_in_words") @db.VarChar(255)
+  previousDuePaisa BigInt    @default(0) @map("previous_due_paisa") @db.BigInt
+  currentDuePaisa  BigInt    @default(0) @map("current_due_paisa") @db.BigInt
+  paymentMethod    String    @map("payment_method") @db.VarChar(32)
+  isVoid           Boolean   @default(false) @map("is_void")
+  voidReason       String?   @map("void_reason") @db.Text
+  voidedAt         DateTime? @map("voided_at") @db.Timestamptz
+  voidedById       String?   @map("voided_by_id") @db.Uuid
+  reprintCount     Int       @default(0) @map("reprint_count")
+  isLegacy         Boolean   @default(false) @map("is_legacy")
+  issuedAt         DateTime  @default(now()) @map("issued_at") @db.Timestamptz
+  issuedById       String    @map("issued_by_id") @db.Uuid
+  createdAt        DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt        DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+
+  payment          Payment   @relation(fields: [paymentId], references: [id])
+  customer         Customer  @relation(fields: [customerId], references: [id])
+  booking          Booking?  @relation(fields: [bookingId], references: [id])
+  voids            ReceiptVoid[]
+
+  @@unique([companyId, receiptNumber], name: "company_receipt_number_unique")
+  @@index([companyId])
+  @@index([companyId, customerId])
+  @@index([companyId, bookingId])
+  @@index([companyId, issuedAt])
+  @@map("receipts")
+}
+
+model ChequeEvent {
+  id           String    @id @default(uuid(7)) @db.Uuid
+  companyId    String    @map("company_id") @db.Uuid
+  paymentId    String    @map("payment_id") @db.Uuid
+  event        String    @map("event") @db.VarChar(32) // RECEIVED, CLEARED, BOUNCED
+  chequeNumber String    @map("cheque_number") @db.VarChar(64)
+  bankName     String?   @map("bank_name") @db.VarChar(128)
+  branchName   String?   @map("branch_name") @db.VarChar(128)
+  chequeDate   DateTime? @map("cheque_date") @db.Date
+  clearingDate DateTime? @map("clearing_date") @db.Date
+  bounceReason String?   @map("bounce_reason") @db.Text
+  notes        String?   @db.Text
+  createdById  String    @map("created_by_id") @db.Uuid
+  createdAt    DateTime  @default(now()) @map("created_at") @db.Timestamptz
+
+  payment      Payment   @relation(fields: [paymentId], references: [id])
+
+  @@index([companyId])
+  @@index([companyId, paymentId])
+  @@index([companyId, event])
+  @@map("cheque_events")
+}
+
+model ReceiptVoid {
+  id         String   @id @default(uuid(7)) @db.Uuid
+  companyId  String   @map("company_id") @db.Uuid
+  receiptId  String   @map("receipt_id") @db.Uuid
+  voidNumber String   @map("void_number") @db.VarChar(64)
+  reason     String   @db.Text
+  approvalId String?  @map("approval_id") @db.Uuid
+  voidedById String   @map("voided_by_id") @db.Uuid
+  createdAt  DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+  receipt    Receipt  @relation(fields: [receiptId], references: [id])
+
+  @@unique([companyId, voidNumber])
+  @@index([companyId, receiptId])
+  @@map("receipt_voids")
+}
+
+model Refund {
+  id            String    @id @default(uuid(7)) @db.Uuid
+  companyId     String    @map("company_id") @db.Uuid
+  refundNumber  String    @map("refund_number") @db.VarChar(64)
+  bookingId     String    @map("booking_id") @db.Uuid
+  customerId    String    @map("customer_id") @db.Uuid
+  amountPaisa   BigInt    @map("amount_paisa") @db.BigInt
+  status        String    @default("Requested") @db.VarChar(32) // Requested, Approved, Paid, Rejected
+  reason        String?   @db.Text
+  approvalId    String?   @map("approval_id") @db.Uuid
+  paidAt        DateTime? @map("paid_at") @db.Timestamptz
+  paidById      String?   @map("paid_by_id") @db.Uuid
+  paymentMethod String?   @map("payment_method") @db.VarChar(32)
+  bankAccountId String?   @map("bank_account_id") @db.Uuid
+  journalId     String?   @map("journal_id") @db.Uuid
+  createdById   String    @map("created_by_id") @db.Uuid
+  createdAt     DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt     DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+
+  booking       Booking   @relation(fields: [bookingId], references: [id])
+  customer      Customer  @relation(fields: [customerId], references: [id])
+
+  @@unique([companyId, refundNumber])
+  @@index([companyId, bookingId])
+  @@index([companyId, customerId])
+  @@index([companyId, status])
+  @@map("refunds")
+}
+
+model InstallmentWaiver {
+  id            String   @id @default(uuid(7)) @db.Uuid
+  companyId     String   @map("company_id") @db.Uuid
+  waiverNumber  String   @map("waiver_number") @db.VarChar(64)
+  installmentId String   @map("installment_id") @db.Uuid
+  amountPaisa   BigInt   @map("amount_paisa") @db.BigInt
+  status        String   @default("Approved") @db.VarChar(32) // Requested, Approved, Rejected
+  reason        String   @db.Text
+  approvalId    String?  @map("approval_id") @db.Uuid
+  createdById   String   @map("created_by_id") @db.Uuid
+  createdAt     DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+  installment   Installment @relation(fields: [installmentId], references: [id])
+
+  @@unique([companyId, waiverNumber])
+  @@index([companyId, installmentId])
+  @@map("installment_waivers")
+}
+
+model LateFeeRecord {
+  id            String    @id @default(uuid(7)) @db.Uuid
+  companyId     String    @map("company_id") @db.Uuid
+  installmentId String    @map("installment_id") @db.Uuid
+  amountPaisa   BigInt    @map("amount_paisa") @db.BigInt
+  isWaived      Boolean   @default(false) @map("is_waived")
+  waivedAt      DateTime? @map("waived_at") @db.Timestamptz
+  waivedById    String?   @map("waived_by_id") @db.Uuid
+  journalId     String?   @map("journal_id") @db.Uuid
+  createdById   String    @map("created_by_id") @db.Uuid
+  createdAt     DateTime  @default(now()) @map("created_at") @db.Timestamptz
+
+  installment   Installment @relation(fields: [installmentId], references: [id])
+
+  @@index([companyId, installmentId])
+  @@map("late_fee_records")
 }

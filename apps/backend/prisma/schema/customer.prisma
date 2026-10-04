@@ -55,7 +55,10 @@ model Customer {
   nominees  CustomerNominee[]
   coBuyers  CustomerCoBuyer[]
   followUps FollowUp[]
-  payments  Payment[]
+  payments       Payment[]
+  receipts       Receipt[]
+  refunds        Refund[]
+  legacyBookings LegacyBookingRecord[]
 
   @@unique([companyId, customerNumber])
   @@index([companyId])

@@ -1,10 +1,9 @@
 import crypto from 'node:crypto';
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
-import { DOMAIN_EVENTS, ERROR_CODES } from '@exzaestate/shared';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { ERROR_CODES } from '@exzaestate/shared';
 import { TenantDb } from '../../database/tenant-db.service.js';
 import { AuditService } from '../../platform/audit/audit.service.js';
 import { IdempotencyService } from '../../platform/idempotency/idempotency.service.js';
-import { OutboxService } from '../../platform/outbox/outbox.service.js';
 import { SequenceService } from '../../platform/sequence/sequence.service.js';
 import type {
   CreateDraftPaymentDto,
@@ -17,6 +16,7 @@ import {
   validateBookingAndCustomer,
   validatePaymentMethodRequirements,
 } from './payment-creator.helper.js';
+import { PaymentPostingService } from './payment-posting.service.js';
 import { mapPaymentToDto } from './payment.mapper.js';
 
 @Injectable()
@@ -25,8 +25,8 @@ export class PaymentService {
     private readonly tenantDb: TenantDb,
     private readonly sequenceService: SequenceService,
     private readonly auditService: AuditService,
-    private readonly outboxService: OutboxService,
     private readonly idempotencyService: IdempotencyService,
+    private readonly paymentPostingService: PaymentPostingService,
   ) {}
 
   async createDraftPayment(
@@ -74,15 +74,14 @@ export class PaymentService {
         projectId,
       );
 
-      const payment = await tx.payment.create({ data: createData });
+      const created = await tx.payment.create({ data: createData });
 
       await tx.paymentStatusHistory.create({
         data: {
           companyId,
-          paymentId: payment.id,
-          fromStatus: null,
+          paymentId: created.id,
           toStatus: 'Draft',
-          reason: 'Draft payment created',
+          reason: dto.notes ?? 'Draft payment created',
           changedById: userId,
         },
       });
@@ -91,26 +90,16 @@ export class PaymentService {
         action: 'PAYMENT_DRAFT_CREATED',
         module: 'collection',
         recordType: 'Payment',
-        recordId: payment.id,
+        recordId: created.id,
         after: {
-          paymentNumber,
-          status: 'Draft',
-          amountPaisa: dto.amountPaisa,
-          paymentMethod: dto.paymentMethod,
-          bookingId: dto.bookingId ?? null,
-          customerId: dto.customerId,
+          paymentNumber: created.paymentNumber,
+          amountPaisa: created.amountPaisa.toString(),
+          paymentMethod: created.paymentMethod,
+          paymentType: created.paymentType,
         },
       });
 
-      await this.outboxService.emit(tx, 'payment.draft_created', {
-        paymentId: payment.id,
-        paymentNumber,
-        amountPaisa: dto.amountPaisa,
-        bookingId: dto.bookingId ?? null,
-        customerId: dto.customerId,
-      });
-
-      const result = mapPaymentToDto(payment);
+      const result = mapPaymentToDto(created);
 
       if (idempotencyKey) {
         await this.idempotencyService.complete(tx, {
@@ -132,73 +121,15 @@ export class PaymentService {
     userId: string,
     paymentId: string,
     dto: PostPaymentDto,
+    idempotencyKey?: string,
   ): Promise<PaymentResponseDto> {
-    return this.tenantDb.withCompany(companyId, async (tx) => {
-      const payment = await tx.payment.findFirst({
-        where: { id: paymentId, companyId },
-      });
-      if (!payment) {
-        throw new NotFoundException({
-          code: ERROR_CODES.NOT_FOUND,
-          message: `Payment with ID "${paymentId}" not found.`,
-        });
-      }
-
-      if (payment.status === 'Posted') {
-        throw new BadRequestException({
-          code: ERROR_CODES.INVALID_STATE_TRANSITION,
-          message: 'Payment is already posted.',
-        });
-      }
-
-      if (payment.status === 'Cancelled' || payment.status === 'Reversed') {
-        throw new BadRequestException({
-          code: ERROR_CODES.INVALID_STATE_TRANSITION,
-          message: `Cannot post payment with status "${payment.status}".`,
-        });
-      }
-
-      const updated = await tx.payment.update({
-        where: { id: paymentId },
-        data: {
-          status: 'Posted',
-          isDraft: false,
-          postedAt: new Date(),
-          postedById: userId,
-          notes: dto.notes ?? payment.notes,
-        },
-      });
-
-      await tx.paymentStatusHistory.create({
-        data: {
-          companyId,
-          paymentId: payment.id,
-          fromStatus: payment.status,
-          toStatus: 'Posted',
-          reason: dto.notes ?? 'Payment posted',
-          changedById: userId,
-        },
-      });
-
-      await this.auditService.record(tx, {
-        action: 'PAYMENT_POSTED',
-        module: 'collection',
-        recordType: 'Payment',
-        recordId: payment.id,
-        before: { status: payment.status },
-        after: { status: 'Posted', postedAt: new Date().toISOString() },
-      });
-
-      await this.outboxService.emit(tx, DOMAIN_EVENTS.PAYMENT_POSTED, {
-        paymentId: payment.id,
-        paymentNumber: payment.paymentNumber,
-        amountPaisa: payment.amountPaisa.toString(),
-        bookingId: payment.bookingId,
-        customerId: payment.customerId,
-      });
-
-      return mapPaymentToDto(updated);
-    });
+    return this.paymentPostingService.postPayment(
+      companyId,
+      userId,
+      paymentId,
+      dto,
+      idempotencyKey,
+    );
   }
 
   async getPaymentById(companyId: string, paymentId: string): Promise<PaymentResponseDto> {

@@ -64,6 +64,8 @@ model Booking {
   payments                   Payment[]
   agreements                 Agreement[]
   installments               Installment[]
+  receipts                   Receipt[]
+  refunds                    Refund[]
 
   @@unique([companyId, bookingNumber])
   @@index([companyId])
