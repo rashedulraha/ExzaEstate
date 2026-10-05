@@ -191,9 +191,9 @@ describe('Users & Roles Management Module', () => {
       renderWithClient(<RoleManagementPage />);
 
       expect(screen.getByText('Security Roles & Permissions')).toBeDefined();
-      expect(screen.getByText('MANAGING_DIRECTOR')).toBeDefined();
+      expect(screen.getAllByText('MANAGING_DIRECTOR')[0]).toBeDefined();
       expect(screen.getByText('Supreme executive role with tenant-wide authority')).toBeDefined();
-      expect(screen.getByText('CHIEF_ACCOUNTANT')).toBeDefined();
+      expect(screen.getAllByText('CHIEF_ACCOUNTANT')[0]).toBeDefined();
       expect(screen.getByText('Financial director with ledger posting authority')).toBeDefined();
     });
   });
