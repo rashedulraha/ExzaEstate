@@ -10,6 +10,21 @@ export function configureApp(app: INestApplication, configService: ConfigService
   // Request ID and logging middleware
   app.use(requestIdMiddleware);
 
+  // Enable CORS for frontend and desktop clients
+  app.enableCors({
+    origin: configService.corsOrigins.length > 0 ? configService.corsOrigins : true,
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: [
+      'Content-Type',
+      'Authorization',
+      'Idempotency-Key',
+      'X-Request-Id',
+      'X-Client-Version',
+      'X-Local-Secret',
+    ],
+  });
+
   // Security headers via Helmet
   app.use(
     helmet({

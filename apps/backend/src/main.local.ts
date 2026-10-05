@@ -22,6 +22,7 @@ export async function bootstrapLocal(): Promise<void> {
   // Restrict CORS strictly to Tauri loopback origins
   app.enableCors({
     origin: [
+      'http://localhost:5173',
       'tauri://localhost',
       'http://localhost:1420',
       'https://tauri.localhost',
