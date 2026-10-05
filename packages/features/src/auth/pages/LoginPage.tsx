@@ -16,6 +16,8 @@ export interface LoginPageProps {
    * 'right' -> form left, showcase right
    */
   showcaseSide?: 'left' | 'right';
+  defaultEmail?: string;
+  defaultPassword?: string;
 }
 
 const inputBase =
@@ -192,7 +194,12 @@ function LoginFormFields({ register, errors, isSubmitting, onSubmit }: LoginForm
   );
 }
 
-export function LoginPage({ onSuccess, showcaseSide = 'left' }: LoginPageProps) {
+export function LoginPage({
+  onSuccess,
+  showcaseSide = 'left',
+  defaultEmail,
+  defaultPassword,
+}: LoginPageProps) {
   const { handleLogin, isSubmitting, errorMessage, errorCode } = useAuthFlow();
   const [showTotpEnrollment, setShowTotpEnrollment] = useState(false);
 
@@ -202,7 +209,10 @@ export function LoginPage({ onSuccess, showcaseSide = 'left' }: LoginPageProps) 
     formState: { errors },
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
-    defaultValues: { email: '', password: '' },
+    defaultValues: {
+      email: defaultEmail ?? '',
+      password: defaultPassword ?? '',
+    },
   });
 
   useEffect(() => {

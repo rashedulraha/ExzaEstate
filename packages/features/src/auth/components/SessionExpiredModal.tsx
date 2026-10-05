@@ -12,6 +12,11 @@ export function SessionExpiredModal({ onSignInAgain }: SessionExpiredModalProps)
     return null;
   }
 
+  // Never display session expired modal while on login page or authentication flow
+  if (typeof window !== 'undefined' && window.location.pathname.includes('/auth/')) {
+    return null;
+  }
+
   const handleAction = () => {
     dismissSessionExpired();
     if (onSignInAgain) {
@@ -20,6 +25,12 @@ export function SessionExpiredModal({ onSignInAgain }: SessionExpiredModalProps)
       window.location.href = '/auth/login';
     }
   };
+
+  const title = t('auth.sessionExpired.title') || 'Session Expired';
+  const description =
+    t('auth.sessionExpired.description') ||
+    'Your session has expired. Please sign in again to continue.';
+  const signInAgainText = t('auth.sessionExpired.signInAgain') || 'Sign in again';
 
   return (
     <div
@@ -48,11 +59,11 @@ export function SessionExpiredModal({ onSignInAgain }: SessionExpiredModalProps)
         </div>
 
         <h3 id="session-expired-title" className="text-h2 font-semibold text-text">
-          {t('auth.sessionExpired.title')}
+          {title}
         </h3>
 
         <p id="session-expired-desc" className="mt-2 text-body text-text-muted">
-          {t('auth.sessionExpired.description')}
+          {description}
         </p>
 
         <div className="mt-6">
@@ -61,7 +72,7 @@ export function SessionExpiredModal({ onSignInAgain }: SessionExpiredModalProps)
             onClick={handleAction}
             className="w-full rounded-button bg-action px-4 py-2.5 text-btn font-medium text-on-action shadow-sm hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-focus cursor-pointer"
           >
-            {t('auth.sessionExpired.signInAgain')}
+            {signInAgainText}
           </button>
         </div>
       </div>

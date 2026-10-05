@@ -15,6 +15,7 @@ import {
   UserCheck,
   CheckSquare,
   ArrowRightLeft,
+  LogOut,
 } from 'lucide-react';
 import { authRoutes } from './auth/auth.routes.js';
 import { StepUpModal } from './auth/components/StepUpModal.js';
@@ -70,7 +71,7 @@ function resolveCurrentRouteId(path: string): string {
 }
 
 export function ProtectedLayout() {
-  const { isAuthenticated, isLoading, user } = useAuth();
+  const { isAuthenticated, isLoading, user, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -210,6 +211,15 @@ export function ProtectedLayout() {
           icon: <ShieldCheck className="w-4 h-4 shrink-0" aria-hidden="true" />,
           onClick: () => navigate('/audit'),
         },
+        {
+          id: 'logout',
+          label: 'Sign Out',
+          icon: <LogOut className="w-4 h-4 shrink-0 text-danger" aria-hidden="true" />,
+          onClick: async () => {
+            await logout();
+            navigate('/auth/login', { replace: true });
+          },
+        },
       ],
     },
   ];
@@ -224,6 +234,13 @@ export function ProtectedLayout() {
           userEmail: user?.email,
           onOpenCommandPalette: () => setIsSearchOpen(true),
           onNotificationsClick: () => setIsNotifOpen(true),
+          onProfileClick: async () => {
+            const confirmed = window.confirm('Sign out from ExzaEstate?');
+            if (confirmed) {
+              await logout();
+              navigate('/auth/login', { replace: true });
+            }
+          },
         }}
       >
         <Outlet />

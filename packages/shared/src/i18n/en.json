@@ -12,5 +12,8 @@
   "common.notFound": "Not found",
   "common.success": "Success",
   "currency.bdt": "BDT",
-  "currency.symbol": "৳"
+  "currency.symbol": "৳",
+  "auth.sessionExpired.title": "Session Expired",
+  "auth.sessionExpired.description": "Your session has expired. Please sign in again to continue.",
+  "auth.sessionExpired.signInAgain": "Sign in again"
 }

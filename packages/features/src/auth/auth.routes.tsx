@@ -5,7 +5,11 @@ import { LoginPage } from './pages/LoginPage.js';
 
 function AuthLoginRoute() {
   const navigate = useNavigate();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, dismissSessionExpired } = useAuth();
+
+  useEffect(() => {
+    dismissSessionExpired();
+  }, [dismissSessionExpired]);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -13,7 +17,13 @@ function AuthLoginRoute() {
     }
   }, [isAuthenticated, navigate]);
 
-  return <LoginPage onSuccess={() => navigate('/dashboard', { replace: true })} />;
+  return (
+    <LoginPage
+      defaultEmail="md@exzaestate.com"
+      defaultPassword="ExzaEstate@2026!"
+      onSuccess={() => navigate('/dashboard', { replace: true })}
+    />
+  );
 }
 
 export const authRoutes: RouteObject[] = [
