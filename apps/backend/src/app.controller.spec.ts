@@ -1,14 +1,16 @@
 import { describe, expect, it } from 'vitest';
 import { AppController } from './app.controller.js';
-import type { ConfigService } from './config/config.service.js';
+import { ConfigService } from './config/config.service.js';
 import type { RequestWithMetadata } from './common/logging/request-logging.middleware.js';
 
 describe('AppController', () => {
   const mockConfigService = {
+    isProduction: false,
     minSupportedClientVersion: '0.1.0',
+    corsOrigins: ['http://localhost:5173'],
   } as unknown as ConfigService;
 
-  it('returns welcome message, status, version and requestId', () => {
+  it('returns welcome message, status, version and requestId unit', () => {
     const controller = new AppController(mockConfigService);
     const mockReq = {
       requestId: 'test-req-id-1234',

@@ -37,7 +37,7 @@ export function configureApp(app: INestApplication, configService: ConfigService
 
   // Global REST API prefix: /api/v1
   app.setGlobalPrefix('api/v1', {
-    exclude: ['/', 'api/docs', 'api/docs/(.*)'],
+    exclude: ['api/docs', 'api/docs/(.*)'],
   });
 
   // Redirect root '/' to '/api/v1' for developer convenience
