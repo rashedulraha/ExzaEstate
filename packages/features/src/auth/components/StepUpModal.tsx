@@ -56,14 +56,14 @@ export function StepUpModal({ isOpen, onSuccess, onCancel }: StepUpModalProps) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 p-4 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-primary-deep/80 p-4 backdrop-blur-sm"
       role="dialog"
       aria-modal="true"
       aria-labelledby="step-up-title"
     >
-      <div className="w-full max-w-md rounded-xl border border-slate-200 bg-white p-6 shadow-2xl dark:border-slate-800 dark:bg-slate-900">
+      <div className="w-full max-w-md rounded-modal border border-border bg-surface-elevated p-6 shadow-2xl">
         <div className="flex items-center space-x-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-amber-100 text-amber-600 dark:bg-amber-950 dark:text-amber-400">
+          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-warning/15 text-warning">
             <svg
               className="h-5 w-5"
               fill="none"
@@ -80,15 +80,10 @@ export function StepUpModal({ isOpen, onSuccess, onCancel }: StepUpModalProps) {
             </svg>
           </div>
           <div>
-            <h3
-              id="step-up-title"
-              className="text-base font-semibold text-slate-900 dark:text-slate-100"
-            >
+            <h3 id="step-up-title" className="text-h2 font-semibold text-text">
               {t('auth.stepUp.title')}
             </h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400">
-              {t('auth.stepUp.description')}
-            </p>
+            <p className="text-caption text-text-muted">{t('auth.stepUp.description')}</p>
           </div>
         </div>
 
@@ -96,7 +91,7 @@ export function StepUpModal({ isOpen, onSuccess, onCancel }: StepUpModalProps) {
           <div>
             <label
               htmlFor="step-up-token"
-              className="block text-xs font-medium text-slate-700 dark:text-slate-300"
+              className="block text-caption font-medium text-text-muted"
             >
               6-Digit Authenticator Code
             </label>
@@ -109,28 +104,26 @@ export function StepUpModal({ isOpen, onSuccess, onCancel }: StepUpModalProps) {
               autoFocus
               placeholder="000000"
               {...register('token')}
-              className="mt-1 block w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-center text-xl tracking-widest text-slate-900 placeholder-slate-400 focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
+              className="mt-1 block w-full rounded-button border border-border-input bg-surface px-3 py-2 text-center text-h1 tracking-widest text-text placeholder-text-muted focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent"
             />
             {errors.token && (
-              <p className="mt-1 text-xs text-red-600 dark:text-red-400">{errors.token.message}</p>
+              <p className="mt-1 text-caption text-danger">{errors.token.message}</p>
             )}
-            {serverError && (
-              <p className="mt-1 text-xs text-red-600 dark:text-red-400">{serverError}</p>
-            )}
+            {serverError && <p className="mt-1 text-caption text-danger">{serverError}</p>}
           </div>
 
           <div className="flex items-center justify-end space-x-3 pt-2">
             <button
               type="button"
               onClick={handleClose}
-              className="rounded-lg border border-slate-300 px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-400 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800"
+              className="rounded-button border border-border px-4 py-2 text-btn font-medium text-text hover:bg-surface-sunken focus:outline-none focus:ring-2 focus:ring-focus cursor-pointer"
             >
               {t('common.cancel')}
             </button>
             <button
               type="submit"
               disabled={isVerifying}
-              className="inline-flex items-center justify-center rounded-lg bg-slate-900 px-4 py-2 text-xs font-medium text-white hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-amber-500 disabled:opacity-50 dark:bg-amber-500 dark:text-slate-950 dark:hover:bg-amber-400"
+              className="inline-flex items-center justify-center rounded-button bg-action px-4 py-2 text-btn font-medium text-on-action hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-focus disabled:opacity-50 cursor-pointer"
             >
               {isVerifying ? t('common.loading') : t('common.confirm')}
             </button>
