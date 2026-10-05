@@ -1099,7 +1099,7 @@ These are applied as defaults in `architecture.md` v4 but are still **"Needs sig
 
 #### B1.1 — Desktop Shell (Cloud mode), `app-core` & Auth Screens
 
-- **Status:** [ ] · **Tier:** 3 · **Size:** L (4 steps) · **Priority:** P0 · 🔒 D-06
+- **Status:** [x] · **Tier:** 3 · **Size:** L (4 steps) · **Priority:** P0 · 🔒 D-06
 - **Depends:** A9.7, A10.4
 - **Reads:** `architecture.md` §4.3, §12.1, §12.3, §12.5, §12.6; `design.md` §5; `security.md` §15 (Tauri); `rules.md` §4.
 - **Touches:** `apps/desktop/**`, `packages/app-core/**`, `packages/features/src/auth/**`, `packages/features/src/routes.tsx`.
@@ -1109,7 +1109,7 @@ These are applied as defaults in `architecture.md` v4 but are still **"Needs sig
 
 #### B1.2 — Design System Tokens & Signature Components
 
-- **Status:** [ ] · **Tier:** 3 · **Size:** L (4 steps) · **Priority:** P0
+- **Status:** [x] · **Tier:** 3 · **Size:** L (4 steps) · **Priority:** P0
 - **Depends:** B1.1
 - **Reads:** `design.md` §0–§14; `tech-versions.md` §2.6; `architecture.md` §12.4.
 - **Touches:** `packages/ui/**`.
@@ -1119,7 +1119,7 @@ These are applied as defaults in `architecture.md` v4 but are still **"Needs sig
 
 #### B1.3 — Property Feature Pages
 
-- **Status:** [ ] · **Tier:** 3 · **Size:** L (4 steps) · **Priority:** P0
+- **Status:** [x] · **Tier:** 3 · **Size:** L (4 steps) · **Priority:** P0
 - **Depends:** B1.2
 - **Reads:** `golden-module-frontend.md` (entire); `design.md` §4.4, §6, §7.1; `architecture.md` §12.4–§12.5, §22.2.
 - **Touches:** `packages/features/src/property/**`.
@@ -1129,7 +1129,7 @@ These are applied as defaults in `architecture.md` v4 but are still **"Needs sig
 
 #### B1.4 — Golden Slice Review Gate & Playwright E2E
 
-- **Status:** [ ] · **Tier:** 3 · **Size:** M (3 steps) · **Priority:** P0
+- **Status:** [x] · **Tier:** 3 · **Size:** M (3 steps) · **Priority:** P0
 - **Depends:** B1.3
 - **Reads:** `architecture.md` §16, §18.1; `golden-module-frontend.md`; `rules.md` §6.
 - **Touches:** `e2e/**`, `packages/features/src/property/**` (fixes only).
@@ -1139,7 +1139,7 @@ These are applied as defaults in `architecture.md` v4 but are still **"Needs sig
 
 #### B2 — CRM, Leads & Customer 360 Screens
 
-- **Status:** [ ] · **Size:** L (4 steps) · **Depends:** B1.4, A3.4, A9.7
+- **Status:** [x] · **Size:** L (4 steps) · **Depends:** B1.4, A3.4, A9.7
 - **Reads:** `design.md` §4, §6, §7; `prd.md` MOD-CRM, MOD-FOLLOWUP, MOD-CUSTOMER; `golden-module-frontend.md`.
 - **Touches:** `packages/features/src/{crm,customer}/**`, `packages/ui/**` (only if a missing primitive is added with a flagged note).
 - **Steps:** **S1** lead list/pipeline board + form (scope-aware). **S2** follow-up calendar/list with overdue chips. **S3** Customer 360 (profile, joint buyers, nominees, KYC fields **masked unless permitted**, documents, timeline). **S4** lead→customer conversion flow. Verify: `{features} test crm customer`.
@@ -1147,7 +1147,7 @@ These are applied as defaults in `architecture.md` v4 but are still **"Needs sig
 
 #### B3 — Sales, Quotations, Approvals & Booking Wizard
 
-- **Status:** [ ] · **Size:** XL (5 steps) · **Depends:** B2, A5.5
+- **Status:** [x] · **Size:** XL (5 steps) · **Depends:** B2, A5.5
 - **Reads:** `design.md` §6, §7; `prd.md` FLOW-06, MOD-QUOTATION, MOD-DISCOUNT, MOD-BOOKING, MOD-AGREEMENT.
 - **Touches:** `packages/features/src/{sales,approvals}/**`.
 - **Steps:** **S1** quotation builder + PDF preview. **S2** approval inbox (approve/reject/override with step-up and joint-control UX). **S3** booking wizard (the 7 steps defined for FLOW-06 / `design.md`; **if the seven steps are not enumerated there, stop and ask — do not invent**). **S4** booking detail with status timeline and reservation countdown. **S5** agreement view/lock. Verify: `{features} test sales approvals`.
@@ -1155,7 +1155,7 @@ These are applied as defaults in `architecture.md` v4 but are still **"Needs sig
 
 #### B4 — Collection, Receipts & Payment Terrace
 
-- **Status:** [ ] · **Size:** XL (5 steps) · **Depends:** B3, A7.9
+- **Status:** [x] · **Size:** XL (5 steps) · **Depends:** B3, A7.9
 - **Reads:** `design.md` §7.1, §12; `prd.md` FLOW-07, MOD-PAYMENT, MOD-RECEIPT, MOD-STATEMENT, MOD-AGING.
 - **Touches:** `packages/ui/src/components/payment-terrace/**`, `packages/features/src/collection/**`.
 - **Steps:** **S1** signature **Payment Terrace** component in `@exzaestate/ui`. **S2** installment views with combined chips ("Partially Paid · Overdue 12 days"). **S3** payment entry (Executive: draft only; Accountant: post), method-specific fields, allocation preview. **S4** cheque management, reversal (step-up + approval), receipts print/reprint. **S5** customer statement + aging dashboard. Verify: `{features} test collection`.
@@ -1163,7 +1163,7 @@ These are applied as defaults in `architecture.md` v4 but are still **"Needs sig
 
 #### B5 — Accounting: COA, Journals, Ledgers, Trial Balance, Periods
 
-- **Status:** [ ] · **Size:** L (4 steps) · **Depends:** B4
+- **Status:** [x] · **Size:** L (4 steps) · **Depends:** B4
 - **Reads:** `design.md` §6; `prd.md` MOD-COA, MOD-JOURNAL, MOD-CASHBANK, MOD-PERIOD; `accounting-rules.md` §1.
 - **Touches:** `packages/features/src/accounting/**`.
 - **Steps:** **S1** COA tree + account detail. **S2** manual journal lifecycle (draft/review/post/reverse) with 2FA/step-up prompts. **S3** ledger (cursor-paged), trial balance, balance sheet, income statement. **S4** cash/bank + reconciliation, fiscal periods (close/reopen with reason). Verify: `{features} test accounting`.
@@ -1171,7 +1171,7 @@ These are applied as defaults in `architecture.md` v4 but are still **"Needs sig
 
 #### B6 — P1 Operations: Expenses, Vendors/AP, Commission, Budgets, Transfers, Profitability
 
-- **Status:** [ ] · **Size:** XL (5 steps) · **Depends:** B5, A8.6
+- **Status:** [x] · **Size:** XL (5 steps) · **Depends:** B5, A8.6
 - **Reads:** `prd.md` MOD-EXPENSE, MOD-VENDOR, MOD-COMMISSION, MOD-TRANSFER, MOD-PROFIT; `design.md` §6.
 - **Touches:** `packages/features/src/{expense,vendor,commission,transfer,profitability}/**`.
 - **Steps:** **S1** expense vouchers + approval/verify states. **S2** vendors, bills, AP payments. **S3** commission lifecycle + broker payouts. **S4** budgets with alert chips. **S5** booking transfer wizard + project profitability. Verify: `{features} test operations`.
@@ -1179,7 +1179,7 @@ These are applied as defaults in `architecture.md` v4 but are still **"Needs sig
 
 #### B7 — Dashboard, Reports, Global Search, Notifications & Audit Viewer
 
-- **Status:** [ ] · **Size:** L (4 steps) · **Depends:** B6, A9.3, A9.4
+- **Status:** [x] · **Size:** L (4 steps) · **Depends:** B6, A9.3, A9.4
 - **Reads:** `design.md` §7.2 (data-visualisation language); `prd.md` MOD-DASH, MOD-REPORTS, MOD-SEARCH, MOD-AUDIT.
 - **Touches:** `packages/ui/src/charts/**`, `packages/features/src/{dashboard,reports,search,notifications,audit}/**`.
 - **Steps:** **S1** custom SVG charts (d3-scale/shape only). **S2** executive dashboard + report pages with export jobs. **S3** command-palette global search + notification centre (SSE). **S4** audit/security-event viewer. Verify: `{features} test dashboard reports`.
@@ -1187,7 +1187,7 @@ These are applied as defaults in `architecture.md` v4 but are still **"Needs sig
 
 #### B8 — Settings, Users & Roles, Setup Checklist, Go-Live Migration Wizard
 
-- **Status:** [ ] · **Size:** L (4 steps) · **Depends:** B7, A9.5
+- **Status:** [x] · **Size:** L (4 steps) · **Depends:** B7, A9.5
 - **Reads:** `prd.md` FLOW-02, FLOW-03, MOD-ORG, MOD-NUMBERING, MOD-MIGRATION; `permissions-matrix.md` §3.
 - **Touches:** `packages/features/src/{settings,users,setup,migration}/**`.
 - **Steps:** **S1** settings catalogue editor (`prd.md` §17), numbering patterns with preview. **S2** users/roles/permissions editor (MD only, step-up). **S3** setup checklist wizard (FLOW-02). **S4** migration wizard (opening balances, legacy bookings, CSV, reconciliation gate). Verify: `{features} test settings migration`.

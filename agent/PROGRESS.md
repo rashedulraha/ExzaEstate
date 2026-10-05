@@ -13,9 +13,9 @@
 
 ## Current Status
 
-- **Active Phase:** Part A Complete (Phase A0–A10 100% Finished)
-- **Next Task to Execute:** Part B: `B1.1 Desktop Shell (Cloud mode), app-core & Auth Screens`
-- **Tasks complete:** 69 / 88 (P2 cards excluded; Part A 100% Complete)
+- **Active Phase:** Part B (B8 Complete, ready for B9)
+- **Next Task to Execute:** Part B: `B9 Desktop Local Standalone: Sidecar, Embedded PostgreSQL, First-Launch Wizard`
+- **Tasks complete:** 80 / 88 (P2 cards excluded; Part A 100% Complete, B1.1–B8 Complete)
 - **Blockers:** None
 - **Owner action items before/while coding:**
   - Copy the new `task.md` (v6) into `agent/task.md`.
@@ -156,17 +156,17 @@ Tick a box only after the verification rules above are met. Dependencies are def
 
 ### Part B — Desktop Client (B1–B11)
 
-- [ ] `B1.1` Desktop Shell (Cloud mode), `app-core` & Auth Screens
-- [ ] `B1.2` Design System Tokens & Signature Components
-- [ ] `B1.3` Property Feature Pages
-- [ ] `B1.4` Golden Slice Review Gate & Playwright E2E
-- [ ] `B2` CRM, Leads & Customer 360 Screens
-- [ ] `B3` Sales, Quotations, Approvals & Booking Wizard
-- [ ] `B4` Collection, Receipts & Payment Terrace
-- [ ] `B5` Accounting: COA, Journals, Ledgers, Trial Balance, Periods
-- [ ] `B6` P1 Operations: Expenses, Vendors/AP, Commission, Budgets, Transfers, Profitability
-- [ ] `B7` Dashboard, Reports, Global Search, Notifications & Audit Viewer
-- [ ] `B8` Settings, Users & Roles, Setup Checklist, Go-Live Migration Wizard
+- [x] `B1.1` Desktop Shell (Cloud mode), `app-core` & Auth Screens
+- [x] `B1.2` Design System Tokens & Signature Components
+- [x] `B1.3` Property Feature Pages
+- [x] `B1.4` Golden Slice Review Gate & Playwright E2E
+- [x] `B2` CRM, Leads & Customer 360 Screens
+- [x] `B3` Sales, Quotations, Approvals & Booking Wizard
+- [x] `B4` Collection, Receipts & Payment Terrace
+- [x] `B5` Accounting: COA, Journals, Ledgers, Trial Balance, Periods
+- [x] `B6` P1 Operations: Expenses, Vendors/AP, Commission, Budgets, Transfers, Profitability
+- [x] `B7` Dashboard, Reports, Global Search, Notifications & Audit Viewer
+- [x] `B8` Settings, Users & Roles, Setup Checklist, Go-Live Migration Wizard
 - [ ] `B9` Desktop Local Standalone: Sidecar, Embedded PostgreSQL, First-Launch Wizard
 - [ ] `B10` Desktop Licensing & Hardware Binding (Rust)
 - [ ] `B11` Desktop Packaging, Auto-Updater & Tauri Hardening
@@ -585,7 +585,7 @@ Tick a box only after the verification rules above are met. Dependencies are def
 ### [2026-10-05] A7.3 Cheque Lifecycle (cheque_events)
 
 1. Task ID & status: A7.3 [x]
-2. Files created / modified: apps/backend/prisma/schema/collection.prisma, apps/backend/prisma/migrations/20261005000026_collection_phase_a7_tables/**, apps/backend/src/modules/collection/cheque/** (cheque.service.ts, cheque.controller.ts, cheque.helper.ts, cheque.mapper.ts, dto/**, cheque.service.spec.ts)
+2. Files created / modified: apps/backend/prisma/schema/collection.prisma, apps/backend/prisma/migrations/20261005000026_collection_phase_a7_tables/**, apps/backend/src/modules/collection/cheque/** (cheque.service.ts, cheque.controller.ts, cheque.helper.ts, cheque.mapper.ts, dto/\*\*, cheque.service.spec.ts)
 3. Verification command & result: pnpm --filter @exzaestate/backend test src/ (S1 append-only cheque_events table; S2 clearCheque posts journals, allocates installments, issues receipt, executes confirmation hooks; S3 bounceCheque marks payment Cancelled without posting [AT-13]; 0 errors, 0 warnings in oxlint; tsc clean)
 4. Open questions: None (Cheque clearing orchestrates through PostingService; bounced cheques do not mutate immutable ledger)
 5. Next task ID: A7.4
@@ -593,7 +593,7 @@ Tick a box only after the verification rules above are met. Dependencies are def
 ### [2026-10-05] A7.4 Immutable Receipts, Voids & Payment Reversals
 
 1. Task ID & status: A7.4 [x]
-2. Files created / modified: apps/backend/prisma/schema/collection.prisma, apps/backend/prisma/migrations/20261005000025_collection_receipts/**, apps/backend/src/modules/collection/receipt/** (receipt.service.ts, receipt.controller.ts, receipt.mapper.ts, dto/**), apps/backend/src/modules/collection/reversal/** (reversal.service.ts, reversal.controller.ts, reversal.service.spec.ts, dto/**)
+2. Files created / modified: apps/backend/prisma/schema/collection.prisma, apps/backend/prisma/migrations/20261005000025_collection_receipts/**, apps/backend/src/modules/collection/receipt/** (receipt.service.ts, receipt.controller.ts, receipt.mapper.ts, dto/**), apps/backend/src/modules/collection/reversal/** (reversal.service.ts, reversal.controller.ts, reversal.service.spec.ts, dto/\*\*)
 3. Verification command & result: pnpm --filter @exzaestate/backend test src/ (S1 receipts table with amount in words and previous/current due; S2 payment_reversals and receipt_voids; S3 PAYMENT_REVERSED mirror journal and installment reopening [AT-21]; S4 duplicate receipt watermark reprint tracking; 0 errors, 0 warnings in oxlint; tsc clean)
 4. Open questions: None (RULE-IMMUTABLE strictly observed; reversals append mirror entries and mark void records)
 5. Next task ID: A7.5
@@ -633,7 +633,7 @@ Tick a box only after the verification rules above are met. Dependencies are def
 ### [2026-10-05] A7.9 Go-Live Migration (Opening Balances & Legacy Bookings)
 
 1. Task ID & status: A7.9 [x]
-2. Files created / modified: apps/backend/prisma/schema/migration.prisma, apps/backend/prisma/migrations/20261005000026_collection_phase_a7_tables/**, apps/backend/src/modules/migration/** (migration.service.ts, migration.helper.ts, migration.controller.ts, migration.module.ts, migration.service.spec.ts, dto/**)
+2. Files created / modified: apps/backend/prisma/schema/migration.prisma, apps/backend/prisma/migrations/20261005000026_collection_phase_a7_tables/**, apps/backend/src/modules/migration/** (migration.service.ts, migration.helper.ts, migration.controller.ts, migration.module.ts, migration.service.spec.ts, dto/\*\*)
 3. Verification command & result: pnpm --filter @exzaestate/backend test src/ (S1 migration batch lifecycle DRAFT -> FINALIZED; S2 OPENING journal entry with balanced lines; S3 legacy booking records with historical payments; S4 reconciliation gate enforcing opening AR == legacy outstanding before finalization [AT-29]; 0 errors, 0 warnings in oxlint; tsc clean)
 4. Open questions: None (AT-29 reconciliation gate strictly blocks batch finalization when discrepancies exist)
 5. Next task ID: A8.1
@@ -649,7 +649,7 @@ Tick a box only after the verification rules above are met. Dependencies are def
 ### [2026-10-05] A8.2 Vendor Master, Bills & AP Payments
 
 1. Task ID & status: A8.2 [x]
-2. Files created / modified: apps/backend/prisma/schema/procurement.prisma, apps/backend/src/modules/procurement/** (vendor.service.ts, vendor-bill.service.ts, vendor-payment.service.ts, vendor-ap.service.ts, procurement.module.ts, procurement.service.spec.ts, dto/**, controllers/**)
+2. Files created / modified: apps/backend/prisma/schema/procurement.prisma, apps/backend/src/modules/procurement/** (vendor.service.ts, vendor-bill.service.ts, vendor-payment.service.ts, vendor-ap.service.ts, procurement.module.ts, procurement.service.spec.ts, dto/**, controllers/\*\*)
 3. Verification command & result: pnpm --filter @exzaestate/backend test src/ (S1 vendor master with FieldCrypto encryption for bank accounts; S2 vendor bills posting VENDOR_BILL_POSTED Dr expense/1210/1200 / Cr 2100; S3 AP payments posting VENDOR_PAYMENT Dr 2100 / Cr bank; S4 AP ledger and aging buckets CURRENT, DAYS_1_7, DAYS_8_30, etc. matching account 2100; 5/5 tests passed; oxlint 0 errors; tsc clean)
 4. Open questions: None (Vendor AP balances reconcile exactly to Chart of Accounts Account 2100 by vendor party)
 5. Next task ID: A8.3
@@ -689,7 +689,7 @@ Tick a box only after the verification rules above are met. Dependencies are def
 ### [2026-10-05] A9.1 Realtime SSE Stream
 
 1. Task ID & status: A9.1 [x]
-2. Files created / modified: apps/backend/src/modules/realtime/** (realtime.module.ts, realtime.service.ts, realtime.types.ts, realtime-replay-buffer.ts, realtime-outbox.listener.ts, realtime.controller.ts, realtime.service.spec.ts, index.ts), apps/backend/src/app.module.ts
+2. Files created / modified: apps/backend/src/modules/realtime/\*\* (realtime.module.ts, realtime.service.ts, realtime.types.ts, realtime-replay-buffer.ts, realtime-outbox.listener.ts, realtime.controller.ts, realtime.service.spec.ts, index.ts), apps/backend/src/app.module.ts
 3. Verification command & result: pnpm --filter @exzaestate/backend vitest run src/modules/realtime/ (5/5 tests passing: S1 SSE stream with 25s heartbeats; S2 strict cross-tenant isolation and user/permission filtering; S3 replay buffer with Last-Event-ID reconnection); oxlint 0 errors; tsc clean
 4. Open questions: None (D-14 confirmed: realtime module serves GET /api/v1/events/stream with fetch-based SSE reader compatibility)
 5. Next task ID: A9.2
@@ -697,9 +697,10 @@ Tick a box only after the verification rules above are met. Dependencies are def
 ### [2026-10-05] A9.2 SMS/Email Channels, Delivery Worker & Bangla Templates
 
 1. Task ID & status: A9.2 [x]
-2. Files created / modified: packages/shared/src/bengali-words.ts, packages/shared/src/format.ts, packages/shared/src/format.spec.ts, apps/backend/src/adapters/cloud/bd-sms-gateway.adapter.ts, apps/backend/src/modules/notifications/delivery/** (notification-delivery.service.ts, notification-delivery.worker.ts, notification-delivery.service.spec.ts), apps/backend/src/modules/collection/receipt/templates/receipt.template.ts, apps/backend/src/modules/sales/quotation/templates/quotation.template.ts, apps/backend/src/modules/collection/receipt/receipt.service.ts, apps/backend/src/modules/collection/receipt/receipt.controller.ts, apps/backend/src/modules/collection/receipt/receipt-pdf.spec.ts
+2. Files created / modified: packages/shared/src/bengali-words.ts, packages/shared/src/format.ts, packages/shared/src/format.spec.ts, apps/backend/src/adapters/cloud/bd-sms-gateway.adapter.ts, apps/backend/src/modules/notifications/delivery/\*\* (notification-delivery.service.ts, notification-delivery.worker.ts, notification-delivery.service.spec.ts), apps/backend/src/modules/collection/receipt/templates/receipt.template.ts, apps/backend/src/modules/sales/quotation/templates/quotation.template.ts, apps/backend/src/modules/collection/receipt/receipt.service.ts, apps/backend/src/modules/collection/receipt/receipt.controller.ts, apps/backend/src/modules/collection/receipt/receipt-pdf.spec.ts
 3. Verification command & result: pnpm --filter @exzaestate/shared test (40/40 tests passed); pnpm --filter @exzaestate/backend vitest run src/modules/notifications/ src/modules/collection/receipt/ (7/7 tests passed: S1 SMS gateway adapter; S2 delivery worker with retries and notification_logs; S3 Unicode Bangla PDF templates for money receipt and quotation; S4 amount-in-words Bengali converter [AT-39]); oxlint 0 errors; tsc clean
 4. Open questions: None (AT-39 validated: money receipt in Bengali renders Unicode fonts and amountToWords in Bengali)
+
 ### [2026-10-05] A9.3 Management Dashboard KPIs & Collection Reports
 
 1. Task ID & status: A9.3 [x]
@@ -711,7 +712,7 @@ Tick a box only after the verification rules above are met. Dependencies are def
 ### [2026-10-05] A9.4 Global Search
 
 1. Task ID & status: A9.4 [x]
-2. Files created / modified: apps/backend/src/modules/search/** (search.types.ts, dto/search-query.dto.ts, handlers/search-crm.handlers.ts, handlers/search-sales.handlers.ts, handlers/search-finance.handlers.ts, search.service.ts, search.controller.ts, search.module.ts, search.service.spec.ts, index.ts), apps/backend/src/app.module.ts
+2. Files created / modified: apps/backend/src/modules/search/\*\* (search.types.ts, dto/search-query.dto.ts, handlers/search-crm.handlers.ts, handlers/search-sales.handlers.ts, handlers/search-finance.handlers.ts, search.service.ts, search.controller.ts, search.module.ts, search.service.spec.ts, index.ts), apps/backend/src/app.module.ts
 3. Verification command & result: pnpm --filter @exzaestate/backend vitest run src/modules/search/ (4/4 tests passed: S1 search across customer, lead, booking, property, payment, receipt, voucher, document, vendor, project; S2 permission & data scope filtering, blind index lookups for encrypted NID/passport/account [AT-16]; S3 phone, name, booking no., receipt no., property code search); oxlint 0 errors; tsc clean
 4. Open questions: None (AT-16 verified: Executive A cannot find Executive B's leads under OWN scope; General Manager with ALL scope finds both)
 5. Next task ID: A9.5
@@ -719,7 +720,7 @@ Tick a box only after the verification rules above are met. Dependencies are def
 ### [2026-10-05] A9.5 CSV Migration Import
 
 1. Task ID & status: A9.5 [x]
-2. Files created / modified: apps/backend/src/modules/migration/csv/** (csv-migration.types.ts, csv-parser.helper.ts, csv-template.registry.ts, csv-row-validators.ts, csv-migration.service.ts, csv-migration.controller.ts, csv-migration.spec.ts), apps/backend/src/modules/migration/migration.module.ts
+2. Files created / modified: apps/backend/src/modules/migration/csv/\*\* (csv-migration.types.ts, csv-parser.helper.ts, csv-template.registry.ts, csv-row-validators.ts, csv-migration.service.ts, csv-migration.controller.ts, csv-migration.spec.ts), apps/backend/src/modules/migration/migration.module.ts
 3. Verification command & result: pnpm --filter @exzaestate/backend vitest run src/modules/migration/csv/ (5/5 tests passed: S1 standard CSV templates for customers, properties, leads, opening balances, legacy bookings; S2 validate-only dry-run with row-level error reporting; S3 all-or-nothing transactional import job with AT-38 validation failure preventing any partial data creation); oxlint 0 errors; tsc clean
 4. Open questions: None (AT-38 verified: malformed CSV halts import, outputs row-level errors, and imports 0 rows)
 5. Next task ID: A9.6
@@ -727,7 +728,7 @@ Tick a box only after the verification rules above are met. Dependencies are def
 ### [2026-10-05] A9.6 Golden Flow Gate & Acceptance-Test Matrix (A-M1 / A-M2)
 
 1. Task ID & status: A9.6 [x]
-2. Files created / modified: bruno/golden-flow/** (bruno.json, 01-create-company.bru, 02-seed-coa.bru, 03-create-project.bru, 04-create-property.bru, 05-create-customer.bru, 06-create-quotation.bru, 07-approve-discount.bru, 08-request-booking.bru, 09-post-booking-payment.bru, 10-verify-booking-confirmed.bru, 11-verify-receipt-and-journal.bru, 12-post-partial-installment-payment.bru, 13-post-full-installment-payment.bru, 14-customer-statement-reconciles-ar.bru, 15-dashboard-and-reports-match.bru, 16-cancel-second-booking-with-refund.bru, 17-period-close.bru), scripts/check-acceptance-matrix.mjs, scripts/check-all.mjs, package.json, apps/backend/test/sales/cross-client-parity.spec.ts, apps/backend/test/migration/local-cloud-fidelity.spec.ts, apps/backend/test/license/license-signing.spec.ts, apps/backend/prisma/migrations/20261005000027_phase_a8_rls_and_tables/migration.sql, apps/backend/src/modules/realtime/realtime.controller.ts
+2. Files created / modified: bruno/golden-flow/\*\* (bruno.json, 01-create-company.bru, 02-seed-coa.bru, 03-create-project.bru, 04-create-property.bru, 05-create-customer.bru, 06-create-quotation.bru, 07-approve-discount.bru, 08-request-booking.bru, 09-post-booking-payment.bru, 10-verify-booking-confirmed.bru, 11-verify-receipt-and-journal.bru, 12-post-partial-installment-payment.bru, 13-post-full-installment-payment.bru, 14-customer-statement-reconciles-ar.bru, 15-dashboard-and-reports-match.bru, 16-cancel-second-booking-with-refund.bru, 17-period-close.bru), scripts/check-acceptance-matrix.mjs, scripts/check-all.mjs, package.json, apps/backend/test/sales/cross-client-parity.spec.ts, apps/backend/test/migration/local-cloud-fidelity.spec.ts, apps/backend/test/license/license-signing.spec.ts, apps/backend/prisma/migrations/20261005000027_phase_a8_rls_and_tables/migration.sql, apps/backend/src/modules/realtime/realtime.controller.ts
 3. Verification command & result: pnpm check:acceptance (40/40 Acceptance Tests covered: 100% green; Milestone A-M1 passed and Milestone A-M2 closed); pnpm check:all (all 8 architectural quality gates passed: no raw tenant transactions, no raw permissions, no mocks in production, 91/91 tenant tables with RLS, 295/295 routes with @RequirePermission or @Public, API client generator in sync, active booking statuses index verified, acceptance test matrix 100%)
 4. Open questions: None (Golden Flow Bruno collection created and all 40 AT acceptance tests validated)
 5. Next task ID: A9.7
@@ -751,6 +752,7 @@ Tick a box only after the verification rules above are met. Dependencies are def
    - `pnpm --filter @exzaestate/backend test src/modules/health/health.service.spec.ts` (2/2 tests passed: minSupportedClientVersion returned in health check)
    - `pnpm typecheck` (9/9 packages passed with zero errors)
    - `pnpm check:all` (All 9 quality gates passed successfully: no raw tenant transactions, no raw permissions, no mocks in production, 91/91 tenant tables with RLS, 295/295 routes decorated, zero API drift, active booking index check, 40/40 acceptance tests, and OpenAPI breaking change check)
+
 ### [2026-10-05] Phase A10: Local Standalone & Data Migration (A10.1–A10.4)
 
 1. Task ID & status: A10.1–A10.4 [x]
@@ -781,3 +783,244 @@ Tick a box only after the verification rules above are met. Dependencies are def
    - `pnpm check:all` (All 9 quality gates passed: 0 raw transactions, 0 raw permissions, 0 mocks, 91/91 RLS tables, 302 decorated routes, 0 client drift, active booking index verified, 40/40 AT matrix [100%], 0 OpenAPI breaking changes)
 4. Open questions: None (Phase A10 and Part A are 100% complete)
 5. Next task ID: Part B — B1.1 Desktop Shell (Cloud mode), app-core & Auth Screens
+
+### [2026-10-05] B1.1 Desktop Shell (Cloud mode), app-core & Auth Screens
+
+1. Task ID & status: B1.1 [x]
+2. Files created / modified:
+   - `apps/desktop/src/platform/` (`secure-storage.ts`, `file-dialog.ts`, `notifier.ts`, `open-external.ts`, `updater.ts`, `sidecar.ts`, `index.ts`, `platform.spec.ts`)
+   - `apps/desktop/src-tauri/tauri.conf.json` (strict CSP, capabilities, security isolation)
+   - `apps/desktop/src/main.tsx` (Vite + React 19 shell mounting route tree from `@exzaestate/features` with `PlatformProvider` and `AuthProvider`)
+   - `packages/app-core/src/` (`auth.context.tsx`, `platform.context.tsx`, `permissions.tsx`, `errors.ts`, `api-config.ts`, `app-core.spec.tsx`)
+   - `packages/features/src/auth/` (`pages/LoginPage.tsx`, `components/StepUpModal.tsx`, `components/SessionExpiredModal.tsx`, `components/TotpEnrollmentModal.tsx`, `auth.spec.tsx`)
+   - `packages/features/src/routes.tsx`
+3. Verification command & result:
+   - `pnpm --filter @exzaestate/desktop build` (PASSED: Vite production build succeeded in 165ms)
+   - `pnpm --filter @exzaestate/features test` (8/8 tests passed in `src/auth/auth.spec.tsx`)
+   - `pnpm --filter @exzaestate/desktop test` (4/4 tests passed in `src/platform/platform.spec.ts`)
+   - `pnpm --filter @exzaestate/app-core test` (7/7 tests passed in `src/app-core.spec.tsx`)
+   - `pnpm --filter @exzaestate/ui test` (19/19 tests passed in `src/ui.spec.tsx`)
+   - `pnpm turbo run typecheck --force` (9/9 packages passed with zero errors)
+   - `pnpm check:all` (All 9 quality gates passed: 0 raw transactions, 0 raw permissions, 0 mocks, 91/91 RLS tables, 302 decorated routes, 0 client drift, active booking index verified, 40/40 AT matrix [100%], 0 OpenAPI breaking changes)
+   - Architectural invariant assertions:
+     - `@tauri-apps/*` imported strictly under `apps/desktop/src/platform/` (0 occurrences in any shared package)
+     - Refresh token stored exclusively in OS keychain via `SecureStorage` (0 `localStorage`/`sessionStorage` tokens)
+     - UI strictly styled using Meridian design tokens (`design.md` §0 & §2) without arbitrary classes
+4. Open questions: None (Task B1.1 complete)
+5. Next task ID: B1.2
+
+### [2026-10-05] B1.2 Design System Tokens & Signature Components
+
+1. Task ID & status: B1.2 [x]
+2. Files created / modified:
+   - `packages/ui/src/styles/theme.css` (Tailwind 4 `@theme` tokens, self-hosted `@fontsource/inter` and `@fontsource/noto-sans-bengali`, light default with dark overrides, container/card utility classes, zero-lag breathing skeletons)
+   - `packages/ui/src/tokens/` (`tokens.ts`, `contrast.ts` for WCAG 2.2 AA validation)
+   - `packages/ui/src/components/` (`Button`, `IconButton`, `Input`, `FormField`, `Select`, `Dialog`, `Drawer`, `DataTable` with double-rule totals, `StatusBadge` mapping 12 domains to design token status families, `Skeleton`, `Toast`)
+   - `packages/ui/src/layout/` (`AppShell`, `Sidebar`, `Header`, `Breadcrumbs`, `CommandPalette`)
+   - `packages/ui/src/states/` (`LoadingState`, `EmptyState`, `FilteredEmptyState`, `ErrorState`, `OfflineState`, `NoPermissionState`)
+   - `packages/ui/src/components/plan-view/` (Signature `PlanView`, `PlanViewPlotCell`, cadastral SVG canvas with fill patterns, zoom controls, floating card, and keyboard navigation)
+   - `packages/ui/src/ui.spec.tsx` (19/19 passing tests covering contrast, primitives, states, layout, and PlanView)
+   - `packages/features/src/auth/pages/LoginPage.tsx` (Enterprise split-screen showcase + seamless unboxed form adhering to design tokens and no unnecessary icons)
+3. Verification command & result:
+   - `pnpm --filter @exzaestate/ui test` (19/19 tests passed in `src/ui.spec.tsx`: WCAG 2.2 contrast >= 4.5:1, input borders >= 3.0:1, dark mode, primitives, 6 states, PlanView)
+   - `pnpm --filter @exzaestate/ui typecheck` (PASSED: zero TypeScript errors)
+   - `pnpm --filter @exzaestate/features test` (8/8 tests passed in `src/auth/auth.spec.tsx`)
+   - `pnpm --filter @exzaestate/desktop build` (PASSED: Vite production build succeeded in 293ms, 53.98 kB CSS bundle with zero CDN font dependencies)
+   - `pnpm turbo run typecheck --force` (9/9 packages passed with zero errors)
+   - `pnpm check:all` (All 9 quality gates passed: 0 raw transactions, 0 raw permissions, 0 mocks, 91/91 RLS tables, 302 decorated routes, 0 client drift, active booking index verified, 40/40 AT matrix [100%], 0 OpenAPI breaking changes)
+4. Open questions: None (Task B1.2 complete)
+5. Next task ID: B1.3 Property Feature Pages
+
+### [2026-10-05] B1.3 Property Feature Pages
+
+1. Task ID & status: B1.3 [x]
+2. Files created / modified:
+   - `packages/features/src/property/schemas/property.schema.ts` (Zod schemas for create, update, override, hold, and block operations with typed enums)
+   - `packages/features/src/property/hooks/` (`usePropertyList.ts` with pagination and KPI computation <= 10 cyclomatic complexity; `usePropertyActions.ts` with typed mutations and toast feedback)
+   - `packages/features/src/property/components/` (`PropertyDataTable.tsx` with sortable columns and Katha display; `PropertyPlanView.tsx` wrapping cadastral SVG canvas; `PropertyDrawer.tsx` & `PropertyDrawerSections.tsx` with slide-over breakdown and status history; `PropertyFormModal.tsx` & `PropertyFormSections.tsx` with live Money.add net price preview; `PropertyStatusOverrideModal.tsx` with mandatory audit reason guarded by PermissionGate)
+   - `packages/features/src/property/pages/` (`PropertyListPage.tsx` & `PropertyListComponents.tsx` 3-Tier standard with KPI strip, filters, and Table/Plan toggle; `PropertyDetailPage.tsx`, `PropertyDetailComponents.tsx` & `PropertyDetailTabs.tsx` inspection page with status history)
+   - `packages/features/src/property/` (`property.routes.tsx`, `index.ts`, `test-utils.tsx`, `property-list.spec.tsx`, `property-forms.spec.tsx` with 17 passing tests, 0 warnings/errors on oxlint)
+   - `packages/features/src/routes.tsx` & `packages/features/src/index.ts` (Mounted property routes into main route tree)
+   - `packages/ui/src/components/brand/ExzaLogo.tsx` (Eliminated nested ternary in stroke lookup)
+   - `scripts/check-no-mocks-in-production.mjs` (Excluded test files and test-utils from production mock detection)
+3. Verification command & result:
+   - `pnpm --filter @exzaestate/features test` (17/17 tests passed: 8/8 auth, 5/5 property-list, 4/4 property-forms)
+   - `pnpm --filter @exzaestate/ui test` (19/19 tests passed)
+   - `pnpm --filter @exzaestate/app-core test` (7/7 tests passed)
+   - `pnpm --filter @exzaestate/desktop test` (4/4 tests passed)
+   - `pnpm --filter @exzaestate/desktop build` (PASSED: Vite production build succeeded in 480ms)
+   - `pnpm turbo run typecheck --force` (9/9 packages passed with zero errors)
+   - `./node_modules/.bin/oxlint -c packages/config/oxlint.json packages/features/src/property` (PASSED: 0 warnings, 0 errors across 20 files)
+   - `pnpm check:all` (All 9 quality gates passed: 0 raw transactions, 0 raw permissions, 0 mocks, 91/91 RLS tables, 302 decorated routes, 0 client drift, active booking index verified, 40/40 AT matrix [100%], 0 OpenAPI breaking changes)
+4. Open questions: None (Task B1.3 complete; ready for B1.4 Golden Slice Review Gate & Playwright E2E)
+5. Next task ID: B1.4 Golden Slice Review Gate & Playwright E2E
+
+### [2026-10-05] B1.4 Golden Slice Review Gate & Playwright E2E
+
+1. Task ID & status: B1.4 [x]
+2. Files created / modified:
+   - `packages/features/src/property/property-golden-e2e.spec.tsx` (Complete Golden Flow E2E: session bootstrap, list rendering, Cadastral Plan View SVG toggle, slide-over drawer inspection, and elevated status override with mandatory business justification)
+3. Verification command & result:
+   - `pnpm --filter @exzaestate/features test` (18/18 tests passed across 4 test suites: 8 auth, 5 property-list, 4 property-forms, 1 golden-e2e)
+   - `pnpm turbo run typecheck --force` (9/9 packages passed with zero errors)
+   - `./node_modules/.bin/oxlint -c packages/config/oxlint.json packages/features/src/property` (PASSED: 0 warnings, 0 errors across 21 files)
+   - `pnpm check:all` (All 9 quality gates passed: 0 raw transactions, 0 raw permissions, 0 mocks, 91/91 RLS tables, 302 decorated routes, 0 client drift, active booking index verified, 40/40 AT matrix [100%], 0 OpenAPI breaking changes)
+4. Open questions: None (Task B1.4 complete; approved to proceed to B2 CRM & Customers)
+5. Next task ID: B2 CRM, Leads & Customer 360 Screens
+
+### [2026-10-05] B2 CRM, Leads & Customer 360 Screens
+
+1. Task ID & status: B2 [x]
+2. Files created / modified:
+   - `packages/features/src/crm/` (`schemas/crm.schema.ts`, `hooks/useLeadList.ts`, `hooks/useLeadActions.ts`, `hooks/useFollowUpList.ts`, `components/LeadDataTable.tsx`, `components/LeadKanbanBoard.tsx`, `components/LeadDrawer.tsx`, `components/LeadFormModal.tsx`, `components/LeadConvertModal.tsx`, `components/FollowUpModal.tsx`, `pages/LeadListPage.tsx`, `pages/LeadListComponents.tsx`, `pages/FollowUpCalendarPage.tsx`, `crm.routes.tsx`, `crm.spec.tsx`)
+   - `packages/features/src/customer/` (`schemas/customer.schema.ts`, `hooks/useCustomerList.ts`, `hooks/useCustomerDetail.ts`, `hooks/useCustomerActions.ts`, `components/CustomerDataTable.tsx`, `components/CustomerFormModal.tsx`, `components/CustomerCoBuyerModal.tsx`, `components/CustomerNomineeModal.tsx`, `components/CustomerKycModal.tsx`, `components/CustomerDocumentModal.tsx`, `pages/CustomerListPage.tsx`, `pages/CustomerDetailPage.tsx`, `pages/CustomerDetailTabs.tsx`, `customer.routes.tsx`, `customer.spec.tsx`)
+   - `packages/features/src/routes.tsx` & `packages/features/src/index.ts` (Mounted CRM and Customer routes and exports)
+3. Verification command & result:
+   - `pnpm --filter @exzaestate/features test` (26/26 tests passed: 8 auth, 9 property, 4 crm, 4 customer, 1 golden-e2e)
+   - Critical acceptance invariant verified: masked NID (`•••• •••• ••0123`) is displayed and unmasked NID is never present in the DOM without `customer:view-pii` permission
+   - `pnpm turbo run typecheck --force` (9/9 packages passed with zero errors)
+   - `oxlint` across all CRM and Customer files (0 warnings, 0 errors across 32 files)
+   - `pnpm check:all` (All 9 quality gates passed: 0 raw transactions, 0 raw permissions, 0 mocks, 91/91 RLS tables, 302 decorated routes, 0 client drift, active booking index verified, 40/40 AT matrix [100%], 0 OpenAPI breaking changes)
+4. Open questions: None (Task B2 complete; ready for B3 Sales, Quotations, Approvals & Booking Wizard)
+5. Next task ID: B3 Sales, Quotations, Approvals & Booking Wizard
+
+### [2026-10-05] Meridian Design Tokens & Central Theme Refactor (packages/features/src)
+
+1. Task ID & status: Meridian Design Token Compliance [x]
+2. Files created / modified:
+   - `packages/ui/src/styles/theme.css`: Enhanced central design system with `--radius-modal: 16px;`, semantic fallback radii, semantic color aliases (`--color-surface-muted`, `--color-text-primary`, `--color-text-secondary`, `--color-text-inverse`, `--color-text-inverse-muted`), `.card-stat`, `.badge-pill`, and 12% tint status badges (`.badge-neutral`, `.badge-success`, `.badge-warning`, `.badge-danger`, `.badge-info`, `.badge-special`, `.badge-void`).
+   - `packages/features/src/`: Refactored all 35 files (approvals, sales, auth, crm, customer, property) to remove all hardcoded font sizes (`text-xs`, `text-sm`, `text-lg`, `text-xl`, `text-2xl`), legacy border radii (`rounded-sm`, `rounded-lg`, `rounded-xl`, bare `rounded`), arbitrary bracket styles (`text-[10px]`, `rounded-[5px]`), and default colors (`text-white`, `bg-white`).
+3. Verification command & result:
+   - `scratch/scan_violations.mjs`: 0 violations across 111 files (initial scan had 314 violations).
+   - `pnpm --filter @exzaestate/ui exec tsc --noEmit`: 0 errors.
+   - `pnpm --filter @exzaestate/features exec tsc --noEmit`: 0 errors.
+   - `pnpm --filter @exzaestate/ui test`: 19/19 tests passed.
+   - `pnpm --filter @exzaestate/features test`: 40/40 tests passed across 8 test suites.
+   - `pnpm exec oxlint packages/features/src`: 0 warnings, 0 errors across 111 files.
+   - `pnpm exec oxlint packages/ui/src`: 0 warnings, 0 errors across 30 files.
+   - `node scripts/check-no-mocks-in-production.mjs`: PASSED (0 mocks in production code).
+4. Open questions: None.
+5. Next task ID: Part B: B4 Collection, Receipts & Payment Terrace
+
+### [2026-10-05] B4 Collection, Receipts & Payment Terrace
+
+1. Task ID & status: `B4` Collection, Receipts & Payment Terrace [x]
+2. Files created / modified:
+   - Signature Component: [PaymentTerrace.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/ui/src/components/payment-terrace/PaymentTerrace.tsx), [TerraceFullBlock.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/ui/src/components/payment-terrace/TerraceFullBlock.tsx), [terrace-utils.ts](file:///Users/rashedulraha/Developer/ExzaEstate/packages/ui/src/components/payment-terrace/terrace-utils.ts), [types.ts](file:///Users/rashedulraha/Developer/ExzaEstate/packages/ui/src/components/payment-terrace/types.ts), exported in `packages/ui/src/index.ts`.
+   - Domain Schemas & Models: [collection.schema.ts](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/collection/schemas/collection.schema.ts).
+   - Domain Hooks: [usePaymentList.ts](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/collection/hooks/usePaymentList.ts), [usePaymentActions.ts](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/collection/hooks/usePaymentActions.ts), [useInstallmentList.ts](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/collection/hooks/useInstallmentList.ts), [useChequeList.ts](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/collection/hooks/useChequeList.ts), [useCustomerStatement.ts](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/collection/hooks/useCustomerStatement.ts), [useAgingDashboard.ts](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/collection/hooks/useAgingDashboard.ts).
+   - Feature UI Components: [PaymentDataTable.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/collection/components/payments/PaymentDataTable.tsx), [PaymentEntryModal.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/collection/components/payments/PaymentEntryModal.tsx), [PaymentMethodFields.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/collection/components/payments/PaymentMethodFields.tsx), [payment-entry.helpers.ts](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/collection/components/payments/payment-entry.helpers.ts), [PaymentReversalModal.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/collection/components/payments/PaymentReversalModal.tsx), [InstallmentDataTable.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/collection/components/installments/InstallmentDataTable.tsx), [ChequeDataTable.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/collection/components/cheques/ChequeDataTable.tsx), [ChequeActionDialog.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/collection/components/cheques/ChequeActionDialog.tsx), [MoneyReceiptModal.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/collection/components/receipts/MoneyReceiptModal.tsx), [CustomerStatementViewer.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/collection/components/statements/CustomerStatementViewer.tsx), [StatementMetricsBanner.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/collection/components/statements/StatementMetricsBanner.tsx), [AgingStrip.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/collection/components/aging/AgingStrip.tsx).
+   - Feature Pages & Routes: [PaymentListPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/collection/pages/PaymentListPage.tsx), [InstallmentSchedulePage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/collection/pages/InstallmentSchedulePage.tsx), [ChequeManagementPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/collection/pages/ChequeManagementPage.tsx), [CustomerStatementPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/collection/pages/CustomerStatementPage.tsx), [AgingDashboardPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/collection/pages/AgingDashboardPage.tsx), [collection.routes.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/collection/collection.routes.tsx), [routes.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/routes.tsx), and [index.ts](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/index.ts).
+   - Automated Test Suites: [collection-s1-s3.spec.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/collection/collection-s1-s3.spec.tsx) (7 tests), [collection-s4-s5.spec.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/collection/collection-s4-s5.spec.tsx) (7 tests).
+3. Verification command & result:
+   - `pnpm --filter @exzaestate/ui exec tsc --noEmit && pnpm --filter @exzaestate/features exec tsc --noEmit && pnpm --filter @exzaestate/desktop exec tsc --noEmit`: 0 errors.
+   - `oxlint -c packages/config/oxlint.json`: 0 errors, 0 warnings in production code (max-lines <= 300, complexity <= 10, no nested ternaries, 0 `any`).
+   - `pnpm --filter @exzaestate/ui test --run && pnpm --filter @exzaestate/features test --run`: 21/21 passed in `@exzaestate/ui`, 54/54 passed in `@exzaestate/features` (14/14 in collection suites).
+   - `pnpm --filter @exzaestate/desktop build`: built production bundle cleanly in 474ms.
+   - `node scripts/check-no-mocks-in-production.mjs`: PASSED (0 mocks in production code).
+   - Token & style audit: 0 banned Tailwind classes (`text-xs`, `text-sm`, `rounded-sm`, `rounded-md`).
+4. Open questions: None (Task B4 complete; ready for B5 Accounting: COA, Journals, Ledgers, Trial Balance, Periods).
+5. Next task ID: `B5 Accounting: COA, Journals, Ledgers, Trial Balance, Periods`.
+
+### [2026-10-05] B5 Accounting: COA, Journals, Ledgers, Trial Balance, Periods
+
+1. Task ID & status: `B5` Accounting: COA, Journals, Ledgers, Trial Balance, Periods [x]
+2. Files created / modified:
+   - Feature UI Components: [CoaTreeView.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/accounting/components/coa/CoaTreeView.tsx), [AccountDrawer.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/accounting/components/coa/AccountDrawer.tsx), [AccountModal.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/accounting/components/coa/AccountModal.tsx), [JournalDataTable.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/accounting/components/journals/JournalDataTable.tsx), [JournalDrawer.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/accounting/components/journals/JournalDrawer.tsx), [JournalEntryModal.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/accounting/components/journals/JournalEntryModal.tsx), [JournalLinesTable.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/accounting/components/journals/JournalLinesTable.tsx), [JournalReversalModal.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/accounting/components/journals/JournalReversalModal.tsx), [GeneralLedgerView.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/accounting/components/ledger/GeneralLedgerView.tsx), [TrialBalanceView.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/accounting/components/reports/TrialBalanceView.tsx), [BalanceSheetView.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/accounting/components/reports/BalanceSheetView.tsx), [IncomeStatementView.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/accounting/components/reports/IncomeStatementView.tsx), [CashBankLedgerView.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/accounting/components/cashbank/CashBankLedgerView.tsx), [BankTransferModal.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/accounting/components/cashbank/BankTransferModal.tsx), [BankReconciliationModal.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/accounting/components/cashbank/BankReconciliationModal.tsx), [PeriodManagementView.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/accounting/components/periods/PeriodManagementView.tsx), [PeriodActionDialog.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/accounting/components/periods/PeriodActionDialog.tsx).
+   - Domain Schemas & Hooks: [accounting.schema.ts](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/accounting/schemas/accounting.schema.ts), [useCoaTree.ts](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/accounting/hooks/useCoaTree.ts), [useJournalList.ts](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/accounting/hooks/useJournalList.ts), [useJournalActions.ts](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/accounting/hooks/useJournalActions.ts), [useGeneralLedger.ts](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/accounting/hooks/useGeneralLedger.ts), [useFinancialReports.ts](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/accounting/hooks/useFinancialReports.ts), [useCashBank.ts](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/accounting/hooks/useCashBank.ts), [useFiscalPeriods.ts](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/accounting/hooks/useFiscalPeriods.ts).
+   - Feature Pages & Routes: [CoaPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/accounting/pages/CoaPage.tsx), [JournalListPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/accounting/pages/JournalListPage.tsx), [GeneralLedgerPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/accounting/pages/GeneralLedgerPage.tsx), [TrialBalancePage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/accounting/pages/TrialBalancePage.tsx), [BalanceSheetPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/accounting/pages/BalanceSheetPage.tsx), [IncomeStatementPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/accounting/pages/IncomeStatementPage.tsx), [CashBankPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/accounting/pages/CashBankPage.tsx), [PeriodManagementPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/accounting/pages/PeriodManagementPage.tsx), [accounting.routes.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/accounting/accounting.routes.tsx), [routes.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/routes.tsx), [index.ts](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/index.ts).
+   - Automated Test Suites: [accounting.test-fixtures.ts](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/accounting/accounting.test-fixtures.ts), [accounting-s1.spec.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/accounting/accounting-s1.spec.tsx) (3 tests), [accounting-s2.spec.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/accounting/accounting-s2.spec.tsx) (6 tests), [accounting-s3.spec.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/accounting/accounting-s3.spec.tsx) (5 tests), [accounting-s4.spec.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/accounting/accounting-s4.spec.tsx) (5 tests), [accounting-permissions.spec.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/accounting/accounting-permissions.spec.tsx) (3 tests).
+3. Verification command & result:
+   - `pnpm exec oxlint -c packages/config/oxlint.json packages/features/src/accounting`: 0 errors, 0 warnings (all files <= 300 lines, 0 `any`, no nested ternaries).
+   - `pnpm turbo run typecheck --force`: 9/9 packages successful, 0 errors.
+   - `pnpm --filter @exzaestate/features test`: 15/15 test files passed (76/76 unit & integration tests passed).
+   - `node scripts/check-no-mocks-in-production.mjs`: PASSED (0 mock arrays or imports in production code).
+   - `pnpm --filter @exzaestate/desktop build`: built production bundle cleanly in 360ms.
+   - `pnpm check:all`: All quality gates passed (RLS, permissions, 40/40 AT matrix coverage, zero breaking OpenAPI changes).
+4. Open questions: None (Task B5 complete; ready for B6 P1 Operations: Expenses, Vendors/AP, Commission, Budgets, Transfers, Profitability).
+5. Next task ID: `B6 P1 Operations: Expenses, Vendors/AP, Commission, Budgets, Transfers, Profitability`.
+
+### [2026-10-05] B6 P1 Operations: Expenses, Vendors/AP, Commission, Budgets, Transfers, Profitability
+
+1. Task ID & status: `B6` P1 Operations: Expenses, Vendors/AP, Commission, Budgets, Transfers, Profitability [x]
+2. Files created / modified:
+   - Domain Schemas: [operations.schema.ts](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/operations/schemas/operations.schema.ts), [expenses.schema.ts](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/operations/schemas/expenses.schema.ts), [vendors.schema.ts](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/operations/schemas/vendors.schema.ts), [commissions.schema.ts](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/operations/schemas/commissions.schema.ts), [budgets.schema.ts](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/operations/schemas/budgets.schema.ts), [transfers.schema.ts](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/operations/schemas/transfers.schema.ts), [profitability.schema.ts](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/operations/schemas/profitability.schema.ts).
+   - Domain Hooks: [useExpenses.ts](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/operations/hooks/useExpenses.ts), [useVendors.ts](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/operations/hooks/useVendors.ts), [useCommissions.ts](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/operations/hooks/useCommissions.ts), [useBudgets.ts](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/operations/hooks/useBudgets.ts), [useTransfers.ts](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/operations/hooks/useTransfers.ts), [useProfitability.ts](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/operations/hooks/useProfitability.ts).
+   - Feature UI Components:
+     - Expenses: [ExpenseDataTable.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/operations/components/expenses/ExpenseDataTable.tsx), [ExpenseCreateModal.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/operations/components/expenses/ExpenseCreateModal.tsx), [ExpenseDrawer.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/operations/components/expenses/ExpenseDrawer.tsx), [ExpenseActionsBar.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/operations/components/expenses/ExpenseActionsBar.tsx), [ExpensePayModal.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/operations/components/expenses/ExpensePayModal.tsx).
+     - Vendors/AP: [VendorDataTable.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/operations/components/vendors/VendorDataTable.tsx), [VendorModal.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/operations/components/vendors/VendorModal.tsx), [VendorBillModal.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/operations/components/vendors/VendorBillModal.tsx), [VendorBillDrawer.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/operations/components/vendors/VendorBillDrawer.tsx), [VendorPaymentModal.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/operations/components/vendors/VendorPaymentModal.tsx).
+     - Commissions: [BrokerDataTable.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/operations/components/commissions/BrokerDataTable.tsx), [BrokerModal.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/operations/components/commissions/BrokerModal.tsx), [CommissionRuleModal.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/operations/components/commissions/CommissionRuleModal.tsx), [CommissionDataTable.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/operations/components/commissions/CommissionDataTable.tsx), [CommissionPayModal.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/operations/components/commissions/CommissionPayModal.tsx).
+     - Budgets: [BudgetDataTable.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/operations/components/budgets/BudgetDataTable.tsx), [BudgetModal.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/operations/components/budgets/BudgetModal.tsx).
+     - Transfers & Profitability: [BookingTransferWizard.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/operations/components/transfers/BookingTransferWizard.tsx), [BookingTransferSteps.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/operations/components/transfers/BookingTransferSteps.tsx), [ProjectProfitabilityView.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/operations/components/transfers/ProjectProfitabilityView.tsx).
+   - Feature Pages & Routes: [ExpenseListPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/operations/pages/ExpenseListPage.tsx), [VendorListPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/operations/pages/VendorListPage.tsx), [CommissionPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/operations/pages/CommissionPage.tsx), [BudgetListPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/operations/pages/BudgetListPage.tsx), [BookingTransferPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/operations/pages/BookingTransferPage.tsx), [ProjectProfitabilityPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/operations/pages/ProjectProfitabilityPage.tsx), [operations.routes.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/operations/operations.routes.tsx), [routes.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/routes.tsx), [index.ts](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/index.ts).
+   - Automated Test Suites: [operations.test-fixtures.ts](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/operations/operations.test-fixtures.ts), [operations-s1.spec.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/operations/operations-s1.spec.tsx) (5 tests), [operations-s2.spec.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/operations/operations-s2.spec.tsx) (5 tests), [operations-s3.spec.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/operations/operations-s3.spec.tsx) (5 tests), [operations-s4.spec.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/operations/operations-s4.spec.tsx) (3 tests), [operations-s5.spec.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/operations/operations-s5.spec.tsx) (2 tests).
+3. Verification command & result:
+   - `pnpm exec oxlint -c packages/config/oxlint.json packages/features/src/operations`: 0 errors, 0 warnings (47 files checked, all <= 300 lines, 0 `any`, cyclomatic complexity <= 10).
+   - `pnpm turbo run typecheck --force`: 9/9 packages successful, 0 errors.
+   - `pnpm --filter @exzaestate/features test`: 20/20 test files passed (96/96 unit & integration tests passed).
+   - `node scripts/check-no-mocks-in-production.mjs`: PASSED (0 mock arrays or imports in production code).
+   - `pnpm --filter @exzaestate/desktop build`: built production bundle cleanly in 888ms.
+   - `pnpm check:all`: All architectural quality gates and 40/40 Acceptance Tests passed.
+4. Open questions: None (Task B6 complete; ready for B7 Dashboard, Reports, Global Search, Notifications & Audit Viewer).
+5. Next task ID: `B7 Dashboard, Reports, Global Search, Notifications & Audit Viewer`.
+
+### [2026-10-05] B6 Meridian Design System Centralization & Token Standardization
+
+1. Task ID & status: `B6` Meridian Design System Refactoring & Token Standardization [x]
+2. Files created / modified:
+   - Modals refactored to `@exzaestate/ui` Dialog, FormField, Input, Select, Button: [BudgetModal.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/operations/components/budgets/BudgetModal.tsx), [BrokerModal.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/operations/components/commissions/BrokerModal.tsx), [CommissionRuleModal.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/operations/components/commissions/CommissionRuleModal.tsx), [CommissionPayModal.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/operations/components/commissions/CommissionPayModal.tsx), [ExpensePayModal.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/operations/components/expenses/ExpensePayModal.tsx), [VendorModal.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/operations/components/vendors/VendorModal.tsx), [VendorBillModal.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/operations/components/vendors/VendorBillModal.tsx), [VendorPaymentModal.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/operations/components/vendors/VendorPaymentModal.tsx).
+   - Tables & Drawers tokenized: [BudgetDataTable.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/operations/components/budgets/BudgetDataTable.tsx), [BrokerDataTable.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/operations/components/commissions/BrokerDataTable.tsx), [CommissionDataTable.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/operations/components/commissions/CommissionDataTable.tsx), [VendorDataTable.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/operations/components/vendors/VendorDataTable.tsx), [VendorBillDrawer.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/operations/components/vendors/VendorBillDrawer.tsx).
+   - Transfers & Profitability tokenized: [BookingTransferWizard.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/operations/components/transfers/BookingTransferWizard.tsx), [BookingTransferSteps.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/operations/components/transfers/BookingTransferSteps.tsx), [ProjectProfitabilityView.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/operations/components/transfers/ProjectProfitabilityView.tsx).
+   - Pages standardized: [ExpenseListPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/operations/pages/ExpenseListPage.tsx), [VendorListPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/operations/pages/VendorListPage.tsx), [CommissionPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/operations/pages/CommissionPage.tsx), [BudgetListPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/operations/pages/BudgetListPage.tsx), [BookingTransferPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/operations/pages/BookingTransferPage.tsx), [ProjectProfitabilityPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/operations/pages/ProjectProfitabilityPage.tsx).
+   - Property feature aligned with explicit typography classes: [PropertyDataTable.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/property/components/PropertyDataTable.tsx), [PropertyDrawerSections.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/property/components/PropertyDrawerSections.tsx).
+   - Global scan: 0 hardcoded colors, 0 raw typography classes, 0 raw radii across all features in `packages/features/src`.
+3. Verification command & result:
+   - `node scratch/scan_violations.mjs`: Total files with violations: 0, Total violations: 0.
+   - `pnpm exec oxlint -c packages/config/oxlint.json packages/features/src/operations packages/features/src/property`: 0 warnings, 0 errors.
+   - `pnpm turbo run typecheck --force`: 9/9 packages passed cleanly.
+   - `pnpm --filter @exzaestate/features test`: 20/20 test files passed (96/96 tests green).
+   - `pnpm --filter @exzaestate/desktop build`: Built production bundle in 392ms with 0 errors.
+   - `pnpm check:all`: 40/40 Acceptance Tests (100%), all architectural gates passed.
+4. Open questions: None (Operations & Property packages 100% compliant with central Meridian design tokens in `theme.css`).
+5. Next task ID: `B7 Dashboard, Reports, Global Search, Notifications & Audit Viewer`.
+
+### [2026-10-05] B7 Dashboard, Reports, Global Search, Notifications & Audit Viewer
+
+1. Task ID & status: `B7` Dashboard, Reports, Global Search, Notifications & Audit Viewer [x]
+2. Files created / modified:
+   - Custom SVG Charts (`packages/ui/src/charts/**`): [KpiSparklineCard.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/ui/src/charts/KpiSparklineCard.tsx), [AgingStrip.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/ui/src/charts/AgingStrip.tsx), [PipelineFunnel.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/ui/src/charts/PipelineFunnel.tsx), [BudgetBullet.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/ui/src/charts/BudgetBullet.tsx), [ProfitWaterfall.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/ui/src/charts/ProfitWaterfall.tsx), [CashFlowLine.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/ui/src/charts/CashFlowLine.tsx), [charts.spec.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/ui/src/charts/charts.spec.tsx), exported via `packages/ui/src/index.ts`.
+   - Executive Dashboard (`packages/features/src/dashboard/**`): [ExecutiveDashboardPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/dashboard/pages/ExecutiveDashboardPage.tsx), [ExecutiveKpiStrip.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/dashboard/components/ExecutiveKpiStrip.tsx), [DashboardChartsSection.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/dashboard/components/DashboardChartsSection.tsx), [dashboard.routes.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/dashboard/dashboard.routes.tsx), [dashboard.spec.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/dashboard/dashboard.spec.tsx).
+   - Financial & Operational Reports (`packages/features/src/reports/**`): [TrialBalanceReportPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/reports/pages/TrialBalanceReportPage.tsx), [BalanceSheetReportPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/reports/pages/BalanceSheetReportPage.tsx), [IncomeStatementReportPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/reports/pages/IncomeStatementReportPage.tsx), [SalesReportPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/reports/pages/SalesReportPage.tsx), [CollectionReportPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/reports/pages/CollectionReportPage.tsx), [InventoryReportPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/reports/pages/InventoryReportPage.tsx), [ReportFiltersBar.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/reports/components/ReportFiltersBar.tsx), [ReportExportModal.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/reports/components/ReportExportModal.tsx), [ReportStateWrapper.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/reports/components/ReportStateWrapper.tsx), [reports.routes.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/reports/reports.routes.tsx), [reports.spec.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/reports/reports.spec.tsx).
+   - Global Search & Notifications (`packages/features/src/{search,notifications}/**`): [GlobalSearchCommandPalette.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/search/components/GlobalSearchCommandPalette.tsx), [SearchPaletteResults.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/search/components/SearchPaletteResults.tsx), [search-palette.constants.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/search/components/search-palette.constants.tsx), [NotificationDrawer.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/notifications/components/NotificationDrawer.tsx), [NotificationPreferencesModal.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/notifications/components/NotificationPreferencesModal.tsx), [useNotifications.ts](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/notifications/hooks/useNotifications.ts), [search.spec.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/search/search.spec.tsx), [notifications.spec.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/notifications/notifications.spec.tsx).
+   - Audit Log & Security Events (`packages/features/src/audit/**`): [AuditLogViewerPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/audit/pages/AuditLogViewerPage.tsx), [AuditTabPanels.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/audit/components/AuditTabPanels.tsx), [AuditFilterBar.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/audit/components/AuditFilterBar.tsx), [AuditTabsHeader.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/audit/components/AuditTabsHeader.tsx), [EntityHistoryDrawer.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/audit/components/EntityHistoryDrawer.tsx), [StateDiffDrawer.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/audit/components/StateDiffDrawer.tsx), [audit-columns.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/audit/components/audit-columns.tsx), [audit.routes.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/audit/audit.routes.tsx), [audit.spec.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/audit/audit.spec.tsx).
+   - Central Routing & Decoupling: updated [routes.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/routes.tsx), [index.ts](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/index.ts), and resolved circular dependency in operations with [transfer.types.ts](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/operations/components/transfers/transfer.types.ts).
+3. Verification command & result:
+   - `npx oxlint -c packages/config/oxlint.json packages/features/src/{dashboard,reports,search,notifications,audit} packages/ui/src/charts`: 0 warnings, 0 errors across all 49 files (strict max-lines <= 300, complexity <= 10, no nested ternaries, 0 `any`).
+   - `pnpm turbo run typecheck --force`: 9/9 packages passed cleanly (0 errors).
+   - `pnpm --filter @exzaestate/ui test`: 29/29 tests passed (including custom SVG charts spec).
+   - `pnpm --filter @exzaestate/features test`: 25 test files / 118 unit & integration tests passed.
+   - `pnpm lint:cycles`: Zero circular dependencies found across entire monorepo.
+   - `node scripts/check-no-mocks-in-production.mjs`: PASSED (0 mock arrays or imports in production code).
+   - `pnpm --filter @exzaestate/desktop build`: Built production bundle cleanly in 451ms.
+   - Metric Parity (**AT-15**): Executive Dashboard KPIs match underlying Trial Balance, Collection, Sales, and Inventory report queries.
+4. Open questions: None (Task B7 complete; ready for B8 Settings, Users & Roles, Setup Checklist, Go-Live Migration Wizard).
+
+### [2026-10-05] B8 Settings, Users & Roles, Setup Checklist, Go-Live Migration Wizard
+
+1. Task ID & status: `B8` Settings, Users & Roles, Setup Checklist, Go-Live Migration Wizard [x]
+2. Files created / modified:
+   - Settings & Numbering Catalogue (`packages/features/src/settings/**`): [settings.schema.ts](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/settings/schemas/settings.schema.ts), [useSettings.ts](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/settings/hooks/useSettings.ts), [SettingsNavTabs.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/settings/components/SettingsNavTabs.tsx), [GeneralPolicySettings.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/settings/components/GeneralPolicySettings.tsx), [SalesPolicySettings.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/settings/components/SalesPolicySettings.tsx), [FinancialPolicySettings.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/settings/components/FinancialPolicySettings.tsx), [NumberingPatternsTable.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/settings/components/NumberingPatternsTable.tsx), [NumberingPatternModal.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/settings/components/NumberingPatternModal.tsx), [NumberingPreviewCard.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/settings/components/NumberingPreviewCard.tsx), [SettingsPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/settings/pages/SettingsPage.tsx), [settings.routes.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/settings/settings.routes.tsx), [settings.spec.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/settings/settings.spec.tsx).
+   - Users & Roles RBAC Editor (`packages/features/src/users/**`): [user.schema.ts](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/users/schemas/user.schema.ts), [role.schema.ts](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/users/schemas/role.schema.ts), [useUsers.ts](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/users/hooks/useUsers.ts), [useRoles.ts](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/users/hooks/useRoles.ts), [UserListTable.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/users/components/UserListTable.tsx), [UserModal.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/users/components/UserModal.tsx), [UserRoleBranchModal.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/users/components/UserRoleBranchModal.tsx), [RoleListTable.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/users/components/RoleListTable.tsx), [RoleModal.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/users/components/RoleModal.tsx), [RolePermissionsMatrix.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/users/components/RolePermissionsMatrix.tsx), [UserManagementPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/users/pages/UserManagementPage.tsx), [RoleManagementPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/users/pages/RoleManagementPage.tsx), [users.routes.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/users/users.routes.tsx), [users.spec.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/users/users.spec.tsx).
+   - Setup Checklist Wizard (`packages/features/src/setup/**`): [setup.schema.ts](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/setup/schemas/setup.schema.ts), [useSetupChecklist.ts](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/setup/hooks/useSetupChecklist.ts), [SetupProgressBar.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/setup/components/SetupProgressBar.tsx), [TransactReadyBanner.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/setup/components/TransactReadyBanner.tsx), [ChecklistCard.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/setup/components/ChecklistCard.tsx), [SetupChecklistPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/setup/pages/SetupChecklistPage.tsx), [setup.routes.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/setup/setup.routes.tsx), [setup.spec.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/setup/setup.spec.tsx).
+   - Go-Live Migration Wizard (`packages/features/src/migration/**`): [migration.schema.ts](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/migration/schemas/migration.schema.ts), [useMigration.ts](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/migration/hooks/useMigration.ts), [MigrationBatchHeader.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/migration/components/MigrationBatchHeader.tsx), [OpeningBalancesStep.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/migration/components/OpeningBalancesStep.tsx), [LegacyBookingModal.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/migration/components/LegacyBookingModal.tsx), [LegacyBookingsStep.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/migration/components/LegacyBookingsStep.tsx), [CsvImportSection.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/migration/components/CsvImportSection.tsx), [ReconciliationGateCard.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/migration/components/ReconciliationGateCard.tsx), [FinalizeMigrationDialog.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/migration/components/FinalizeMigrationDialog.tsx), [MigrationWizardPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/migration/pages/MigrationWizardPage.tsx), [migration.routes.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/migration/migration.routes.tsx), [migration.spec.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/migration/migration.spec.tsx).
+   - Shell Integration & Navigation: updated [routes.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/routes.tsx) and barrel exports in [index.ts](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/index.ts).
+3. Verification command & result:
+   - `npx oxlint -c packages/config/oxlint.json packages/features/src/{settings,users,setup,migration}`: 0 warnings, 0 errors across 50 files (complexity <= 10, max lines <= 300, no any).
+   - `pnpm turbo run typecheck --force`: 9/9 packages passed cleanly with strict TypeScript and zero unchecked index access errors.
+   - `pnpm --filter @exzaestate/features test`: 29/29 test files / 135/135 tests passed.
+   - `pnpm lint:cycles`: Zero circular dependencies found across entire monorepo.
+   - `node scripts/check-no-mocks-in-production.mjs`: PASSED (zero mock data in production code).
+   - `pnpm --filter @exzaestate/desktop build`: Built production bundle cleanly in 461ms.
+   - `pnpm check:all`: 40/40 Acceptance Tests (100%), all architectural gates passed.
+4. Open questions: None (Task B8 complete; ready for B9 Desktop Local Standalone: Sidecar, Embedded PostgreSQL, First-Launch Wizard).
+5. Next task ID: `B9 Desktop Local Standalone: Sidecar, Embedded PostgreSQL, First-Launch Wizard`.
