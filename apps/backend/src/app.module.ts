@@ -31,8 +31,10 @@ import { DashboardModule } from './modules/dashboard/dashboard.module.js';
 import { SearchModule } from './modules/search/search.module.js';
 import { LocalDataModule } from './modules/local-data/local-data.module.js';
 import { AdaptersModule } from './adapters/adapters.module.js';
+import { AppController } from './app.controller.js';
 
 @Module({
+  controllers: [AppController],
   imports: [
     ConfigModule.forRoot(),
     AdaptersModule.forRoot((process.env.RUNTIME_MODE as 'cloud' | 'local') || 'cloud'),
@@ -69,7 +71,6 @@ import { AdaptersModule } from './adapters/adapters.module.js';
     LocalDataModule,
   ],
 })
-
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer): void {
     consumer.apply(RequestLoggingMiddleware, ClientVersionMiddleware).forRoutes('*');

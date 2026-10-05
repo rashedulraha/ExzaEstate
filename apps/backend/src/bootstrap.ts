@@ -37,8 +37,16 @@ export function configureApp(app: INestApplication, configService: ConfigService
 
   // Global REST API prefix: /api/v1
   app.setGlobalPrefix('api/v1', {
-    exclude: ['api/docs', 'api/docs/(.*)'],
+    exclude: ['/', 'api/docs', 'api/docs/(.*)'],
   });
+
+  // Redirect root '/' to '/api/v1' for developer convenience
+  const httpAdapter = app.getHttpAdapter();
+  if (httpAdapter && typeof httpAdapter.get === 'function') {
+    httpAdapter.get('/', (_req: unknown, res: { redirect: (url: string) => void }) => {
+      res.redirect('/api/v1');
+    });
+  }
 
   // Global response envelope: { success: true, data, meta }
   app.useGlobalInterceptors(new ResponseEnvelopeInterceptor());
