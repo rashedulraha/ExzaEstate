@@ -1195,7 +1195,7 @@ These are applied as defaults in `architecture.md` v4 but are still **"Needs sig
 
 #### B9 — Desktop Local Standalone: Sidecar, Embedded PostgreSQL, First-Launch Wizard
 
-- **Status:** [ ] · **Size:** XL (5 steps) · **Priority:** P1 · 🔒 D-01, D-03 · **Depends:** B1.1, A10.3, A10.2
+- **Status:** [x] · **Size:** XL (5 steps) · **Priority:** P1 · 🔒 D-01, D-03 · **Depends:** B1.1, A10.3, A10.2
 - **Reads:** `architecture.md` §12.3, §12.6, §20.3–§20.5; `design.md` §5.2; `security.md` §15.
 - **Touches:** `apps/desktop/src-tauri/**`, `apps/desktop/src/platform/**`, `packages/features/src/setup/first-launch/**`.
 - **Steps:** **S1** **Task B0 verification:** run the backend with Prisma 7 driver adapters on Windows, macOS and Linux (no query-engine binary should be required) and record the result. **S2** Rust launcher: free loopback port, 256-bit per-launch secret, bundle PostgreSQL, handle stale `postmaster.pid`, `single-instance`. **S3** sidecar lifecycle: health poll (30 s), restart ≤ 3× with backoff, error screen with log folder link. **S4** first-launch wizard (Cloud vs Local, create company/admin, restore from backup). **S5** backup banner/"Back up now"/restore UI. Verify: `{desktop} test && cargo test --manifest-path apps/desktop/src-tauri/Cargo.toml`.

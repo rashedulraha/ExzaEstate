@@ -2,6 +2,7 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { screen, fireEvent, waitFor, act } from '@testing-library/react';
 import { QueryClient } from '@tanstack/react-query';
 import { InMemorySecureStorage } from '@exzaestate/app-core';
+import { PERMISSIONS } from '@exzaestate/shared';
 import * as apiClient from '@exzaestate/api-client';
 
 import { CustomerListPage } from './pages/CustomerListPage.js';
@@ -61,8 +62,13 @@ interface AdapterConfig {
 }
 
 function getAuthMeResponse(hasPii: boolean) {
-  const permissions = ['customer:view', 'customer:create', 'customer:edit', 'customer:verify-kyc'];
-  if (hasPii) permissions.push('customer:view-pii');
+  const permissions = [
+    PERMISSIONS.CUSTOMER_VIEW,
+    PERMISSIONS.CUSTOMER_CREATE,
+    PERMISSIONS.CUSTOMER_EDIT,
+    PERMISSIONS.CUSTOMER_VERIFY_KYC,
+  ];
+  if (hasPii) permissions.push(PERMISSIONS.CUSTOMER_VIEW_PII);
   return {
     id: 'user-1',
     email: 'officer@exzaestate.com',

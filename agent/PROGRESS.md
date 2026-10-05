@@ -13,9 +13,9 @@
 
 ## Current Status
 
-- **Active Phase:** Part B (B8 Complete, ready for B9)
-- **Next Task to Execute:** Part B: `B9 Desktop Local Standalone: Sidecar, Embedded PostgreSQL, First-Launch Wizard`
-- **Tasks complete:** 80 / 88 (P2 cards excluded; Part A 100% Complete, B1.1–B8 Complete)
+- **Active Phase:** Part B (B9 Complete, ready for B10)
+- **Next Task to Execute:** Part B: `B10 Desktop Licensing & Hardware Binding (Rust)`
+- **Tasks complete:** 81 / 88 (P2 cards excluded; Part A 100% Complete, B1.1–B9 Complete)
 - **Blockers:** None
 - **Owner action items before/while coding:**
   - Copy the new `task.md` (v6) into `agent/task.md`.
@@ -167,7 +167,7 @@ Tick a box only after the verification rules above are met. Dependencies are def
 - [x] `B6` P1 Operations: Expenses, Vendors/AP, Commission, Budgets, Transfers, Profitability
 - [x] `B7` Dashboard, Reports, Global Search, Notifications & Audit Viewer
 - [x] `B8` Settings, Users & Roles, Setup Checklist, Go-Live Migration Wizard
-- [ ] `B9` Desktop Local Standalone: Sidecar, Embedded PostgreSQL, First-Launch Wizard
+- [x] `B9` Desktop Local Standalone: Sidecar, Embedded PostgreSQL, First-Launch Wizard
 - [ ] `B10` Desktop Licensing & Hardware Binding (Rust)
 - [ ] `B11` Desktop Packaging, Auto-Updater & Tauri Hardening
 
@@ -1024,3 +1024,23 @@ Tick a box only after the verification rules above are met. Dependencies are def
    - `pnpm check:all`: 40/40 Acceptance Tests (100%), all architectural gates passed.
 4. Open questions: None (Task B8 complete; ready for B9 Desktop Local Standalone: Sidecar, Embedded PostgreSQL, First-Launch Wizard).
 5. Next task ID: `B9 Desktop Local Standalone: Sidecar, Embedded PostgreSQL, First-Launch Wizard`.
+
+### [2026-10-06] B9 Desktop Local Standalone: Sidecar, Embedded PostgreSQL, First-Launch Wizard
+
+1. Task ID & status: `B9` Desktop Local Standalone: Sidecar, Embedded PostgreSQL, First-Launch Wizard [x]
+2. Files created / modified:
+   - Rust Launcher & Core Platform (`apps/desktop/src-tauri/**`): [Cargo.toml](file:///Users/rashedulraha/Developer/ExzaEstate/apps/desktop/src-tauri/Cargo.toml), [build.rs](file:///Users/rashedulraha/Developer/ExzaEstate/apps/desktop/src-tauri/build.rs), [src/main.rs](file:///Users/rashedulraha/Developer/ExzaEstate/apps/desktop/src-tauri/src/main.rs), [src/lib.rs](file:///Users/rashedulraha/Developer/ExzaEstate/apps/desktop/src-tauri/src/lib.rs), [port.rs](file:///Users/rashedulraha/Developer/ExzaEstate/apps/desktop/src-tauri/src/launcher/port.rs), [secret.rs](file:///Users/rashedulraha/Developer/ExzaEstate/apps/desktop/src-tauri/src/launcher/secret.rs), [postgres.rs](file:///Users/rashedulraha/Developer/ExzaEstate/apps/desktop/src-tauri/src/launcher/postgres.rs), [single_instance.rs](file:///Users/rashedulraha/Developer/ExzaEstate/apps/desktop/src-tauri/src/launcher/single_instance.rs), [sidecar.rs](file:///Users/rashedulraha/Developer/ExzaEstate/apps/desktop/src-tauri/src/launcher/sidecar.rs), [commands/mod.rs](file:///Users/rashedulraha/Developer/ExzaEstate/apps/desktop/src-tauri/src/commands/mod.rs).
+   - Desktop Sidecar Platform Adapter (`apps/desktop/src/platform/**`): [sidecar.ts](file:///Users/rashedulraha/Developer/ExzaEstate/apps/desktop/src/platform/sidecar.ts), [sidecar.spec.ts](file:///Users/rashedulraha/Developer/ExzaEstate/apps/desktop/src/platform/sidecar.spec.ts).
+   - First-Launch Wizard & Local Data (`packages/features/src/setup/first-launch/**`): [first-launch.schema.ts](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/setup/first-launch/schemas/first-launch.schema.ts), [useFirstLaunch.ts](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/setup/first-launch/hooks/useFirstLaunch.ts), [ModeSelectionCard.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/setup/first-launch/components/ModeSelectionCard.tsx), [CloudSetupSection.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/setup/first-launch/components/CloudSetupSection.tsx), [LocalSetupSection.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/setup/first-launch/components/LocalSetupSection.tsx), [FirstLaunchSummary.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/setup/first-launch/components/FirstLaunchSummary.tsx), [BackupBanner.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/setup/first-launch/components/BackupBanner.tsx), [BackupModal.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/setup/first-launch/components/BackupModal.tsx), [RestoreModal.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/setup/first-launch/components/RestoreModal.tsx), [FirstLaunchWizardPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/setup/first-launch/pages/FirstLaunchWizardPage.tsx), [first-launch.spec.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/setup/first-launch/first-launch.spec.tsx), [index.ts](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/setup/first-launch/index.ts).
+   - Routing & Quality Updates: [packages/features/src/setup/index.ts](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/setup/index.ts), [packages/features/src/setup/setup.routes.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/setup/setup.routes.tsx), [packages/features/src/customer/customer.spec.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/customer/customer.spec.tsx).
+3. Verification command & result:
+   - `cargo test --offline --manifest-path apps/desktop/src-tauri/Cargo.toml`: 14/14 Rust launcher tests passed (loopback port allocation, 256-bit cryptographically secure secret generation, single-instance flock directory locking, postmaster.pid stale cleanup, sidecar exponential backoff with max 3 attempts).
+   - `pnpm --filter @exzaestate/desktop test && pnpm --filter @exzaestate/desktop build`: 8/8 tests passed, production Vite bundle built cleanly in 384ms.
+   - `pnpm --filter @exzaestate/features test`: 30/30 test files / 143/143 tests green (including 8/8 first-launch wizard and backup tests).
+   - `npx oxlint -c packages/config/oxlint.json packages/features/src/setup/first-launch/ apps/desktop/src/platform/`: 0 warnings, 0 errors across 21 files (complexity <= 10, max lines <= 300, 0 `any`).
+   - `pnpm turbo run typecheck --force`: 9/9 packages passed cleanly with strict TypeScript.
+   - `node scripts/check-no-mocks-in-production.mjs`: PASSED (zero mock data in production code).
+   - Design System Compliance: 0 hardcoded hex/rgb colors, 0 raw typography classes, 0 raw radii; full adherence to Meridian design tokens in `theme.css`.
+   - `pnpm check:all`: 40/40 Acceptance Tests (100%), all architectural quality gates passed (AT-34 single instance & local backup/restore verified).
+4. Open questions: None (Task B9 complete; ready for B10 Desktop Licensing & Hardware Binding (Rust)).
+5. Next task ID: `B10 Desktop Licensing & Hardware Binding (Rust)`.
