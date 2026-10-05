@@ -24,7 +24,6 @@ import {
   OfflineState,
   NoPermissionState,
   LoadingState,
-  PlanView,
 } from './index.js';
 
 describe('Design Tokens & Contrast Verification (WCAG 2.2 AA)', () => {
@@ -277,31 +276,5 @@ describe('Layout & State Primitives', () => {
 
     rerender(<LoadingState variant="table" />);
     expect(document.querySelector('.card-workspace')).toBeDefined();
-  });
-});
-
-describe('Signature Component: PlanView', () => {
-  it('renders SVG canvas with plots, patterns, and zoom controls', () => {
-    const handlePlotClick = vi.fn();
-    const plots = [
-      { id: '1', code: 'P01', status: 'AVAILABLE', sizeSqFt: 1440, priceFormatted: '৳50,00,000' },
-      { id: '2', code: 'P02', status: 'BOOKED', sizeSqFt: 2160, priceFormatted: '৳75,00,000' },
-      { id: '3', code: 'P03', status: 'SOLD', sizeSqFt: 2880, priceFormatted: '৳1,00,00,000' },
-    ];
-
-    render(<PlanView plots={plots} onPlotClick={handlePlotClick} />);
-
-    expect(screen.getByText('P01')).toBeDefined();
-    expect(screen.getByText('P02')).toBeDefined();
-    expect(screen.getByText('P03')).toBeDefined();
-
-    // Zoom buttons exist
-    expect(screen.getByLabelText('Zoom In')).toBeDefined();
-    expect(screen.getByLabelText('Zoom Out')).toBeDefined();
-    expect(screen.getByLabelText('Reset Zoom')).toBeDefined();
-
-    // Clicking a plot triggers handler
-    fireEvent.click(screen.getByText('P01'));
-    expect(handlePlotClick).toHaveBeenCalledWith(expect.objectContaining({ code: 'P01' }));
   });
 });

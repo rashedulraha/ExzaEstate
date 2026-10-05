@@ -11,6 +11,7 @@ import {
   ChevronLeft,
   ChevronRight,
 } from 'lucide-react';
+import { ExzaLogoIcon } from '../components/brand/ExzaLogo.js';
 
 export interface SidebarNavItem {
   id: string;
@@ -176,8 +177,8 @@ function SidebarHeader({ isCollapsed, companyName, onToggleCollapse }: SidebarHe
   return (
     <div className="h-14 px-4 flex items-center justify-between border-b border-white/10 shrink-0">
       <div className="flex items-center gap-2.5 overflow-hidden">
-        <div className="w-8 h-8 rounded-button bg-accent flex items-center justify-center shrink-0">
-          <span className="font-bold text-white text-small">EE</span>
+        <div className="w-8 h-8 rounded-button bg-primary-deep border border-accent/30 flex items-center justify-center shrink-0">
+          <ExzaLogoIcon size={22} variant="gold" />
         </div>
         {!isCollapsed && (
           <span className="text-body font-semibold text-white truncate tracking-tight">

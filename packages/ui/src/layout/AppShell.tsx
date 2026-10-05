@@ -49,9 +49,7 @@ export function AppShell({
           {...headerProps}
         />
 
-        <main className="flex-1 p-4 md:p-6 space-y-6 max-w-[1600px] mx-auto w-full">
-          {children}
-        </main>
+        <main className="flex-1 container-page space-y-6">{children}</main>
       </div>
 
       {/* Global Command Palette */}

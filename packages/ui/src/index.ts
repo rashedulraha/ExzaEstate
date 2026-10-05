@@ -17,8 +17,17 @@ export * from './components/badge/StatusBadge.js';
 export * from './components/skeleton/Skeleton.js';
 export * from './components/toast/Toast.js';
 
+// Brand & Identity
+export * from './components/brand/ExzaLogo.js';
+
 // Signature Components
 export * from './components/plan-view/PlanView.js';
+export * from './components/payment-terrace/PaymentTerrace.js';
+export * from './components/balance-beam/BalanceBeam.js';
+export * from './components/posting-seal/PostingSeal.js';
+
+// Charts (d3-scale / d3-shape SVG visualisations)
+export * from './charts/index.js';
 
 // Layout Components
 export * from './layout/Breadcrumbs.js';

@@ -60,7 +60,7 @@ export function PlanView({ plots, onPlotClick, selectedPlotId, className = '' }:
       className={`relative w-full card-workspace bg-surface border border-border select-none outline-none focus-visible:ring-2 focus-visible:ring-focus ${className}`}
     >
       {/* Zoom / Pan Toolbar */}
-      <div className="absolute top-4 right-4 z-20 flex items-center gap-1 bg-surface-elevated/90 backdrop-blur p-1 rounded-button border border-border shadow-sm">
+      <div className="absolute top-4 right-4 z-20 flex items-center gap-1 bg-surface-elevated p-1 rounded-button border border-border shadow-sm">
         <button
           type="button"
           onClick={() => setZoom((z) => Math.min(2.5, z + 0.2))}
@@ -88,7 +88,7 @@ export function PlanView({ plots, onPlotClick, selectedPlotId, className = '' }:
       </div>
 
       {/* SVG Canvas */}
-      <div className="w-full overflow-auto max-h-[640px] p-4 flex justify-center bg-surface-sunken/20">
+      <div className="w-full overflow-auto max-h-160 p-4 flex justify-center bg-surface-sunken/20">
         <svg
           width={svgWidth * zoom}
           height={svgHeight * zoom}
@@ -156,7 +156,7 @@ export function PlanView({ plots, onPlotClick, selectedPlotId, className = '' }:
 
       {/* Floating Hover Card */}
       {hoveredPlot && (
-        <div className="absolute bottom-16 left-6 z-20 p-3 bg-surface-elevated/95 backdrop-blur border border-border-strong rounded-card shadow-md text-small space-y-1 min-w-[200px] animate-in fade-in-50 duration-75">
+        <div className="absolute bottom-16 left-6 z-20 p-3 bg-surface-elevated border border-border-strong rounded-card shadow-md text-small space-y-1 min-w-52 animate-in fade-in-50 duration-75">
           <div className="flex items-center justify-between border-b border-border pb-1">
             <span className="font-semibold text-text">{hoveredPlot.code}</span>
             <span className="text-caption font-medium uppercase px-1.5 py-0.2 rounded bg-surface-sunken">

@@ -53,7 +53,7 @@ export function Dialog({
   return (
     <div
       role="presentation"
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/45 backdrop-blur-[0.5px]"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/45"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
