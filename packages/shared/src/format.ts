@@ -200,8 +200,26 @@ export function isOverdueBusinessDate(
 }
 
 const ONES = [
-  '', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine',
-  'Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen',
+  '',
+  'One',
+  'Two',
+  'Three',
+  'Four',
+  'Five',
+  'Six',
+  'Seven',
+  'Eight',
+  'Nine',
+  'Ten',
+  'Eleven',
+  'Twelve',
+  'Thirteen',
+  'Fourteen',
+  'Fifteen',
+  'Sixteen',
+  'Seventeen',
+  'Eighteen',
+  'Nineteen',
 ];
 
 const TENS = ['', '', 'Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety'];
@@ -262,16 +280,13 @@ export { amountToBnWords };
  *   500000000n, 'en' -> "Fifty Lakh Taka Only"
  *   500000000n, 'bn' -> "পঞ্চাশ লক্ষ টাকা মাত্র"
  */
-export function amountToWords(paisa: bigint, language: 'en' | 'bn' = 'en'): string {
-  if (language === 'bn') {
-    return amountToBnWords(paisa);
-  }
+function parseToBigIntPaisa(paisa: bigint | number | string): bigint {
+  if (typeof paisa === 'bigint') return paisa;
+  if (typeof paisa === 'number') return BigInt(Math.round(paisa));
+  return BigInt((paisa || '0').trim());
+}
 
-  const isNegative = paisa < 0n;
-  const absPaisa = isNegative ? -paisa : paisa;
-  const taka = absPaisa / 100n;
-  const remPaisa = Number(absPaisa % 100n);
-
+function formatEnglishWords(taka: bigint, remPaisa: number, isNegative: boolean): string {
   const prefix = isNegative ? 'Negative ' : '';
   const takaWords = convertTakaToWords(taka);
   const paisaWords = remPaisa > 0 ? convertBelowThousand(remPaisa) : '';
@@ -279,12 +294,32 @@ export function amountToWords(paisa: bigint, language: 'en' | 'bn' = 'en'): stri
   if (taka === 0n && remPaisa > 0) {
     return `${prefix}${paisaWords} Paisa Only`;
   }
-
   if (remPaisa > 0) {
     return `${prefix}${takaWords} Taka and ${paisaWords} Paisa Only`;
   }
-
   return `${prefix}${takaWords} Taka Only`;
 }
 
+/**
+ * Converts BigInt paisa into Bangladeshi currency wording in English or Bengali.
+ * Examples:
+ *   500000000n, 'en' -> "Fifty Lakh Taka Only"
+ *   500000000n, 'bn' -> "পঞ্চাশ লক্ষ টাকা মাত্র"
+ */
+export function amountToWords(
+  paisa: bigint | number | string,
+  language: 'en' | 'bn' = 'en',
+): string {
+  const bigPaisa = parseToBigIntPaisa(paisa);
 
+  if (language === 'bn') {
+    return amountToBnWords(bigPaisa);
+  }
+
+  const isNegative = bigPaisa < 0n;
+  const absPaisa = isNegative ? -bigPaisa : bigPaisa;
+  const taka = absPaisa / 100n;
+  const remPaisa = Number(absPaisa % 100n);
+
+  return formatEnglishWords(taka, remPaisa, isNegative);
+}

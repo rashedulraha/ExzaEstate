@@ -5,6 +5,7 @@ import { queryClient } from '@exzaestate/api-client';
 import { PlatformProvider, AuthProvider, initApiClient } from '@exzaestate/app-core';
 import { routes } from '@exzaestate/features';
 import { desktopPlatformAdapters, desktopApiConfig } from './platform/index.js';
+import './index.css';
 
 // Initialize API client base URL and client info
 initApiClient(desktopApiConfig);

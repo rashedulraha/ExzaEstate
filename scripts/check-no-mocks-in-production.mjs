@@ -49,7 +49,13 @@ function getAllFiles(dirPath, arrayOfFiles = []) {
       file.endsWith('.js') ||
       file.endsWith('.jsx')
     ) {
-      if (!file.endsWith('.spec.ts') && !file.endsWith('.test.ts') && !file.endsWith('.test.tsx')) {
+      if (
+        !file.endsWith('.spec.ts') &&
+        !file.endsWith('.spec.tsx') &&
+        !file.endsWith('.test.ts') &&
+        !file.endsWith('.test.tsx') &&
+        !file.includes('test-utils')
+      ) {
         arrayOfFiles.push(fullPath);
       }
     }

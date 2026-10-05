@@ -1,0 +1,6 @@
+@import 'tailwindcss';
+@import '@exzaestate/ui/theme.css';
+
+@source "../../../packages/features/src";
+@source "../../../packages/ui/src";
+@source "./";
