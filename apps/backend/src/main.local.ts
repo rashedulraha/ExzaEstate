@@ -33,10 +33,12 @@ export async function bootstrapLocal(): Promise<void> {
     allowedHeaders: [
       'Content-Type',
       'Authorization',
+      'X-Client',
+      'X-Client-Version',
       'X-Local-Secret',
       'Idempotency-Key',
       'X-Request-Id',
-      'X-Client-Version',
+      'Accept',
     ],
   });
 

@@ -7,12 +7,22 @@ import { DesktopNotifier } from './notifier.js';
 import { DesktopSidecarControl } from './sidecar.js';
 import { DesktopLicensingService } from './license.js';
 
-export const desktopApiConfig: ApiConfig = {
-  baseUrl:
+function getDefaultBaseUrl(): string {
+  if (typeof window !== 'undefined') {
+    if (!('__TAURI_INTERNALS__' in window) && window.location.port === '5173') {
+      return '';
+    }
+  }
+  return (
     (typeof import.meta !== 'undefined' &&
       (import.meta as unknown as { env?: { VITE_API_BASE_URL?: string } }).env
         ?.VITE_API_BASE_URL) ||
-    'http://localhost:3000',
+    'http://localhost:3000'
+  );
+}
+
+export const desktopApiConfig: ApiConfig = {
+  baseUrl: getDefaultBaseUrl(),
   runtimeMode: 'cloud',
   clientType: 'desktop',
   clientVersion: '0.1.0',

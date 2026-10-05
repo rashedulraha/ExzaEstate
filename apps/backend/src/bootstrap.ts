@@ -18,10 +18,12 @@ export function configureApp(app: INestApplication, configService: ConfigService
     allowedHeaders: [
       'Content-Type',
       'Authorization',
-      'Idempotency-Key',
-      'X-Request-Id',
+      'X-Client',
       'X-Client-Version',
+      'X-Request-Id',
+      'Idempotency-Key',
       'X-Local-Secret',
+      'Accept',
     ],
   });
 
