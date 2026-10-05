@@ -13,9 +13,9 @@
 
 ## Current Status
 
-- **Active Phase:** Part B (B10 Complete, ready for B11)
-- **Next Task to Execute:** Part B: `B11 Desktop Packaging, Auto-Updater & Tauri Hardening`
-- **Tasks complete:** 82 / 88 (P2 cards excluded; Part A 100% Complete, B1.1–B10 Complete)
+- **Active Phase:** Part C (Part B 100% Complete, ready for C1)
+- **Next Task to Execute:** Part C: `C1 Web SPA Shell, Platform Adapters & Cookie-Refresh Auth`
+- **Tasks complete:** 83 / 88 (P2 cards excluded; Part A 100% Complete, Part B 100% Complete, B1.1–B11 Complete)
 - **Blockers:** None
 - **Owner action items before/while coding:**
   - Copy the new `task.md` (v6) into `agent/task.md`.
@@ -169,7 +169,7 @@ Tick a box only after the verification rules above are met. Dependencies are def
 - [x] `B8` Settings, Users & Roles, Setup Checklist, Go-Live Migration Wizard
 - [x] `B9` Desktop Local Standalone: Sidecar, Embedded PostgreSQL, First-Launch Wizard
 - [x] `B10` Desktop Licensing & Hardware Binding (Rust)
-- [ ] `B11` Desktop Packaging, Auto-Updater & Tauri Hardening
+- [x] `B11` Desktop Packaging, Auto-Updater & Tauri Hardening
 
 ### Part C — Web Client
 
@@ -1062,3 +1062,19 @@ Tick a box only after the verification rules above are met. Dependencies are def
    - `pnpm check:all`: 40/40 Acceptance Tests (100%), 0 breaking changes, all architectural quality gates passed (AT-31 license expiration handling & read-only lock verified).
 9. Open questions: None (Task B10 complete; ready for B11 Desktop Packaging, Auto-Updater & Tauri Hardening).
 10. Next task ID: `B11 Desktop Packaging, Auto-Updater & Tauri Hardening`.
+
+11. Task ID & status: `B11` Desktop Packaging, Auto-Updater & Tauri Hardening [x]
+12. Files created / modified:
+    - Tauri Hardened Capabilities & Security (`apps/desktop/src-tauri/**`): [capabilities/default.json](file:///Users/rashedulraha/Developer/ExzaEstate/apps/desktop/src-tauri/capabilities/default.json), [tauri.conf.json](file:///Users/rashedulraha/Developer/ExzaEstate/apps/desktop/src-tauri/tauri.conf.json), [entitlements.plist](file:///Users/rashedulraha/Developer/ExzaEstate/apps/desktop/src-tauri/entitlements.plist), [icons/\*\*](file:///Users/rashedulraha/Developer/ExzaEstate/apps/desktop/src-tauri/icons/).
+    - Multi-Platform Code-Signing & Release CI (`.github/workflows/**`): [.github/workflows/release-desktop.yml](file:///Users/rashedulraha/Developer/ExzaEstate/.github/workflows/release-desktop.yml).
+    - Desktop Hardening & Auto-Updater Platform Adapter (`apps/desktop/src/platform/**`): [open-external.ts](file:///Users/rashedulraha/Developer/ExzaEstate/apps/desktop/src/platform/open-external.ts), [platform.spec.ts](file:///Users/rashedulraha/Developer/ExzaEstate/apps/desktop/src/platform/platform.spec.ts), [updater.ts](file:///Users/rashedulraha/Developer/ExzaEstate/apps/desktop/src/platform/updater.ts), [updater.spec.ts](file:///Users/rashedulraha/Developer/ExzaEstate/apps/desktop/src/platform/updater.spec.ts).
+13. Verification command & result:
+    - `cargo test --offline --manifest-path apps/desktop/src-tauri/Cargo.toml`: 21/21 Rust native core tests passed.
+    - `pnpm --filter @exzaestate/desktop test`: 4 test files / 23/23 tests green (including openExternal strict HTTPS rejection of non-HTTPS protocols, and updater lifecycle event notifications and signature mismatch rejection).
+    - `pnpm --filter @exzaestate/desktop build`: production Vite client bundle built cleanly in 518ms.
+    - `npx oxlint -c packages/config/oxlint.json apps/desktop/src/platform/`: 0 warnings, 0 errors across 12 files (complexity <= 10, max lines <= 300, 0 `any`).
+    - `pnpm turbo run typecheck --force`: 9/9 packages passed cleanly with strict TypeScript.
+    - `pnpm --filter @exzaestate/desktop tauri inspect wix-upgrade-code`: WiX Upgrade Code verified successfully (`88cb8431-ed5a-557e-84bc-3a5410fd76b8`).
+    - `pnpm check:all`: 40/40 Acceptance Tests (100%), 0 breaking changes, all architectural quality gates passed.
+14. Open questions: None (Task B11 complete; Part B Desktop Client 100% complete; ready for Part C Web Client).
+15. Next task ID: `C1 Web SPA Shell, Platform Adapters & Cookie-Refresh Auth`.

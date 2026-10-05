@@ -33,16 +33,25 @@ describe('Desktop Platform Adapters', () => {
     expect(await storage.getItem('refresh_token')).toBeNull();
   });
 
-  it('openExternal function executes safely', async () => {
+  it('openExternal function executes safely for https URLs', async () => {
     const originalOpen = window.open;
     window.open = vi.fn();
-    await expect(desktopOpenExternal('https://example.com')).resolves.not.toThrow();
+    await expect(desktopOpenExternal('https://example.com/docs')).resolves.not.toThrow();
     expect(window.open).toHaveBeenCalledWith(
-      'https://example.com',
+      'https://example.com/docs',
       '_blank',
       'noopener,noreferrer',
     );
     window.open = originalOpen;
+  });
+
+  it('openExternal strictly blocks non-HTTPS protocols per S1 security hardening', async () => {
+    await expect(desktopOpenExternal('http://insecure.example.com')).rejects.toThrow(
+      'SECURITY_VIOLATION',
+    );
+    await expect(desktopOpenExternal('file:///etc/passwd')).rejects.toThrow('SECURITY_VIOLATION');
+    await expect(desktopOpenExternal('javascript:alert(1)')).rejects.toThrow('SECURITY_VIOLATION');
+    await expect(desktopOpenExternal('not-a-valid-url')).rejects.toThrow('SECURITY_VIOLATION');
   });
 
   it('sidecar control reports status', async () => {

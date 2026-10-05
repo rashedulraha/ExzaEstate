@@ -1212,7 +1212,7 @@ These are applied as defaults in `architecture.md` v4 but are still **"Needs sig
 
 #### B11 — Desktop Packaging, Auto-Updater & Tauri Hardening
 
-- **Status:** [ ] · **Size:** M (3 steps) · **Depends:** B9, B10, A0.11
+- **Status:** [x] · **Size:** M (3 steps) · **Depends:** B9, B10, A0.11
 - **Reads:** `architecture.md` §12.6 (items 4–5); `security.md` §15, §16; `rules.md` §11.
 - **Touches:** `apps/desktop/src-tauri/tauri.conf.json`, `apps/desktop/src-tauri/capabilities/**`, `.github/workflows/release-desktop.yml`.
 - **Steps:** **S1** least-privilege capability set (no broad `fs`/`shell`; `openExternal` allow-listed to https), strict CSP, no remote content in the webview. **S2** code-signed Windows `.msi/.exe`, macOS `.dmg`, Linux `.AppImage/.deb`; signing keys only in CI secrets. **S3** updater with mandatory signature verification; update checks send no business data; published checksums. Verify: release workflow dry-run + `{desktop} tauri build --debug` on each OS runner.

@@ -13,9 +13,6 @@
       "allow": [
         {
           "href": "https://*"
-        },
-        {
-          "href": "http://*"
         }
       ]
     }
