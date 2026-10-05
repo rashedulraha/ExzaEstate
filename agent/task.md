@@ -1203,7 +1203,7 @@ These are applied as defaults in `architecture.md` v4 but are still **"Needs sig
 
 #### B10 — Desktop Licensing & Hardware Binding (Rust)
 
-- **Status:** [ ] · **Size:** L (4 steps) · **Priority:** P0/P1 · 🔒 D-15 · **Depends:** B1.1, A1.5
+- **Status:** [x] · **Size:** L (4 steps) · **Priority:** P0/P1 · 🔒 D-15 · **Depends:** B1.1, A1.5
 - **Reads:** `architecture.md` §12.8; `security.md` §17; `prd.md` MOD-PLATFORM, AT-31.
 - **Touches:** `apps/desktop/src-tauri/src/platform/licensing.rs`, `apps/desktop/src/platform/**`, `packages/features/src/license/**`.
 - **Steps:** **S1** `MachineFingerprint` (SHA-256 of motherboard UUID + CPU serial + primary disk serial; accept ≥ 2 of 3 matching). **S2** offline Ed25519 verification with an embedded **key set** (`kid`), licence stored only in the OS credential vault (`SecureStorage`). **S3** clock-rollback high-water mark (`CLOCK_TAMPERED`, writes locked, reads/export still allowed). **S4** activation/renewal UI, expiry banner (grace → read-only), renewal request code, transfer request. Verify: `cargo test … licensing && {desktop} test license`.

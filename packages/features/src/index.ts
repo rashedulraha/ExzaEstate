@@ -24,3 +24,4 @@ export * from './settings/index.js';
 export * from './users/index.js';
 export * from './setup/index.js';
 export * from './migration/index.js';
+export * from './license/index.js';

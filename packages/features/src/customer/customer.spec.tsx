@@ -62,7 +62,7 @@ interface AdapterConfig {
 }
 
 function getAuthMeResponse(hasPii: boolean) {
-  const permissions = [
+  const permissions: string[] = [
     PERMISSIONS.CUSTOMER_VIEW,
     PERMISSIONS.CUSTOMER_CREATE,
     PERMISSIONS.CUSTOMER_EDIT,

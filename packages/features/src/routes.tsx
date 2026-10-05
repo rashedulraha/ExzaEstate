@@ -34,6 +34,7 @@ import { settingsRoutes } from './settings/settings.routes.js';
 import { usersRoutes } from './users/users.routes.js';
 import { setupRoutes } from './setup/setup.routes.js';
 import { migrationRoutes } from './migration/migration.routes.js';
+import { licenseRoutes } from './license/license.routes.js';
 import { GlobalSearchCommandPalette } from './search/components/GlobalSearchCommandPalette.js';
 import { NotificationDrawer } from './notifications/components/NotificationDrawer.js';
 
@@ -264,6 +265,7 @@ export const routes: RouteObject[] = [
           ...usersRoutes,
           ...setupRoutes,
           ...migrationRoutes,
+          ...licenseRoutes,
         ],
       },
     ],

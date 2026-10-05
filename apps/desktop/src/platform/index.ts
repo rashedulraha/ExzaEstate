@@ -5,6 +5,7 @@ import { DesktopUpdater } from './updater.js';
 import { desktopOpenExternal } from './open-external.js';
 import { DesktopNotifier } from './notifier.js';
 import { DesktopSidecarControl } from './sidecar.js';
+import { DesktopLicensingService } from './license.js';
 
 export const desktopApiConfig: ApiConfig = {
   baseUrl:
@@ -17,14 +18,17 @@ export const desktopApiConfig: ApiConfig = {
   clientVersion: '0.1.0',
 };
 
+const secureStorage = new DesktopKeychainSecureStorage();
+
 export const desktopPlatformAdapters: PlatformAdapters = {
-  secureStorage: new DesktopKeychainSecureStorage(),
+  secureStorage,
   fileDialog: new DesktopFileDialog(),
   updater: new DesktopUpdater(),
   openExternal: desktopOpenExternal,
   notifier: new DesktopNotifier(),
   apiConfig: desktopApiConfig,
   sidecarControl: new DesktopSidecarControl(),
+  licensing: new DesktopLicensingService(secureStorage),
 };
 
 export * from './secure-storage.js';
@@ -33,3 +37,4 @@ export * from './updater.js';
 export * from './open-external.js';
 export * from './notifier.js';
 export * from './sidecar.js';
+export * from './license.js';

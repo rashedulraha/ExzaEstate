@@ -13,9 +13,9 @@
 
 ## Current Status
 
-- **Active Phase:** Part B (B9 Complete, ready for B10)
-- **Next Task to Execute:** Part B: `B10 Desktop Licensing & Hardware Binding (Rust)`
-- **Tasks complete:** 81 / 88 (P2 cards excluded; Part A 100% Complete, B1.1–B9 Complete)
+- **Active Phase:** Part B (B10 Complete, ready for B11)
+- **Next Task to Execute:** Part B: `B11 Desktop Packaging, Auto-Updater & Tauri Hardening`
+- **Tasks complete:** 82 / 88 (P2 cards excluded; Part A 100% Complete, B1.1–B10 Complete)
 - **Blockers:** None
 - **Owner action items before/while coding:**
   - Copy the new `task.md` (v6) into `agent/task.md`.
@@ -168,7 +168,7 @@ Tick a box only after the verification rules above are met. Dependencies are def
 - [x] `B7` Dashboard, Reports, Global Search, Notifications & Audit Viewer
 - [x] `B8` Settings, Users & Roles, Setup Checklist, Go-Live Migration Wizard
 - [x] `B9` Desktop Local Standalone: Sidecar, Embedded PostgreSQL, First-Launch Wizard
-- [ ] `B10` Desktop Licensing & Hardware Binding (Rust)
+- [x] `B10` Desktop Licensing & Hardware Binding (Rust)
 - [ ] `B11` Desktop Packaging, Auto-Updater & Tauri Hardening
 
 ### Part C — Web Client
@@ -1044,3 +1044,21 @@ Tick a box only after the verification rules above are met. Dependencies are def
    - `pnpm check:all`: 40/40 Acceptance Tests (100%), all architectural quality gates passed (AT-34 single instance & local backup/restore verified).
 4. Open questions: None (Task B9 complete; ready for B10 Desktop Licensing & Hardware Binding (Rust)).
 5. Next task ID: `B10 Desktop Licensing & Hardware Binding (Rust)`.
+
+6. Task ID & status: `B10` Desktop Licensing & Hardware Binding (Rust) [x]
+7. Files created / modified:
+   - Rust Licensing Engine & Tauri Commands (`apps/desktop/src-tauri/**`): [Cargo.toml](file:///Users/rashedulraha/Developer/ExzaEstate/apps/desktop/src-tauri/Cargo.toml), [Cargo.lock](file:///Users/rashedulraha/Developer/ExzaEstate/apps/desktop/src-tauri/Cargo.lock), [src/lib.rs](file:///Users/rashedulraha/Developer/ExzaEstate/apps/desktop/src-tauri/src/lib.rs), [platform/mod.rs](file:///Users/rashedulraha/Developer/ExzaEstate/apps/desktop/src-tauri/src/platform/mod.rs), [platform/licensing.rs](file:///Users/rashedulraha/Developer/ExzaEstate/apps/desktop/src-tauri/src/platform/licensing.rs), [commands/mod.rs](file:///Users/rashedulraha/Developer/ExzaEstate/apps/desktop/src-tauri/src/commands/mod.rs).
+   - Desktop Licensing Platform Adapter & App-Core (`apps/desktop/**`, `packages/app-core/**`): [packages/app-core/src/platform/index.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/app-core/src/platform/index.tsx), [apps/desktop/src/platform/license.ts](file:///Users/rashedulraha/Developer/ExzaEstate/apps/desktop/src/platform/license.ts), [apps/desktop/src/platform/license.spec.ts](file:///Users/rashedulraha/Developer/ExzaEstate/apps/desktop/src/platform/license.spec.ts), [apps/desktop/src/platform/index.ts](file:///Users/rashedulraha/Developer/ExzaEstate/apps/desktop/src/platform/index.ts).
+   - Commercial Licensing Feature Module (`packages/features/src/license/**`): [schemas/license.schema.ts](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/license/schemas/license.schema.ts), [hooks/useLicenseState.ts](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/license/hooks/useLicenseState.ts), [components/LicenseStatusBanner.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/license/components/LicenseStatusBanner.tsx), [components/LicenseActivationModal.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/license/components/LicenseActivationModal.tsx), [components/LicenseRenewalModal.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/license/components/LicenseRenewalModal.tsx), [components/LicenseTransferModal.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/license/components/LicenseTransferModal.tsx), [components/LicenseSummaryCard.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/license/components/LicenseSummaryCard.tsx), [pages/LicenseManagementPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/license/pages/LicenseManagementPage.tsx), [license.routes.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/license/license.routes.tsx), [index.ts](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/license/index.ts), [license.spec.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/license/license.spec.tsx), [routes.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/routes.tsx), [index.ts](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/index.ts), [customer.spec.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/customer/customer.spec.tsx).
+8. Verification command & result:
+   - `cargo test --offline --manifest-path apps/desktop/src-tauri/Cargo.toml licensing`: 7/7 Rust licensing tests passed (deterministic SHA-256 machine fingerprint, Gate D-15 hardware tolerance >= 2 of 3 matching components, offline Ed25519 signature verification with canonical JSON serialization, anti-clock-rollback ClockGuard detecting backward shifts > 1 hour, renewal request code generator, full license evaluation lifecycle). Full crate: 21/21 tests passed.
+   - `pnpm --filter @exzaestate/desktop test`: 17/17 desktop tests green (including 9/9 desktop licensing service tests verifying OS credential vault SecureStorage integration, zero plain-file/localStorage leaks, clock integrity checks, and Gate D-15 fallback evaluation).
+   - `pnpm --filter @exzaestate/features test license`: 9/9 licensing feature tests passed (verifying status banner grace/expired/tampered states, write lock enforcement while guaranteeing BR-20 Export all data accessibility, activation modal, renewal modal, and transfer modal).
+   - `pnpm --filter @exzaestate/features test`: 31/31 test files / 152/152 tests passed.
+   - `pnpm --filter @exzaestate/desktop build`: production Vite client bundle built cleanly in 491ms.
+   - `npx oxlint -c packages/config/oxlint.json`: 0 warnings, 0 errors across all license and platform files (cyclomatic complexity <= 10, max lines <= 300, 0 `any`).
+   - `pnpm turbo run typecheck --force`: 9/9 packages passed cleanly with strict TypeScript.
+   - Design System Compliance: 0 hardcoded hex/rgb colors, 0 raw typography classes, 0 raw radii; full adherence to Meridian design tokens in `theme.css`.
+   - `pnpm check:all`: 40/40 Acceptance Tests (100%), 0 breaking changes, all architectural quality gates passed (AT-31 license expiration handling & read-only lock verified).
+9. Open questions: None (Task B10 complete; ready for B11 Desktop Packaging, Auto-Updater & Tauri Hardening).
+10. Next task ID: `B11 Desktop Packaging, Auto-Updater & Tauri Hardening`.
