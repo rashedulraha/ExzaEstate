@@ -107,10 +107,19 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
   );
 }
 
-export function useToast() {
+const fallbackToastContext: ToastContextValue = {
+  showToast: (toast) => {
+    if (typeof console !== 'undefined') {
+      console.warn('[useToast] showToast called outside ToastProvider:', toast);
+    }
+  },
+  removeToast: () => {},
+};
+
+export function useToast(): ToastContextValue {
   const ctx = useContext(ToastContext);
   if (!ctx) {
-    throw new Error('useToast must be used within a ToastProvider');
+    return fallbackToastContext;
   }
   return ctx;
 }

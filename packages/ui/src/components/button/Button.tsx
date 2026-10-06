@@ -52,11 +52,17 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       <button
         ref={ref}
         disabled={isDisabled}
-        className={`inline-flex items-center justify-center font-medium rounded-button transition-colors duration-100 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed select-none ${variantStyles[variant]} ${sizeStyles[size]} ${className}`}
+        className={`inline-flex flex-row items-center justify-center font-medium rounded-button transition-colors duration-100 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed select-none whitespace-nowrap ${variantStyles[variant]} ${sizeStyles[size]} ${className}`}
         {...props}
       >
-        {isLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" aria-hidden="true" /> : leftIcon}
-        <span>{children}</span>
+        {isLoading ? (
+          <Loader2 className="w-3.5 h-3.5 animate-spin shrink-0" aria-hidden="true" />
+        ) : (
+          leftIcon
+        )}
+        <span className="inline-flex flex-row items-center gap-1.5 whitespace-nowrap">
+          {children}
+        </span>
         {!isLoading && rightIcon}
       </button>
     );

@@ -27,7 +27,7 @@ ExzaEstate is a business ERP for land and property: people spend hours in it cou
 - **Precision** — financial data demands exactness in alignment, typography, and number rendering.
 - **Trust** — a premium, restrained aesthetic signals reliability and institutional quality.
 
-The interface is calm, spacious and precise everywhere, and spends its boldness in **four signature components** (§7.1). Everything else stays quiet so those four are what people remember. Palette identity: **Slate + Charcoal + Warm Gold** — deliberately not blue-SaaS and not generic green-fintech: neutrals are cool _slate_, gold is a rare, restrained accent that signals premium quality.
+The interface is calm, spacious and precise everywhere, and spends its boldness in **four signature components** (§7.1). Everything else stays quiet so those four are what people remember. Palette identity: **Exza Saffron Orange (`--primary: #F26522`) + Obsidian Charcoal (`--secondary: #17160F`)** — high-contrast, prestigious corporate real estate & ERP aesthetics: neutrals are obsidian and cool slate, while saffron orange is the signature brand accent for primary CTAs, active highlights, and milestone indicators.
 
 Principles: (1) every screen answers where am I / what is this / what matters / what next / what needs attention; (2) status is never colour alone (§2.5); (3) money is always exact, never animated; (4) spacious but never wasteful; (5) keyboard first.
 
@@ -39,31 +39,34 @@ All design tokens are defined in **one single central file: `packages/ui/src/sty
 > Components must **NEVER** use ugly arbitrary classes like `bg-[var(--primary)]` or `text-[#1A1A2E]`.
 > All tokens generate first-class, native Tailwind v4 utility classes:
 >
-> - Use `bg-primary`, `bg-primary-deep`, `bg-surface`, `bg-surface-sunken`, `bg-bg`
-> - Use `text-primary`, `text-accent-text`, `text-muted`
+> - Use `bg-primary`, `bg-primary-deep`, `bg-secondary`, `bg-surface`, `bg-surface-sunken`, `bg-bg`
+> - Use `text-primary`, `text-secondary`, `text-accent-text`, `text-muted`
 > - Use `rounded-button`, `rounded-card`, `rounded-modal`
 > - Use `text-h1`, `text-h2`, `text-h3`, `text-h4`, `text-h5`, `text-h6`
 >   Changing a value in `packages/ui/src/styles/theme.css` instantly updates that font, color, or radius across the entire multi-app codebase.
 
 ### 2.1 Brand and surfaces (light — default)
 
-| Token                | Hex       | Use                                                                                                   |
-| -------------------- | --------- | ----------------------------------------------------------------------------------------------------- |
-| `--primary`          | `#1A1A2E` | Primary brand, sidebar, primary button, auth screens                                                  |
-| `--primary-deep`     | `#111122` | Sidebar depth, pressed/hover on dark                                                                  |
-| `--primary-light`    | `#2D2D4A` | Sidebar hover, secondary dark interactions                                                            |
-| `--accent`           | `#C8A951` | Decorative/large only: active-nav indicator, milestone dot, premium ribbon                            |
-| `--accent-text`      | `#7A6223` | Accent when it is text or a small icon (4.9:1 on surface; the previous `#96792B` measured only 4.1:1) |
-| `--accent-subtle`    | `#EDE4C8` | Accent tint for backgrounds, very light accent wash                                                   |
-| `--bg`               | `#F5F5F7` | App background (cool light grey; Apple-inspired)                                                      |
-| `--surface`          | `#FFFFFF` | Cards, tables, forms                                                                                  |
-| `--surface-elevated` | `#FFFFFF` | Modal, popover, dropdown, command palette                                                             |
-| `--surface-sunken`   | `#EBEBF0` | Inset areas, secondary background zones                                                               |
-| `--surface-dark`     | `#1A1A2E` | Sidebar, auth, special sections                                                                       |
-| `--primary-fg`       | `#1A1A2E` | Primary colour used **as text, icon, outline or chart series** (dark mode: `#A5A5E0`)                 |
-| `--action`           | `#1A1A2E` | Fill of the primary button and selected controls (dark mode: `#E5E5EA`)                               |
-| `--on-action`        | `#FFFFFF` | Text/icon on `--action` (dark mode: `#1A1A2E`)                                                        |
-| `--focus`            | `#1A1A2E` | Focus ring colour (dark mode: `--accent`)                                                             |
+| Token                | Hex       | Use                                                                            |
+| -------------------- | --------- | ------------------------------------------------------------------------------ |
+| `--primary`          | `#F26522` | Primary brand, primary CTA buttons, active state highlights, auth brand accent |
+| `--primary-deep`     | `#D94D0C` | Primary button pressed/active depth, deep brand tone                           |
+| `--primary-light`    | `#F5834B` | Primary button hover, light brand highlight                                    |
+| `--secondary`        | `#17160F` | Secondary brand surface, obsidian sidebar, header chrome, dark modal backdrop  |
+| `--secondary-light`  | `#222117` | Elevated obsidian dark surface, secondary dark hover                           |
+| `--secondary-deep`   | `#0E0D09` | Ultra-deep obsidian inset zones                                                |
+| `--accent`           | `#F26522` | Active-nav indicator, milestone dot, brand ribbons and badges                  |
+| `--accent-text`      | `#C44309` | Accent when it is text or a small icon (4.8:1 on surface, passes WCAG AA)      |
+| `--accent-subtle`    | `#FDEADE` | Accent tint for backgrounds, light brand highlight wash                        |
+| `--bg`               | `#F5F5F7` | App background (cool light grey; Apple-inspired)                               |
+| `--surface`          | `#FFFFFF` | Cards, tables, forms                                                           |
+| `--surface-elevated` | `#FFFFFF` | Modal, popover, dropdown, command palette                                      |
+| `--surface-sunken`   | `#EBEBF0` | Inset areas, secondary background zones                                        |
+| `--surface-dark`     | `#17160F` | Obsidian sidebar, header, dark cockpit sections                                |
+| `--primary-fg`       | `#F26522` | Primary brand colour used as icon, outline or chart series                     |
+| `--action`           | `#F26522` | Fill of primary interactive buttons (dark mode: `#F26522`)                     |
+| `--on-action`        | `#FFFFFF` | Text/icon on `--action`                                                        |
+| `--focus`            | `#F26522` | Focus ring colour                                                              |
 
 ### 2.2 Text
 
@@ -257,9 +260,9 @@ The 3-tier shell (§4.1) is the **list** template. The others: **Detail** — en
 
 Fixed sidebar + top header + scrolling main — identical on both clients.
 
-**Sidebar:** `--primary` (#1A1A2E), 260 px (collapsed 72). Inactive text `rgba(255,255,255,0.65)` (≥ 4.5:1 on primary), active `#FFFFFF`, active background `rgba(255,255,255,0.08)`, active indicator `--accent` 3 px bar left edge, hover `rgba(255,255,255,0.04)`. Icons accompany labels, never replace them. Groups: Overview · CRM & Sales · Property · Collections · Finance · Procurement · Reports · System, with separators. Group labels: 11px, font-weight 500, `rgba(255,255,255,0.50)` (5.1:1; the previous 0.40 gave 3.8:1), uppercase, letter-spacing 0.05em.
+**Sidebar:** `--secondary` (#17160F), 260 px (collapsed 72). Inactive text `rgba(255,255,255,0.65)` (≥ 4.5:1 on obsidian secondary), active `#FFFFFF`, active background `rgba(242,101,34,0.18)`, active indicator `--primary` 3 px bar left edge, hover `rgba(255,255,255,0.05)`. Icons accompany labels, never replace them. Groups: Overview · CRM & Sales · Property · Collections · Finance · Procurement · Reports · System, with separators. Group labels: 11px, font-weight 500, `rgba(255,255,255,0.50)`, uppercase, letter-spacing 0.05em.
 
-**Header:** 56px height. `--surface` background, 1px bottom border `--border`. Breadcrumb, page context, global search bar (centered, max-width 400px), **branch switcher** (a view filter over the user's allowed branches — a user belongs to one company, `prd.md` §4), **System Engine & Mode Badge** (shows `● Local Engine (100% Offline • Hardware Bound)` in subtle slate or `● Cloud Live (Asia/Dhaka • Synced)` with emerald indicator so users always know their data residency at a glance), fiscal-year/period chip, notifications, user menu. The company name is always visible so the user is never unsure where they are operating.
+**Header:** 56px height. Unified `--secondary` (#17160F) background matching the sidebar, seamless curved border transition to workspace. Breadcrumb in dark-variant, page context, global search bar (with ⌘K shortcut), **branch switcher**, **System Engine & Mode Badge**, fiscal-year/period badge, notifications, user profile menu.
 
 **Command palette** (`Ctrl/⌘ K`): elevated white surface, `rounded-modal`, 1px `--border-strong` border, grouped results (customers, leads, properties, projects, bookings, payments, receipts, journals) **and actions** ("New booking", "Record payment", "Go to ledger"), visible shortcuts, recent items first.
 
@@ -413,8 +416,60 @@ This document only works if drift is caught automatically.
 - **Icon test.** Every Lucide name referenced here exists in the pinned version.
 - **Status test.** Every enum in `prd.md` has an entry in the status map (family, icon, display label).
 
+## 16. Meridian Design Intelligence & Craft Standards (Skills Synthesis)
+
+This section persists the core visual, interaction, and typographic intelligence distilled from our active skill sets (`better-ui`, `better-typography`, `frontend-design`, `ui-ux-pro-max`). Any agent or human developer building or upgrading ExzaEstate components must apply these rules directly from this document without needing to re-read raw skill directories.
+
+### 16.1 Concentric Border Radii & Nested Geometry
+
+- **Concentric Formula:** Whenever an element is nested inside a container with padding, the inner element's border-radius must follow:
+  $$R_{\text{inner}} = \max(0, R_{\text{outer}} - \text{padding})$$
+  _(Example: A `rounded-modal` container with 16px padding must host inner items with `rounded-button` or `rounded-card` so inner corners don't pinch against outer corners)._
+- **Outer Elevation vs Inner Structure:** Outer containers use subtle box-shadows for elevation (`shadow-xs` / `shadow-lg`); internal dividers use crisp hairline borders (`border border-border/60`). Never stack multiple heavy borders inside each other.
+
+### 16.2 Optical Alignment & Icon Harmonization
+
+- **Optical Nudges:** Geometric centering often looks off-center to human eyes. When placing icons next to text, inside round containers, or in action buttons:
+  - Play triangles, chevron indicators, and asymmetric icons need a 0.5px–1px manual optical nudge.
+  - Buttons with text + icon: Align vertically with `items-center gap-1.5` or `gap-2`, ensuring icon size matches line-height.
+- **Icon Stroke-to-Weight Matching:**
+  - Lucide icons next to Regular (400) or Medium (500) text: stroke `1.5` to `1.75`.
+  - Lucide icons next to Semibold (600) or Bold (700) text: stroke `2.0`.
+  - Never place a hairline 1px icon beside bold header text.
+- **Single-SVG Recoloring:** Always use `currentColor` in SVG icons. State variations (hover, active, muted) are driven purely by CSS text-color classes (`text-text-muted`, `text-primary`, `text-accent-text`), never by swapping separate SVG files.
+
+### 16.3 Tactile Interaction Physics & Micro-Motion
+
+- **Tactile Scale on Press:** Interactive buttons, tabs, and action cards must provide crisp tactile feedback using `active:scale-[0.98]` (or `active:scale-[0.96]` on small icon buttons).
+- **Duration Restraint:** High-frequency interactions (hover, button click, dropdown select) must execute in $\le 150\text{ms}$ with `ease-out`. Never apply slow 300ms+ animations to everyday clicks.
+- **Interruptible Transitions:** Always declare exact transition properties (`transition-colors`, `transition-transform`, `transition-opacity`). **NEVER use `transition: all`**, which causes layout thrashing and smears during theme flips.
+- **Theme Swap Safety:** Theme transitions must suppress CSS transitions during theme switching (`*, *::before, *::after { transition: none !important }`) to snap instantly without rainbow smearing.
+
+### 16.4 Advanced Financial & ERP Typography
+
+- **Mandatory Tabular Numerals:** Every financial figure, BDT money display, countdown, voucher number, percentage, and table cell containing numbers **must** include `font-mono tabular-nums` (enforcing `font-variant-numeric: tabular-nums`). This prevents jitter and ensures ledger columns align with decimal precision.
+- **Semantic Text Wrapping:**
+  - `text-wrap: balance` on headers and section titles to eliminate single-word orphan wraps.
+  - `text-wrap: pretty` on paragraph descriptions to avoid typographic widows.
+  - `white-space: nowrap` on badges, status pills, and short action labels.
+  - `overflow-wrap: break-word` and `truncate` on user names, lead titles, and reference IDs.
+- **Line Length Measure Cap:** Long-form descriptions and narrative content must be capped at 60–75 characters (`max-w-prose` or `max-w-xl`) for readability.
+- **Natural Copy Case:** Store and render strings in natural sentence case. Never hardcode ALL CAPS in source strings; apply `uppercase tracking-wider` purely via CSS tokens for small metadata tags.
+- **Smart Punctuation:** Use en-dashes (`–`) for date/number ranges (e.g. `FY 2026–27`, `1–7 days`), curly quotes in prose, and true ellipsis (`…`) rather than three separate dots (`...`).
+
+### 16.5 Anti-Patterns & Visual Discipline
+
+- **Zero Mock Fallbacks in UI Components:** UI components must **never** hardcode fake mock arrays or fallback mock numbers (`14800000000n`, `24 units`, `8 VIP site visits`). Clean `0`, `0n`, or empty states (`All Operational Workflows Up To Date`) must be rendered when backend data is absent. Real data is seeded via `pnpm db:seed:demo`.
+- **Zero Bangla Strings in System Chrome:** System navigation, header bars, action centers, and command palettes must be strictly clean English. User names and company profiles in the database must use English text (`Anwar Hossain`, `ExzaEstate Development Ltd.`).
+- **Zero AI-Generated Visual Clichés:**
+  - Do NOT use Claude-style terracotta/clay accents, neon greens, or cyber glows.
+  - Do NOT chop layouts into identical generic cards with identical shadows.
+  - Do NOT insert fake numbered markers (`01 / 02 / 03`) unless the content is genuinely an ordered chronological sequence.
+- **Spend Boldness in Signature Moments:** Meridian spends its visual boldness exclusively in the 4 signature components: **Plan View (Plot Master Plan)**, **Payment Terrace**, **Balance Beam**, and **Posting Seal**. All supporting chrome remains calm, spacious, and disciplined.
+
 ### Changelog
 
+**Rev. 3 (2026-10-06).** Added §16 (Meridian Design Intelligence & Craft Standards) distilling rules from `better-ui`, `better-typography`, `frontend-design`, and `ui-ux-pro-max` into the canonical project constitution. Enforced zero mock data policy, concentric border radius formula, tactile press physics (`active:scale-[0.98]`), and strict English chrome.
 **Rev. 2 (2026-10-03).** Recomputed all contrast values: `--accent-text`, `--success`, `--warning`, `--danger`, `--void`, `--special`, `--text-muted` and `--border-input` adjusted so every pair passes; sidebar group labels raised to 0.50 alpha. Added `--primary-fg`, `--action`, `--on-action`, `--focus` and a dark-mode fix for the invisible primary button. Replaced the spacing table with allowed Tailwind steps; removed `rounded-sm/md/lg` aliases; added `text-th`, `text-small`, 11 px floor. Resolved word-collision statuses with display labels; moved Site Visit off the accent colour. Fixed contradictions (badge tint 10 vs 12 %, command-palette 2 px border, 150 vs 100 ms transitions, input vs button heights, `pulse-subtle` vs `skeleton-breathe`, `max-w-[1600px]` arbitrary value). Added: quick reference for AI agents (§0), Bengali font and BDT/area/date formatting (§3.1), control heights, z-index and breakpoints (§4.3), page templates (§4.4), sync states (§5.2), component catalogue (§6.1), cross-cutting patterns (§6.2), structural transitions, WCAG 2.2 specifics, print and QR security, governance (§15).
 
 > **One-line direction:** a calm, precise workspace for land and accounts — Deep Slate, Clean White, and a rare Warm Gold — that becomes unmistakable in four places: the Plan View, the Payment Terrace, the Balance Beam and the Posting Seal.

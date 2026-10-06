@@ -1,6 +1,6 @@
 /* =============================================================================
    theme.css — Single source of truth for the whole ERP UI
-   Brand:  Primary  #f26522 (orange)   Secondary  #17160f (warm ink)
+   Brand: Slate + Charcoal + Warm Gold (Meridian Design System)
    Edit tokens here → the entire app updates.
    ============================================================================= */
 
@@ -25,114 +25,132 @@
 @theme static {
   /* ── Typography ─────────────────────────────────────────────────────────── */
   --font-sans: 'Inter', 'Noto Sans Bengali', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
 
-  /* ── Brand · Primary (orange). 500 = brand colour ───────────────────────── */
-  --color-primary-50: #fff5ee;
-  --color-primary-100: #ffe8d9;
-  --color-primary-200: #ffd0b0;
-  --color-primary-300: #ffb07e;
-  --color-primary-400: #fb8647;
+  /* ── Meridian Unified Type Scale Tokens ──────────────────────────────────── */
+  --font-size-hero-num: 32px;
+  --font-size-display: 28px;
+  --font-size-h1: 22px;
+  --font-size-h2: 17px;
+  --font-size-h3: 14px;
+  --font-size-body: 14px;
+  --font-size-nav: 13px;
+  --font-size-btn: 13px;
+  --font-size-label: 12px;
+  --font-size-small: 12px;
+  --font-size-th: 12px;
+  --font-size-h4: 12px;
+  --font-size-h5: 11px;
+  --font-size-h6: 11px;
+  --font-size-caption: 11px;
+
+  /* ── Brand · Primary (#F26522 Saffron Orange). ExzaEstate Core ─────────── */
+  --color-primary-50: #fef6f0;
+  --color-primary-100: #fdeade;
+  --color-primary-200: #fbd2bb;
+  --color-primary-300: #f7b28d;
+  --color-primary-400: #f48b57;
   --color-primary-500: #f26522;
-  --color-primary-600: #d9500f;
-  --color-primary-700: #b43e0c;
-  --color-primary-800: #8f3210;
-  --color-primary-900: #742c12;
-  --color-primary-950: #401407;
+  --color-primary-600: #e04d0b;
+  --color-primary-700: #ba3a08;
+  --color-primary-800: #94300e;
+  --color-primary-900: #772a0f;
+  --color-primary-950: #401205;
 
   --color-primary: #f26522;
-  --color-primary-light: #fb8647;
-  --color-primary-deep: #d9500f;
-  --color-primary-fg: #b43e0c; /* brand-coloured text/icons on neutral surfaces (AA) */
-  --color-on-primary: #17160f; /* text on a primary fill */
+  --color-primary-light: #f5834b;
+  --color-primary-deep: #d94d0c;
+  --color-primary-fg: #f26522; /* brand-coloured text/icons */
+  --color-on-primary: #ffffff; /* text on a primary fill */
 
-  /* ── Brand · Secondary (warm ink). 900 = brand colour ───────────────────── */
-  --color-secondary-50: #faf9f7;
-  --color-secondary-100: #f3f1ec;
-  --color-secondary-200: #e8e5de;
-  --color-secondary-300: #d6d2c8;
-  --color-secondary-400: #a8a498;
-  --color-secondary-500: #7d7a6e;
-  --color-secondary-600: #5e5b50;
-  --color-secondary-700: #46443b;
-  --color-secondary-800: #2c2b23;
+  /* ── Brand · Secondary (#17160F Obsidian Charcoal). Exza Cockpit ───────── */
+  --color-secondary-50: #f7f7f5;
+  --color-secondary-100: #ecebe6;
+  --color-secondary-200: #dad8cd;
+  --color-secondary-300: #c1bea9;
+  --color-secondary-400: #8f8c74;
+  --color-secondary-500: #605e4b;
+  --color-secondary-600: #484738;
+  --color-secondary-700: #333226;
+  --color-secondary-800: #222117;
   --color-secondary-900: #17160f;
   --color-secondary-950: #0e0d09;
 
   --color-secondary: #17160f;
+  --color-secondary-light: #222117;
+  --color-secondary-deep: #0e0d09;
 
   /* ── Actions (buttons, links, focus) ────────────────────────────────────────
-     Ink text on brand orange = 5.8:1 (AA). White on #f26522 is only 3.1:1.
-     Prefer white text? Use --color-action: #b43e0c; --color-on-action: #ffffff; */
+     Light mode: Brand primary #F26522 fill with crisp white text. */
   --color-action: #f26522;
-  --color-action-hover: #ff7436;
-  --color-action-active: #e8590f;
-  --color-on-action: #17160f;
-  --color-focus: #d9500f;
+  --color-action-hover: #d94d0c;
+  --color-action-active: #ba3a08;
+  --color-on-action: #ffffff;
+  --color-focus: #f26522;
 
-  /* ── Accent (highlights, selected rows, active indicators) ──────────────── */
+  /* ── Accent (Brand Orange & Warm Highlight) ─────────────────────────────── */
   --color-accent: #f26522;
-  --color-accent-text: #b43e0c;
-  --color-accent-subtle: #fff0e6;
+  --color-accent-text: #c44309; /* 4.8:1 on surface (WCAG AA) */
+  --color-accent-subtle: #fdeade;
+  --color-accent-hover: #e04d0b;
 
-  /* ── Surfaces (warm neutrals, light default) ────────────────────────────── */
-  --color-bg: #faf9f7;
+  /* ── Surfaces (soft cool neutrals, light default) ───────────────────────── */
+  --color-bg: #f5f5f7;
   --color-surface: #ffffff;
   --color-surface-elevated: #ffffff;
-  --color-surface-sunken: #f3f1ec;
-  --color-surface-muted: #f3f1ec;
+  --color-surface-sunken: #ebebf0;
+  --color-surface-muted: #ebebf0;
   --color-surface-dark: #17160f;
 
   /* ── Text ───────────────────────────────────────────────────────────────── */
-  --color-text: #17160f;
-  --color-text-2: #46443b;
-  --color-text-muted: #68655b;
-  --color-text-disabled: #a8a498;
-  --color-text-primary: #17160f;
-  --color-text-secondary: #46443b;
+  --color-text: #1d1d1f;
+  --color-text-2: #424245;
+  --color-text-muted: #68686d;
+  --color-text-disabled: #aeaeb2;
+  --color-text-primary: #1d1d1f;
+  --color-text-secondary: #424245;
   --color-text-inverse: #ffffff;
   --color-text-inverse-muted: rgba(255, 255, 255, 0.7);
 
-  /* ── Borders ────────────────────────────────────────────────────────────── */
-  --color-border: #e8e5de;
-  --color-border-subtle: rgba(23, 22, 15, 0.05);
-  --color-border-strong: rgba(23, 22, 15, 0.14);
-  --color-border-input: #8a867a;
+  /* ── Borders (fine, hairline, crisp) ────────────────────────────────────── */
+  --color-border: #e5e5ea;
+  --color-border-subtle: rgba(0, 0, 0, 0.035);
+  --color-border-strong: rgba(0, 0, 0, 0.08);
+  --color-border-input: #86868b;
 
-  /* ── Semantic status ────────────────────────────────────────────────────────
-     Suggested real-estate mapping: success = available / paid · warning = due /
-     pending · danger = overdue / rejected · info = booked · special = premium /
-     on hold · void = cancelled. */
-  --color-success: #157347;
-  --color-warning: #8a5a00;
-  --color-danger: #c4223a;
-  --color-info: #1f5fbf;
-  --color-special: #6d3bd4;
-  --color-void: #5b5e6a;
+  /* ── Semantic status ────────────────────────────────────────────────────── */
+  --color-success: #197444;
+  --color-warning: #7c6200;
+  --color-danger: #b83429;
+  --color-info: #2563b1;
+  --color-special: #7a39e8;
+  --color-void: #5f6572;
 
-  /* ── Sidebar / app shell ────────────────────────────────────────────────── */
+  /* ── Sidebar / app shell (Obsidian #17160F + Saffron #F26522 Highlights) ── */
   --color-sidebar: #17160f;
-  --color-sidebar-fg: #f6f4ee;
-  --color-sidebar-muted: #a8a498;
-  --color-sidebar-hover: rgba(255, 248, 235, 0.06);
+  --color-sidebar-fg: #ffffff;
+  --color-sidebar-muted: rgba(255, 255, 255, 0.65);
+  --color-sidebar-hover: rgba(255, 255, 255, 0.05);
   --color-sidebar-active: rgba(242, 101, 34, 0.18);
-  --color-sidebar-border: rgba(255, 248, 235, 0.08);
+  --color-sidebar-border: rgba(255, 255, 255, 0.08);
 
   /* ── Chart palette (dashboards) ─────────────────────────────────────────── */
   --color-chart-1: #f26522;
   --color-chart-2: #17160f;
-  --color-chart-3: #0f8b8d;
-  --color-chart-4: #2f6fe4;
-  --color-chart-5: #8b5cf6;
-  --color-chart-6: #d99a0b;
+  --color-chart-3: #197444;
+  --color-chart-4: #2563b1;
+  --color-chart-5: #7a39e8;
+  --color-chart-6: #7c6200;
 
   /* ── Gradients ──────────────────────────────────────────────────────────── */
-  --gradient-brand: linear-gradient(135deg, #ff8a4c 0%, #f26522 50%, #d9500f 100%);
-  --gradient-ink: linear-gradient(160deg, #2c2b23 0%, #17160f 60%, #0e0d09 100%);
+  --gradient-brand: linear-gradient(135deg, #f5834b 0%, #f26522 50%, #d94d0c 100%);
+  --gradient-ink: linear-gradient(160deg, #222117 0%, #17160f 60%, #0e0d09 100%);
+  --gradient-gold: linear-gradient(135deg, #ff8743 0%, #f26522 50%, #d94d0c 100%);
 
   /* ── Radii ──────────────────────────────────────────────────────────────── */
-  --radius-button: 8px;
-  --radius-card: 12px;
-  --radius-modal: 16px;
+  --radius-button: 4px;
+  --radius-card: 8px;
+  --radius-modal: 12px;
   --radius-full: 9999px;
   --radius-sm: 8px;
   --radius-md: 8px;
@@ -147,12 +165,12 @@
   --height-control-md: 36px;
   --height-control-lg: 40px;
 
-  /* ── Elevation (warm-tinted) ────────────────────────────────────────────── */
-  --shadow-xs: 0 1px 1px rgba(23, 22, 15, 0.04);
-  --shadow-sm: 0 1px 2px rgba(23, 22, 15, 0.06), 0 1px 1px rgba(23, 22, 15, 0.03);
-  --shadow-md: 0 4px 12px rgba(23, 22, 15, 0.08), 0 1px 3px rgba(23, 22, 15, 0.04);
-  --shadow-lg: 0 12px 28px rgba(23, 22, 15, 0.12), 0 2px 6px rgba(23, 22, 15, 0.05);
-  --shadow-brand: 0 6px 16px rgba(242, 101, 34, 0.28);
+  /* ── Elevation ──────────────────────────────────────────────────────────── */
+  --shadow-xs: 0 1px 1px rgba(0, 0, 0, 0.03);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04), 0 1px 1px rgba(0, 0, 0, 0.02);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.03);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.09), 0 2px 6px rgba(0, 0, 0, 0.04);
+  --shadow-brand: 0 4px 14px rgba(26, 26, 46, 0.15);
 
   /* ── Motion ─────────────────────────────────────────────────────────────── */
   --ease-smooth: cubic-bezier(0.2, 0, 0, 1);
@@ -174,47 +192,68 @@
 
   --color-bg: #0e0d09;
   --color-surface: #17160f;
-  --color-surface-elevated: #211f17;
-  --color-surface-sunken: #0a0906;
-  --color-surface-muted: #0a0906;
-  --color-surface-dark: #0a0906;
+  --color-surface-elevated: #222117;
+  --color-surface-sunken: #090906;
+  --color-surface-muted: #090906;
+  --color-surface-dark: #17160f;
 
-  --color-text: #f6f4ee;
-  --color-text-2: #c9c5b8;
-  --color-text-muted: #9d998b;
-  --color-text-disabled: #5f5c52;
-  --color-text-primary: #f6f4ee;
-  --color-text-secondary: #c9c5b8;
+  --color-text: #f5f5f7;
+  --color-text-2: #b8b8bd;
+  --color-text-muted: #98989d;
+  --color-text-disabled: #5e5e62;
+  --color-text-primary: #f5f5f7;
+  --color-text-secondary: #b8b8bd;
 
-  --color-border: rgba(255, 248, 235, 0.09);
-  --color-border-subtle: rgba(255, 248, 235, 0.05);
-  --color-border-strong: rgba(255, 248, 235, 0.16);
-  --color-border-input: #7d7a6e;
+  /* Thinner, finer hairline borders */
+  --color-border: rgba(255, 255, 255, 0.065);
+  --color-border-subtle: rgba(255, 255, 255, 0.03);
+  --color-border-strong: rgba(255, 255, 255, 0.1);
+  --color-border-input: #7c7c80;
 
-  --color-primary-fg: #ff8a4c;
-  --color-focus: #ff8a4c;
-  --color-accent-text: #ff8a4c;
-  --color-accent-subtle: rgba(242, 101, 34, 0.16);
+  --color-primary: #f26522;
+  --color-primary-light: #f5834b;
+  --color-primary-deep: #d94d0c;
+  --color-primary-fg: #f26522;
 
-  --color-success: #4ade80;
+  --color-secondary: #17160f;
+
+  /* Executive Brand Action Button in Dark Mode */
+  --color-action: #f26522;
+  --color-action-hover: #f5834b;
+  --color-action-active: #d94d0c;
+  --color-on-action: #ffffff;
+  --color-focus: #f26522;
+
+  --color-accent: #f26522;
+  --color-accent-text: #f5834b;
+  --color-accent-subtle: rgba(242, 101, 34, 0.18);
+
+  --color-success: #34d399;
   --color-warning: #fbbf24;
-  --color-danger: #ff7b8a;
-  --color-info: #6aa8ff;
-  --color-special: #b79cff;
-  --color-void: #a3a7b3;
+  --color-danger: #f97f7f;
+  --color-info: #63a7fa;
+  --color-special: #ae94fa;
+  --color-void: #9ea5b1;
 
-  --color-sidebar: #0a0906;
+  --color-sidebar: #17160f;
+  --color-sidebar-fg: #ffffff;
+  --color-sidebar-muted: rgba(255, 255, 255, 0.65);
+  --color-sidebar-hover: rgba(255, 255, 255, 0.05);
+  --color-sidebar-active: rgba(242, 101, 34, 0.18);
+  --color-sidebar-border: rgba(255, 255, 255, 0.08);
 
-  --color-chart-2: #d6d2c8;
-  --color-chart-3: #2dd4bf;
-  --color-chart-4: #6aa8ff;
-  --color-chart-5: #b79cff;
+  --color-chart-1: #f26522;
+  --color-chart-2: #222117;
+  --color-chart-3: #34d399;
+  --color-chart-4: #63a7fa;
+  --color-chart-5: #ae94fa;
   --color-chart-6: #fbbf24;
 
-  --shadow-xs: 0 1px 1px rgba(0, 0, 0, 0.3);
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.45);
-  --shadow-lg: 0 12px 28px rgba(0, 0, 0, 0.55);
+  --shadow-xs: 0 1px 1px rgba(0, 0, 0, 0.35);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.45);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 12px 28px rgba(0, 0, 0, 0.6);
+  --shadow-brand: 0 4px 16px rgba(242, 101, 34, 0.25);
 }
 
 /* ── Dark mode: follow the OS unless the user forced light ────────────────── */
@@ -225,58 +264,171 @@
 
     --color-bg: #0e0d09;
     --color-surface: #17160f;
-    --color-surface-elevated: #211f17;
-    --color-surface-sunken: #0a0906;
-    --color-surface-muted: #0a0906;
-    --color-surface-dark: #0a0906;
+    --color-surface-elevated: #222117;
+    --color-surface-sunken: #090906;
+    --color-surface-muted: #090906;
+    --color-surface-dark: #17160f;
 
-    --color-text: #f6f4ee;
-    --color-text-2: #c9c5b8;
-    --color-text-muted: #9d998b;
-    --color-text-disabled: #5f5c52;
-    --color-text-primary: #f6f4ee;
-    --color-text-secondary: #c9c5b8;
+    --color-text: #f5f5f7;
+    --color-text-2: #b8b8bd;
+    --color-text-muted: #98989d;
+    --color-text-disabled: #5e5e62;
+    --color-text-primary: #f5f5f7;
+    --color-text-secondary: #b8b8bd;
 
-    --color-border: rgba(255, 248, 235, 0.09);
-    --color-border-subtle: rgba(255, 248, 235, 0.05);
-    --color-border-strong: rgba(255, 248, 235, 0.16);
-    --color-border-input: #7d7a6e;
+    /* Thinner, finer hairline borders */
+    --color-border: rgba(255, 255, 255, 0.065);
+    --color-border-subtle: rgba(255, 255, 255, 0.03);
+    --color-border-strong: rgba(255, 255, 255, 0.1);
+    --color-border-input: #7c7c80;
 
-    --color-primary-fg: #ff8a4c;
-    --color-focus: #ff8a4c;
-    --color-accent-text: #ff8a4c;
-    --color-accent-subtle: rgba(242, 101, 34, 0.16);
+    --color-primary: #f26522;
+    --color-primary-light: #f5834b;
+    --color-primary-deep: #d94d0c;
+    --color-primary-fg: #f26522;
 
-    --color-success: #4ade80;
+    --color-secondary: #17160f;
+
+    /* Executive Brand Action Button in Dark Mode */
+    --color-action: #f26522;
+    --color-action-hover: #f5834b;
+    --color-action-active: #d94d0c;
+    --color-on-action: #ffffff;
+    --color-focus: #f26522;
+
+    --color-accent: #f26522;
+    --color-accent-text: #f5834b;
+    --color-accent-subtle: rgba(242, 101, 34, 0.18);
+
+    --color-success: #34d399;
     --color-warning: #fbbf24;
-    --color-danger: #ff7b8a;
-    --color-info: #6aa8ff;
-    --color-special: #b79cff;
-    --color-void: #a3a7b3;
+    --color-danger: #f97f7f;
+    --color-info: #63a7fa;
+    --color-special: #ae94fa;
+    --color-void: #9ea5b1;
 
-    --color-sidebar: #0a0906;
+    --color-sidebar: #17160f;
+    --color-sidebar-fg: #ffffff;
+    --color-sidebar-muted: rgba(255, 255, 255, 0.65);
+    --color-sidebar-hover: rgba(255, 255, 255, 0.05);
+    --color-sidebar-active: rgba(242, 101, 34, 0.18);
+    --color-sidebar-border: rgba(255, 255, 255, 0.08);
 
-    --color-chart-2: #d6d2c8;
-    --color-chart-3: #2dd4bf;
-    --color-chart-4: #6aa8ff;
-    --color-chart-5: #b79cff;
+    --color-chart-1: #f26522;
+    --color-chart-2: #222117;
+    --color-chart-3: #34d399;
+    --color-chart-4: #63a7fa;
+    --color-chart-5: #ae94fa;
     --color-chart-6: #fbbf24;
 
-    --shadow-xs: 0 1px 1px rgba(0, 0, 0, 0.3);
-    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
-    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.45);
-    --shadow-lg: 0 12px 28px rgba(0, 0, 0, 0.55);
+    --shadow-xs: 0 1px 1px rgba(0, 0, 0, 0.35);
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.45);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5);
+    --shadow-lg: 0 12px 28px rgba(0, 0, 0, 0.6);
+    --shadow-brand: 0 4px 16px rgba(242, 101, 34, 0.25);
   }
 }
 
 /* ── Base ─────────────────────────────────────────────────────────────────── */
 @layer base {
-  body {
-    background-color: var(--color-bg);
-    color: var(--color-text);
+  html {
+    font-family: var(--font-sans);
+    font-size: 14px;
+    font-optical-sizing: auto;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
+    font-feature-settings: 'cv11' 1, 'ss01' 1;
+    letter-spacing: -0.005em;
+  }
+
+  body {
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    font-family: var(--font-sans);
+    font-size: 14px;
+    line-height: 1.6;
+    letter-spacing: -0.005em;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    font-feature-settings: 'cv11' 1, 'ss01' 1;
+  }
+
+  /* Semantic Heading Scale (Descending & Balanced, better-typography) */
+  h1 {
+    font-size: 22px;
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+    text-wrap: balance;
+    overflow-wrap: break-word;
+  }
+
+  h2 {
+    font-size: 17px;
+    font-weight: 600;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+    overflow-wrap: break-word;
+  }
+
+  h3 {
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.4;
+    letter-spacing: 0;
+    text-wrap: balance;
+    overflow-wrap: break-word;
+  }
+
+  h4 {
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.4;
+    letter-spacing: 0.01em;
+    text-wrap: balance;
+    overflow-wrap: break-word;
+  }
+
+  h5 {
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1.3;
+    letter-spacing: 0.01em;
+    text-wrap: balance;
+    overflow-wrap: break-word;
+  }
+
+  h6 {
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1.3;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  /* Paragraphs and descriptions: prevent orphaned words (better-typography) */
+  p {
+    text-wrap: pretty;
+    overflow-wrap: break-word;
+  }
+
+  /* Underline ergonomics from font metrics (better-typography) */
+  a {
+    text-underline-position: from-font;
+    text-decoration-skip-ink: auto;
+  }
+
+  /* Numeric data in tables, inputs, codes: tabular numbers */
+  table,
+  input[type='number'],
+  .tabular-nums,
+  .text-num,
+  .font-mono {
+    font-variant-numeric: tabular-nums slashed-zero;
   }
 
   ::selection {
@@ -309,34 +461,50 @@
    Inside @layer components so Tailwind utilities (p-0, text-sm, …) can still
    override them. */
 @layer components {
+  /* Hero numbers and display */
+  .text-hero-num {
+    font-size: 32px;
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums slashed-zero;
+  }
   .text-display {
     font-size: 28px;
     font-weight: 600;
     line-height: 1.15;
     letter-spacing: -0.02em;
+    text-wrap: balance;
   }
+
+  /* Headings */
   .text-h1 {
     font-size: 22px;
     font-weight: 600;
     line-height: 1.2;
     letter-spacing: -0.015em;
+    text-wrap: balance;
   }
   .text-h2 {
     font-size: 17px;
     font-weight: 600;
     line-height: 1.3;
     letter-spacing: -0.01em;
+    text-wrap: balance;
   }
   .text-h3 {
     font-size: 14px;
     font-weight: 600;
     line-height: 1.4;
+    letter-spacing: 0;
+    text-wrap: balance;
   }
   .text-h4 {
     font-size: 12px;
     font-weight: 600;
     line-height: 1.4;
     letter-spacing: 0.01em;
+    text-wrap: balance;
   }
   .text-h5 {
     font-size: 11px;
@@ -348,14 +516,42 @@
     font-size: 11px;
     font-weight: 600;
     line-height: 1.3;
-    letter-spacing: 0.02em;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
     color: var(--color-text-muted);
   }
+
+  /* Body & Navigation */
   .text-body {
     font-size: 14px;
     font-weight: 400;
     line-height: 1.6;
+    letter-spacing: -0.005em;
+    text-wrap: pretty;
   }
+  .text-body-medium {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.5;
+    letter-spacing: -0.005em;
+    text-wrap: pretty;
+  }
+  .text-nav {
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.3;
+    letter-spacing: -0.005em;
+    white-space: nowrap;
+  }
+  .text-btn {
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+  }
+
+  /* Small & Labels */
   .text-label {
     font-size: 12px;
     font-weight: 500;
@@ -365,6 +561,12 @@
   .text-small {
     font-size: 12px;
     font-weight: 400;
+    line-height: 1.4;
+    text-wrap: pretty;
+  }
+  .text-small-medium {
+    font-size: 12px;
+    font-weight: 500;
     line-height: 1.4;
   }
   .text-caption {
@@ -377,28 +579,20 @@
     font-size: 12px;
     font-weight: 600;
     line-height: 1.3;
-    letter-spacing: 0.01em;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
     color: var(--color-text-muted);
-  }
-  .text-btn {
-    font-size: 13px;
-    font-weight: 500;
-    line-height: 1;
-    letter-spacing: 0.01em;
-  }
-  .text-num {
-    font-variant-numeric: tabular-nums;
-  }
-  .text-hero-num {
-    font-size: 32px;
-    font-weight: 600;
-    line-height: 1;
-    letter-spacing: -0.02em;
-    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
   }
 
-  /* Bengali needs more vertical room and no negative tracking (set lang="bn") */
+  /* Numerics */
+  .text-num {
+    font-variant-numeric: tabular-nums slashed-zero;
+  }
+
+  /* Bengali script adjustments */
   :lang(bn) .text-body,
+  :lang(bn) .text-body-medium,
   :lang(bn) .text-small,
   :lang(bn) .text-caption {
     line-height: 1.7;
@@ -533,3 +727,23 @@
     opacity: 0.65;
   }
 }
+
+/* ── Sleek Custom Scrollbar for Sidebar & Modals ────────────────────────────── */
+.sidebar-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.12) transparent;
+}
+.sidebar-scroll::-webkit-scrollbar {
+  width: 4px;
+}
+.sidebar-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.sidebar-scroll::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 9999px;
+}
+.sidebar-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+

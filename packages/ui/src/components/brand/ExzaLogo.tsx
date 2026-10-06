@@ -2,7 +2,7 @@ import React from 'react';
 
 export interface ExzaLogoProps extends React.SVGProps<SVGSVGElement> {
   size?: number | string;
-  variant?: 'gold' | 'white' | 'dark';
+  variant?: 'gold' | 'white' | 'dark' | 'primary';
   showText?: boolean;
   className?: string;
 }
@@ -10,7 +10,7 @@ export interface ExzaLogoProps extends React.SVGProps<SVGSVGElement> {
 /**
  * Official ExzaEstate Architectural Cadastre Monogram & Logo Mark.
  * Combines the letter 'E' with multistoried structural pillars,
- * golden precision beams, and cadastral land parcel subdivision geometry.
+ * signature saffron orange precision beams, and cadastral land parcel subdivision geometry.
  */
 export function ExzaLogoIcon({
   size = 36,
@@ -18,12 +18,13 @@ export function ExzaLogoIcon({
   className = '',
   ...props
 }: Omit<ExzaLogoProps, 'showText'>) {
-  const strokeColors: Record<'gold' | 'white' | 'dark', string> = {
-    gold: '#C8A951',
+  const strokeColors: Record<'gold' | 'white' | 'dark' | 'primary', string> = {
+    gold: '#F26522',
+    primary: '#F26522',
     white: '#FFFFFF',
-    dark: '#1A1A2E',
+    dark: '#17160F',
   };
-  const strokeColor = strokeColors[variant] ?? '#C8A951';
+  const strokeColor = strokeColors[variant] ?? '#F26522';
 
   return (
     <svg
@@ -127,7 +128,7 @@ export function ExzaLogo({
               Exza<span className="text-accent">Estate</span>
             </span>
           </div>
-          <span className={`text-[10px] font-medium tracking-widest uppercase ${subtitleColor}`}>
+          <span className={`text-h6 font-medium tracking-widest uppercase ${subtitleColor}`}>
             Real Estate ERP
           </span>
         </div>
