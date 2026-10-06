@@ -1,4 +1,4 @@
-import React from 'react';
+import type { ReactNode } from 'react';
 import {
   Users,
   Building2,
@@ -10,6 +10,13 @@ import {
   CheckCircle,
   LayoutDashboard,
   ShieldCheck,
+  UserCheck,
+  CreditCard,
+  Clock,
+  Landmark,
+  Settings,
+  Shield,
+  PlusCircle,
 } from 'lucide-react';
 
 export interface NavCommand {
@@ -17,58 +24,222 @@ export interface NavCommand {
   title: string;
   category: string;
   path: string;
-  icon: React.ReactNode;
+  keywords: string[];
+  icon: ReactNode;
 }
 
-export const DEFAULT_COMMANDS: NavCommand[] = [
+export const ALL_NAV_COMMANDS: NavCommand[] = [
+  // ── Quick Transactions (New Record Launchers) ──────────────────────────────
+  {
+    id: 'tx-receipt',
+    title: '+ Issue Money Receipt (Installment / Booking Payment)',
+    category: 'Quick Transactions',
+    path: '/collection/receipts',
+    keywords: ['new', 'create', 'payment', 'receipt', 'money', 'cheque', 'collection'],
+    icon: <PlusCircle className="w-4 h-4 text-emerald-400" />,
+  },
+  {
+    id: 'tx-booking',
+    title: '+ New Booking & Agreement (Plot / Flat Sale)',
+    category: 'Quick Transactions',
+    path: '/sales/bookings',
+    keywords: ['new', 'booking', 'sale', 'agreement', 'allotment', 'buyer'],
+    icon: <PlusCircle className="w-4 h-4 text-accent" />,
+  },
+  {
+    id: 'tx-lead',
+    title: '+ Register New Lead & Prospect (Inquiry)',
+    category: 'Quick Transactions',
+    path: '/crm/leads',
+    keywords: ['new', 'lead', 'prospect', 'inquiry', 'customer', 'phone'],
+    icon: <PlusCircle className="w-4 h-4 text-info" />,
+  },
+  {
+    id: 'tx-cust',
+    title: '+ Add Customer KYC Profile (NID & Nominee)',
+    category: 'Quick Transactions',
+    path: '/crm/customers',
+    keywords: ['new', 'customer', 'kyc', 'nid', 'client', 'profile'],
+    icon: <PlusCircle className="w-4 h-4 text-primary" />,
+  },
+  {
+    id: 'tx-exp',
+    title: '+ Record Operational Expense Voucher',
+    category: 'Quick Transactions',
+    path: '/operations/expenses',
+    keywords: ['new', 'expense', 'voucher', 'bill', 'vendor', 'payment', 'ap'],
+    icon: <PlusCircle className="w-4 h-4 text-warning" />,
+  },
+  {
+    id: 'tx-prop',
+    title: '+ Add Inventory Plot / Apartment Unit',
+    category: 'Quick Transactions',
+    path: '/properties',
+    keywords: ['new', 'plot', 'unit', 'property', 'flat', 'inventory'],
+    icon: <PlusCircle className="w-4 h-4 text-special" />,
+  },
+
+  // ── Overview & Navigation ──────────────────────────────────────────────────
   {
     id: 'cmd-dash',
     title: 'Go to Executive Dashboard',
-    category: 'Navigation',
+    category: 'Overview',
     path: '/dashboard',
+    keywords: ['home', 'overview', 'kpi', 'metrics', 'analytics', 'performance'],
     icon: <LayoutDashboard className="w-4 h-4 text-primary" />,
   },
   {
-    id: 'cmd-prop',
-    title: 'Browse Property Inventory',
-    category: 'Navigation',
-    path: '/properties',
-    icon: <Building2 className="w-4 h-4 text-special" />,
+    id: 'cmd-rep',
+    title: 'Reports Hub & Financial Statements',
+    category: 'Overview',
+    path: '/reports',
+    keywords: ['reports', 'trial balance', 'balance sheet', 'income statement', 'audit'],
+    icon: <FileSpreadsheet className="w-4 h-4 text-info" />,
+  },
+
+  // ── CRM & Sales ────────────────────────────────────────────────────────────
+  {
+    id: 'cmd-lead',
+    title: 'Leads & Prospects Pipeline',
+    category: 'CRM & Sales',
+    path: '/crm/leads',
+    keywords: ['leads', 'prospects', 'crm', 'pipeline', 'inquiries'],
+    icon: <Users className="w-4 h-4 text-accent-text" />,
+  },
+  {
+    id: 'cmd-cust',
+    title: 'Customer Directory & KYC 360',
+    category: 'CRM & Sales',
+    path: '/crm/customers',
+    keywords: ['customer', 'clients', 'kyc', 'nid', 'nominee', 'buyers'],
+    icon: <UserCheck className="w-4 h-4 text-primary" />,
   },
   {
     id: 'cmd-book',
     title: 'View All Bookings',
-    category: 'Navigation',
+    category: 'CRM & Sales',
     path: '/sales/bookings',
+    keywords: ['bookings', 'agreements', 'allotment', 'sales', 'contracts'],
     icon: <Receipt className="w-4 h-4 text-accent-text" />,
   },
   {
-    id: 'cmd-col',
-    title: 'Collection & Receipts',
-    category: 'Navigation',
-    path: '/collection/receipts',
-    icon: <CheckCircle className="w-4 h-4 text-success" />,
+    id: 'cmd-quote',
+    title: 'Quotations & Pricing Plans',
+    category: 'CRM & Sales',
+    path: '/sales/quotations',
+    keywords: ['quotation', 'pricing', 'installment plan', 'estimate', 'cost'],
+    icon: <FileText className="w-4 h-4 text-special" />,
   },
   {
-    id: 'cmd-rep',
-    title: 'Reports Hub & Financials',
-    category: 'Navigation',
-    path: '/reports',
-    icon: <FileSpreadsheet className="w-4 h-4 text-info" />,
+    id: 'cmd-appr',
+    title: 'Discount & Approval Matrix',
+    category: 'CRM & Sales',
+    path: '/sales/approvals',
+    keywords: ['approvals', 'discounts', 'exceptions', 'maker checker'],
+    icon: <ShieldCheck className="w-4 h-4 text-warning" />,
+  },
+
+  // ── Properties & Inventory ─────────────────────────────────────────────────
+  {
+    id: 'cmd-prop',
+    title: 'Browse Property Inventory',
+    category: 'Property',
+    path: '/properties',
+    keywords: ['plots', 'flats', 'units', 'inventory', 'master plan', 'stock'],
+    icon: <Building2 className="w-4 h-4 text-special" />,
+  },
+
+  // ── Finance & Treasury ─────────────────────────────────────────────────────
+  {
+    id: 'cmd-col',
+    title: 'Money Receipts & Collections',
+    category: 'Finance',
+    path: '/collection/receipts',
+    keywords: ['collections', 'money receipts', 'payments', 'cash', 'mr'],
+    icon: <Receipt className="w-4 h-4 text-emerald-400" />,
+  },
+  {
+    id: 'cmd-chq',
+    title: 'Cheques Register & Clearing',
+    category: 'Finance',
+    path: '/collection/cheques',
+    keywords: ['cheques', 'clearing', 'bounced', 'deposit', 'bank'],
+    icon: <CreditCard className="w-4 h-4 text-info" />,
+  },
+  {
+    id: 'cmd-aging',
+    title: 'AR Aging Analysis (30-60-90+ Days)',
+    category: 'Finance',
+    path: '/collection/aging',
+    keywords: ['aging', 'overdue', 'installments', 'debtors', 'receivables'],
+    icon: <Clock className="w-4 h-4 text-danger" />,
+  },
+  {
+    id: 'cmd-coa',
+    title: 'Chart of Accounts (COA)',
+    category: 'Finance',
+    path: '/accounting/chart-of-accounts',
+    keywords: ['coa', 'accounts', 'ledger', 'general ledger', 'accounting'],
+    icon: <Landmark className="w-4 h-4 text-primary" />,
+  },
+
+  // ── Operations & System ────────────────────────────────────────────────────
+  {
+    id: 'cmd-exp',
+    title: 'Operational Expenses & AP',
+    category: 'Operations',
+    path: '/operations/expenses',
+    keywords: ['expenses', 'bills', 'procurement', 'operating cost'],
+    icon: <Briefcase className="w-4 h-4 text-warning" />,
+  },
+  {
+    id: 'cmd-user',
+    title: 'Users & RBAC Roles',
+    category: 'System',
+    path: '/users',
+    keywords: ['users', 'roles', 'permissions', 'staff', 'access'],
+    icon: <Shield className="w-4 h-4 text-primary" />,
+  },
+  {
+    id: 'cmd-sett',
+    title: 'Company Settings & Numbering',
+    category: 'System',
+    path: '/settings',
+    keywords: ['settings', 'numbering', 'prefix', 'fiscal year', 'policy'],
+    icon: <Settings className="w-4 h-4 text-text-muted" />,
   },
   {
     id: 'cmd-aud',
     title: 'Security & Audit Log Viewer',
-    category: 'Navigation',
+    category: 'System',
     path: '/audit',
+    keywords: ['audit', 'security events', 'logs', 'compliance', 'history'],
     icon: <ShieldCheck className="w-4 h-4 text-void" />,
   },
 ];
 
-export function getEntityIcon(type: string): React.ReactNode {
+const DEFAULT_COMMAND_IDS = [
+  'tx-receipt',
+  'tx-booking',
+  'tx-lead',
+  'tx-cust',
+  'tx-exp',
+  'tx-prop',
+  'cmd-dash',
+  'cmd-prop',
+  'cmd-book',
+  'cmd-rep',
+  'cmd-aud',
+];
+
+export const DEFAULT_COMMANDS: NavCommand[] = DEFAULT_COMMAND_IDS.map((id) =>
+  ALL_NAV_COMMANDS.find((cmd) => cmd.id === id),
+).filter((cmd): cmd is NavCommand => Boolean(cmd));
+
+export function getEntityIcon(type: string): ReactNode {
   switch (type.toUpperCase()) {
     case 'CUSTOMER':
-      return <Users className="w-4 h-4 text-primary" />;
+      return <UserCheck className="w-4 h-4 text-primary" />;
     case 'LEAD':
       return <Users className="w-4 h-4 text-accent-text" />;
     case 'BOOKING':
@@ -102,4 +273,15 @@ const ENTITY_PATH_MAP: Record<string, string> = {
 
 export function resolveEntityPath(type: string): string {
   return ENTITY_PATH_MAP[type.toUpperCase()] ?? '/dashboard';
+}
+
+export function filterNavCommands(query: string): NavCommand[] {
+  const q = query.trim().toLowerCase();
+  if (!q) return ALL_NAV_COMMANDS;
+
+  return ALL_NAV_COMMANDS.filter((cmd) => {
+    if (cmd.title.toLowerCase().includes(q)) return true;
+    if (cmd.category.toLowerCase().includes(q)) return true;
+    return cmd.keywords.some((k) => k.toLowerCase().includes(q));
+  });
 }

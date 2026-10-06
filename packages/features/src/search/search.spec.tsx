@@ -58,4 +58,24 @@ describe('Global Search Command Palette', () => {
     fireEvent.keyDown(window, { key: 'Escape' });
     expect(onClose).toHaveBeenCalled();
   });
+
+  it('transitions from closed (isOpen: false) to open (isOpen: true) without hook order violations', () => {
+    const onClose = vi.fn();
+    const { rerender } = render(
+      <MemoryRouter>
+        <GlobalSearchCommandPalette isOpen={false} onClose={onClose} />
+      </MemoryRouter>,
+    );
+
+    expect(screen.queryByPlaceholderText(/Search across customers/i)).toBeNull();
+
+    // Rerender as open — must strictly avoid "Rendered more hooks than during the previous render"
+    rerender(
+      <MemoryRouter>
+        <GlobalSearchCommandPalette isOpen={true} onClose={onClose} />
+      </MemoryRouter>,
+    );
+
+    expect(screen.getByPlaceholderText(/Search across customers/i)).toBeDefined();
+  });
 });

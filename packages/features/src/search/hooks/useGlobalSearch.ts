@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import type { QueryKey } from '@tanstack/react-query';
 import { useSearchControllerGlobalSearch } from '@exzaestate/api-client';
 
 export type SearchEntityType =
@@ -45,6 +46,7 @@ export function useGlobalSearch(delayMs: number = 250) {
 
   const query = useSearchControllerGlobalSearch<GlobalSearchResponse>({
     query: {
+      queryKey: ['/api/v1/search', debouncedQuery] as unknown as QueryKey,
       enabled: debouncedQuery.length >= 2,
     },
     request: {
