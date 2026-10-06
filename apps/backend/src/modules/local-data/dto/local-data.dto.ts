@@ -2,7 +2,10 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class LocalProvisioningDto {
-  @ApiPropertyOptional({ description: 'Company name for local standalone', example: 'ExzaEstate Local Ltd' })
+  @ApiPropertyOptional({
+    description: 'Company name for local standalone',
+    example: 'ExzaEstate Local Ltd',
+  })
   @IsOptional()
   @IsString()
   companyName?: string;
@@ -12,7 +15,10 @@ export class LocalProvisioningDto {
   @IsString()
   companyCode?: string;
 
-  @ApiPropertyOptional({ description: 'Administrator email', example: 'admin@local.exzaestate.internal' })
+  @ApiPropertyOptional({
+    description: 'Administrator email',
+    example: 'admin@local.exzaestate.internal',
+  })
   @IsOptional()
   @IsString()
   adminEmail?: string;
@@ -22,7 +28,10 @@ export class LocalProvisioningDto {
   @IsString()
   adminName?: string;
 
-  @ApiPropertyOptional({ description: 'Administrator initial password', example: 'AdminLocal1234!' })
+  @ApiPropertyOptional({
+    description: 'Administrator initial password',
+    example: 'AdminLocal1234!',
+  })
   @IsOptional()
   @IsString()
   adminPassword?: string;
@@ -31,6 +40,30 @@ export class LocalProvisioningDto {
   @IsOptional()
   @IsString()
   timezone?: string;
+
+  @ApiPropertyOptional({
+    description: 'Company trade license number',
+    example: 'TRAD/DNCC/019283/2026',
+  })
+  @IsOptional()
+  @IsString()
+  tradeLicense?: string;
+
+  @ApiPropertyOptional({
+    description: 'License key issued on purchase',
+    example: 'EXZA-ENTERPRISE-2026-ABCD-EF01-9999',
+  })
+  @IsOptional()
+  @IsString()
+  licenseKey?: string;
+
+  @ApiPropertyOptional({
+    description: 'Machine fingerprint ID',
+    example: '8f4c2b9a7d1e3f5a8b0c4e6d2f1a9b7c...',
+  })
+  @IsOptional()
+  @IsString()
+  machineId?: string;
 }
 
 export class CreateLocalBackupDto {
@@ -39,7 +72,10 @@ export class CreateLocalBackupDto {
   @IsString()
   destinationDir?: string;
 
-  @ApiPropertyOptional({ description: 'Optional label or reason for the backup', example: 'Pre-tax audit backup' })
+  @ApiPropertyOptional({
+    description: 'Optional label or reason for the backup',
+    example: 'Pre-tax audit backup',
+  })
   @IsOptional()
   @IsString()
   label?: string;

@@ -35,7 +35,7 @@ export class ManagingDirectorStep implements ProvisioningStep {
       update: {
         fullName: ctx.managingDirector.fullName,
         phone: ctx.managingDirector.phone,
-        ...(isLocalMode ? { passwordHash, status } : {}),
+        ...(isLocalMode ? { passwordHash, status, isTwoFactorEnabled: true } : {}),
       },
       create: {
         companyId: ctx.companyId,
@@ -44,6 +44,7 @@ export class ManagingDirectorStep implements ProvisioningStep {
         fullName: ctx.managingDirector.fullName,
         phone: ctx.managingDirector.phone,
         status,
+        isTwoFactorEnabled: isLocalMode,
       },
     });
 

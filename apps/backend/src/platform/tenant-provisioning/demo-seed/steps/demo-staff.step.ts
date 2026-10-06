@@ -16,7 +16,7 @@ interface DemoStaffTemplate {
 const DEMO_STAFF_TEMPLATES: DemoStaffTemplate[] = [
   {
     prefix: 'gm',
-    fullName: 'মোহাম্মদ রফিক (Mohammad Rafiq)',
+    fullName: 'Mohammad Rafiq',
     phone: '+8801700000002',
     roleCode: 'GENERAL_MANAGER',
     employeeCode: 'EMP-002',
@@ -24,7 +24,7 @@ const DEMO_STAFF_TEMPLATES: DemoStaffTemplate[] = [
   },
   {
     prefix: 'accountant',
-    fullName: 'ফারহানা হক (Farhana Haque)',
+    fullName: 'Farhana Haque',
     phone: '+8801700000003',
     roleCode: 'ACCOUNTANT',
     employeeCode: 'EMP-003',
@@ -33,7 +33,7 @@ const DEMO_STAFF_TEMPLATES: DemoStaffTemplate[] = [
   },
   {
     prefix: 'executive',
-    fullName: 'তানভীর আহমেদ (Tanveer Ahmed)',
+    fullName: 'Tanveer Ahmed',
     phone: '+8801700000004',
     roleCode: 'EXECUTIVE',
     employeeCode: 'EMP-004',
@@ -42,7 +42,7 @@ const DEMO_STAFF_TEMPLATES: DemoStaffTemplate[] = [
   },
   {
     prefix: 'executive2',
-    fullName: 'নুসরাত জাহান (Nusrat Jahan)',
+    fullName: 'Nusrat Jahan',
     phone: '+8801700000005',
     roleCode: 'EXECUTIVE',
     employeeCode: 'EMP-005',
@@ -99,6 +99,7 @@ export class DemoStaffStep implements DemoSeedStep {
           phone: template.phone,
           status: 'ACTIVE',
           passwordHash,
+          isTwoFactorEnabled: true,
         },
         create: {
           companyId: ctx.companyId,
@@ -107,6 +108,7 @@ export class DemoStaffStep implements DemoSeedStep {
           phone: template.phone,
           status: 'ACTIVE',
           passwordHash,
+          isTwoFactorEnabled: true,
         },
       });
 
