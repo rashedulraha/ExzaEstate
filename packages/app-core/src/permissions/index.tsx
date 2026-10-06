@@ -1,4 +1,5 @@
 import { useMemo, type ReactNode, type ReactElement } from 'react';
+import { NoPermissionState } from '@exzaestate/ui';
 import { useAuth } from '../session/index.js';
 
 export type PermissionScope = 'OWN' | 'TEAM' | 'BRANCH' | 'ALL';
@@ -68,13 +69,16 @@ export interface PermissionGateProps {
 export function PermissionGate({
   permission,
   scope,
-  fallback = null,
+  fallback,
   children,
 }: PermissionGateProps): ReactElement | null {
   const { hasPermission } = usePermission(permission, scope);
 
   if (!hasPermission) {
-    return <>{fallback}</>;
+    if (fallback !== undefined) {
+      return fallback === null ? null : <>{fallback}</>;
+    }
+    return <NoPermissionState permission={permission} onGoBack={() => window.history.back()} />;
   }
 
   return <>{children}</>;

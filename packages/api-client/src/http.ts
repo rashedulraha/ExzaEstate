@@ -49,6 +49,10 @@ export function setAuthToken(token: string | null): void {
   currentAuthToken = token;
 }
 
+export function getAuthToken(): string | null {
+  return currentAuthToken;
+}
+
 export function setTokenGetter(getter: () => string | null | Promise<string | null>): void {
   tokenGetter = getter;
 }

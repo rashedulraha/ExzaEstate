@@ -1,6 +1,7 @@
 import { Component, type ReactNode, type ErrorInfo } from 'react';
 import { ApiError } from '@exzaestate/api-client';
 import { ERROR_CODES, t } from '@exzaestate/shared';
+import { ErrorState } from '@exzaestate/ui';
 
 const FALLBACK_ERROR_MESSAGES: Record<string, string> = {
   [ERROR_CODES.VALIDATION_ERROR]: 'Please verify the entered details and try again.',
@@ -118,40 +119,11 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
       }
 
       return (
-        <div
-          className="flex min-h-[300px] flex-col items-center justify-center p-8 text-center"
-          role="alert"
-        >
-          <div className="mb-4 rounded-full bg-red-100 p-3 text-red-600 dark:bg-red-950 dark:text-red-400">
-            <svg
-              className="h-8 w-8"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              aria-hidden="true"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-              />
-            </svg>
-          </div>
-          <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
-            {t('common.error')}
-          </h2>
-          <p className="mt-2 max-w-md text-sm text-slate-600 dark:text-slate-400">
-            {this.state.error.message || getErrorMessage(this.state.error)}
-          </p>
-          <button
-            type="button"
-            onClick={this.reset}
-            className="mt-6 rounded-md bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-slate-200"
-          >
-            Retry
-          </button>
-        </div>
+        <ErrorState
+          title={t('common.error')}
+          message={this.state.error.message || getErrorMessage(this.state.error)}
+          onRetry={this.reset}
+        />
       );
     }
 

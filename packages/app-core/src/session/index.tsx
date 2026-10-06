@@ -1,12 +1,4 @@
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-  type ReactNode,
-} from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import {
   customInstance,
   setAuthFailureHandler,
@@ -15,73 +7,19 @@ import {
 } from '@exzaestate/api-client';
 import { usePlatform } from '../platform/index.js';
 
-export interface User {
-  id: string;
-  email: string;
-  fullName: string;
-  companyId: string;
-  isTwoFactorEnabled?: boolean;
-  permissions: string[];
-  scopes: Record<string, string>;
-  branchIds: string[];
-}
+import type {
+  AuthContextType,
+  AuthProviderProps,
+  BackendLoginResponse,
+  BackendMeResponse,
+  User,
+} from './types.js';
 
-export interface LoginCredentials {
-  email: string;
-  password: string;
-  captchaToken?: string;
-}
-
-export interface AuthContextType {
-  user: User | null;
-  isAuthenticated: boolean;
-  isLoading: boolean;
-  sessionExpired: boolean;
-  stepUpRequired: boolean;
-  twoFactorRequired: boolean;
-  login: (credentials: LoginCredentials) => Promise<void>;
-  logout: () => Promise<void>;
-  logoutAll: () => Promise<void>;
-  verifyStepUp: (token: string) => Promise<boolean>;
-  dismissSessionExpired: () => void;
-  dismissStepUp: () => void;
-  refreshUser: () => Promise<void>;
-  setTwoFactorRequired: (required: boolean) => void;
-}
+export * from './types.js';
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
 const REFRESH_TOKEN_STORAGE_KEY = 'refresh_token';
-
-interface BackendLoginResponse {
-  accessToken: string;
-  refreshToken?: string;
-  user: {
-    id: string;
-    email: string;
-    fullName: string;
-    companyId: string;
-    isTwoFactorEnabled?: boolean;
-    permissions?: string[];
-    scopes?: Record<string, string>;
-    branchIds?: string[];
-  };
-}
-
-interface BackendMeResponse {
-  id: string;
-  email: string;
-  fullName: string;
-  companyId: string;
-  isTwoFactorEnabled?: boolean;
-  permissions?: string[];
-  scopes?: Record<string, string>;
-  branchIds?: string[];
-}
-
-export interface AuthProviderProps {
-  children: ReactNode;
-}
 
 export function AuthProvider({ children }: AuthProviderProps) {
   const { secureStorage } = usePlatform();
@@ -102,6 +40,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         email: me.email,
         fullName: me.fullName,
         companyId: me.companyId,
+        companyName: me.companyName,
         isTwoFactorEnabled: me.isTwoFactorEnabled,
         permissions: me.permissions ?? [],
         scopes: me.scopes ?? {},
@@ -205,6 +144,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         email: response.user.email,
         fullName: response.user.fullName,
         companyId: response.user.companyId,
+        companyName: response.user.companyName,
         isTwoFactorEnabled: response.user.isTwoFactorEnabled,
         permissions: response.user.permissions ?? [],
         scopes: response.user.scopes ?? {},
@@ -214,6 +154,21 @@ export function AuthProvider({ children }: AuthProviderProps) {
       setSessionExpired(false);
 
       // Refresh full profile in background to get all RBAC details
+      void fetchUserProfile();
+    },
+    [secureStorage, fetchUserProfile],
+  );
+
+  const setSession = useCallback(
+    async (accessToken: string, refreshToken?: string, initialUser?: User): Promise<void> => {
+      setAuthToken(accessToken);
+      if (refreshToken) {
+        await secureStorage.setItem(REFRESH_TOKEN_STORAGE_KEY, refreshToken);
+      }
+      if (initialUser) {
+        setUser(initialUser);
+      }
+      setSessionExpired(false);
       void fetchUserProfile();
     },
     [secureStorage, fetchUserProfile],
@@ -286,6 +241,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       stepUpRequired,
       twoFactorRequired,
       login,
+      setSession,
       logout,
       logoutAll,
       verifyStepUp,
@@ -301,6 +257,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       stepUpRequired,
       twoFactorRequired,
       login,
+      setSession,
       logout,
       logoutAll,
       verifyStepUp,
