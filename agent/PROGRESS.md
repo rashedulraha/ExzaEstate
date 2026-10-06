@@ -1078,3 +1078,267 @@ Tick a box only after the verification rules above are met. Dependencies are def
     - `pnpm check:all`: 40/40 Acceptance Tests (100%), 0 breaking changes, all architectural quality gates passed.
 14. Open questions: None (Task B11 complete; Part B Desktop Client 100% complete; ready for Part C Web Client).
 15. Next task ID: `C1 Web SPA Shell, Platform Adapters & Cookie-Refresh Auth`.
+
+16. Task ID & status: `UI-Search-Design-Polish` Universal Search Palette, English Header, Mock Data Elimination & Design System Persistence [x]
+17. Files created / modified:
+    - Universal Search Command Palette: [packages/features/src/search/components/GlobalSearchCommandPalette.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/search/components/GlobalSearchCommandPalette.tsx), [packages/features/src/search/components/SearchPaletteResults.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/search/components/SearchPaletteResults.tsx), [packages/features/src/search/components/search-palette.constants.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/search/components/search-palette.constants.tsx), [packages/features/src/search/hooks/useGlobalSearch.ts](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/search/hooks/useGlobalSearch.ts).
+    - Mock Data Fallback Elimination: [packages/features/src/dashboard/components/ExecutiveKpiStrip.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/dashboard/components/ExecutiveKpiStrip.tsx), [packages/features/src/dashboard/components/InventoryAbsorptionStrip.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/dashboard/components/InventoryAbsorptionStrip.tsx), [packages/features/src/dashboard/components/DashboardChartsSection.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/dashboard/components/DashboardChartsSection.tsx), [packages/features/src/dashboard/components/ExecutiveActionCenter.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/dashboard/components/ExecutiveActionCenter.tsx).
+    - Database & Header English Sanitization: [apps/backend/prisma/sanitize-database-names.ts](file:///Users/rashedulraha/Developer/ExzaEstate/apps/backend/prisma/sanitize-database-names.ts), [apps/backend/src/platform/tenant-provisioning/demo-seed/steps/demo-staff.step.ts](file:///Users/rashedulraha/Developer/ExzaEstate/apps/backend/src/platform/tenant-provisioning/demo-seed/steps/demo-staff.step.ts), [packages/ui/src/layout/Header.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/ui/src/layout/Header.tsx), [packages/features/src/routes.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/routes.tsx).
+    - Design System Specification: [agent/design.md](file:///Users/rashedulraha/Developer/ExzaEstate/agent/design.md) (§16 added).
+18. Verification command & result:
+    - `pnpm --filter @exzaestate/features test`: 33/33 test files passed (165/165 tests green).
+    - `pnpm --filter @exzaestate/features typecheck`: clean 0 type errors with strict TypeScript.
+    - `pnpm oxlint -c packages/config/oxlint.json`: 0 warnings, 0 errors across search, dashboard, and layout components.
+19. Open questions: None.
+20. Next task ID: `C1 Web SPA Shell, Platform Adapters & Cookie-Refresh Auth`.
+
+21. Task ID & status: `UI-Cockpit-Layout-Overhaul` Unified Dark Header/Sidebar, Curved Cockpit Canvas, Collapsed Logo & Functional Navigation [x]
+22. Files created / modified:
+    - Unified Cockpit Layout & AppShell: [packages/ui/src/layout/AppShell.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/ui/src/layout/AppShell.tsx), [packages/ui/src/layout/Header.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/ui/src/layout/Header.tsx), [packages/ui/src/layout/Breadcrumbs.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/ui/src/layout/Breadcrumbs.tsx).
+    - Sidebar Overhaul & Modularity: [packages/ui/src/layout/Sidebar.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/ui/src/layout/Sidebar.tsx), [packages/ui/src/layout/sidebar.constants.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/ui/src/layout/sidebar.constants.tsx).
+    - Feature Navigation & Route Refactoring: [packages/features/src/navigation.config.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/navigation.config.tsx), [packages/features/src/routes.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/routes.tsx).
+23. Verification command & result:
+    - `pnpm --filter @exzaestate/ui test`: 6/6 test files passed (43/43 tests green).
+    - `pnpm --filter @exzaestate/features test`: 33/33 test files passed (165/165 tests green).
+    - `pnpm --filter @exzaestate/ui typecheck && pnpm --filter @exzaestate/features typecheck`: 0 type errors.
+    - `npx oxlint -c packages/config/oxlint.json packages/features/src/routes.tsx packages/features/src/navigation.config.tsx packages/ui/src/layout`: 0 warnings, 0 errors (all files <= 300 lines, 0 any).
+24. Open questions: None (Layout and cockpit overhaul completely verified).
+25. Next task ID: `C1 Web SPA Shell, Platform Adapters & Cookie-Refresh Auth`.
+
+26. Task ID & status: `BUGFIX-Search-Hook-Order` Fix React Rules of Hooks in Command Palette & Add Global ⌘K Keydown Listener [x]
+27. Files created / modified:
+    - Command Palette Hooks Order: [packages/features/src/search/components/GlobalSearchCommandPalette.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/search/components/GlobalSearchCommandPalette.tsx).
+    - Global Keyboard Listener: [packages/features/src/routes.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/routes.tsx).
+    - Lifecycle Stability Tests: [packages/features/src/search/search.spec.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/search/search.spec.tsx).
+28. Verification command & result:
+    - `pnpm --filter @exzaestate/features test src/search/search.spec.tsx`: 4/4 tests green (including closed->open hook order stability test).
+    - `pnpm --filter @exzaestate/features test`: 33/33 test files passed (166/166 tests green).
+    - `pnpm --filter @exzaestate/ui test`: 6/6 test files passed (43/43 tests green).
+    - `pnpm --filter @exzaestate/desktop build`: Vite production client build completed in 848ms.
+    - `npx oxlint -c packages/config/oxlint.json packages/features/src/search/ packages/features/src/routes.tsx`: 0 warnings, 0 errors.
+29. Open questions: None.
+30. Next task ID: `C1 Web SPA Shell, Platform Adapters & Cookie-Refresh Auth`.
+
+31. Task ID & status: `BRAND-COLOR-PALETTE-UPDATE` Brand Primary (#F26522) & Secondary (#17160F) Integration across Design Tokens & UI [x]
+32. Files created / modified:
+    - Design System Specification: [agent/design.md](file:///Users/rashedulraha/Developer/ExzaEstate/agent/design.md) (Updated Section 1, 2.1, 5 with --primary: #F26522 and --secondary: #17160F).
+    - Central Tailwind v4 Theme Tokens: [packages/ui/src/styles/theme.css](file:///Users/rashedulraha/Developer/ExzaEstate/packages/ui/src/styles/theme.css) (Light & Dark mode --color-primary: #f26522, --color-secondary: #17160f, --color-sidebar: #17160f, --color-action: #f26522, gradients).
+    - Design Tokens & Contrast Matrix: [packages/ui/src/tokens/tokens.ts](file:///Users/rashedulraha/Developer/ExzaEstate/packages/ui/src/tokens/tokens.ts).
+    - UI Components & Charts: [packages/ui/src/components/brand/ExzaLogo.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/ui/src/components/brand/ExzaLogo.tsx), [packages/ui/src/components/plan-view/PlanViewPlotCell.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/ui/src/components/plan-view/PlanViewPlotCell.tsx), [packages/ui/src/charts/KpiSparklineCard.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/ui/src/charts/KpiSparklineCard.tsx), [packages/ui/src/charts/ProfitWaterfall.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/ui/src/charts/ProfitWaterfall.tsx), [packages/ui/src/charts/CashFlowLine.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/ui/src/charts/CashFlowLine.tsx), [packages/ui/src/layout/Sidebar.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/ui/src/layout/Sidebar.tsx), [packages/ui/src/layout/Header.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/ui/src/layout/Header.tsx).
+33. Verification command & result:
+    - `pnpm --filter @exzaestate/ui test`: 6/6 test files passed (43/43 tests green, WCAG 2.2 contrast compliance verified).
+    - `pnpm --filter @exzaestate/features test`: 33/33 test files passed (166/166 tests green).
+    - `pnpm --filter @exzaestate/desktop build`: Vite production client build completed cleanly in 696ms.
+    - `npx oxlint -c packages/config/oxlint.json packages/ui/`: 0 warnings, 0 errors across 55 files.
+34. Open questions: None.
+35. Next task ID: `C1 Web SPA Shell, Platform Adapters & Cookie-Refresh Auth`.
+
+36. Task ID & status: `SEARCH-PALETTE-CLEANUP-CENTERING` Command Palette Viewport Centering, Icon Removal, Clean Minimalist Hover, and Scope Pills Filter [x]
+37. Files created / modified:
+    - Results Component: [packages/features/src/search/components/SearchPaletteResults.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/search/components/SearchPaletteResults.tsx) (Removed clunky left icon boxes, stripped heavy accent border-left, applied rounded-lg clean hover highlights).
+    - Modal Shell & Scopes: [packages/features/src/search/components/GlobalSearchCommandPalette.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/search/components/GlobalSearchCommandPalette.tsx) (Centered on viewport with items-center justify-center, rounded-2xl smooth entrance animation, scope switcher pills [All / Navigation / Customers / Properties / Finance], Tab keyboard switcher, 1-click Clear search button).
+    - UI Palette: [packages/ui/src/layout/CommandPalette.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/ui/src/layout/CommandPalette.tsx) (Centered on viewport, rounded-2xl elevation, removed left arrows).
+38. Verification command & result:
+    - `pnpm --filter @exzaestate/features test src/search/search.spec.tsx`: 4/4 tests green.
+    - `pnpm --filter @exzaestate/ui test`: 6/6 test files passed (43/43 tests green).
+    - `pnpm --filter @exzaestate/desktop build`: Vite production build passed in 654ms.
+    - `npx oxlint -c packages/config/oxlint.json packages/features/src/search packages/ui/src/layout`: 0 warnings, 0 errors.
+39. Open questions: None.
+40. Next task ID: `C1 Web SPA Shell, Platform Adapters & Cookie-Refresh Auth`.
+
+41. Task ID & status: `LINEAR-STYLE-SIDEBAR-COLLAPSIBLE-RESIZER` Linear.app-Grade Sidebar Overhaul: Collapsible Groups, Resizer Handle, Floating Peek Drawer, Subtle Colors, Indentation, and Zero Right Border [x]
+42. Files created / modified:
+    - Sidebar Core: [packages/ui/src/layout/Sidebar.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/ui/src/layout/Sidebar.tsx) (Removed sidebar's right vertical border; refined active state to subtle bg-white/10 pill without orange border or background; indented group children with border-l guide line; collapsible accordion groups with chevron toggles).
+    - Header Controls & Sections: [packages/ui/src/layout/SidebarSections.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/ui/src/layout/SidebarSections.tsx) (Monogram workspace header with dropdown chevron, search trigger, pin button, live sync footer, help button).
+    - Draggable Resizer & Shortcut: [packages/ui/src/layout/SidebarResizer.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/ui/src/layout/SidebarResizer.tsx), [packages/ui/src/layout/useSidebarResize.ts](file:///Users/rashedulraha/Developer/ExzaEstate/packages/ui/src/layout/useSidebarResize.ts) (Draggable resize border with hover tooltip: 'Drag to resize / Click to collapse [', localStorage persistence, [ keyboard shortcut).
+    - Shell & Peek Flyout: [packages/ui/src/layout/AppShell.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/ui/src/layout/AppShell.tsx), [packages/ui/src/layout/Header.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/ui/src/layout/Header.tsx) (Header PanelLeft expand button when collapsed; hovering smoothly opens floating peek drawer with auto-hide on mouse leave; clicking locks/pins open).
+    - Exports: [packages/ui/src/index.ts](file:///Users/rashedulraha/Developer/ExzaEstate/packages/ui/src/index.ts).
+43. Verification command & result:
+    - `pnpm --filter @exzaestate/ui test`: 6/6 test files passed (43/43 tests green).
+    - `pnpm --filter @exzaestate/features test`: 33/33 test files passed (166/166 tests green).
+    - `pnpm --filter @exzaestate/desktop build`: Vite production client build completed cleanly in 651ms.
+    - `npx oxlint -c packages/config/oxlint.json packages/ui/src/layout/`: 0 warnings, 0 errors across 9 files.
+44. Open questions: None.
+45. Next task ID: `C1 Web SPA Shell, Platform Adapters & Cookie-Refresh Auth`.
+
+46. Task ID & status: `SMOOTH-CONTENT-PUSH-STATIONARY-CANVAS-FIX` Sticky Curved Canvas on Scroll, Smooth Content Push on Sidebar Open, Sleek Scrollbar, Header Cloud Live Removal, and Quick Transaction Launchers [x]
+47. Files created / modified:
+    - Sticky Canvas & Content Push: [packages/ui/src/layout/AppShell.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/ui/src/layout/AppShell.tsx) (`h-screen overflow-hidden` wrapper with internal `main` scrolling; curved top-left corner stays 100% stationary and never breaks on scroll; smooth `duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]` content push shifting body content to the right when sidebar expands/peeks).
+    - Smooth Slide Transform: [packages/ui/src/layout/Sidebar.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/ui/src/layout/Sidebar.tsx) (Preserves instance using GPU `translateX` without abrupt unmounting; added `.sidebar-scroll` custom scrollbar class).
+    - Header Cleanup: [packages/ui/src/layout/Header.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/ui/src/layout/Header.tsx) (Removed redundant `EngineModeBadge` / "Cloud Live" button since Live Sync is already on the sidebar footer).
+    - Sleek Scrollbar CSS: [packages/ui/src/styles/theme.css](file:///Users/rashedulraha/Developer/ExzaEstate/packages/ui/src/styles/theme.css) (Ultra-thin 4px translucent scrollbar with subtle hover highlight).
+    - Quick Transaction Palette: [packages/features/src/search/components/search-palette.constants.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/search/components/search-palette.constants.tsx), [packages/features/src/routes.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/routes.tsx) (Wired "+ New Transaction" to open Universal Command Palette with 1-click transaction actions: Issue Money Receipt, New Booking, Register Lead, Customer KYC, Expense Voucher, Add Property).
+48. Verification command & result:
+    - `pnpm --filter @exzaestate/ui test`: 6/6 test files passed (43/43 tests green).
+    - `pnpm --filter @exzaestate/features test`: 33/33 test files passed (166/166 tests green).
+    - `pnpm --filter @exzaestate/desktop build`: Vite production client build completed cleanly in 561ms.
+    - `npx oxlint -c packages/config/oxlint.json packages/ui/ packages/features/`: 0 errors across 406 files.
+49. Open questions: None.
+50. Next task ID: `C1 Web SPA Shell, Platform Adapters & Cookie-Refresh Auth`.
+
+51. Task ID & status: `SIDEBAR-IN-FLOW-LAYOUT-OVERWRITE-FIX` Pure Side-by-Side In-Flow Flex Layout (Zero Overlay / Zero Content Overwrite) [x]
+52. Files created / modified:
+    - [packages/ui/src/layout/AppShell.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/ui/src/layout/AppShell.tsx): Refactored outer shell into horizontal flex container (`flex font-sans select-none`). Left child is the sidebar wrapper with animated width (`transition-[width] 300ms`), and right child is the main workspace (`flex-1 min-w-0`). As sidebar expands or collapses, workspace automatically expands/contracts side-by-side without ANY overlay or clipping.
+    - [packages/ui/src/layout/Sidebar.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/ui/src/layout/Sidebar.tsx): Removed `fixed left-0 top-0 bottom-0 z-50` and rounded overlay borders; sidebar is now a clean relative flex component that sits naturally alongside the workspace.
+53. Verification command & result:
+    - `pnpm --filter @exzaestate/ui test`: 6/6 test files passed (43/43 tests green).
+    - `pnpm --filter @exzaestate/desktop build`: Vite production client build completed cleanly in 622ms.
+    - `npx oxlint -c packages/config/oxlint.json packages/ui/src/layout/`: 0 warnings, 0 errors.
+54. Open questions: None.
+55. Next task ID: `C1 Web SPA Shell, Platform Adapters & Cookie-Refresh Auth`.
+
+56. Task ID & status: `PROPERTY-INVENTORY-REDESIGN-ICON-FREE-KPIS` Property Inventory & Units Redesign (Modern Icon-Free KPI Cards, Horizontal Flex Buttons, Quick Filter Chips, and CSV Export) [x]
+57. Files created / modified:
+    - [packages/features/src/property/pages/PropertyKpiCards.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/property/pages/PropertyKpiCards.tsx): Rebuilt 4 KPI metric summary cards without tacky icons. Implemented modern percentage badges (`% Ready`, `% Pipeline`, `% Absorbed`), bold tabular typography, 4px micro-absorption progress tracks, and clean subtitles.
+    - [packages/features/src/property/pages/PropertyListComponents.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/property/pages/PropertyListComponents.tsx): Added fast preset status filter chips (`All Units`, `Available`, `Reserved`, `Booked`, `Sold`, `Hold / Blocked`), extracted `PaginationBar` and `exportPropertiesToCsv`.
+    - [packages/features/src/property/pages/PropertyListPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/property/pages/PropertyListPage.tsx): Integrated 1-click CSV export, live refresh indicator button, horizontal flex alignment on all buttons via `leftIcon`, and streamlined layout under 250 lines and complexity <= 10.
+    - [packages/ui/src/components/button/Button.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/ui/src/components/button/Button.tsx): Enforced `inline-flex flex-row items-center gap-1.5 whitespace-nowrap` on buttons and children wrappers so icons and text never stack vertically.
+    - [packages/ui/src/layout/SidebarSections.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/ui/src/layout/SidebarSections.tsx): Refined "New Transaction" launcher button with warm gold styling and flex-row alignment.
+    - [packages/ui/src/layout/Sidebar.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/ui/src/layout/Sidebar.tsx): Refined active navigation item styling with warm gold accent and `flex-row items-center`.
+    - [packages/ui/src/components/plan-view/PlanViewPlotCell.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/ui/src/components/plan-view/PlanViewPlotCell.tsx): Replaced stark white plot chip rectangles with dark-theme elevated chips (`fill="var(--color-surface-elevated)"`), theme-aware high-contrast text (`fill="var(--color-text)"`), and visible borders for Sold units.
+    - [packages/ui/src/components/plan-view/PlanView.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/ui/src/components/plan-view/PlanView.tsx): Replaced hardcoded `#EDE4C8` yellow dashed boundary with theme-aware `var(--color-border-strong)` border, glass floating cards, and polished legend.
+58. Verification command & result:
+    - `pnpm --filter @exzaestate/features test`: 33/33 test files passed (166/166 tests green).
+    - `pnpm --filter @exzaestate/ui test`: 6/6 test files passed (43/43 tests green).
+    - `pnpm --filter @exzaestate/desktop build`: Vite production client build completed cleanly in 511ms.
+    - `npx oxlint -c packages/config/oxlint.json packages/features/src/property/ packages/ui/`: 0 warnings, 0 errors across 80 files.
+59. Open questions: None.
+60. Next task ID: `C1 Web SPA Shell, Platform Adapters & Cookie-Refresh Auth`.
+
+61. Task ID & status: `PROPERTY-PLAN-VIEW-ARCHITECTURAL-STACKING-THEME-PURIFICATION` Property Inventory Plan View Overhaul & Strict Theme.css Token Standardization [x]
+62. Files created / modified:
+    - [packages/features/src/property/components/PropertyStackingPlan.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/property/components/PropertyStackingPlan.tsx): Created professional, executive-grade Architectural Building Stacking Plan grouping properties by floor levels with floor occupancy mini-bars, status breakdown pills, and rich interactive unit cards.
+    - [packages/features/src/property/components/PropertyCadastralMap.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/property/components/PropertyCadastralMap.tsx): Created 2D spatial master plot map with road corridors, zoom controls, and theme-compliant plot cards.
+    - [packages/features/src/property/components/PropertyPlanView.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/property/components/PropertyPlanView.tsx): Rebuilt Plan View workspace with dual-mode toggle (Building Stacking Plan vs 2D Cadastral Map), fast unit code search, available filter pill, and 100% theme-token status legend.
+    - [packages/features/src/property/pages/PropertyKpiCards.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/property/pages/PropertyKpiCards.tsx): Replaced all arbitrary Tailwind palette classes (`emerald-*`, `amber-*`, `text-[11px]`, `rounded-xl`) with Meridian tokens (`text-caption`, `rounded-card`, `bg-success`, `bg-warning`, `text-hero-num`).
+    - [packages/features/src/property/pages/PropertyListComponents.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/property/pages/PropertyListComponents.tsx): Removed arbitrary `min-w-[220px]` and `text-[11px]` in favor of standard classes and `text-caption`.
+    - [packages/ui/src/components/plan-view/PlanView.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/ui/src/components/plan-view/PlanView.tsx): Replaced Tailwind palette colors in legend with semantic Meridian tokens.
+    - [packages/features/src/property/index.ts](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/property/index.ts): Exported new `PropertyStackingPlan` and `PropertyCadastralMap` components.
+63. Verification command & result:
+    - `pnpm oxlint -c packages/config/oxlint.json packages/features/src/property`: 0 warnings, 0 errors across 24 files.
+    - `pnpm oxlint -c packages/config/oxlint.json packages/ui/src/layout packages/ui/src/components/plan-view`: 0 warnings, 0 errors across 12 files.
+    - `pnpm --filter @exzaestate/ui typecheck && pnpm --filter @exzaestate/features typecheck`: Passed with 0 errors.
+    - `pnpm --filter @exzaestate/features test`: 33/33 test files passed (166/166 tests green).
+    - `pnpm --filter @exzaestate/ui test`: 6/6 test files passed (43/43 tests green).
+64. Open questions: None.
+65. Next task ID: `C1 Web SPA Shell, Platform Adapters & Cookie-Refresh Auth`.
+
+66. Task ID & status: `REPORTS-HUB-EXECUTIVE-REDESIGN` Reports Module Complete Redesign (21 Enterprise Reports Catalog, Strict Theme Tokens, Icon Restraint, Executive Metrics, Search & Pinning, Dual View Modes, Quick Exports & Recent Downloads) [x]
+67. Files created / modified:
+    - [packages/features/src/reports/reports.types.ts](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/reports/reports.types.ts): Comprehensive type system for 6 report departments (`FINANCIAL`, `SALES`, `COLLECTION`, `INVENTORY`, `PROCUREMENT`, `AUDIT`), report frequencies, export formats, and archives.
+    - [packages/features/src/reports/reports.catalog.ts](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/reports/reports.catalog.ts): Authoritative directory of 21 statutory and management real estate ERP reports with exact codes (`FIN-01` to `AUD-03`), frequency cadence, statutory compliance level, and audience.
+    - [packages/features/src/reports/components/ReportsMetricsBar.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/reports/components/ReportsMetricsBar.tsx): Executive KPI highlight strip showing Realized Sales, Realized Collections, Portfolio Inventory Value, and Units Allotted with zero icon clutter and strict theme tokens.
+    - [packages/features/src/reports/components/ReportsFilterBar.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/reports/components/ReportsFilterBar.tsx): Category navigation tabs with count badges, live search with keyboard shortcuts, frequency filter, view toggle, and recent downloads launcher.
+    - [packages/features/src/reports/components/ReportCard.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/reports/components/ReportCard.tsx): Tactile executive report card with star pinning, metadata tags, 1-click Quick Export, and direct View Report navigation.
+    - [packages/features/src/reports/components/ReportsTableView.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/reports/components/ReportsTableView.tsx): High-density tabular listing for finance controllers scanning across 20+ reports.
+    - [packages/features/src/reports/components/RecentExportsDrawer.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/reports/components/RecentExportsDrawer.tsx): Side slide-over drawer displaying recently generated reports with 1-click download retrieval.
+    - [packages/features/src/reports/components/QuickGenerateModal.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/reports/components/QuickGenerateModal.tsx): Interactive generation modal supporting PDF, Excel, CSV formats with As-Of date or Period ranges and project scope.
+    - [packages/features/src/reports/pages/ReportsHubPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/reports/pages/ReportsHubPage.tsx): Main reports hub orchestrating executive metrics, pinned reports ribbon, filters, dual views, and background BullMQ status.
+    - [packages/features/src/reports/reports-hub.spec.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/reports/reports-hub.spec.tsx): Comprehensive Vitest suite testing the reports directory, search, category tabs, pinning persistence, view toggle, and export workflows.
+    - [packages/features/src/reports/index.ts](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/reports/index.ts): Exported new reports catalog, types, and components.
+68. Verification command & result:
+    - `pnpm oxlint -c packages/config/oxlint.json packages/features/src/reports`: 0 warnings, 0 errors across 21 files.
+    - `pnpm --filter @exzaestate/features typecheck && pnpm --filter @exzaestate/ui typecheck`: Passed with 0 errors.
+    - `pnpm --filter @exzaestate/features test`: 34/34 test files passed (174/174 tests green).
+69. Open questions: None.
+70. Next task ID: `C1 Web SPA Shell, Platform Adapters & Cookie-Refresh Auth`.
+
+71. Task ID & status: `REPORTS-HUB-DESIGN-SYSTEM-AND-MOCK-DATA-PURGE` Reports Hub Design System Select, Typography Overflow Elimination, Default List View & Zero-Mock Data Architecture [x]
+72. Files created / modified:
+    - [packages/features/src/reports/components/ReportsMetricsBar.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/reports/components/ReportsMetricsBar.tsx): Eliminated `font-mono` coding font and fixed overflow bug on crore amounts (`৳3,22,73,00,000`), switching to responsive `font-sans font-bold tracking-tight text-xl lg:text-2xl truncate` with optional zero-decimal formatting for clean executive display.
+    - [packages/shared/src/format.ts](file:///Users/rashedulraha/Developer/ExzaEstate/packages/shared/src/format.ts): Enhanced `formatMoney` with `showDecimals?: boolean` option and refactored `parseToBigIntPaisa` to keep cyclomatic complexity strictly <= 10.
+    - [packages/shared/src/format.spec.ts](file:///Users/rashedulraha/Developer/ExzaEstate/packages/shared/src/format.spec.ts): Added unit tests for `showDecimals: false` whole taka formatting.
+    - [packages/features/src/reports/components/ReportsFilterBar.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/reports/components/ReportsFilterBar.tsx): Replaced native OS `<select>` with Design System `Select` from `@exzaestate/ui`, eliminating blue OS popups; reordered view mode toggles with List view first.
+    - [packages/features/src/reports/pages/ReportsHubPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/reports/pages/ReportsHubPage.tsx): Completely removed hardcoded `INITIAL_RECENT_EXPORTS` mock array; initialized `viewMode` default to `'table'` (List view); synced recent exports directly with `localStorage` starting completely clean (`[]`).
+    - [packages/features/src/reports/components/ReportsDirectoryView.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/reports/components/ReportsDirectoryView.tsx): Extracted directory renderer component to maintain modularity and stay strictly below 300 lines.
+    - [packages/features/src/reports/reports-hub.spec.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/reports/reports-hub.spec.tsx): Updated tests to verify default table view and clean initial empty state.
+73. Verification command & result:
+    - `pnpm oxlint -c packages/config/oxlint.json packages/features/src/reports packages/shared/src/format.ts`: 0 warnings, 0 errors across 24 files.
+    - `pnpm --filter @exzaestate/shared typecheck && pnpm --filter @exzaestate/ui typecheck && pnpm --filter @exzaestate/features typecheck`: Passed with 0 errors.
+    - `pnpm --filter @exzaestate/features test`: 34/34 test files passed (174/174 tests green).
+    - `pnpm --filter @exzaestate/shared test`: 5/5 test files passed (44/44 tests green).
+    - `pnpm --filter @exzaestate/ui test`: 6/6 test files passed (43/43 tests green).
+74. Task ID & status: `HEADER-SIDEBAR-UNIFIED-COCKPIT-AND-NAV-ENHANCEMENT` Unified Dark Cockpit Canvas (Matching Header & Sidebar `#1a1a2e`), Seamless Top-Left Curved Canvas Boundary, Centered Collapsed Logo, and ERP Navigation & Executive Header Badges [x]
+75. Files created / modified:
+    - [packages/ui/src/layout/Breadcrumbs.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/ui/src/layout/Breadcrumbs.tsx): Added `variant?: 'light' | 'dark'` prop to render crisp white/light text and separators on dark header background.
+    - [packages/ui/src/layout/sidebar.constants.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/ui/src/layout/sidebar.constants.tsx): Created modular constants and interfaces for navigation items and groups to enforce strict < 300 line ceiling.
+    - [packages/ui/src/layout/Sidebar.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/ui/src/layout/Sidebar.tsx): Redesigned with unified `bg-sidebar` theme; fixed collapsed mode with centered 40x40px interactive gold logo icon; added "+ New Transaction" quick action button, and live status footer with connection indicator and version badge.
+    - [packages/ui/src/layout/Header.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/ui/src/layout/Header.tsx): Unified to `bg-sidebar text-white`; added active fiscal period badge (`FY 2026–27`), branch badge (`Dhaka Main Branch`), glass search bar with gold icon and `⌘K` badge, dark breadcrumbs, and profile quick actions.
+    - [packages/ui/src/layout/AppShell.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/ui/src/layout/AppShell.tsx): Implemented curved cockpit canvas where both Header and Sidebar share seamless `bg-sidebar`, with the main content canvas smoothly radiused (`rounded-tl-2xl sm:rounded-tl-[24px]`) and framed by a continuous subtle border.
+    - [packages/features/src/navigation.config.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/navigation.config.tsx): Extracted modular navigation routing config and route prefix mapping to cleanly isolate route definition and keep `routes.tsx` well below the line limit.
+    - [packages/features/src/routes.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/routes.tsx): Streamlined protected layout shell and routed navigation handlers.
+76. Verification command & result:
+    - `pnpm oxlint -c packages/config/oxlint.json packages/ui/src/layout packages/features/src/routes.tsx packages/features/src/navigation.config.tsx`: 0 warnings, 0 errors.
+    - `pnpm --filter @exzaestate/ui typecheck && pnpm --filter @exzaestate/features typecheck`: Passed with 0 errors.
+    - `pnpm --filter @exzaestate/ui test`: 6/6 test files passed (43/43 tests green).
+    - `pnpm --filter @exzaestate/features test`: 34/34 test files passed (174/174 tests green).
+77. Open questions: None.
+78. Next task ID: `SUPER-ADMIN-DATABASE-PURGE-AND-HARDWARE-BOUND-ONBOARDING`.
+
+79. Task ID & status: `SUPER-ADMIN-DATABASE-PURGE-AND-HARDWARE-BOUND-ONBOARDING` Super Admin Seeding, Mock User DB Purge, Hardware-Locked License Registration & Direct Client Onboarding Flow [x]
+80. Files created / modified:
+    - [.env](file:///Users/rashedulraha/Developer/ExzaEstate/.env) & [.env.example](file:///Users/rashedulraha/Developer/ExzaEstate/.env.example): Added Super Admin environment credentials (`Exzazon Team`, `exzazon.bd@gmail.com` / `rashedulraha.bd@gmail.com`, `lDMBXtn9t3nOTa32@2026!`) and enterprise initial license key.
+    - [apps/backend/src/config/env.schema.ts](file:///Users/rashedulraha/Developer/ExzaEstate/apps/backend/src/config/env.schema.ts) & [apps/backend/src/config/config.service.ts](file:///Users/rashedulraha/Developer/ExzaEstate/apps/backend/src/config/config.service.ts): Validated and exposed `superAdmin` credentials and `initialLicenseKey`.
+    - [apps/backend/prisma/setup-super-admin.ts](file:///Users/rashedulraha/Developer/ExzaEstate/apps/backend/prisma/setup-super-admin.ts): Script to purge mock demo users/companies and seed `system_admins` records with Argon2id password hashing.
+    - [apps/backend/src/modules/auth/auth.service.ts](file:///Users/rashedulraha/Developer/ExzaEstate/apps/backend/src/modules/auth/auth.service.ts): Enabled `/api/v1/auth/login` to authenticate `system_admins` with platform realm tokens (`companyId: 00000000-0000-0000-0000-000000000000`), resolving dynamic `companyName`.
+    - [apps/backend/src/modules/local-data/local-provisioning.service.ts](file:///Users/rashedulraha/Developer/ExzaEstate/apps/backend/src/modules/local-data/local-provisioning.service.ts): Fixed `isProvisioned()` user verification; generated direct session tokens upon provisioning; integrated license hardware lock.
+    - [packages/app-core/src/session/index.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/app-core/src/session/index.tsx): Enhanced `AuthProvider` with `companyName` and `setSession()` for direct session establishment in React state and Keychain.
+    - [packages/features/src/setup/first-launch/hooks/useFirstLaunch.ts](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/setup/first-launch/hooks/useFirstLaunch.ts): Integrated motherboard UUID and machine fingerprint detection, email verification code step, license key validation, and automatic session token storage upon provisioning.
+    - [packages/features/src/setup/first-launch/components/LocalSetupSection.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/setup/first-launch/components/LocalSetupSection.tsx): Rebuilt with 3 structured sections: License & Hardware Protection, Managing Director & Verification, and Enterprise Organization Profile using central `theme.css` tokens.
+    - [packages/features/src/routes.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/routes.tsx): Directed unprovisioned clients straight to `/setup/first-launch` without 401 errors, and dynamic company name display in AppShell and Header.
+81. Verification command & result:
+    - Super Admin Seeding & Hash verification: Executed with code 0 (`argon2.verify` verified successfully for `exzazon.bd@gmail.com`).
+    - `pnpm --filter @exzaestate/backend test test/local/local-provisioning.spec.ts`: 3/3 passed.
+    - `pnpm --filter @exzaestate/features test`: 34/34 test files passed (174/174 tests green).
+    - `pnpm oxlint`: 0 warnings, 0 errors across 1,711 files.
+    - `tsc --noEmit` across `@exzaestate/backend`, `@exzaestate/features`, `@exzaestate/desktop`, `@exzaestate/app-core`: 0 errors.
+82. Open questions: None.
+83. Next task ID: `SUPER-ADMIN-CONSOLE-DASHBOARD-AND-PLATFORM-REALM-INTEGRATION`.
+
+84. Task ID & status: `SUPER-ADMIN-CONSOLE-DASHBOARD-AND-PLATFORM-REALM-INTEGRATION` Super Admin Console Dashboard, Multi-Tenant Provisioning, Ed25519 License Key Generator, Live Telemetry & Platform Navigation [x]
+85. Files created / modified:
+    - [agent/super-admin-tasks.md](file:///Users/rashedulraha/Developer/ExzaEstate/agent/super-admin-tasks.md): Phased implementation checklist covering planning, schema, hooks, presentation components, page, and routing.
+    - [packages/features/src/system-admin/schemas/system-admin.schema.ts](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/system-admin/schemas/system-admin.schema.ts): Strictly-typed Zod schemas and TypeScript models for tenants, branches, system health telemetry, and Ed25519 license payloads.
+    - [packages/features/src/system-admin/hooks/useSystemAdmin.ts](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/system-admin/hooks/useSystemAdmin.ts): Custom TanStack Query hook managing tenants list, 15s live telemetry polling, company onboarding, suspension/reactivation, and license generation mutations.
+    - [packages/features/src/system-admin/components/SystemHealthCardGrid.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/system-admin/components/SystemHealthCardGrid.tsx): Real-time platform health cards with pulsing status, uptime, memory heap/RSS, and BullMQ queue telemetry.
+    - [packages/features/src/system-admin/components/TenantDirectoryTable.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/system-admin/components/TenantDirectoryTable.tsx): Searchable enterprise company directory with status filter tabs, formatted timestamps, and quick action buttons.
+    - [packages/features/src/system-admin/components/OnboardTenantModal.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/system-admin/components/OnboardTenantModal.tsx): Accessible dialog modal to provision new multi-tenant database company workspaces with Managing Director credentials.
+    - [packages/features/src/system-admin/components/LicenseGeneratorModal.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/system-admin/components/LicenseGeneratorModal.tsx): Cryptographic Ed25519 license generator modal with copyable keys, digital signatures, and JSON file export.
+    - [packages/features/src/system-admin/components/TenantDetailModal.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/system-admin/components/TenantDetailModal.tsx): Company inspection modal with branch breakdown, legal code, and suspension reason dialog.
+    - [packages/features/src/system-admin/pages/PlatformSuperAdminDashboardPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/system-admin/pages/PlatformSuperAdminDashboardPage.tsx): Master Platform Administration Cockpit tying telemetry, company directory, and license issuance into a unified view.
+    - [packages/features/src/system-admin/system-admin.routes.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/system-admin/system-admin.routes.tsx): Route configuration mounting `/system/dashboard`, `/system/tenants`, `/system/licenses`, and `/system/health`.
+    - [packages/features/src/navigation.config.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/navigation.config.tsx): Added `createSystemAdminSidebarNavGroups` providing dedicated Platform Control sidebar navigation.
+    - [packages/features/src/routes.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/routes.tsx): Added dynamic Super Admin detection routing (`companyId === '00000000-0000-0000-0000-000000000000'`) to `/system/dashboard` and switching AppShell to Platform mode.
+86. Verification command & result:
+    - `pnpm --filter @exzaestate/features exec tsc --noEmit`: 0 errors.
+    - `pnpm --filter @exzaestate/desktop exec tsc --noEmit`: 0 errors.
+    - `pnpm oxlint packages/features/src/system-admin`: 0 warnings, 0 errors across 10 files.
+    - `pnpm --filter @exzaestate/features test`: 34/34 test files passed (174/174 tests green).
+    - `pnpm --filter @exzaestate/desktop build`: Built clean in 528ms.
+87. Next task ID: `SUPER-ADMIN-UI-OVERHAUL-AND-COMMAND-PALETTE`.
+
+88. Task ID & status: `SUPER-ADMIN-UI-OVERHAUL-AND-COMMAND-PALETTE` Bespoke Super Admin Console Redesign, Platform Command Palette, Sidebar Collapse/Expand Toggle & Real Data Backend Integration [x]
+89. Files created / modified:
+    - [packages/ui/src/layout/Header.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/ui/src/layout/Header.tsx): Added visible `PanelLeftOpen`/`PanelLeftClose` toggle button on the header left bar, added `searchPlaceholder` support, and restored branch/fiscal year badges.
+    - [packages/ui/src/layout/AppShell.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/ui/src/layout/AppShell.tsx): Fixed sidebar toggle handler, added left-edge hover peek sensor trigger when sidebar is collapsed, and bound `⌘[` keyboard shortcut.
+    - [packages/features/src/system-admin/components/PlatformCommandPalette.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/system-admin/components/PlatformCommandPalette.tsx): Built dedicated Super Admin universal search and command palette (`Cmd+K`) supporting company tenant search, cryptographic license search, and direct platform action triggers without tenant data interference.
+    - [packages/features/src/routes.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/routes.tsx): Integrated `PlatformCommandPalette` for Super Admin realm and context-aware header search placeholder.
+    - [apps/backend/src/modules/license/system-license.controller.ts](file:///Users/rashedulraha/Developer/ExzaEstate/apps/backend/src/modules/license/system-license.controller.ts) & [apps/backend/src/modules/license/license.service.ts](file:///Users/rashedulraha/Developer/ExzaEstate/apps/backend/src/modules/license/license.service.ts): Implemented `GET /api/v1/system/licenses` to list all issued offline cryptographic Ed25519 licenses with company names from PostgreSQL. Zero mock data.
+    - [apps/backend/src/modules/system-admin/system-tenant.controller.ts](file:///Users/rashedulraha/Developer/ExzaEstate/apps/backend/src/modules/system-admin/system-tenant.controller.ts) & [apps/backend/src/modules/system-admin/system-tenant.service.ts](file:///Users/rashedulraha/Developer/ExzaEstate/apps/backend/src/modules/system-admin/system-tenant.service.ts): Implemented `GET /api/v1/system/tenants/audit-logs` returning immutable platform audit trail records from PostgreSQL.
+    - [packages/features/src/system-admin/components/ClusterTelemetryConsole.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/system-admin/components/ClusterTelemetryConsole.tsx): Bespoke high-density cluster state station displaying PostgreSQL 18 RLS, Node.js V8 memory progress bar, BullMQ jobs, and active tenant stats.
+    - [packages/features/src/system-admin/components/PlatformLicensesTable.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/system-admin/components/PlatformLicensesTable.tsx): Cryptographic license registry table with license keys, hardware bindings, and Ed25519 signature details.
+    - [packages/features/src/system-admin/components/PlatformAuditLogsTable.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/system-admin/components/PlatformAuditLogsTable.tsx): Platform audit trail table showing immutable audit actions, timestamps, and justifications.
+    - [packages/features/src/system-admin/components/TenantDirectoryTable.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/system-admin/components/TenantDirectoryTable.tsx): Cleaned up row typography and removed repetitive decorative icon clutter.
+    - [packages/features/src/system-admin/pages/PlatformSuperAdminDashboardPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/system-admin/pages/PlatformSuperAdminDashboardPage.tsx): Multi-tab platform workbench uniting telemetry, tenant directory, cryptographic licenses, and audit trail.
+    - [packages/features/src/system-admin/hooks/useSystemAdmin.ts](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/system-admin/hooks/useSystemAdmin.ts): Added queries for licenses and audit logs with automatic cache invalidation on license generation.
+    - [packages/features/src/system-admin/index.ts](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/system-admin/index.ts): Barrel exports for all new components and schemas.
+    - [agent/super-admin-tasks.md](file:///Users/rashedulraha/Developer/ExzaEstate/agent/super-admin-tasks.md): Completed Phase 6 tracking checklist.
+90. Verification command & result:
+    - `pnpm --filter @exzaestate/ui test`: 6/6 test files passed (43/43 tests green).
+    - `pnpm --filter @exzaestate/features test`: 34/34 test files passed (174/174 tests green).
+    - `pnpm --filter @exzaestate/desktop exec tsc --noEmit`: 0 errors.
+    - `pnpm --filter @exzaestate/backend exec tsc --noEmit`: 0 errors.
+    - `pnpm oxlint packages/features/src/system-admin packages/features/src/routes.tsx packages/ui/src/layout`: 0 warnings, 0 errors across 24 files.
+    - `pnpm --filter @exzaestate/desktop build`: Built clean production bundle in 528ms.
+91. Open questions: None.
+92. Next task ID: `C1 Web SPA Shell, Platform Adapters & Cookie-Refresh Auth`.
