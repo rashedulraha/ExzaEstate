@@ -8,6 +8,7 @@ import { TZDate } from '@date-fns/tz';
 
 export interface FormatMoneyOptions {
   showCurrency?: boolean;
+  showDecimals?: boolean;
 }
 
 /**
@@ -41,21 +42,20 @@ export function formatBangladeshiGrouping(intStr: string): string {
  * Example:
  *   formatMoney(50000000n) -> "৳5,00,000.00" (Acceptance AT-19)
  *   formatMoney(-50000000n) -> "-৳5,00,000.00"
+ *   formatMoney(50000000n, { showDecimals: false }) -> "৳5,00,000"
  */
+function parseToBigIntPaisa(paisa: bigint | number | string): bigint {
+  if (typeof paisa === 'bigint') return paisa;
+  if (typeof paisa === 'number') return BigInt(Math.round(paisa));
+  return BigInt((paisa || '0').trim());
+}
+
 export function formatMoney(
   paisa: bigint | number | string,
   options: FormatMoneyOptions = {},
 ): string {
-  const { showCurrency = true } = options;
-
-  let bigPaisa: bigint;
-  if (typeof paisa === 'bigint') {
-    bigPaisa = paisa;
-  } else if (typeof paisa === 'number') {
-    bigPaisa = BigInt(Math.round(paisa));
-  } else {
-    bigPaisa = BigInt(paisa.trim());
-  }
+  const { showCurrency = true, showDecimals = true } = options;
+  const bigPaisa = parseToBigIntPaisa(paisa);
 
   const isNegative = bigPaisa < 0n;
   const absPaisa = isNegative ? -bigPaisa : bigPaisa;
@@ -66,7 +66,7 @@ export function formatMoney(
   const formattedTaka = formatBangladeshiGrouping(taka.toString());
   const formattedPoisha = poisha.toString().padStart(2, '0');
 
-  const numberPart = `${formattedTaka}.${formattedPoisha}`;
+  const numberPart = showDecimals === false ? formattedTaka : `${formattedTaka}.${formattedPoisha}`;
 
   if (isNegative) {
     return showCurrency ? `-৳${numberPart}` : `-${numberPart}`;
@@ -273,18 +273,6 @@ function convertTakaToWords(taka: bigint): string {
 
 import { amountToBnWords } from './bengali-words.js';
 export { amountToBnWords };
-
-/**
- * Converts BigInt paisa into Bangladeshi currency wording in English or Bengali.
- * Examples:
- *   500000000n, 'en' -> "Fifty Lakh Taka Only"
- *   500000000n, 'bn' -> "পঞ্চাশ লক্ষ টাকা মাত্র"
- */
-function parseToBigIntPaisa(paisa: bigint | number | string): bigint {
-  if (typeof paisa === 'bigint') return paisa;
-  if (typeof paisa === 'number') return BigInt(Math.round(paisa));
-  return BigInt((paisa || '0').trim());
-}
 
 function formatEnglishWords(taka: bigint, remPaisa: number, isNegative: boolean): string {
   const prefix = isNegative ? 'Negative ' : '';

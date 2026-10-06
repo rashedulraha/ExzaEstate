@@ -25,6 +25,11 @@ describe('Formatters & Localisation (S3)', () => {
     it('supports hiding currency symbol', () => {
       expect(formatMoney(50000000n, { showCurrency: false })).toBe('5,00,000.00');
     });
+
+    it('supports omitting decimals when showDecimals is false', () => {
+      expect(formatMoney(50000000n, { showDecimals: false })).toBe('৳5,00,000');
+      expect(formatMoney(322730000000n, { showDecimals: false })).toBe('৳3,22,73,00,000');
+    });
   });
 
   describe('formatNumber', () => {

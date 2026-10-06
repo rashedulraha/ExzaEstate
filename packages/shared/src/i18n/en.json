@@ -15,5 +15,10 @@
   "currency.symbol": "৳",
   "auth.sessionExpired.title": "Session Expired",
   "auth.sessionExpired.description": "Your session has expired. Please sign in again to continue.",
-  "auth.sessionExpired.signInAgain": "Sign in again"
+  "auth.sessionExpired.signInAgain": "Sign in again",
+  "auth.signOut.title": "Sign Out",
+  "auth.signOut.description": "Are you sure you want to sign out of ExzaEstate ERP? You will need your credentials to open your workspace again.",
+  "auth.signOut.confirm": "Sign Out",
+  "auth.signOut.cancel": "Cancel",
+  "auth.signOut.inProgress": "Signing out..."
 }
