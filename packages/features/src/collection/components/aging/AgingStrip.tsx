@@ -65,7 +65,7 @@ export function AgingStrip({ buckets, totalReceivablePaisa, className = '' }: Ag
               title={`${b.label}: ${b.amountFormatted} (${b.percentage.toFixed(1)}%)`}
             >
               {widthPct > 8 && (
-                <span className={`truncate text-[11px] font-semibold ${theme.text}`}>
+                <span className={`truncate text-caption font-semibold ${theme.text}`}>
                   {b.label}
                 </span>
               )}

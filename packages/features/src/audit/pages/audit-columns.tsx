@@ -56,7 +56,7 @@ export function buildAuditColumns(
       render: (r: AuditLogRecord) => (
         <div>
           <span className="font-medium text-text uppercase text-caption">{r.recordType}</span>
-          <span className="font-mono text-[11px] text-text-muted block truncate max-w-[140px]">
+          <span className="font-mono text-caption text-text-muted block truncate max-w-[140px]">
             {r.recordId}
           </span>
         </div>

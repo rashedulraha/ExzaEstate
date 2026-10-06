@@ -72,6 +72,47 @@ function buildLeadQueryParams(
   return params;
 }
 
+function resolveLeadBudget(item: Record<string, unknown>): {
+  min: string | null;
+  max: string | null;
+} {
+  const min = typeof item.budgetMinPaisa === 'string' ? item.budgetMinPaisa : null;
+  let max = typeof item.budgetMaxPaisa === 'string' ? item.budgetMaxPaisa : null;
+  if (!max && item.budgetPaisa) {
+    max = String(item.budgetPaisa);
+  }
+  return { min, max };
+}
+
+function resolveLeadDetails(item: Record<string, unknown>) {
+  const name = String(item.fullName || item.name || '');
+  const type = (item.preferredType as string) || (item.preferredPropertyType as string) || null;
+  const notes = (item.notes as string) || (item.interestNotes as string) || null;
+  return { name, type, notes };
+}
+
+function mapRawLead(item: Record<string, unknown>): LeadItem {
+  const budget = resolveLeadBudget(item);
+  const details = resolveLeadDetails(item);
+
+  return {
+    id: String(item.id || ''),
+    fullName: details.name,
+    phone: String(item.phone || ''),
+    email: item.email ? String(item.email) : null,
+    source: String(item.source || ''),
+    status: String(item.status || 'New'),
+    preferredType: details.type,
+    budgetMinPaisa: budget.min,
+    budgetMaxPaisa: budget.max,
+    assignedToId: item.assignedToId ? String(item.assignedToId) : null,
+    assignedTo: (item.assignedTo as LeadItem['assignedTo']) || null,
+    notes: details.notes,
+    createdAt: String(item.createdAt || ''),
+    updatedAt: String(item.updatedAt || ''),
+  };
+}
+
 function extractLeadData(rawData: unknown): {
   leads: LeadItem[];
   total: number;
@@ -83,7 +124,8 @@ function extractLeadData(rawData: unknown): {
   const obj = rawData as Record<string, unknown>;
   const payload =
     obj.data && typeof obj.data === 'object' ? (obj.data as Record<string, unknown>) : obj;
-  const leads = Array.isArray(payload.items) ? (payload.items as LeadItem[]) : [];
+  const rawItems = Array.isArray(payload.items) ? (payload.items as Record<string, unknown>[]) : [];
+  const leads = rawItems.map(mapRawLead);
   const total = typeof payload.total === 'number' ? payload.total : leads.length;
   const totalPages = typeof payload.totalPages === 'number' ? payload.totalPages : 1;
   return { leads, total, totalPages };

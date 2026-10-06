@@ -135,7 +135,7 @@ export function CustomerListPage(): ReactElement {
           </div>
         </div>
 
-        <PermissionGate permission={PERMISSIONS.CUSTOMER_CREATE}>
+        <PermissionGate permission={PERMISSIONS.CUSTOMER_CREATE} fallback={null}>
           <Button variant="primary" className="gap-2" onClick={() => setIsAddModalOpen(true)}>
             <Plus className="w-4 h-4" />
             <span>Register Customer</span>

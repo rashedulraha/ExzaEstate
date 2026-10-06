@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
+import { useAuth } from '@exzaestate/app-core';
 import {
   useNotificationsControllerGetInbox,
   useNotificationsControllerGetUnreadCount,
@@ -7,19 +8,32 @@ import {
   useNotificationsControllerMarkAllRead,
   getNotificationsControllerGetInboxQueryKey,
   getNotificationsControllerGetUnreadCountQueryKey,
+  getAuthToken,
 } from '@exzaestate/api-client';
 
 export function useNotifications() {
   const queryClient = useQueryClient();
+  const { isAuthenticated } = useAuth();
 
-  const inboxQuery = useNotificationsControllerGetInbox({ limit: 50 });
-  const unreadCountQuery = useNotificationsControllerGetUnreadCount();
+  const inboxQuery = useNotificationsControllerGetInbox(
+    { limit: 50 },
+    {
+      query: { enabled: isAuthenticated },
+    },
+  );
+  const unreadCountQuery = useNotificationsControllerGetUnreadCount({
+    query: { enabled: isAuthenticated },
+  });
 
   const markReadMutation = useNotificationsControllerMarkAsRead();
   const markAllReadMutation = useNotificationsControllerMarkAllRead();
 
   // Real-time SSE Connection per architecture.md §8.4
   useEffect(() => {
+    if (!isAuthenticated) {
+      return;
+    }
+
     let eventSource: EventSource | null = null;
     let reconnectTimeout: ReturnType<typeof setTimeout> | null = null;
 
@@ -28,8 +42,11 @@ export function useNotifications() {
         return;
       }
       try {
-        // SSE endpoint on the backend
-        eventSource = new EventSource('/api/v1/events/stream', {
+        const token = getAuthToken();
+        const sseUrl = token
+          ? `/api/v1/events/stream?token=${encodeURIComponent(token)}`
+          : '/api/v1/events/stream';
+        eventSource = new EventSource(sseUrl, {
           withCredentials: true,
         });
 
@@ -70,7 +87,7 @@ export function useNotifications() {
       if (reconnectTimeout) clearTimeout(reconnectTimeout);
       eventSource?.close();
     };
-  }, [queryClient]);
+  }, [queryClient, isAuthenticated]);
 
   const markAsRead = async (id: string) => {
     await markReadMutation.mutateAsync({ id });

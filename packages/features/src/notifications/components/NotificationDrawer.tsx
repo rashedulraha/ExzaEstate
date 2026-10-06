@@ -152,8 +152,8 @@ export function NotificationDrawer({ isOpen, onClose }: NotificationDrawerProps)
                     {n.body}
                   </p>
 
-                  <div className="flex items-center justify-between pt-1 text-[11px] text-text-muted">
-                    <span className="flex items-center gap-1 font-mono">
+                  <div className="flex items-center justify-between pt-1 text-caption text-text-muted">
+                    <span className="flex items-center gap-1 font-mono tabular-nums">
                       <Clock className="w-3 h-3" />
                       {n.createdAt
                         ? new Date(n.createdAt).toLocaleTimeString([], {
@@ -162,9 +162,7 @@ export function NotificationDrawer({ isOpen, onClose }: NotificationDrawerProps)
                           })
                         : ''}
                     </span>
-                    <span className="uppercase text-[10px] font-semibold tracking-wider text-text-muted">
-                      {n.category}
-                    </span>
+                    <span className="text-h6 text-text-muted">{n.category}</span>
                   </div>
                 </div>
               </div>

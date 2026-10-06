@@ -1,4 +1,4 @@
-import type { RouteObject } from 'react-router';
+import { Navigate, type RouteObject } from 'react-router';
 import { PermissionGate } from '@exzaestate/app-core';
 import { PERMISSIONS } from '@exzaestate/shared';
 import { PaymentListPage } from './pages/PaymentListPage.js';
@@ -8,6 +8,18 @@ import { CustomerStatementPage } from './pages/CustomerStatementPage.js';
 import { AgingDashboardPage } from './pages/AgingDashboardPage.js';
 
 export const collectionRoutes: RouteObject[] = [
+  {
+    path: 'collection',
+    element: <Navigate to="/collection/payments" replace />,
+  },
+  {
+    path: 'collection/receipts',
+    element: (
+      <PermissionGate permission={PERMISSIONS.PAYMENT_VIEW}>
+        <PaymentListPage />
+      </PermissionGate>
+    ),
+  },
   {
     path: 'collection/payments',
     element: (

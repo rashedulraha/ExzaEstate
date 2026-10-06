@@ -54,7 +54,7 @@ export function AuditDetailDrawer({ isOpen, onClose, log }: AuditDetailDrawerPro
               <span className="text-caption text-text-muted flex items-center gap-1">
                 <Hash className="w-3.5 h-3.5" /> Request ID
               </span>
-              <span className="font-mono text-[11px] text-text-muted mt-0.5 block truncate">
+              <span className="font-mono text-caption text-text-muted mt-0.5 block truncate">
                 {log.requestId}
               </span>
             </div>
@@ -81,7 +81,7 @@ export function AuditDetailDrawer({ isOpen, onClose, log }: AuditDetailDrawerPro
               <span className="text-caption font-semibold uppercase text-danger">
                 Previous State (Before)
               </span>
-              <pre className="p-3 rounded bg-surface-sunken border border-border text-[11px] font-mono overflow-x-auto max-h-80 text-text">
+              <pre className="p-3 rounded bg-surface-sunken border border-border text-caption font-mono overflow-x-auto max-h-80 text-text">
                 {log.oldValue ? JSON.stringify(log.oldValue, null, 2) : '(none - created)'}
               </pre>
             </div>
@@ -91,7 +91,7 @@ export function AuditDetailDrawer({ isOpen, onClose, log }: AuditDetailDrawerPro
               <span className="text-caption font-semibold uppercase text-success">
                 Resulting State (After)
               </span>
-              <pre className="p-3 rounded bg-surface-sunken border border-border text-[11px] font-mono overflow-x-auto max-h-80 text-text">
+              <pre className="p-3 rounded bg-surface-sunken border border-border text-caption font-mono overflow-x-auto max-h-80 text-text">
                 {log.newValue ? JSON.stringify(log.newValue, null, 2) : '(none - deleted)'}
               </pre>
             </div>

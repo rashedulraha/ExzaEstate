@@ -66,7 +66,7 @@ export function BookingListPage(): ReactElement {
             Atomic property reservations, co-buyer allocations, and 72-hour hold management
           </p>
         </div>
-        <PermissionGate permission={PERMISSIONS.BOOKING_CREATE}>
+        <PermissionGate permission={PERMISSIONS.BOOKING_CREATE} fallback={null}>
           <Button variant="primary" onClick={() => setIsWizardOpen(true)}>
             + New Booking Wizard
           </Button>

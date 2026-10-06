@@ -77,7 +77,7 @@ export function LeadListPage(): ReactElement {
             </button>
           </div>
 
-          <PermissionGate permission={PERMISSIONS.LEAD_CREATE}>
+          <PermissionGate permission={PERMISSIONS.LEAD_CREATE} fallback={null}>
             <Button variant="primary" className="gap-2" onClick={() => setIsAddModalOpen(true)}>
               <Plus className="w-4 h-4" />
               <span>Add Lead</span>

@@ -79,7 +79,7 @@ function EntityHistoryContent({
               {/* Summary of changes */}
               {item.newValue && (
                 <div className="mt-2 pt-2 border-t border-border/60">
-                  <span className="text-[11px] font-semibold text-text-muted block mb-1">
+                  <span className="text-caption font-semibold text-text-muted block mb-1">
                     Mutated Properties:
                   </span>
                   <div className="flex flex-wrap gap-1.5">

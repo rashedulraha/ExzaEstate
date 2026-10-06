@@ -26,7 +26,7 @@ export function QuotationListPage(): ReactElement {
             Commercial proposal management and automated discount approvals
           </p>
         </div>
-        <PermissionGate permission={PERMISSIONS.QUOTATION_CREATE}>
+        <PermissionGate permission={PERMISSIONS.QUOTATION_CREATE} fallback={null}>
           <Button variant="primary" onClick={() => setIsFormOpen(true)}>
             + Create Quotation
           </Button>

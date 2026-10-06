@@ -160,7 +160,7 @@ function ReceiptSignatoryBlock({ verificationUrl }: { verificationUrl: string })
           </div>
           <div className="text-caption text-text-muted space-y-0.5 max-w-[200px]">
             <p className="font-semibold text-text">SCAN TO VERIFY</p>
-            <p className="text-[11px] leading-tight">
+            <p className="text-caption leading-tight">
               Tamper-proof digital receipt verified on ExzaEstate network.
             </p>
           </div>
@@ -172,15 +172,15 @@ function ReceiptSignatoryBlock({ verificationUrl }: { verificationUrl: string })
         >
           <div className="w-32 border-t border-text-muted pt-1.5">
             <p className="font-semibold text-text">Prepared By</p>
-            <p className="text-[10px] text-text-muted">Executive</p>
+            <p className="text-caption text-text-muted">Executive</p>
           </div>
           <div className="w-32 border-t border-text-muted pt-1.5">
             <p className="font-semibold text-text">Verified By</p>
-            <p className="text-[10px] text-text-muted">Accounts</p>
+            <p className="text-caption text-text-muted">Accounts</p>
           </div>
           <div className="w-36 border-t border-text-muted pt-1.5">
             <p className="font-bold text-text">Authorized Signatory</p>
-            <p className="text-[10px] text-text-muted">MD / Director</p>
+            <p className="text-caption text-text-muted">MD / Director</p>
           </div>
         </div>
       </div>
