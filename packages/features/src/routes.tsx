@@ -1,25 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Outlet, Navigate, useNavigate, useLocation, type RouteObject } from 'react-router';
-import { useAuth } from '@exzaestate/app-core';
-import { AppShell, type SidebarNavGroup } from '@exzaestate/ui';
-import {
-  LayoutDashboard,
-  Users,
-  Building2,
-  Receipt,
-  FileSpreadsheet,
-  BarChart3,
-  ShieldCheck,
-  Briefcase,
-  Settings,
-  UserCheck,
-  CheckSquare,
-  ArrowRightLeft,
-  LogOut,
-} from 'lucide-react';
+import { useAuth, usePlatform } from '@exzaestate/app-core';
+import { AppShell, ThemeProvider, ToastProvider } from '@exzaestate/ui';
 import { authRoutes } from './auth/auth.routes.js';
 import { StepUpModal } from './auth/components/StepUpModal.js';
 import { SessionExpiredModal } from './auth/components/SessionExpiredModal.js';
+import { SignOutModal } from './auth/components/SignOutModal.js';
 import { propertyRoutes } from './property/property.routes.js';
 import { crmRoutes } from './crm/crm.routes.js';
 import { customerRoutes } from './customer/customer.routes.js';
@@ -33,41 +19,87 @@ import { reportsRoutes } from './reports/reports.routes.js';
 import { auditRoutes } from './audit/audit.routes.js';
 import { settingsRoutes } from './settings/settings.routes.js';
 import { usersRoutes } from './users/users.routes.js';
-import { setupRoutes } from './setup/setup.routes.js';
+import { publicSetupRoutes, setupRoutes } from './setup/setup.routes.js';
 import { migrationRoutes } from './migration/migration.routes.js';
 import { licenseRoutes } from './license/license.routes.js';
-import { GlobalSearchCommandPalette } from './search/components/GlobalSearchCommandPalette.js';
+import { systemAdminRoutes } from './system-admin/system-admin.routes.js';
 import { NotificationDrawer } from './notifications/components/NotificationDrawer.js';
+import { RouteErrorBoundary } from './common/RouteErrorBoundary.js';
+import { resolveCurrentRouteId } from './navigation.config.js';
+import {
+  isUserSuperAdmin,
+  getRoleSpecificRedirect,
+  useSearchShortcut,
+  resolveSidebarConfig,
+  buildHeaderProps,
+  SearchPaletteContainer,
+} from './routes.helpers.js';
 
 export function RootLayout() {
   return (
-    <>
-      <Outlet />
-      <StepUpModal />
-      <SessionExpiredModal />
-    </>
+    <ThemeProvider>
+      <ToastProvider>
+        <Outlet />
+        <StepUpModal />
+        <SessionExpiredModal />
+      </ToastProvider>
+    </ThemeProvider>
   );
 }
 
-const ROUTE_PREFIX_MAP: Array<[string, string]> = [
-  ['/properties', 'properties'],
-  ['/crm', 'leads'],
-  ['/sales', 'bookings'],
-  ['/collection', 'collections'],
-  ['/accounting', 'journals'],
-  ['/operations', 'operations'],
-  ['/reports', 'reports'],
-  ['/audit', 'audit'],
-  ['/settings', 'settings'],
-  ['/users', 'users'],
-  ['/roles', 'users'],
-  ['/setup', 'setup'],
-  ['/migration', 'migration'],
-];
+export function AppRootRedirect() {
+  const { isAuthenticated, isLoading, user } = useAuth();
+  const platform = usePlatform();
+  const [isProvisioned, setIsProvisioned] = useState<boolean | null>(null);
 
-function resolveCurrentRouteId(path: string): string {
-  const match = ROUTE_PREFIX_MAP.find(([prefix]) => path.startsWith(prefix));
-  return match ? match[1] : 'dashboard';
+  useEffect(() => {
+    let active = true;
+    async function checkProvisioned() {
+      try {
+        const res = await fetch(`${platform.apiConfig.baseUrl}/api/v1/local-data/is-provisioned`, {
+          method: 'GET',
+          signal: AbortSignal.timeout(3000),
+        });
+        if (res.ok) {
+          const data = (await res.json()) as {
+            provisioned?: boolean;
+            data?: { provisioned?: boolean };
+          };
+          const flag = Boolean(data.provisioned || data.data?.provisioned);
+          if (active) setIsProvisioned(flag);
+        } else {
+          if (active) setIsProvisioned(true);
+        }
+      } catch {
+        if (active) setIsProvisioned(true);
+      }
+    }
+    void checkProvisioned();
+    return () => {
+      active = false;
+    };
+  }, [platform.apiConfig.baseUrl]);
+
+  if (isLoading || isProvisioned === null) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-bg text-text">
+        <div className="h-8 w-8 animate-skeleton-breathe rounded-full bg-surface-sunken" />
+      </div>
+    );
+  }
+
+  if (isAuthenticated) {
+    if (isUserSuperAdmin(user?.companyId, user?.permissions)) {
+      return <Navigate to="/system/dashboard" replace />;
+    }
+    return <Navigate to="/dashboard" replace />;
+  }
+
+  if (!isProvisioned) {
+    return <Navigate to="/setup/first-launch" replace />;
+  }
+
+  return <Navigate to="/auth/login" replace />;
 }
 
 export function ProtectedLayout() {
@@ -77,6 +109,21 @@ export function ProtectedLayout() {
 
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isNotifOpen, setIsNotifOpen] = useState(false);
+  const [isSignOutModalOpen, setIsSignOutModalOpen] = useState(false);
+  const [isSigningOut, setIsSigningOut] = useState(false);
+
+  useSearchShortcut(() => setIsSearchOpen((prev) => !prev));
+
+  const handleConfirmSignOut = async () => {
+    setIsSigningOut(true);
+    try {
+      await logout();
+      setIsSignOutModalOpen(false);
+      navigate('/auth/login', { replace: true });
+    } finally {
+      setIsSigningOut(false);
+    }
+  };
 
   if (isLoading) {
     return (
@@ -90,167 +137,46 @@ export function ProtectedLayout() {
     return <Navigate to="/auth/login" replace />;
   }
 
-  const currentRouteId = resolveCurrentRouteId(location.pathname);
+  const isSuperAdmin = isUserSuperAdmin(user?.companyId, user?.permissions);
+  const roleRedirect = getRoleSpecificRedirect(isSuperAdmin, location.pathname);
+  if (roleRedirect) {
+    return <Navigate to={roleRedirect} replace />;
+  }
 
-  const sidebarGroups: SidebarNavGroup[] = [
-    {
-      id: 'overview',
-      title: 'Overview',
-      items: [
-        {
-          id: 'dashboard',
-          label: 'Dashboard',
-          icon: <LayoutDashboard className="w-4 h-4 shrink-0" aria-hidden="true" />,
-          onClick: () => navigate('/dashboard'),
-        },
-      ],
-    },
-    {
-      id: 'crm',
-      title: 'CRM & Sales',
-      items: [
-        {
-          id: 'leads',
-          label: 'Leads & Customers',
-          icon: <Users className="w-4 h-4 shrink-0" aria-hidden="true" />,
-          onClick: () => navigate('/crm/leads'),
-        },
-        {
-          id: 'bookings',
-          label: 'Bookings & Sales',
-          icon: <Receipt className="w-4 h-4 shrink-0" aria-hidden="true" />,
-          onClick: () => navigate('/sales/bookings'),
-        },
-      ],
-    },
-    {
-      id: 'property',
-      title: 'Property',
-      items: [
-        {
-          id: 'properties',
-          label: 'Inventory & Plots',
-          icon: <Building2 className="w-4 h-4 shrink-0" aria-hidden="true" />,
-          onClick: () => navigate('/properties'),
-        },
-      ],
-    },
-    {
-      id: 'finance',
-      title: 'Finance & Accounts',
-      items: [
-        {
-          id: 'collections',
-          label: 'Collections',
-          icon: <Receipt className="w-4 h-4 shrink-0" aria-hidden="true" />,
-          onClick: () => navigate('/collection/receipts'),
-        },
-        {
-          id: 'journals',
-          label: 'Chart of Accounts',
-          icon: <FileSpreadsheet className="w-4 h-4 shrink-0" aria-hidden="true" />,
-          onClick: () => navigate('/accounting/coa'),
-        },
-      ],
-    },
-    {
-      id: 'procurement',
-      title: 'Operations',
-      items: [
-        {
-          id: 'operations',
-          label: 'Expenses & AP',
-          icon: <Briefcase className="w-4 h-4 shrink-0" aria-hidden="true" />,
-          onClick: () => navigate('/operations/expenses'),
-        },
-      ],
-    },
-    {
-      id: 'reports',
-      title: 'Reports',
-      items: [
-        {
-          id: 'reports',
-          label: 'Reports Hub',
-          icon: <BarChart3 className="w-4 h-4 shrink-0" aria-hidden="true" />,
-          onClick: () => navigate('/reports'),
-        },
-      ],
-    },
-    {
-      id: 'system',
-      title: 'System & Admin',
-      items: [
-        {
-          id: 'users',
-          label: 'Users & Roles',
-          icon: <UserCheck className="w-4 h-4 shrink-0" aria-hidden="true" />,
-          onClick: () => navigate('/users'),
-        },
-        {
-          id: 'settings',
-          label: 'Settings & Numbering',
-          icon: <Settings className="w-4 h-4 shrink-0" aria-hidden="true" />,
-          onClick: () => navigate('/settings'),
-        },
-        {
-          id: 'setup',
-          label: 'Setup Checklist',
-          icon: <CheckSquare className="w-4 h-4 shrink-0" aria-hidden="true" />,
-          onClick: () => navigate('/setup/checklist'),
-        },
-        {
-          id: 'migration',
-          label: 'Migration Wizard',
-          icon: <ArrowRightLeft className="w-4 h-4 shrink-0" aria-hidden="true" />,
-          onClick: () => navigate('/migration/wizard'),
-        },
-        {
-          id: 'audit',
-          label: 'Audit & Security',
-          icon: <ShieldCheck className="w-4 h-4 shrink-0" aria-hidden="true" />,
-          onClick: () => navigate('/audit'),
-        },
-        {
-          id: 'logout',
-          label: 'Sign Out',
-          icon: <LogOut className="w-4 h-4 shrink-0 text-danger" aria-hidden="true" />,
-          onClick: async () => {
-            await logout();
-            navigate('/auth/login', { replace: true });
-          },
-        },
-      ],
-    },
-  ];
+  const currentRouteId = resolveCurrentRouteId(location.pathname);
+  const { sidebarGroups, displayCompany } = resolveSidebarConfig(user, isSuperAdmin, navigate);
+  const headerProps = buildHeaderProps(user, isSuperAdmin, {
+    onSearch: () => setIsSearchOpen(true),
+    onNotif: () => setIsNotifOpen(true),
+    onProfile: () => setIsSignOutModalOpen(true),
+  });
 
   return (
     <>
       <AppShell
-        companyName="ExzaEstate ERP"
+        companyName={displayCompany}
         currentRouteId={currentRouteId}
         sidebarGroups={sidebarGroups}
-        headerProps={{
-          userEmail: user?.email,
-          onOpenCommandPalette: () => setIsSearchOpen(true),
-          onNotificationsClick: () => setIsNotifOpen(true),
-          onProfileClick: async () => {
-            const confirmed = window.confirm('Sign out from ExzaEstate?');
-            if (confirmed) {
-              await logout();
-              navigate('/auth/login', { replace: true });
-            }
-          },
-        }}
+        onQuickAction={() => setIsSearchOpen(true)}
+        headerProps={headerProps}
       >
         <Outlet />
       </AppShell>
 
-      {/* Global Universal Search Command Palette (Cmd+K) */}
-      <GlobalSearchCommandPalette isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
+      <SearchPaletteContainer
+        isSuperAdmin={isSuperAdmin}
+        isOpen={isSearchOpen}
+        onClose={() => setIsSearchOpen(false)}
+      />
 
-      {/* Real-time SSE Notification Drawer */}
       <NotificationDrawer isOpen={isNotifOpen} onClose={() => setIsNotifOpen(false)} />
+
+      <SignOutModal
+        isOpen={isSignOutModalOpen}
+        onClose={() => setIsSignOutModalOpen(false)}
+        onConfirm={handleConfirmSignOut}
+        isSigningOut={isSigningOut}
+      />
     </>
   );
 }
@@ -258,32 +184,48 @@ export function ProtectedLayout() {
 export const routes: RouteObject[] = [
   {
     element: <RootLayout />,
+    errorElement: <RouteErrorBoundary isRoot />,
     children: [
+      {
+        path: '/',
+        element: <AppRootRedirect />,
+      },
+      ...publicSetupRoutes,
       ...authRoutes,
       {
         element: <ProtectedLayout />,
         children: [
           {
-            path: '/',
-            element: <Navigate to="/dashboard" replace />,
+            errorElement: <RouteErrorBoundary />,
+            children: [
+              ...dashboardRoutes,
+              ...systemAdminRoutes,
+              ...propertyRoutes,
+              ...crmRoutes,
+              ...customerRoutes,
+              ...approvalsRoutes,
+              ...salesRoutes,
+              ...collectionRoutes,
+              ...accountingRoutes,
+              ...operationsRoutes,
+              ...reportsRoutes,
+              ...auditRoutes,
+              ...settingsRoutes,
+              ...usersRoutes,
+              ...setupRoutes,
+              ...migrationRoutes,
+              ...licenseRoutes,
+              {
+                path: '*',
+                element: <RouteErrorBoundary />,
+              },
+            ],
           },
-          ...dashboardRoutes,
-          ...propertyRoutes,
-          ...crmRoutes,
-          ...customerRoutes,
-          ...approvalsRoutes,
-          ...salesRoutes,
-          ...collectionRoutes,
-          ...accountingRoutes,
-          ...operationsRoutes,
-          ...reportsRoutes,
-          ...auditRoutes,
-          ...settingsRoutes,
-          ...usersRoutes,
-          ...setupRoutes,
-          ...migrationRoutes,
-          ...licenseRoutes,
         ],
+      },
+      {
+        path: '*',
+        element: <RouteErrorBoundary isRoot />,
       },
     ],
   },

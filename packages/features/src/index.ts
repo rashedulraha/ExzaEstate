@@ -25,3 +25,5 @@ export * from './users/index.js';
 export * from './setup/index.js';
 export * from './migration/index.js';
 export * from './license/index.js';
+export * from './system-admin/index.js';
+export * from './common/RouteErrorBoundary.js';
