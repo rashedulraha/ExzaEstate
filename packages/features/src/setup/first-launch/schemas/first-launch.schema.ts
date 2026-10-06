@@ -11,14 +11,18 @@ export type CloudConfigInput = z.infer<typeof cloudConfigSchema>;
 
 export const createLocalCompanySchema = z
   .object({
+    licenseKey: z.string().trim().min(8, 'Valid license key from purchase receipt is required'),
     companyName: z
       .string()
       .trim()
       .min(2, 'Company name must be at least 2 characters')
       .max(100, 'Company name cannot exceed 100 characters'),
+    companyCode: z.string().trim().optional(),
     tradeLicense: z.string().trim().optional(),
     adminName: z.string().trim().min(2, 'Administrator name must be at least 2 characters'),
     adminEmail: z.string().trim().email('Please enter a valid corporate email address'),
+    phone: z.string().trim().optional(),
+    verificationCode: z.string().trim().optional(),
     adminPassword: z.string().min(8, 'Password must be at least 8 characters long'),
     confirmPassword: z.string().min(8, 'Confirm password is required'),
   })

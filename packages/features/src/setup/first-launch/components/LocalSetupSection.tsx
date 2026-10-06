@@ -2,141 +2,14 @@ import { type ReactElement, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, FormField, Input } from '@exzaestate/ui';
+import type { MachineFingerprint } from '@exzaestate/app-core';
 import {
-  createLocalCompanySchema,
   restoreBackupSchema,
   type CreateLocalCompanyInput,
   type RestoreBackupInput,
   type LocalSetupAction,
 } from '../schemas/first-launch.schema.js';
-
-interface LocalCompanyFormProps {
-  onSubmit: (data: CreateLocalCompanyInput) => void;
-  isLoading: boolean;
-}
-
-function LocalCompanyForm({ onSubmit, isLoading }: LocalCompanyFormProps): ReactElement {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<CreateLocalCompanyInput>({
-    resolver: zodResolver(createLocalCompanySchema),
-    defaultValues: {
-      companyName: '',
-      tradeLicense: '',
-      adminName: '',
-      adminEmail: '',
-      adminPassword: '',
-      confirmPassword: '',
-    },
-  });
-
-  return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <FormField
-          id="local-companyName"
-          label="Company / Enterprise Name"
-          required
-          error={errors.companyName?.message}
-        >
-          <Input
-            id="local-companyName"
-            placeholder="e.g. Paramount Real Estate Ltd."
-            {...register('companyName')}
-          />
-        </FormField>
-
-        <FormField
-          id="local-tradeLicense"
-          label="Trade License Number"
-          error={errors.tradeLicense?.message}
-        >
-          <Input
-            id="local-tradeLicense"
-            placeholder="e.g. TRAD/DNCC/012345/2026"
-            {...register('tradeLicense')}
-          />
-        </FormField>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <FormField
-          id="local-adminName"
-          label="Managing Director / Admin Name"
-          required
-          error={errors.adminName?.message}
-        >
-          <Input
-            id="local-adminName"
-            placeholder="e.g. Mohammad Anisur Rahman"
-            {...register('adminName')}
-          />
-        </FormField>
-
-        <FormField
-          id="local-adminEmail"
-          label="Administrator Email (Login ID)"
-          required
-          error={errors.adminEmail?.message}
-        >
-          <Input
-            id="local-adminEmail"
-            type="email"
-            placeholder="admin@exzaestate.local"
-            {...register('adminEmail')}
-          />
-        </FormField>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <FormField
-          id="local-adminPassword"
-          label="Master Password"
-          required
-          error={errors.adminPassword?.message}
-          helperText="Minimum 8 characters with numbers and symbols"
-        >
-          <Input
-            id="local-adminPassword"
-            type="password"
-            placeholder="••••••••••••"
-            {...register('adminPassword')}
-          />
-        </FormField>
-
-        <FormField
-          id="local-confirmPassword"
-          label="Confirm Master Password"
-          required
-          error={errors.confirmPassword?.message}
-        >
-          <Input
-            id="local-confirmPassword"
-            type="password"
-            placeholder="••••••••••••"
-            {...register('confirmPassword')}
-          />
-        </FormField>
-      </div>
-
-      <div className="p-3.5 bg-surface-sunken rounded-card border border-border text-caption text-text-muted flex items-start gap-2.5">
-        <span className="text-accent font-bold">ℹ</span>
-        <span>
-          Local Standalone uses single-machine encryption and local loopback isolation. Keep regular
-          backups to protect your ledgers.
-        </span>
-      </div>
-
-      <div className="pt-2 flex justify-end">
-        <Button type="submit" variant="primary" isLoading={isLoading} disabled={isLoading}>
-          Initialize Local Engine & Create Admin →
-        </Button>
-      </div>
-    </form>
-  );
-}
+import { LocalCompanyForm } from './LocalCompanyForm.js';
 
 interface LocalRestoreFormProps {
   onRestore: (backupPath: string) => void;
@@ -221,6 +94,11 @@ interface LocalSetupSectionProps {
   onRestoreBackup: (backupPath: string) => void;
   isLoading: boolean;
   onBrowseFile?: () => Promise<string | null>;
+  machineFingerprint?: MachineFingerprint | null;
+  onSendVerificationCode?: (email: string) => string;
+  onVerifyCode?: (code: string) => boolean;
+  isEmailVerified?: boolean;
+  verificationCodeSent?: boolean;
 }
 
 export function LocalSetupSection({
@@ -228,6 +106,11 @@ export function LocalSetupSection({
   onRestoreBackup,
   isLoading,
   onBrowseFile,
+  machineFingerprint,
+  onSendVerificationCode,
+  onVerifyCode,
+  isEmailVerified,
+  verificationCodeSent,
 }: LocalSetupSectionProps): ReactElement {
   const [action, setAction] = useState<LocalSetupAction>('new_company');
 
@@ -235,9 +118,11 @@ export function LocalSetupSection({
     <div className="card-surface space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border pb-4">
         <div>
-          <h3 className="text-h3 font-semibold text-text">Local Standalone Configuration</h3>
+          <h3 className="text-h3 font-semibold text-text">
+            Organization Registration & Deployment
+          </h3>
           <p className="mt-0.5 text-body text-text-muted">
-            Configure your air-gapped financial engine on this PC.
+            Activate your license key and configure your enterprise workspace.
           </p>
         </div>
         <div className="flex rounded-button bg-surface-sunken p-1 border border-border">
@@ -267,7 +152,15 @@ export function LocalSetupSection({
       </div>
 
       {action === 'new_company' ? (
-        <LocalCompanyForm onSubmit={onCreateCompany} isLoading={isLoading} />
+        <LocalCompanyForm
+          onSubmit={onCreateCompany}
+          isLoading={isLoading}
+          machineFingerprint={machineFingerprint}
+          onSendVerificationCode={onSendVerificationCode}
+          onVerifyCode={onVerifyCode}
+          isEmailVerified={isEmailVerified}
+          verificationCodeSent={verificationCodeSent}
+        />
       ) : (
         <LocalRestoreForm
           onRestore={onRestoreBackup}

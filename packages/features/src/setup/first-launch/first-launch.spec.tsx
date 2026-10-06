@@ -1,7 +1,12 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
-import { PlatformProvider, defaultPlatformAdapters } from '@exzaestate/app-core';
+import {
+  PlatformProvider,
+  AuthProvider,
+  defaultPlatformAdapters,
+  InMemorySecureStorage,
+} from '@exzaestate/app-core';
 import { ModeSelectionCard } from './components/ModeSelectionCard.js';
 import { CloudSetupSection } from './components/CloudSetupSection.js';
 import { LocalSetupSection } from './components/LocalSetupSection.js';
@@ -12,9 +17,15 @@ import { FirstLaunchSummary } from './components/FirstLaunchSummary.js';
 import { FirstLaunchWizardPage } from './pages/FirstLaunchWizardPage.js';
 
 function renderWithPlatform(ui: React.ReactElement) {
+  const adapters = {
+    ...defaultPlatformAdapters,
+    secureStorage: new InMemorySecureStorage(),
+  };
   return render(
-    <PlatformProvider adapters={defaultPlatformAdapters}>
-      <MemoryRouter>{ui}</MemoryRouter>
+    <PlatformProvider adapters={adapters}>
+      <AuthProvider>
+        <MemoryRouter>{ui}</MemoryRouter>
+      </AuthProvider>
     </PlatformProvider>,
   );
 }
@@ -68,8 +79,8 @@ describe('First-Launch Wizard & Local Standalone (Task B9)', () => {
         />,
       );
 
-      expect(screen.getByLabelText(/Company \/ Enterprise Name/i)).toBeDefined();
-      expect(screen.getByLabelText(/Managing Director \/ Admin Name/i)).toBeDefined();
+      expect(screen.getByLabelText(/Legal Company Name/i)).toBeDefined();
+      expect(screen.getByLabelText(/Full Name/i)).toBeDefined();
 
       const restoreTab = screen.getByRole('button', { name: 'Restore Backup' });
       fireEvent.click(restoreTab);
@@ -130,10 +141,10 @@ describe('First-Launch Wizard & Local Standalone (Task B9)', () => {
       render(<FirstLaunchSummary mode="local" onProceedToLogin={onProceed} />);
 
       expect(screen.getByText('Workspace Initialized')).toBeDefined();
-      expect(screen.getByText(/Local Standalone engine is ready/i)).toBeDefined();
+      expect(screen.getByText(/local enterprise workspace is provisioned/i)).toBeDefined();
       expect(screen.getByText('ENFORCED (RULE-IMMUTABLE)')).toBeDefined();
 
-      const proceedBtn = screen.getByRole('button', { name: /Proceed to Sign In/i });
+      const proceedBtn = screen.getByRole('button', { name: /Launch Executive Dashboard/i });
       fireEvent.click(proceedBtn);
       expect(onProceed).toHaveBeenCalled();
     });
@@ -143,9 +154,9 @@ describe('First-Launch Wizard & Local Standalone (Task B9)', () => {
     it('renders wizard layout with step indicator', () => {
       renderWithPlatform(<FirstLaunchWizardPage />);
 
-      expect(screen.getByText('Initial Deployment Wizard')).toBeDefined();
+      expect(screen.getByText('Enterprise Onboarding & License Activation')).toBeDefined();
       expect(screen.getByText('Choose Mode')).toBeDefined();
-      expect(screen.getByText('Configure Engine')).toBeDefined();
+      expect(screen.getByText('Organization & License')).toBeDefined();
       expect(screen.getByText('Ready')).toBeDefined();
       expect(screen.getByText('Choose Runtime Engine')).toBeDefined();
     });

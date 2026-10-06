@@ -12,7 +12,7 @@ interface StepIndicatorProps {
 }
 
 function StepIndicator({ currentStep }: StepIndicatorProps): ReactElement {
-  const steps = ['Choose Mode', 'Configure Engine', 'Ready'];
+  const steps = ['Choose Mode', 'Organization & License', 'Ready'];
 
   return (
     <div className="flex items-center justify-center gap-3 py-4">
@@ -55,15 +55,25 @@ export function FirstLaunchWizardPage(): ReactElement {
     currentStep,
     selectedMode,
     isLoading,
+    machineFingerprint,
+    verificationCodeSent,
+    isEmailVerified,
+    provisionedDetails,
     selectMode,
+    sendVerificationCode,
+    verifyCode,
     configureCloud,
     createLocalCompany,
     restoreLocalBackup,
     handleBrowseFile,
   } = useFirstLaunch();
 
+  const handleProceedToDashboard = () => {
+    void navigate('/dashboard', { replace: true });
+  };
+
   const handleProceedToLogin = () => {
-    void navigate('/login');
+    void navigate('/auth/login', { replace: true });
   };
 
   return (
@@ -77,12 +87,12 @@ export function FirstLaunchWizardPage(): ReactElement {
             <div>
               <span className="text-h3 font-bold text-text">ExzaEstate</span>
               <span className="ml-2 text-caption text-text-muted font-medium">
-                Initial Deployment Wizard
+                Enterprise Onboarding & License Activation
               </span>
             </div>
           </div>
           <span className="text-caption px-2.5 py-1 rounded-full bg-surface-sunken border border-border text-text-muted font-mono">
-            v0.1.0 • Desktop Shell
+            v0.1.0 • Enterprise Edition
           </span>
         </div>
       </header>
@@ -108,17 +118,27 @@ export function FirstLaunchWizardPage(): ReactElement {
               onRestoreBackup={(path) => void restoreLocalBackup(path)}
               isLoading={isLoading}
               onBrowseFile={handleBrowseFile}
+              machineFingerprint={machineFingerprint}
+              onSendVerificationCode={sendVerificationCode}
+              onVerifyCode={verifyCode}
+              isEmailVerified={isEmailVerified}
+              verificationCodeSent={verificationCodeSent}
             />
           )}
 
           {currentStep === 3 && (
-            <FirstLaunchSummary mode={selectedMode} onProceedToLogin={handleProceedToLogin} />
+            <FirstLaunchSummary
+              mode={selectedMode}
+              companyName={provisionedDetails?.companyName}
+              onProceedToLogin={handleProceedToLogin}
+              onProceedToDashboard={handleProceedToDashboard}
+            />
           )}
         </div>
       </main>
 
       <footer className="border-t border-border bg-surface px-6 py-4 text-center text-caption text-text-muted">
-        <p>ExzaEstate Enterprise ERP • Dual-Mode Architecture (Cloud & Local Standalone)</p>
+        <p>Protected by hardware-bound cryptographic security and row-level tenant isolation</p>
       </footer>
     </div>
   );

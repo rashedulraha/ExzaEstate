@@ -4,4 +4,5 @@ export * from './pages/LoginPage.js';
 export * from './components/StepUpModal.js';
 export * from './components/SessionExpiredModal.js';
 export * from './components/TotpEnrollmentModal.js';
+export * from './components/SignOutModal.js';
 export * from './auth.routes.js';

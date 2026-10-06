@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
+import { MemoryRouter } from 'react-router';
 import {
   PlatformProvider,
   AuthProvider,
@@ -29,7 +30,9 @@ describe('Auth Feature Screens & Modals', () => {
     };
     return render(
       <PlatformProvider adapters={adapters}>
-        <AuthProvider>{ui}</AuthProvider>
+        <AuthProvider>
+          <MemoryRouter>{ui}</MemoryRouter>
+        </AuthProvider>
       </PlatformProvider>,
     );
   }

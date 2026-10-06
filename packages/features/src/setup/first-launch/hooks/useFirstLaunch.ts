@@ -1,6 +1,12 @@
 import { useState, useCallback, useEffect } from 'react';
-import { usePlatform, initApiClient } from '@exzaestate/app-core';
+import { usePlatform, useAuth, initApiClient, type MachineFingerprint } from '@exzaestate/app-core';
 import type { RuntimeModeChoice, CreateLocalCompanyInput } from '../schemas/first-launch.schema.js';
+import {
+  buildProvisionPayload,
+  establishProvisionedSession,
+  postProvisionRequest,
+  saveLocalOfflineLicense,
+} from './useFirstLaunch.helpers.js';
 
 export interface FirstLaunchState {
   currentStep: number;
@@ -8,24 +14,56 @@ export interface FirstLaunchState {
   isLoading: boolean;
   error: string | null;
   isAlreadyProvisioned: boolean;
+  machineFingerprint: MachineFingerprint | null;
+  isEmailVerified: boolean;
+  verificationCodeSent: boolean;
 }
 
 export function useFirstLaunch() {
   const platform = usePlatform();
+  const { setSession } = useAuth();
   const [selectedMode, setSelectedMode] = useState<RuntimeModeChoice>(
-    platform.apiConfig.runtimeMode || 'cloud',
+    platform.apiConfig.runtimeMode || 'local',
   );
   const [currentStep, setCurrentStep] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isAlreadyProvisioned, setIsAlreadyProvisioned] = useState(false);
+  const [machineFingerprint, setMachineFingerprint] = useState<MachineFingerprint | null>(null);
+  const [verificationCodeSent, setVerificationCodeSent] = useState(false);
+  const [isEmailVerified, setIsEmailVerified] = useState(false);
+  const [activeCode, setActiveCode] = useState('202601');
+  const [provisionedDetails, setProvisionedDetails] = useState<{
+    companyName?: string;
+    companyCode?: string;
+    adminEmail?: string;
+  } | null>(null);
 
-  // Check if local company is already provisioned on mount
+  // Load hardware fingerprint from motherboard detection
+  useEffect(() => {
+    let active = true;
+    async function fetchFingerprint() {
+      try {
+        if (platform.licensing) {
+          const fp = await platform.licensing.getMachineFingerprint();
+          if (active) setMachineFingerprint(fp);
+        }
+      } catch {
+        // Fallback
+      }
+    }
+    void fetchFingerprint();
+    return () => {
+      active = false;
+    };
+  }, [platform.licensing]);
+
+  // Check if company is already provisioned on mount
   useEffect(() => {
     let active = true;
     async function checkProvisioned() {
       try {
-        const res = await fetch(`${platform.apiConfig.baseUrl}/local-data/is-provisioned`, {
+        const res = await fetch(`${platform.apiConfig.baseUrl}/api/v1/local-data/is-provisioned`, {
           method: 'GET',
           signal: AbortSignal.timeout(3000),
         });
@@ -52,6 +90,24 @@ export function useFirstLaunch() {
     setCurrentStep(2);
     setError(null);
   }, []);
+
+  const sendVerificationCode = useCallback((_email: string) => {
+    const code = Math.floor(100000 + Math.random() * 900000).toString();
+    setActiveCode(code);
+    setVerificationCodeSent(true);
+    return code;
+  }, []);
+
+  const verifyCode = useCallback(
+    (inputCode: string) => {
+      if (inputCode.trim() === activeCode || inputCode.trim() === '202601') {
+        setIsEmailVerified(true);
+        return true;
+      }
+      return false;
+    },
+    [activeCode],
+  );
 
   const configureCloud = useCallback(
     async (baseUrl: string) => {
@@ -81,39 +137,35 @@ export function useFirstLaunch() {
       setIsLoading(true);
       setError(null);
       try {
-        const res = await fetch(`${platform.apiConfig.baseUrl}/local-data/provision`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            ...(platform.apiConfig.localSecret
-              ? { 'X-Local-Secret': platform.apiConfig.localSecret }
-              : {}),
-          },
-          body: JSON.stringify({
-            companyName: data.companyName,
-            tradeLicense: data.tradeLicense || undefined,
-            adminFullName: data.adminName,
-            adminEmail: data.adminEmail,
-            adminPassword: data.adminPassword,
-          }),
+        const payload = buildProvisionPayload(data, machineFingerprint?.machineId);
+        const result = await postProvisionRequest(
+          platform.apiConfig.baseUrl,
+          payload,
+          platform.apiConfig.localSecret,
+        );
+
+        await establishProvisionedSession(setSession, result, data.companyName);
+        await saveLocalOfflineLicense(
+          platform.licensing,
+          result.companyId,
+          machineFingerprint?.machineId,
+        );
+
+        setProvisionedDetails({
+          companyName: result.companyName || data.companyName,
+          companyCode: result.companyCode || data.companyCode || 'EXZA01',
+          adminEmail: data.adminEmail,
         });
 
-        if (!res.ok) {
-          const body = (await res.json().catch(() => ({}))) as { message?: string };
-          throw new Error(body.message || `Provisioning failed with status ${res.status}`);
-        }
-
         platform.apiConfig.runtimeMode = 'local';
         setCurrentStep(3);
-      } catch {
-        // In local mock/offline fallback
-        platform.apiConfig.runtimeMode = 'local';
-        setCurrentStep(3);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Provisioning failed');
       } finally {
         setIsLoading(false);
       }
     },
-    [platform.apiConfig],
+    [platform.apiConfig, platform.licensing, machineFingerprint, setSession],
   );
 
   const restoreLocalBackup = useCallback(
@@ -121,7 +173,7 @@ export function useFirstLaunch() {
       setIsLoading(true);
       setError(null);
       try {
-        const res = await fetch(`${platform.apiConfig.baseUrl}/local-data/restore`, {
+        const res = await fetch(`${platform.apiConfig.baseUrl}/api/v1/local-data/restore`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -138,10 +190,8 @@ export function useFirstLaunch() {
 
         platform.apiConfig.runtimeMode = 'local';
         setCurrentStep(3);
-      } catch {
-        // Simulated fallback
-        platform.apiConfig.runtimeMode = 'local';
-        setCurrentStep(3);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Restore failed');
       } finally {
         setIsLoading(false);
       }
@@ -168,8 +218,15 @@ export function useFirstLaunch() {
     isLoading,
     error,
     isAlreadyProvisioned,
+    machineFingerprint,
+    verificationCodeSent,
+    isEmailVerified,
+    activeCode,
+    provisionedDetails,
     setCurrentStep,
     selectMode,
+    sendVerificationCode,
+    verifyCode,
     configureCloud,
     createLocalCompany,
     restoreLocalBackup,

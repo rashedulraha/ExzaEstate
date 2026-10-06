@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { t } from '@exzaestate/shared';
@@ -6,7 +7,7 @@ import { useAuthFlow } from '../hooks/useAuthFlow.js';
 import { loginSchema, type LoginFormData } from '../schemas/auth.schema.js';
 import { TotpEnrollmentModal } from '../components/TotpEnrollmentModal.js';
 import { LoginShowcase } from '../components/Loginshowcase.js';
-import { ExzaLogoIcon } from '@exzaestate/ui';
+import { ExzaLogoIcon, ThemeToggle } from '@exzaestate/ui';
 
 export interface LoginPageProps {
   onSuccess?: () => void;
@@ -20,8 +21,12 @@ export interface LoginPageProps {
   defaultPassword?: string;
 }
 
+/**
+ * Every colour below comes from theme.css tokens, so the form follows
+ * light / dark mode and any future brand change automatically.
+ */
 const inputBase =
-  'block w-full rounded-button border bg-surface-sunken/40 px-4 py-3 text-body text-text-inverse placeholder-text-muted transition focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent';
+  'block w-full rounded-button border bg-surface px-4 py-3 text-body text-text placeholder:text-text-disabled transition focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/20';
 
 function EyeIcon() {
   return (
@@ -77,7 +82,7 @@ function LoginErrorBanner({ errorMessage, errorCode, onOpenTotp }: LoginErrorBan
   if (!errorMessage) return null;
   return (
     <div
-      className="mb-6 rounded-button border border-danger/40 bg-danger/12 p-3 text-caption text-danger"
+      className="mb-6 rounded-button border border-danger/30 bg-danger/10 p-3 text-caption text-danger"
       role="alert"
     >
       <p>{errorMessage}</p>
@@ -85,7 +90,7 @@ function LoginErrorBanner({ errorMessage, errorCode, onOpenTotp }: LoginErrorBan
         <button
           type="button"
           onClick={onOpenTotp}
-          className="mt-2 cursor-pointer text-caption font-semibold text-accent underline hover:opacity-80"
+          className="mt-2 cursor-pointer text-caption font-semibold text-primary-fg underline hover:opacity-80"
         >
           Set up 2FA now
         </button>
@@ -104,7 +109,7 @@ function PasswordInputField({ register, error }: PasswordInputFieldProps) {
 
   return (
     <div>
-      <label htmlFor="login-password" className="block text-caption font-medium text-text-muted">
+      <label htmlFor="login-password" className="block text-label">
         Password
       </label>
       <div className="relative mt-1.5">
@@ -116,12 +121,12 @@ function PasswordInputField({ register, error }: PasswordInputFieldProps) {
           aria-invalid={Boolean(error)}
           aria-describedby={error ? 'login-password-error' : undefined}
           {...register('password')}
-          className={`${inputBase} pr-11 ${error ? 'border-danger/60' : 'border-border-input'}`}
+          className={`${inputBase} pr-11 ${error ? 'border-danger' : 'border-border-input'}`}
         />
         <button
           type="button"
           onClick={() => setShowPassword((v) => !v)}
-          className="absolute inset-y-0 right-0 flex cursor-pointer items-center rounded-button pr-3.5 text-text-muted hover:text-text-inverse focus:outline-none focus-visible:text-accent"
+          className="absolute inset-y-0 right-0 flex cursor-pointer items-center rounded-button pr-3.5 text-text-muted hover:text-text focus-visible:text-primary-fg"
           aria-label={showPassword ? 'Hide password' : 'Show password'}
           aria-pressed={showPassword}
         >
@@ -148,7 +153,7 @@ function LoginFormFields({ register, errors, isSubmitting, onSubmit }: LoginForm
   return (
     <form onSubmit={onSubmit} className="space-y-5" noValidate>
       <div>
-        <label htmlFor="login-email" className="block text-caption font-medium text-text-muted">
+        <label htmlFor="login-email" className="block text-label">
           Email address
         </label>
         <div className="mt-1.5">
@@ -161,7 +166,7 @@ function LoginFormFields({ register, errors, isSubmitting, onSubmit }: LoginForm
             aria-invalid={Boolean(errors.email)}
             aria-describedby={errors.email ? 'login-email-error' : undefined}
             {...register('email')}
-            className={`${inputBase} ${errors.email ? 'border-danger/60' : 'border-border-input'}`}
+            className={`${inputBase} ${errors.email ? 'border-danger' : 'border-border-input'}`}
           />
         </div>
         {errors.email && (
@@ -178,11 +183,11 @@ function LoginFormFields({ register, errors, isSubmitting, onSubmit }: LoginForm
           type="submit"
           disabled={isSubmitting}
           aria-busy={isSubmitting}
-          className="relative flex w-full cursor-pointer justify-center rounded-button bg-accent px-4 py-3 text-btn font-semibold text-primary shadow-md shadow-accent/15 transition hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-primary-deep active:opacity-95 disabled:cursor-not-allowed disabled:opacity-50"
+          className="flex w-full cursor-pointer items-center justify-center rounded-button bg-action px-4 py-3 text-btn font-semibold text-on-action shadow-sm transition enabled:hover:bg-action-hover enabled:active:bg-action-active disabled:cursor-not-allowed disabled:opacity-50"
         >
           {isSubmitting ? (
-            <span className="flex items-center space-x-2">
-              <span className="h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+            <span className="flex items-center gap-2">
+              <span className="h-4 w-4 animate-spin rounded-full border-2 border-on-action border-t-transparent" />
               <span>{t('common.loading')}</span>
             </span>
           ) : (
@@ -231,23 +236,26 @@ export function LoginPage({
   const orderClass = showcaseSide === 'left' ? 'lg:order-2' : 'lg:order-1';
 
   return (
-    <div className="flex min-h-screen w-full bg-primary-deep text-text selection:bg-accent selection:text-primary">
+    <div className="flex min-h-screen w-full bg-bg text-text">
       <div className="grid min-h-screen w-full grid-cols-1 lg:grid-cols-12">
         <LoginShowcase side={showcaseSide} />
 
         <main
-          className={`relative flex flex-col justify-center overflow-hidden px-6 py-12 lg:col-span-5 lg:px-12 xl:px-16 ${orderClass}`}
+          className={`relative flex flex-col justify-center bg-surface px-6 py-12 lg:col-span-5 lg:px-12 xl:px-16 ${orderClass}`}
         >
-          <div className="pointer-events-none absolute -right-24 -top-24 h-80 w-80 rounded-full bg-accent/5 blur-3xl" />
+          <div className="absolute top-4 right-4 z-10">
+            <ThemeToggle />
+          </div>
 
-          <div className="relative mx-auto w-full max-w-md">
+          <div className="mx-auto w-full max-w-sm">
+            {/* Mobile brand (the showcase is hidden below lg) */}
             <div className="mb-10 lg:hidden">
-              <div className="flex items-center space-x-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-button bg-primary-deep border border-accent/40 shadow-md">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-button border border-sidebar-border bg-sidebar">
                   <ExzaLogoIcon size={26} variant="gold" />
                 </div>
                 <div>
-                  <div className="text-h2 font-bold text-text-inverse">{t('app.name')}</div>
+                  <div className="text-h2 font-bold text-text">{t('app.name')}</div>
                   <p className="text-caption text-text-muted">
                     Enterprise Real Estate Management & ERP
                   </p>
@@ -256,7 +264,7 @@ export function LoginPage({
             </div>
 
             <div className="mb-8">
-              <h1 className="text-display font-bold tracking-tight text-text-inverse">Sign in</h1>
+              <h1 className="text-display font-bold text-text">Sign in</h1>
               <p className="mt-2 text-body text-text-muted">
                 Enter your credentials to open your workspace.
               </p>
@@ -275,7 +283,16 @@ export function LoginPage({
               onSubmit={handleSubmit(onSubmit)}
             />
 
-            <div className="mt-10 border-t border-border-subtle pt-6 text-center">
+            <div className="mt-4 text-center">
+              <Link
+                to="/setup/first-launch"
+                className="text-caption font-semibold text-primary hover:underline cursor-pointer"
+              >
+                First time setup? Activate License & Register Organization →
+              </Link>
+            </div>
+
+            <div className="mt-10 border-t border-border pt-6 text-center">
               <p className="text-caption text-text-muted">
                 Protected by hardware-bound cryptographic security and row-level isolation
               </p>

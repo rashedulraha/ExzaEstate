@@ -4,11 +4,18 @@ import { PERMISSIONS } from '@exzaestate/shared';
 import { SetupChecklistPage } from './pages/SetupChecklistPage.js';
 import { FirstLaunchWizardPage } from './first-launch/pages/FirstLaunchWizardPage.js';
 
-export const setupRoutes: RouteObject[] = [
+export const publicSetupRoutes: RouteObject[] = [
   {
     path: '/setup/first-launch',
     element: <FirstLaunchWizardPage />,
   },
+  {
+    path: '/setup/wizard',
+    element: <FirstLaunchWizardPage />,
+  },
+];
+
+export const setupRoutes: RouteObject[] = [
   {
     path: '/setup/checklist',
     element: (
