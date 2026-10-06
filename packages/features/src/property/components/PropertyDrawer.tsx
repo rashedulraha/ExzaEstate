@@ -63,14 +63,22 @@ export function PropertyDrawer({
         <div className="flex items-center justify-between w-full">
           <div className="flex items-center gap-2">
             {onViewDetails && (
-              <Button variant="secondary" size="sm" onClick={() => onViewDetails(property)}>
-                <ExternalLink className="w-3.5 h-3.5 mr-1" />
+              <Button
+                variant="secondary"
+                size="sm"
+                leftIcon={<ExternalLink className="w-3.5 h-3.5" />}
+                onClick={() => onViewDetails(property)}
+              >
                 Full Page
               </Button>
             )}
             {canEdit && onEdit && (
-              <Button variant="secondary" size="sm" onClick={() => onEdit(property)}>
-                <Edit className="w-3.5 h-3.5 mr-1" />
+              <Button
+                variant="secondary"
+                size="sm"
+                leftIcon={<Edit className="w-3.5 h-3.5" />}
+                onClick={() => onEdit(property)}
+              >
                 Edit
               </Button>
             )}

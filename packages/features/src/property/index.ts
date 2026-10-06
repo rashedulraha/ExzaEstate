@@ -3,6 +3,8 @@ export * from './hooks/usePropertyList.js';
 export * from './hooks/usePropertyActions.js';
 export * from './components/PropertyDataTable.js';
 export * from './components/PropertyPlanView.js';
+export * from './components/PropertyStackingPlan.js';
+export * from './components/PropertyCadastralMap.js';
 export * from './components/PropertyDrawer.js';
 export * from './components/PropertyFormModal.js';
 export * from './components/PropertyStatusOverrideModal.js';

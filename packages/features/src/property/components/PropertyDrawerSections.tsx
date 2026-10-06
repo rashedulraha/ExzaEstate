@@ -57,14 +57,22 @@ function DrawerLifecycleButtons({
     return (
       <>
         {onHold && (
-          <Button variant="secondary" size="sm" onClick={() => onHold(property)}>
-            <Clock className="w-3.5 h-3.5 mr-1" />
+          <Button
+            variant="secondary"
+            size="sm"
+            leftIcon={<Clock className="w-3.5 h-3.5" />}
+            onClick={() => onHold(property)}
+          >
             Hold
           </Button>
         )}
         {onBlock && (
-          <Button variant="secondary" size="sm" onClick={() => onBlock(property)}>
-            <Lock className="w-3.5 h-3.5 mr-1" />
+          <Button
+            variant="secondary"
+            size="sm"
+            leftIcon={<Lock className="w-3.5 h-3.5" />}
+            onClick={() => onBlock(property)}
+          >
             Block
           </Button>
         )}
@@ -82,8 +90,12 @@ function DrawerLifecycleButtons({
 
   if (statusUpper === 'BLOCKED' && onUnblock) {
     return (
-      <Button variant="secondary" size="sm" onClick={() => onUnblock(property)}>
-        <Unlock className="w-3.5 h-3.5 mr-1" />
+      <Button
+        variant="secondary"
+        size="sm"
+        leftIcon={<Unlock className="w-3.5 h-3.5" />}
+        onClick={() => onUnblock(property)}
+      >
         Unblock
       </Button>
     );
@@ -114,10 +126,10 @@ export function DrawerQuickActions({
           <Button
             variant="ghost"
             size="sm"
+            leftIcon={<ShieldAlert className="w-3.5 h-3.5" />}
             onClick={() => onOverrideStatus(property)}
             className="text-warning text-caption"
           >
-            <ShieldAlert className="w-3.5 h-3.5 mr-1" />
             Override
           </Button>
         )}
