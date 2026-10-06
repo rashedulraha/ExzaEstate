@@ -1,4 +1,6 @@
 export * from './reports.routes.js';
+export * from './reports.types.js';
+export * from './reports.catalog.js';
 export * from './pages/ReportsHubPage.js';
 export * from './pages/TrialBalanceReportPage.js';
 export * from './pages/BalanceSheetReportPage.js';
@@ -8,3 +10,9 @@ export * from './pages/CollectionReportPage.js';
 export * from './pages/InventoryReportPage.js';
 export * from './components/ReportFiltersBar.js';
 export * from './components/ExportReportModal.js';
+export * from './components/ReportsMetricsBar.js';
+export * from './components/ReportsFilterBar.js';
+export * from './components/ReportCard.js';
+export * from './components/ReportsTableView.js';
+export * from './components/RecentExportsDrawer.js';
+export * from './components/QuickGenerateModal.js';
