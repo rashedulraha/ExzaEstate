@@ -75,6 +75,43 @@ export class LicenseService {
     };
   }
 
+  async listAllLicenses() {
+    return this.systemPrisma.executeWithReason(
+      '// SYSTEM-SCOPE: List all issued licenses across platform',
+      async (client) => {
+        const licenses = await client.license.findMany({
+          where: { deletedAt: null },
+          orderBy: { createdAt: 'desc' },
+        });
+
+        const companyIds = [...new Set(licenses.map((l) => l.companyId))];
+        const companies = await client.company.findMany({
+          where: { id: { in: companyIds } },
+          select: { id: true, name: true, code: true },
+        });
+        const companyMap = new Map(companies.map((c) => [c.id, c]));
+
+        return licenses.map((l) => ({
+          id: l.id,
+          companyId: l.companyId,
+          companyName: companyMap.get(l.companyId)?.name ?? 'Unknown Company',
+          companyCode: companyMap.get(l.companyId)?.code ?? 'N/A',
+          licenseKey: l.licenseKey,
+          plan: l.plan,
+          status: l.status,
+          validFrom: l.validFrom.toISOString(),
+          validUntil: l.validUntil.toISOString(),
+          maxSeats: l.maxSeats,
+          maxBranches: l.maxBranches,
+          maxProjects: l.maxProjects,
+          machineId: l.machineId,
+          signature: l.signature,
+          createdAt: l.createdAt.toISOString(),
+        }));
+      },
+    );
+  }
+
   async verifyLicense(dto: VerifyLicenseDto): Promise<LicenseStatusResult> {
     const license = await this.systemPrisma.executeWithReason(
       '// SYSTEM-SCOPE: Verify license authenticity and validity',

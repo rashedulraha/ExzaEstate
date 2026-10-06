@@ -11,6 +11,7 @@ export interface JwtAccessTokenPayload {
   sub: string;
   companyId: string;
   sid: string;
+  realm?: string;
 }
 
 export interface SessionContext {

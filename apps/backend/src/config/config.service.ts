@@ -108,4 +108,22 @@ export class ConfigService {
   get localApiSecret(): string | undefined {
     return this.config.LOCAL_API_SECRET;
   }
+
+  get superAdmin(): {
+    name?: string;
+    email?: string;
+    secondaryEmail?: string;
+    password?: string;
+  } {
+    return {
+      name: this.config.SUPER_ADMIN_NAME,
+      email: this.config.SUPER_ADMIN_EMAIL,
+      secondaryEmail: this.config.SUPER_ADMIN_SECONDARY_EMAIL,
+      password: this.config.SUPER_ADMIN_PASSWORD,
+    };
+  }
+
+  get initialLicenseKey(): string | undefined {
+    return this.config.INITIAL_LICENSE_KEY;
+  }
 }

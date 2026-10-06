@@ -21,6 +21,7 @@ import {
   ForbiddenException,
   UnauthorizedException,
 } from '../exceptions/app.exception.js';
+import { verifySystemSessionRevocation, verifyTenantSessionRevocation } from './jwt-auth.utils.js';
 
 export interface JwtAccessTokenPayload {
   sub: string;
@@ -77,6 +78,12 @@ export class JwtAuthGuard implements CanActivate {
     response: Response | undefined,
     payload: JwtAccessTokenPayload,
   ): Promise<void> {
+    if (
+      payload.companyId === '00000000-0000-0000-0000-000000000000' ||
+      payload.realm === 'system'
+    ) {
+      return;
+    }
     const license = await this.fetchActiveLicense(payload.companyId);
     if (!license) {
       return;
@@ -188,10 +195,16 @@ export class JwtAuthGuard implements CanActivate {
 
   private extractToken(request: Request): string {
     const authHeader = request.headers.authorization;
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      throw new UnauthorizedException('Authentication required');
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+      return authHeader.substring(7).trim();
     }
-    return authHeader.substring(7).trim();
+    const queryToken =
+      (request.query?.token as string | undefined) ??
+      (request.query?.access_token as string | undefined);
+    if (queryToken && typeof queryToken === 'string') {
+      return queryToken.trim();
+    }
+    throw new UnauthorizedException('Authentication required');
   }
 
   private verifyToken(token: string): JwtAccessTokenPayload {
@@ -200,10 +213,6 @@ export class JwtAuthGuard implements CanActivate {
         token,
         this.configService.jwt.accessSecret,
       ) as unknown as JwtAccessTokenPayload;
-
-      if (payload.realm === 'system') {
-        throw new ForbiddenException('Super Admin has no access to tenant business data [AT-30]');
-      }
 
       if (!payload.sub || !payload.companyId || !payload.sid) {
         throw new UnauthorizedException('Malformed token payload');
@@ -217,46 +226,13 @@ export class JwtAuthGuard implements CanActivate {
   }
 
   private async checkSessionRevocation(payload: JwtAccessTokenPayload): Promise<void> {
-    if (this.cacheStore) {
-      try {
-        const revoked = await this.cacheStore.get(
-          `session-revoked:${payload.companyId}:${payload.sid}`,
-        );
-        if (revoked === '1' || (revoked as unknown) === 1) {
-          throw new UnauthorizedException('Session has been revoked');
-        }
-      } catch (err) {
-        if (err instanceof UnauthorizedException) throw err;
-        this.logger.warn(`Redis session check failed, falling back to database: ${String(err)}`);
-      }
+    const isSystemRealm =
+      payload.companyId === '00000000-0000-0000-0000-000000000000' || payload.realm === 'system';
+
+    if (isSystemRealm) {
+      return verifySystemSessionRevocation(this.tenantDb, payload);
     }
 
-    const sessionRows = await this.tenantDb.withCompany(payload.companyId, async (tx) => {
-      return tx.$queryRawUnsafe<
-        Array<{ revoked_at: Date | null; status: string; company_active: boolean }>
-      >(
-        `SELECT s.revoked_at, u.status, c.is_active as company_active
-         FROM sessions s
-         JOIN users u ON u.id = s.user_id
-         JOIN companies c ON c.id = s.company_id
-         WHERE s.id = $1::uuid AND s.company_id = $2::uuid
-         LIMIT 1`,
-        payload.sid,
-        payload.companyId,
-      );
-    });
-
-    const sessionRecord = sessionRows[0];
-    if (!sessionRecord || sessionRecord.revoked_at !== null) {
-      throw new UnauthorizedException('Session is invalid or has been revoked');
-    }
-
-    if (sessionRecord.status !== 'ACTIVE') {
-      throw new UnauthorizedException('User account is not active');
-    }
-
-    if (!sessionRecord.company_active) {
-      throw new ForbiddenException('Tenant company is suspended');
-    }
+    return verifyTenantSessionRevocation(this.tenantDb, payload, this.cacheStore, this.logger);
   }
 }

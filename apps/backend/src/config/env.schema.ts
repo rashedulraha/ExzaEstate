@@ -38,7 +38,9 @@ export const envSchema = z
     LOCAL_API_SECRET: z.string().optional(),
 
     // CORS & Logging
-    CORS_ORIGIN: z.string().default('http://localhost:5173,tauri://localhost,http://localhost:1420'),
+    CORS_ORIGIN: z
+      .string()
+      .default('http://localhost:5173,tauri://localhost,http://localhost:1420'),
     LOG_LEVEL: z.enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace']).default('info'),
 
     // Client versioning compatibility (D-13)
@@ -58,6 +60,13 @@ export const envSchema = z
       .optional(),
     SWAGGER_USER: z.string().optional(),
     SWAGGER_PASSWORD: z.string().optional(),
+
+    // Super Admin & Initial License Configuration
+    SUPER_ADMIN_NAME: z.string().optional(),
+    SUPER_ADMIN_EMAIL: z.string().optional(),
+    SUPER_ADMIN_SECONDARY_EMAIL: z.string().optional(),
+    SUPER_ADMIN_PASSWORD: z.string().optional(),
+    INITIAL_LICENSE_KEY: z.string().optional(),
   })
   .superRefine((data, ctx) => {
     if (data.RUNTIME_MODE === 'cloud' && (!data.REDIS_URL || data.REDIS_URL.trim() === '')) {

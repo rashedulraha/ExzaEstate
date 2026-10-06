@@ -42,6 +42,12 @@ export class SystemTenantController {
     return this.tenantService.listTenants(admin?.id);
   }
 
+  @Get('audit-logs')
+  @ApiOperation({ summary: 'List recent platform audit log events' })
+  async listAuditLogs() {
+    return this.tenantService.listAuditLogs();
+  }
+
   @Get(':id')
   @ApiOperation({ summary: 'Get details of a company tenant by ID' })
   async getTenantById(@Param('id') id: string) {

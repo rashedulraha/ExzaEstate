@@ -189,4 +189,48 @@ export class SystemTenantService {
       },
     );
   }
+
+  async listAuditLogs(limit = 50) {
+    return this.systemPrisma.executeWithReason(
+      '// SYSTEM-SCOPE: List platform audit logs',
+      async (client) => {
+        const logs = await client.auditLog.findMany({
+          take: limit,
+          orderBy: { createdAt: 'desc' },
+        });
+
+        const companyIds = [
+          ...new Set(
+            logs
+              .map((l) => l.companyId)
+              .filter((id) => id && id !== '00000000-0000-0000-0000-000000000000'),
+          ),
+        ];
+
+        const companies = await client.company.findMany({
+          where: { id: { in: companyIds } },
+          select: { id: true, name: true, code: true },
+        });
+        const companyMap = new Map(companies.map((c) => [c.id, c]));
+
+        return logs.map((l) => ({
+          id: l.id,
+          companyId: l.companyId,
+          companyName:
+            l.companyId === '00000000-0000-0000-0000-000000000000'
+              ? 'Platform Core'
+              : (companyMap.get(l.companyId)?.name ?? 'Unknown Company'),
+          companyCode:
+            l.companyId === '00000000-0000-0000-0000-000000000000'
+              ? 'SYSTEM'
+              : (companyMap.get(l.companyId)?.code ?? 'TENANT'),
+          module: l.module,
+          action: l.action,
+          recordType: l.recordType,
+          reason: l.reason,
+          createdAt: l.createdAt.toISOString(),
+        }));
+      },
+    );
+  }
 }

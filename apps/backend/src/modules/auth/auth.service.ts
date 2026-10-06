@@ -2,6 +2,7 @@ import { Injectable, Optional } from '@nestjs/common';
 import { ClsService } from 'nestjs-cls';
 import { NotFoundException, UnauthorizedException } from '../../common/exceptions/app.exception.js';
 import { PrismaService } from '../../database/prisma.service.js';
+import { SystemPrisma } from '../../database/system-prisma.service.js';
 import { TenantDb } from '../../database/tenant-db.service.js';
 import { AuthLockoutService } from './auth-lockout.service.js';
 import type { AcceptInvitationDto } from './dto/accept-invitation.dto.js';
@@ -13,28 +14,20 @@ import { PasswordResetService } from './password-reset.service.js';
 import { SessionItem, SessionService } from './session.service.js';
 import { TokenService, type TokenPairResult } from './token.service.js';
 import { verifyPassword } from './utils/password.util.js';
+import { PermissionService } from './permission.service.js';
+import {
+  authenticateSuperAdminPreTenant,
+  fetchTenantUserProfile,
+  handleSuperAdminGetMe,
+  handleSuperAdminLogin,
+  resolveTenantAuthUser,
+  revokeSuperAdminSession,
+  type AuthResult,
+  type UserAuthRow,
+  type UserProfileResult,
+} from './auth.helpers.js';
 
-export interface AuthResult {
-  tokens: TokenPairResult;
-  user: {
-    id: string;
-    email: string;
-    fullName: string;
-    companyId: string;
-  };
-}
-
-interface UserAuthRow {
-  id: string;
-  company_id: string;
-  email: string;
-  password_hash: string;
-  status: string;
-  failed_login_attempts: number;
-  locked_until: Date | null;
-  is_two_factor_enabled: boolean;
-  full_name: string;
-}
+export type { AuthResult, UserProfileResult };
 
 const DUMMY_HASH =
   '$argon2id$v=19$m=65536,p=4,t=3$OVepa75E4e0IuxT/4/mJKQ$uzqMAPA1FxwNUEvPs1IWw8btDiWJBjBGRcTCHKNUph4';
@@ -43,11 +36,13 @@ const DUMMY_HASH =
 export class AuthService {
   constructor(
     private readonly prismaService: PrismaService,
+    private readonly systemPrisma: SystemPrisma,
     private readonly tenantDb: TenantDb,
     private readonly clsService: ClsService,
     private readonly tokenService: TokenService,
     private readonly lockoutService: AuthLockoutService,
     private readonly passwordResetService: PasswordResetService,
+    @Optional() private readonly permissionService?: PermissionService,
     @Optional() private readonly sessionService?: SessionService,
     @Optional() private readonly invitationService?: InvitationService,
   ) {}
@@ -65,6 +60,52 @@ export class AuthService {
     return rows[0] || null;
   }
 
+  private async validateAndGetUser(
+    dto: LoginDto,
+    normalizedEmail: string,
+    ip: string,
+  ): Promise<UserAuthRow> {
+    await this.lockoutService.checkLockout(normalizedEmail, ip, dto.captchaToken);
+    const user = await this.findUserByEmailPreTenant(normalizedEmail);
+
+    if (user) {
+      const targetHash = user.password_hash ?? DUMMY_HASH;
+      const isPasswordValid = await verifyPassword(dto.password, targetHash);
+
+      if (!isPasswordValid) {
+        await this.lockoutService.recordFailedAttempt(normalizedEmail, ip, user.id);
+        throw new UnauthorizedException('Invalid email or password');
+      }
+
+      if (user.status !== 'ACTIVE') {
+        throw new UnauthorizedException('Account is not active or has been suspended');
+      }
+
+      return user;
+    }
+
+    const sysUser = await authenticateSuperAdminPreTenant(
+      this.systemPrisma,
+      normalizedEmail,
+      dto.password,
+      verifyPassword,
+    );
+    if (sysUser) {
+      return sysUser;
+    }
+
+    await this.lockoutService.recordFailedAttempt(normalizedEmail, ip);
+    throw new UnauthorizedException('Invalid email or password');
+  }
+
+  private async buildAuthUser(user: UserAuthRow): Promise<AuthResult['user']> {
+    return resolveTenantAuthUser({
+      systemPrisma: this.systemPrisma,
+      permissionService: this.permissionService,
+      user,
+    });
+  }
+
   /**
    * Authenticates user, enforcing progressive lockout (OQ-02) and pre-tenant isolation.
    */
@@ -75,24 +116,20 @@ export class AuthService {
     userAgent?: string,
   ): Promise<AuthResult> {
     const normalizedEmail = dto.email.toLowerCase().trim();
-
-    await this.lockoutService.checkLockout(normalizedEmail, ip, dto.captchaToken);
-    const user = await this.findUserByEmailPreTenant(normalizedEmail);
-
-    const targetHash = user?.password_hash ?? DUMMY_HASH;
-    const isPasswordValid = await verifyPassword(dto.password, targetHash);
-
-    if (!user || !isPasswordValid) {
-      await this.lockoutService.recordFailedAttempt(normalizedEmail, ip, user?.id);
-      throw new UnauthorizedException('Invalid email or password');
-    }
-
-    if (user.status !== 'ACTIVE') {
-      throw new UnauthorizedException('Account is not active or has been suspended');
-    }
+    const user = await this.validateAndGetUser(dto, normalizedEmail, ip);
 
     await this.lockoutService.resetFailedAttempts(normalizedEmail, ip, user.id);
     await this.sessionService?.alertIfNewDevice(user, userAgent, ip);
+
+    if (user.company_id === '00000000-0000-0000-0000-000000000000') {
+      return handleSuperAdminLogin({
+        systemPrisma: this.systemPrisma,
+        tokenService: this.tokenService,
+        user,
+        ip,
+        userAgent,
+      });
+    }
 
     this.clsService.set('companyId', user.company_id);
 
@@ -106,14 +143,11 @@ export class AuthService {
       });
     });
 
+    const authUser = await this.buildAuthUser(user);
+
     return {
       tokens,
-      user: {
-        id: user.id,
-        email: user.email,
-        fullName: user.full_name,
-        companyId: user.company_id,
-      },
+      user: authUser,
     };
   }
 
@@ -156,8 +190,23 @@ export class AuthService {
     const companyId = this.clsService.get<string>('companyId');
     if (!companyId) return;
 
+    if (companyId === '00000000-0000-0000-0000-000000000000') {
+      return revokeSuperAdminSession(this.systemPrisma, sessionId);
+    }
+
     await this.tenantDb.transaction(async (tx) => {
       await this.tokenService.revokeSession(tx, sessionId);
+    });
+  }
+
+  private async getTenantMe(userId: string, companyId: string): Promise<UserProfileResult> {
+    this.clsService.set('companyId', companyId);
+    return fetchTenantUserProfile({
+      tenantDb: this.tenantDb,
+      systemPrisma: this.systemPrisma,
+      permissionService: this.permissionService,
+      companyId,
+      userId,
     });
   }
 
@@ -165,58 +214,11 @@ export class AuthService {
    * Retrieves profile of current user.
    */
   async getMe(userId: string, companyId: string) {
-    this.clsService.set('companyId', companyId);
-
-    let user:
-      | {
-          id: string;
-          email: string;
-          full_name: string;
-          company_id: string;
-          phone: string | null;
-          status: string;
-          is_two_factor_enabled: boolean;
-          last_login_at: Date | null;
-        }
-      | undefined;
-
-    await this.tenantDb.transaction(async (tx) => {
-      const rows = await tx.$queryRawUnsafe<
-        Array<{
-          id: string;
-          email: string;
-          full_name: string;
-          company_id: string;
-          phone: string | null;
-          status: string;
-          is_two_factor_enabled: boolean;
-          last_login_at: Date | null;
-        }>
-      >(
-        `SELECT id, email, full_name, company_id, phone, status, is_two_factor_enabled, last_login_at
-         FROM users
-         WHERE id = $1::uuid AND company_id = $2::uuid
-         LIMIT 1`,
-        userId,
-        companyId,
-      );
-      user = rows[0];
-    });
-
-    if (!user) {
-      throw new NotFoundException('User profile not found');
+    if (companyId === '00000000-0000-0000-0000-000000000000') {
+      return handleSuperAdminGetMe(this.systemPrisma, userId);
     }
 
-    return {
-      id: user.id,
-      email: user.email,
-      fullName: user.full_name,
-      companyId: user.company_id,
-      phone: user.phone,
-      status: user.status,
-      isTwoFactorEnabled: user.is_two_factor_enabled,
-      lastLoginAt: user.last_login_at,
-    };
+    return this.getTenantMe(userId, companyId);
   }
 
   /**
@@ -226,71 +228,55 @@ export class AuthService {
     if (!this.invitationService) {
       throw new NotFoundException('Invitation service is not available');
     }
-    return this.invitationService.acceptInvitation(dto);
+    const result = await this.invitationService.acceptInvitation(dto);
+    const resolved = this.permissionService
+      ? await this.permissionService.resolvePermissions(result.user.companyId, result.user.id)
+      : undefined;
+    return {
+      tokens: result.tokens,
+      user: {
+        ...result.user,
+        permissions: resolved?.permissions ?? [],
+        scopes: resolved?.scopes ?? {},
+        branchIds: resolved?.branchIds ?? [],
+      },
+    };
   }
 
-  /**
-   * Request password reset link (S5).
-   */
   async forgotPassword(email: string): Promise<{ message: string }> {
     return this.passwordResetService.forgotPassword(email);
   }
 
-  /**
-   * Resets password using token (S5).
-   */
   async resetPassword(dto: ResetPasswordDto): Promise<{ message: string }> {
     return this.passwordResetService.resetPassword(dto);
   }
 
-  /**
-   * Lists active sessions for current user (A0.12 S1).
-   */
   async listSessions(
     userId: string,
     companyId: string,
     currentSessionId?: string,
   ): Promise<SessionItem[]> {
-    if (!this.sessionService) {
-      return [];
-    }
-    return this.sessionService.listSessions(userId, companyId, currentSessionId);
+    return this.sessionService?.listSessions(userId, companyId, currentSessionId) ?? [];
   }
 
-  /**
-   * Revokes a specific session (A0.12 S1).
-   */
   async revokeSession(
     userId: string,
     companyId: string,
     sessionId: string,
   ): Promise<{ message: string }> {
-    if (!this.sessionService) {
-      return { message: 'Session service unavailable' };
-    }
+    if (!this.sessionService) return { message: 'Session service unavailable' };
     return this.sessionService.revokeSession(userId, companyId, sessionId);
   }
 
-  /**
-   * Revokes all active sessions for current user (A0.12 S1).
-   */
   async logoutAll(userId: string, companyId: string): Promise<{ message: string }> {
-    if (!this.sessionService) {
-      return { message: 'Session service unavailable' };
-    }
+    if (!this.sessionService) return { message: 'Session service unavailable' };
     return this.sessionService.logoutAll(userId, companyId);
   }
 
-  /**
-   * Request email unlock token for locked accounts (A0.12 S2).
-   */
   async requestUnlock(email: string) {
     return this.lockoutService.requestUnlock(email);
   }
 
-  /**
-   * Unlocks progressive lockout via email token + TOTP (A0.12 S2).
-   */
   async unlock(dto: UnlockDto) {
     return this.lockoutService.unlock(dto.token, dto.totpCode);
   }

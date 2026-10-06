@@ -17,6 +17,13 @@ export class TenantDb {
   ) {}
 
   /**
+   * Raw Prisma service instance for system-level or non-tenant table queries.
+   */
+  get rawPrisma(): PrismaService {
+    return this.prisma;
+  }
+
+  /**
    * Returns a tenant-scoped Prisma client extension bound to the current request's companyId.
    */
   get client(): TenantPrisma {
