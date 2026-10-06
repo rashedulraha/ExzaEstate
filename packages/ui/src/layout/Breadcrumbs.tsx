@@ -10,12 +10,26 @@ export interface BreadcrumbItem {
 export interface BreadcrumbsProps {
   items: BreadcrumbItem[];
   className?: string;
+  variant?: 'light' | 'dark';
 }
 
-function BreadcrumbItemContent({ item, isLast }: { item: BreadcrumbItem; isLast: boolean }) {
+function BreadcrumbItemContent({
+  item,
+  isLast,
+  variant = 'light',
+}: {
+  item: BreadcrumbItem;
+  isLast: boolean;
+  variant?: 'light' | 'dark';
+}) {
+  const isDark = variant === 'dark';
+
   if (isLast) {
     return (
-      <span className="font-medium text-text truncate" aria-current="page">
+      <span
+        className={`font-medium truncate ${isDark ? 'text-white' : 'text-text'}`}
+        aria-current="page"
+      >
         {item.label}
       </span>
     );
@@ -26,17 +40,23 @@ function BreadcrumbItemContent({ item, isLast }: { item: BreadcrumbItem; isLast:
       <button
         type="button"
         onClick={item.onClick}
-        className="text-text-muted hover:text-text cursor-pointer transition-colors truncate focus:outline-none"
+        className={`cursor-pointer transition-colors truncate focus:outline-none ${
+          isDark ? 'text-white/60 hover:text-white' : 'text-text-muted hover:text-text'
+        }`}
       >
         {item.label}
       </button>
     );
   }
 
-  return <span className="text-text-muted truncate">{item.label}</span>;
+  return (
+    <span className={`truncate ${isDark ? 'text-white/60' : 'text-text-muted'}`}>{item.label}</span>
+  );
 }
 
-export function Breadcrumbs({ items, className = '' }: BreadcrumbsProps) {
+export function Breadcrumbs({ items, className = '', variant = 'light' }: BreadcrumbsProps) {
+  const isDark = variant === 'dark';
+
   return (
     <nav
       aria-label="Breadcrumb"
@@ -48,11 +68,11 @@ export function Breadcrumbs({ items, className = '' }: BreadcrumbsProps) {
           <React.Fragment key={index}>
             {index > 0 && (
               <ChevronRight
-                className="w-3.5 h-3.5 text-text-muted/60 shrink-0"
+                className={`w-3.5 h-3.5 shrink-0 ${isDark ? 'text-white/30' : 'text-text-muted/60'}`}
                 aria-hidden="true"
               />
             )}
-            <BreadcrumbItemContent item={item} isLast={isLast} />
+            <BreadcrumbItemContent item={item} isLast={isLast} variant={variant} />
           </React.Fragment>
         );
       })}

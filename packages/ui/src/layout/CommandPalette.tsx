@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Search, ArrowRight, CornerDownLeft } from 'lucide-react';
+import { Search, CornerDownLeft } from 'lucide-react';
 
 export interface CommandItem {
   id: string;
@@ -81,7 +81,7 @@ export function CommandPalette({ isOpen, onClose, items }: CommandPaletteProps) 
   return (
     <div
       role="presentation"
-      className="fixed inset-0 z-50 flex items-start justify-center pt-24 p-4 bg-black/45 backdrop-blur-[0.5px]"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-all duration-200 animate-in fade-in"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
@@ -90,10 +90,10 @@ export function CommandPalette({ isOpen, onClose, items }: CommandPaletteProps) 
         role="dialog"
         aria-modal="true"
         aria-label="Command Palette"
-        className="w-full max-w-xl bg-surface-elevated border border-border-strong rounded-modal shadow-lg overflow-hidden flex flex-col"
+        className="w-full max-w-xl bg-surface-elevated border border-border-strong rounded-2xl shadow-2xl overflow-hidden flex flex-col transform transition-all duration-200 ease-out animate-in fade-in zoom-in-95"
       >
         {/* Search Input Bar */}
-        <div className="flex items-center px-4 py-3 border-b border-border gap-3">
+        <div className="flex items-center px-4 py-3.5 border-b border-border gap-3">
           <Search className="w-4 h-4 text-text-muted shrink-0" aria-hidden="true" />
           <input
             ref={inputRef}
@@ -104,7 +104,7 @@ export function CommandPalette({ isOpen, onClose, items }: CommandPaletteProps) 
               setSelectedIndex(0);
             }}
             placeholder="Type a command or search records..."
-            className="w-full bg-transparent text-text placeholder-text-muted text-body outline-none"
+            className="w-full bg-transparent text-text placeholder:text-text-muted text-body outline-hidden"
           />
           <kbd className="text-caption bg-surface-sunken px-1.5 py-0.5 rounded border border-border text-text-muted font-mono">
             ESC
@@ -122,7 +122,7 @@ export function CommandPalette({ isOpen, onClose, items }: CommandPaletteProps) 
               const categoryItems = filteredItems.filter((item) => item.category === category);
               return (
                 <div key={category} className="space-y-1">
-                  <h4 className="px-3 text-caption font-semibold uppercase tracking-wider text-text-muted">
+                  <h4 className="px-3 text-caption font-semibold uppercase tracking-wider text-text-muted/70">
                     {category}
                   </h4>
                   {categoryItems.map((item) => {
@@ -138,23 +138,24 @@ export function CommandPalette({ isOpen, onClose, items }: CommandPaletteProps) 
                           onClose();
                         }}
                         onMouseEnter={() => setSelectedIndex(globalIdx)}
-                        className={`flex items-center justify-between px-3 py-2 rounded-button text-small cursor-pointer transition-colors ${
+                        className={`flex items-center justify-between px-3.5 py-2.5 rounded-lg text-small cursor-pointer transition-colors duration-150 ${
                           isSelected
-                            ? 'bg-primary/8 text-primary font-medium'
-                            : 'text-text hover:bg-surface-sunken'
+                            ? 'bg-surface-sunken text-text font-medium'
+                            : 'text-text hover:bg-surface-sunken/50'
                         }`}
                       >
-                        <div className="flex items-center gap-2">
-                          <ArrowRight className="w-3.5 h-3.5 text-text-muted shrink-0" />
-                          <span>{item.title}</span>
+                        <div className="flex items-center gap-2 min-w-0 pr-3">
+                          <span className="truncate">{item.title}</span>
                         </div>
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-2 shrink-0">
                           {item.shortcut && (
                             <kbd className="text-caption bg-surface-sunken px-1.5 py-0.5 rounded border border-border font-mono text-text-muted">
                               {item.shortcut}
                             </kbd>
                           )}
-                          {isSelected && <CornerDownLeft className="w-3.5 h-3.5 text-primary" />}
+                          {isSelected && (
+                            <CornerDownLeft className="w-3.5 h-3.5 text-text-muted/60" />
+                          )}
                         </div>
                       </div>
                     );
