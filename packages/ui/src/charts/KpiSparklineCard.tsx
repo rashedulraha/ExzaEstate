@@ -79,9 +79,7 @@ function SparklineTableView({ sparklineData }: { sparklineData: SparklinePoint[]
           {sparklineData.map((d, i) => (
             <tr key={i} className="border-b border-border/50">
               <td className="px-2 py-0.5">{d.label ?? d.date}</td>
-              <td className="px-2 py-0.5 text-right font-mono tabular-nums">
-                {d.value.toLocaleString()}
-              </td>
+              <td className="px-2 py-0.5 text-right tabular-nums">{d.value.toLocaleString()}</td>
             </tr>
           ))}
         </tbody>
@@ -147,17 +145,13 @@ function KpiCardBody({
   return (
     <div className="flex items-end justify-between gap-4 mt-1">
       <div>
-        <div className="text-[32px] font-semibold tracking-tight text-text leading-none font-mono tabular-nums">
-          {value}
-        </div>
+        <div className="text-hero-num text-text">{value}</div>
         {subvalue && (
           <div className="text-small text-text-muted mt-1.5 font-medium">{subvalue}</div>
         )}
         {trend && (
           <div className="flex items-center gap-1.5 mt-2 text-caption">
-            <span
-              className={`font-semibold font-mono tabular-nums ${getTrendColor(trend.direction)}`}
-            >
+            <span className={`font-medium tabular-nums ${getTrendColor(trend.direction)}`}>
               {getTrendSign(trend.direction)}
               {Math.abs(trend.percentage)}%
             </span>
@@ -199,14 +193,14 @@ export function KpiSparklineCard({
   const [isTableView, setIsTableView] = useState(false);
 
   const strokeColors: Record<string, string> = {
-    primary: 'var(--color-primary-fg, #1a1a2e)',
+    primary: 'var(--color-primary-fg, #f26522)',
     success: 'var(--color-success, #197444)',
     warning: 'var(--color-warning, #7c6200)',
     danger: 'var(--color-danger, #b83429)',
     info: 'var(--color-info, #2563b1)',
   };
 
-  const activeStroke = strokeColors[indicatorColor] ?? 'var(--color-primary-fg, #1a1a2e)';
+  const activeStroke = strokeColors[indicatorColor] ?? 'var(--color-primary-fg, #f26522)';
   const width = 160;
   const height = 48;
   const padding = 4;

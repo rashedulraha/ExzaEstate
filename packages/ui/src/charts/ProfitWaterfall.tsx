@@ -23,8 +23,8 @@ function getStepTextColor(s: ComputedStep): string {
 
 function getStepFillColor(type: WaterfallItem['type']): string {
   if (type === 'decrease') return 'var(--color-danger, #b83429)';
-  if (type === 'total') return 'var(--color-accent, #c8a951)';
-  return 'var(--color-primary-fg, #1a1a2e)';
+  if (type === 'total') return 'var(--color-accent, #f26522)';
+  return 'var(--color-primary-fg, #f26522)';
 }
 
 function computeWaterfallSteps(items: WaterfallItem[]): ComputedStep[] {
@@ -150,7 +150,7 @@ function WaterfallSvgView({ steps }: { steps: ComputedStep[] }) {
                 x={x + barWidth / 2}
                 y={step.isNegative ? yBottom + 14 : yTop - 6}
                 textAnchor="middle"
-                className="text-[11px] font-mono tabular-nums font-semibold"
+                className="text-caption font-mono tabular-nums font-semibold"
                 fill="var(--color-text, #1d1d1f)"
               >
                 {step.isNegative ? '-' : ''}
@@ -184,7 +184,7 @@ function WaterfallSvgView({ steps }: { steps: ComputedStep[] }) {
             >
               {s.label}
             </span>
-            <span className="text-[11px] font-mono tabular-nums text-text font-bold block mt-0.5">
+            <span className="text-caption font-mono tabular-nums text-text font-bold block mt-0.5">
               {formatMoney(s.end)}
             </span>
           </div>

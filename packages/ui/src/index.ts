@@ -3,6 +3,7 @@ export const UI_VERSION = '0.1.0';
 // Design Tokens & Contrast
 export * from './tokens/tokens.js';
 export * from './tokens/contrast.js';
+export * from './theme/index.js';
 
 // Primitives
 export * from './components/button/Button.js';
@@ -32,6 +33,9 @@ export * from './charts/index.js';
 // Layout Components
 export * from './layout/Breadcrumbs.js';
 export * from './layout/Sidebar.js';
+export * from './layout/SidebarSections.js';
+export * from './layout/SidebarResizer.js';
+export * from './layout/useSidebarResize.js';
 export * from './layout/Header.js';
 export * from './layout/CommandPalette.js';
 export * from './layout/AppShell.js';
@@ -43,3 +47,4 @@ export * from './states/FilteredEmptyState.js';
 export * from './states/ErrorState.js';
 export * from './states/OfflineState.js';
 export * from './states/NoPermissionState.js';
+export * from './states/NotFoundState.js';

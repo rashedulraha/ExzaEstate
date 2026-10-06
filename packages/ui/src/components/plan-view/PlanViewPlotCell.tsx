@@ -1,14 +1,14 @@
 import type { PlanViewPlot } from './types.js';
 
-const statusColorMap: Record<string, { stroke: string; fill: string }> = {
-  AVAILABLE: { stroke: '#197444', fill: 'transparent' },
-  RESERVED: { stroke: '#7C6200', fill: 'url(#pattern-reserved-dots)' },
-  BOOKED: { stroke: '#7A39E8', fill: 'url(#pattern-booked-hatch)' },
-  SOLD: { stroke: '#1A1A2E', fill: '#1A1A2E' },
-  HOLD: { stroke: '#5F6572', fill: 'url(#pattern-void-crosshatch)' },
-  BLOCKED: { stroke: '#5F6572', fill: 'url(#pattern-void-crosshatch)' },
-  CANCELLED: { stroke: '#5F6572', fill: 'transparent' },
-  TRANSFERRED: { stroke: '#2563B1', fill: 'transparent' },
+const statusColorMap: Record<string, { stroke: string; fill: string; chipStroke: string }> = {
+  AVAILABLE: { stroke: '#10b981', fill: 'rgba(16, 185, 129, 0.06)', chipStroke: '#10b981' },
+  RESERVED: { stroke: '#f59e0b', fill: 'url(#pattern-reserved-dots)', chipStroke: '#f59e0b' },
+  BOOKED: { stroke: '#8b5cf6', fill: 'url(#pattern-booked-hatch)', chipStroke: '#8b5cf6' },
+  SOLD: { stroke: '#475569', fill: 'rgba(71, 85, 105, 0.28)', chipStroke: '#64748b' },
+  HOLD: { stroke: '#64748b', fill: 'url(#pattern-void-crosshatch)', chipStroke: '#64748b' },
+  BLOCKED: { stroke: '#ef4444', fill: 'url(#pattern-void-crosshatch)', chipStroke: '#ef4444' },
+  CANCELLED: { stroke: '#64748b', fill: 'transparent', chipStroke: '#64748b' },
+  TRANSFERRED: { stroke: '#3b82f6', fill: 'transparent', chipStroke: '#3b82f6' },
 };
 
 function getPlotStroke(
@@ -18,7 +18,7 @@ function getPlotStroke(
   statusStroke: string,
 ): string {
   if (isSelected || isFocused || isHovered) {
-    return '#1A1A2E';
+    return '#F26522';
   }
   return statusStroke;
 }
@@ -54,13 +54,13 @@ export function PlanViewPlotCell({
 }: PlotCellProps) {
   const statusKey = plot.status.toUpperCase();
   const statusConfig = statusColorMap[statusKey] ?? {
-    stroke: '#68686D',
+    stroke: '#64748b',
     fill: 'transparent',
+    chipStroke: '#64748b',
   };
 
   const stroke = getPlotStroke(isSelected, isFocused, isHovered, statusConfig.stroke);
   const strokeWidth = getPlotStrokeWidth(isSelected, isFocused, isHovered);
-  const isSold = statusKey === 'SOLD';
 
   const x = plot.x ?? 0;
   const y = plot.y ?? 0;
@@ -73,42 +73,48 @@ export function PlanViewPlotCell({
       onClick={onClick}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
-      className="cursor-pointer transition-transform duration-75"
+      className="cursor-pointer transition-transform duration-75 group"
     >
+      {/* Outer Plot Boundary */}
       <rect
         x={x}
         y={y}
         width={width}
         height={height}
-        rx="6"
-        ry="6"
+        rx="8"
+        ry="8"
         stroke={stroke}
         strokeWidth={strokeWidth}
         fill={statusConfig.fill}
         className="transition-colors"
       />
 
+      {/* Modern Theme-Aware Plot Number Chip */}
       <rect
-        x={x + width / 2 - 24}
-        y={y + height / 2 - 11}
-        width="48"
-        height="22"
-        rx="4"
-        ry="4"
-        fill="#FFFFFF"
-        stroke={statusConfig.stroke}
-        strokeWidth="0.5"
-        opacity={isSold ? 0.95 : 0.9}
+        x={x + width / 2 - 27}
+        y={y + height / 2 - 12}
+        width="54"
+        height="24"
+        rx="5"
+        ry="5"
+        fill="var(--color-surface-elevated, #1a1a26)"
+        stroke={
+          isSelected || isHovered ? stroke : 'var(--color-border-strong, rgba(255,255,255,0.15))'
+        }
+        strokeWidth="1"
+        className="transition-colors"
       />
 
+      {/* Plot Number Typography */}
       <text
         x={x + width / 2}
         y={y + height / 2 + 4}
         textAnchor="middle"
-        fill="#1D1D1F"
+        fill="var(--color-text, #f5f5f7)"
         fontSize="11"
         fontWeight="600"
-        fontFamily="Inter, sans-serif"
+        fontFamily="Inter, system-ui, sans-serif"
+        className="select-none pointer-events-none tracking-tight"
       >
         {plot.code}
       </text>
@@ -116,12 +122,12 @@ export function PlanViewPlotCell({
       {statusKey === 'TRANSFERRED' && (
         <polygon
           points={`${x + width - 10},${y} ${x + width},${y} ${x + width},${y + 10}`}
-          fill="#2563B1"
+          fill="#3b82f6"
         />
       )}
 
       {statusKey === 'CANCELLED' && (
-        <line x1={x} y1={y} x2={x + width} y2={y + height} stroke="#5F6572" strokeWidth="1.5" />
+        <line x1={x} y1={y} x2={x + width} y2={y + height} stroke="#64748b" strokeWidth="1.5" />
       )}
     </g>
   );

@@ -26,14 +26,14 @@ function CashFlowTableView({ data }: { data: CashFlowPoint[] }) {
           {data.map((d, i) => (
             <tr key={i}>
               <td className="px-3 py-2 font-medium text-text">{d.date}</td>
-              <td className="px-3 py-2 text-right font-mono tabular-nums text-success">
+              <td className="px-3 py-2 text-right tabular-nums text-success">
                 {formatMoney(BigInt(Math.round(d.inflow)))}
               </td>
-              <td className="px-3 py-2 text-right font-mono tabular-nums text-danger">
+              <td className="px-3 py-2 text-right tabular-nums text-danger">
                 {formatMoney(BigInt(Math.round(d.outflow)))}
               </td>
               <td
-                className={`px-3 py-2 text-right font-mono tabular-nums font-bold ${
+                className={`px-3 py-2 text-right tabular-nums font-bold ${
                   d.net >= 0 ? 'text-success' : 'text-danger'
                 }`}
               >
@@ -89,8 +89,8 @@ function CashFlowSvgChart({ data, height }: { data: CashFlowPoint[]; height: num
       >
         <defs>
           <linearGradient id="cashflow-primary-gradient" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="var(--color-primary-fg, #1a1a2e)" stopOpacity="0.08" />
-            <stop offset="100%" stopColor="var(--color-primary-fg, #1a1a2e)" stopOpacity="0.00" />
+            <stop offset="0%" stopColor="var(--color-primary-fg, #f26522)" stopOpacity="0.08" />
+            <stop offset="100%" stopColor="var(--color-primary-fg, #f26522)" stopOpacity="0.00" />
           </linearGradient>
         </defs>
 
@@ -111,7 +111,7 @@ function CashFlowSvgChart({ data, height }: { data: CashFlowPoint[]; height: num
                 x={paddingLeft - 6}
                 y={yPos + 3}
                 textAnchor="end"
-                className="text-[10px] font-mono tabular-nums fill-text-muted"
+                className="text-caption tabular-nums fill-text-muted"
               >
                 {formatMoney(BigInt(Math.round(yVal)))}
               </text>
@@ -134,7 +134,7 @@ function CashFlowSvgChart({ data, height }: { data: CashFlowPoint[]; height: num
         <path
           d={linePath}
           fill="none"
-          stroke="var(--color-primary-fg, #1a1a2e)"
+          stroke="var(--color-primary-fg, #f26522)"
           strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -150,14 +150,14 @@ function CashFlowSvgChart({ data, height }: { data: CashFlowPoint[]; height: num
                 cy={cy}
                 r="3.5"
                 fill="var(--color-surface, #ffffff)"
-                stroke="var(--color-primary-fg, #1a1a2e)"
+                stroke="var(--color-primary-fg, #f26522)"
                 strokeWidth="2"
               />
               <text
                 x={cx}
                 y={cy - 8}
                 textAnchor="middle"
-                className="text-[10px] font-mono tabular-nums font-semibold fill-text"
+                className="text-caption tabular-nums font-semibold fill-text"
               >
                 {formatMoney(BigInt(Math.round(d.net)))}
               </text>
@@ -165,7 +165,7 @@ function CashFlowSvgChart({ data, height }: { data: CashFlowPoint[]; height: num
                 x={cx}
                 y={height - paddingBottom + 16}
                 textAnchor="middle"
-                className="text-[10px] fill-text-muted"
+                className="text-caption fill-text-muted"
               >
                 {d.date}
               </text>

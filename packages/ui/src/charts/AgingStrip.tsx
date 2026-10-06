@@ -44,15 +44,13 @@ function AgingTableView({ buckets, totalNum }: { buckets: AgingBucketItem[]; tot
             return (
               <tr key={b.key}>
                 <td className="px-3 py-2 font-medium text-text">{b.label}</td>
-                <td className="px-3 py-2 text-right font-mono tabular-nums text-text-muted">
+                <td className="px-3 py-2 text-right tabular-nums text-text-muted">
                   {b.count ?? '-'}
                 </td>
-                <td className="px-3 py-2 text-right font-mono tabular-nums font-medium text-text">
+                <td className="px-3 py-2 text-right tabular-nums font-medium text-text">
                   {formatMoney(bAmount)}
                 </td>
-                <td className="px-3 py-2 text-right font-mono tabular-nums text-text-muted">
-                  {sharePct}%
-                </td>
+                <td className="px-3 py-2 text-right tabular-nums text-text-muted">{sharePct}%</td>
               </tr>
             );
           })}
@@ -80,12 +78,12 @@ function AgingBarView({ buckets, totalNum }: { buckets: AgingBucketItem[]; total
             <div
               key={b.key}
               style={{ width: `${pct}%`, backgroundColor: bgColor }}
-              className={`h-full flex items-center justify-center px-1 text-caption font-mono tabular-nums font-semibold transition-all relative group cursor-default ${
+              className={`h-full flex items-center justify-center px-1 text-caption tabular-nums font-semibold transition-all relative group cursor-default ${
                 isDark ? 'text-white' : 'text-primary'
               }`}
               title={`${b.label}: ${formatMoney(bAmount)} (${pct}%)`}
             >
-              {ratio >= 0.1 && <span className="truncate text-[11px] drop-shadow-xs">{pct}%</span>}
+              {ratio >= 0.1 && <span className="truncate text-caption drop-shadow-xs">{pct}%</span>}
             </div>
           );
         })}
@@ -106,9 +104,9 @@ function AgingBarView({ buckets, totalNum }: { buckets: AgingBucketItem[]; total
             >
               <div className="flex items-center justify-between text-caption font-semibold">
                 <span>{b.label}</span>
-                <span className="font-mono tabular-nums text-[11px] opacity-80">{pct}%</span>
+                <span className="tabular-nums text-caption opacity-80">{pct}%</span>
               </div>
-              <div className="mt-1 text-small font-semibold font-mono tabular-nums">
+              <div className="mt-1 text-small font-semibold tabular-nums">
                 {formatMoney(bAmount)}
               </div>
             </div>
@@ -141,7 +139,7 @@ function AgingHeader({
         {subtitle && <p className="text-caption text-text-muted mt-0.5">{subtitle}</p>}
       </div>
       <div className="flex items-center gap-3">
-        <span className="text-small font-semibold font-mono tabular-nums text-text">
+        <span className="text-small font-semibold tabular-nums text-text">
           Total: {formatMoney(totalAmountPaisa)}
         </span>
         {showTableToggle && (

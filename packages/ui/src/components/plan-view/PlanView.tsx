@@ -60,11 +60,11 @@ export function PlanView({ plots, onPlotClick, selectedPlotId, className = '' }:
       className={`relative w-full card-workspace bg-surface border border-border select-none outline-none focus-visible:ring-2 focus-visible:ring-focus ${className}`}
     >
       {/* Zoom / Pan Toolbar */}
-      <div className="absolute top-4 right-4 z-20 flex items-center gap-1 bg-surface-elevated p-1 rounded-button border border-border shadow-sm">
+      <div className="absolute top-4 right-4 z-20 flex items-center gap-1 bg-surface-elevated/90 backdrop-blur-sm p-1 rounded-button border border-border shadow-xs">
         <button
           type="button"
           onClick={() => setZoom((z) => Math.min(2.5, z + 0.2))}
-          className="p-1.5 text-text-muted hover:text-text rounded hover:bg-surface-sunken cursor-pointer"
+          className="p-1.5 text-text-muted hover:text-text rounded hover:bg-surface-sunken cursor-pointer transition-colors"
           aria-label="Zoom In"
         >
           <ZoomIn className="w-4 h-4" />
@@ -72,7 +72,7 @@ export function PlanView({ plots, onPlotClick, selectedPlotId, className = '' }:
         <button
           type="button"
           onClick={() => setZoom((z) => Math.max(0.5, z - 0.2))}
-          className="p-1.5 text-text-muted hover:text-text rounded hover:bg-surface-sunken cursor-pointer"
+          className="p-1.5 text-text-muted hover:text-text rounded hover:bg-surface-sunken cursor-pointer transition-colors"
           aria-label="Zoom Out"
         >
           <ZoomOut className="w-4 h-4" />
@@ -80,7 +80,7 @@ export function PlanView({ plots, onPlotClick, selectedPlotId, className = '' }:
         <button
           type="button"
           onClick={() => setZoom(1)}
-          className="p-1.5 text-text-muted hover:text-text rounded hover:bg-surface-sunken cursor-pointer"
+          className="p-1.5 text-text-muted hover:text-text rounded hover:bg-surface-sunken cursor-pointer transition-colors"
           aria-label="Reset Zoom"
         >
           <RotateCcw className="w-4 h-4" />
@@ -88,7 +88,7 @@ export function PlanView({ plots, onPlotClick, selectedPlotId, className = '' }:
       </div>
 
       {/* SVG Canvas */}
-      <div className="w-full overflow-auto max-h-160 p-4 flex justify-center bg-surface-sunken/20">
+      <div className="w-full overflow-auto max-h-160 p-4 flex justify-center bg-surface-sunken/30">
         <svg
           width={svgWidth * zoom}
           height={svgHeight * zoom}
@@ -97,7 +97,7 @@ export function PlanView({ plots, onPlotClick, selectedPlotId, className = '' }:
         >
           <defs>
             <pattern id="pattern-reserved-dots" width="8" height="8" patternUnits="userSpaceOnUse">
-              <circle cx="4" cy="4" r="1.5" fill="#7C6200" opacity="0.4" />
+              <circle cx="4" cy="4" r="1.5" fill="#f59e0b" opacity="0.35" />
             </pattern>
             <pattern
               id="pattern-booked-hatch"
@@ -106,15 +106,7 @@ export function PlanView({ plots, onPlotClick, selectedPlotId, className = '' }:
               patternTransform="rotate(45 0 0)"
               patternUnits="userSpaceOnUse"
             >
-              <line
-                x1="0"
-                y1="0"
-                x2="0"
-                y2="10"
-                stroke="#7A39E8"
-                strokeWidth="2.5"
-                opacity="0.35"
-              />
+              <line x1="0" y1="0" x2="0" y2="10" stroke="#8b5cf6" strokeWidth="2" opacity="0.35" />
             </pattern>
             <pattern
               id="pattern-void-crosshatch"
@@ -122,20 +114,21 @@ export function PlanView({ plots, onPlotClick, selectedPlotId, className = '' }:
               height="8"
               patternUnits="userSpaceOnUse"
             >
-              <path d="M 0 0 L 8 8 M 8 0 L 0 8" stroke="#5F6572" strokeWidth="1" opacity="0.4" />
+              <path d="M 0 0 L 8 8 M 8 0 L 0 8" stroke="#64748b" strokeWidth="0.8" opacity="0.35" />
             </pattern>
           </defs>
 
-          {/* Road guidelines */}
+          {/* Cadastral Boundary Line */}
           <rect
             x={20}
             y={20}
             width={svgWidth - 40}
             height={svgHeight - 40}
             fill="none"
-            stroke="#EDE4C8"
+            stroke="var(--color-border-strong, rgba(255, 255, 255, 0.12))"
             strokeWidth="1"
             strokeDasharray="4 4"
+            rx="8"
           />
 
           {/* Plots */}
@@ -156,10 +149,10 @@ export function PlanView({ plots, onPlotClick, selectedPlotId, className = '' }:
 
       {/* Floating Hover Card */}
       {hoveredPlot && (
-        <div className="absolute bottom-16 left-6 z-20 p-3 bg-surface-elevated border border-border-strong rounded-card shadow-md text-small space-y-1 min-w-52 animate-in fade-in-50 duration-75">
+        <div className="absolute bottom-16 left-6 z-20 p-3 bg-surface-elevated/95 backdrop-blur-md border border-border rounded-xl shadow-md text-small space-y-1 min-w-52 animate-in fade-in-50 duration-75">
           <div className="flex items-center justify-between border-b border-border pb-1">
             <span className="font-semibold text-text">{hoveredPlot.code}</span>
-            <span className="text-caption font-medium uppercase px-1.5 py-0.2 rounded bg-surface-sunken">
+            <span className="text-caption font-medium uppercase px-2 py-0.5 rounded-full bg-surface-sunken text-text-2 border border-border">
               {hoveredPlot.status}
             </span>
           </div>
@@ -188,23 +181,23 @@ export function PlanView({ plots, onPlotClick, selectedPlotId, className = '' }:
       {/* Bottom Status Legend */}
       <div className="p-3 border-t border-border bg-surface flex flex-wrap items-center justify-center gap-4 text-caption text-text-muted">
         <div className="flex items-center gap-1.5">
-          <span className="w-3.5 h-3.5 rounded border border-success" />
+          <span className="w-3.5 h-3.5 rounded-button border border-success bg-success/15" />
           <span>Available</span>
         </div>
         <div className="flex items-center gap-1.5">
-          <span className="w-3.5 h-3.5 rounded border border-warning bg-warning/20" />
+          <span className="w-3.5 h-3.5 rounded-button border border-warning bg-warning/20" />
           <span>Reserved (Dotted)</span>
         </div>
         <div className="flex items-center gap-1.5">
-          <span className="w-3.5 h-3.5 rounded border border-special bg-special/20" />
+          <span className="w-3.5 h-3.5 rounded-button border border-special bg-special/20" />
           <span>Booked (Diagonal)</span>
         </div>
         <div className="flex items-center gap-1.5">
-          <span className="w-3.5 h-3.5 rounded bg-primary" />
+          <span className="w-3.5 h-3.5 rounded-button border border-border-strong bg-secondary/50" />
           <span className="text-text">Sold (Solid)</span>
         </div>
         <div className="flex items-center gap-1.5">
-          <span className="w-3.5 h-3.5 rounded border border-void bg-void/20" />
+          <span className="w-3.5 h-3.5 rounded-button border border-void bg-void/20" />
           <span>Hold / Blocked (Hatch)</span>
         </div>
       </div>

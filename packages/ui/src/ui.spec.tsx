@@ -23,6 +23,7 @@ import {
   ErrorState,
   OfflineState,
   NoPermissionState,
+  NotFoundState,
   LoadingState,
 } from './index.js';
 
@@ -246,9 +247,10 @@ describe('Layout & State Primitives', () => {
     expect(screen.getByText('Inventory & Plots')).toBeDefined();
   });
 
-  it('renders Header with Cloud Live mode indicator', () => {
-    render(<Header isLocalMode={false} />);
-    expect(screen.getByText(/Cloud Live/i)).toBeDefined();
+  it('renders Header with branch and fiscal year badges', () => {
+    render(<Header branchName="Dhaka Main Branch" fiscalYear="FY 2026–27" />);
+    expect(screen.getByText('Dhaka Main Branch')).toBeDefined();
+    expect(screen.getByText('FY 2026–27')).toBeDefined();
   });
 
   it('renders all six state primitives', () => {
@@ -273,6 +275,10 @@ describe('Layout & State Primitives', () => {
 
     rerender(<NoPermissionState permission="property:create" />);
     expect(screen.getByText(/Access Restricted/i)).toBeDefined();
+
+    rerender(<NotFoundState title="Page Not Found" path="/unknown/test" />);
+    expect(screen.getByText(/Page Not Found/i)).toBeDefined();
+    expect(screen.getByText(/unknown\/test/i)).toBeDefined();
 
     rerender(<LoadingState variant="table" />);
     expect(document.querySelector('.card-workspace')).toBeDefined();

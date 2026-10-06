@@ -37,13 +37,13 @@ function FunnelTableView({ stages }: { stages: FunnelStage[] }) {
           {stages.map((st, idx) => (
             <tr key={st.id}>
               <td className="px-3 py-2 font-medium text-text">{st.label}</td>
-              <td className="px-3 py-2 text-right font-mono tabular-nums text-text font-semibold">
+              <td className="px-3 py-2 text-right tabular-nums text-text font-semibold">
                 {st.count.toLocaleString()}
               </td>
-              <td className="px-3 py-2 text-right font-mono tabular-nums text-text-muted">
+              <td className="px-3 py-2 text-right tabular-nums text-text-muted">
                 {st.valuePaisa !== undefined ? formatMoney(BigInt(st.valuePaisa.toString())) : '-'}
               </td>
-              <td className="px-3 py-2 text-right font-mono tabular-nums text-accent-text font-semibold">
+              <td className="px-3 py-2 text-right tabular-nums text-accent-text font-semibold">
                 {getConversionRate(stages, idx)}
               </td>
             </tr>
@@ -77,11 +77,11 @@ function FunnelBarView({ stages }: { stages: FunnelStage[] }) {
                     style={{ width: `${barWidth}%` }}
                     className="h-full bg-primary/80 transition-all duration-300 rounded flex items-center justify-between px-2.5 text-white"
                   >
-                    <span className="text-caption font-semibold font-mono tabular-nums">
+                    <span className="text-caption font-semibold tabular-nums">
                       {st.count.toLocaleString()}
                     </span>
                     {st.valuePaisa !== undefined && (
-                      <span className="text-[11px] font-mono tabular-nums opacity-90 hidden sm:inline">
+                      <span className="text-caption tabular-nums opacity-90 hidden sm:inline">
                         {formatMoney(BigInt(st.valuePaisa.toString()))}
                       </span>
                     )}
@@ -93,7 +93,7 @@ function FunnelBarView({ stages }: { stages: FunnelStage[] }) {
             {conversionPct !== null && (
               <div className="ml-32 pl-4 flex items-center gap-1.5 text-caption text-text-muted">
                 <ArrowDown className="w-3.5 h-3.5 text-accent" />
-                <span className="font-mono tabular-nums font-medium text-accent-text">
+                <span className="tabular-nums font-medium text-accent-text">
                   {conversionPct.toFixed(1)}%
                 </span>
                 <span>conversion</span>
