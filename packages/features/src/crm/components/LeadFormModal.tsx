@@ -126,7 +126,7 @@ export function LeadFormModal({
             id="lead-budgetMin"
             label="Min Budget (Paisa, Optional)"
             error={errors.budgetMinPaisa?.message}
-            helperText="e.g. 500000000 for ৳50,00,000"
+            helperText="e.g. 500000000 for BDT 50,00,000"
           >
             <Input
               id="lead-budgetMin"
@@ -140,7 +140,7 @@ export function LeadFormModal({
             id="lead-budgetMax"
             label="Max Budget (Paisa, Optional)"
             error={errors.budgetMaxPaisa?.message}
-            helperText="e.g. 1500000000 for ৳1,50,00,000"
+            helperText="e.g. 1500000000 for BDT 1,50,00,000"
           >
             <Input
               id="lead-budgetMax"

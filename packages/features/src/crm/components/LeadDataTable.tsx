@@ -46,7 +46,7 @@ export function LeadDataTable({
     {
       key: 'status',
       header: 'Stage',
-      render: (item) => <StatusBadge domain="lead" value={item.status} />,
+      render: (item) => <StatusBadge domain="lead" value={(item.status || 'NEW').toUpperCase()} />,
     },
     {
       key: 'source',

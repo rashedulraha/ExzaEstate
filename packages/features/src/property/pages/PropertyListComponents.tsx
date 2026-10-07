@@ -53,7 +53,7 @@ export function PaginationBar({
   const end = Math.min(page * limit, total);
 
   return (
-    <div className="p-3 border-t border-border bg-surface flex items-center justify-between text-small text-text-muted">
+    <div className="p-3 border-t border-border bg-surface flex items-center justify-between text-small text-text-muted rounded-b-card">
       <span>
         Showing {start}–{end} of {total} units
       </span>
@@ -84,11 +84,12 @@ export function PaginationBar({
 
 const STATUS_CHIPS = [
   { label: 'All Units', value: '' },
-  { label: 'Available', value: 'AVAILABLE' },
-  { label: 'Reserved', value: 'RESERVED' },
-  { label: 'Booked', value: 'BOOKED' },
-  { label: 'Sold', value: 'SOLD' },
-  { label: 'Hold / Blocked', value: 'HOLD' },
+  { label: 'Available', value: 'Available' },
+  { label: 'Reserved', value: 'Reserved' },
+  { label: 'Booked', value: 'Booked' },
+  { label: 'Sold', value: 'Sold' },
+  { label: 'Hold', value: 'Hold' },
+  { label: 'Blocked', value: 'Blocked' },
 ];
 
 export interface PropertyListFiltersProps {
@@ -113,7 +114,7 @@ export function PropertyListFilters({
   onClearFilters,
 }: PropertyListFiltersProps) {
   return (
-    <div className="p-4 border-b border-border bg-surface-sunken/20 space-y-3">
+    <div className="p-3.5 bg-surface rounded-card border border-border shadow-xs space-y-3">
       {/* Top Filter Row: Search & Dropdowns */}
       <div className="flex flex-wrap items-center gap-3">
         <div className="relative flex-1 min-w-56">
@@ -172,7 +173,7 @@ export function PropertyListFilters({
               key={chip.label}
               type="button"
               onClick={() => onStatusChange(chip.value)}
-              className={`px-2.5 py-1 rounded-full text-caption font-medium transition-all duration-150 cursor-pointer ${
+              className={`px-3 py-1 rounded-full text-caption font-medium transition-all duration-150 cursor-pointer ${
                 isSelected
                   ? 'bg-primary text-on-primary shadow-xs font-semibold'
                   : 'bg-surface hover:bg-surface-sunken text-text-2 border border-border hover:border-border-input'

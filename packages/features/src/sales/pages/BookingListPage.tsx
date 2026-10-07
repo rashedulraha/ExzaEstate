@@ -1,7 +1,18 @@
 import { type ReactElement, useState } from 'react';
-import { Button, Input, Select, LoadingState, ErrorState, EmptyState } from '@exzaestate/ui';
+import { useNavigate } from 'react-router';
+import {
+  Breadcrumbs,
+  Button,
+  Input,
+  Select,
+  LoadingState,
+  ErrorState,
+  EmptyState,
+  StickyToolbar,
+} from '@exzaestate/ui';
 import { PermissionGate } from '@exzaestate/app-core';
 import { PERMISSIONS } from '@exzaestate/shared';
+import { Plus, Search, X } from 'lucide-react';
 import { useBookingList } from '../hooks/useBookingList.js';
 import { useBookingActions } from '../hooks/useBookingActions.js';
 import { BookingDataTable } from '../components/bookings/BookingDataTable.js';
@@ -16,6 +27,7 @@ interface RenderBookingTableProps {
   bookings: BookingItem[];
   onRetry: () => void;
   onSelect: (b: BookingItem) => void;
+  onOpenWizard: () => void;
 }
 
 function renderBookingTableContent({
@@ -25,6 +37,7 @@ function renderBookingTableContent({
   bookings,
   onRetry,
   onSelect,
+  onOpenWizard,
 }: RenderBookingTableProps): ReactElement {
   if (isLoading) {
     return <LoadingState variant="table" />;
@@ -40,15 +53,25 @@ function renderBookingTableContent({
   if (bookings.length === 0) {
     return (
       <EmptyState
+        dashedBorder
         title="No bookings recorded"
         description="Start by launching the 7-step booking wizard to reserve a property unit."
+        actionLabel="New Booking Wizard"
+        actionVariant="secondary"
+        actionIcon={<Plus className="w-4 h-4" />}
+        onAction={onOpenWizard}
       />
     );
   }
-  return <BookingDataTable bookings={bookings} isLoading={isLoading} onSelectBooking={onSelect} />;
+  return (
+    <div className="bg-surface rounded-card border border-border overflow-hidden">
+      <BookingDataTable bookings={bookings} isLoading={isLoading} onSelectBooking={onSelect} />
+    </div>
+  );
 }
 
 export function BookingListPage(): ReactElement {
+  const navigate = useNavigate();
   const { bookings, kpis, filters, setFilters, isLoading, isError, error, refetch } =
     useBookingList();
   const { createBooking, cancelBooking } = useBookingActions();
@@ -57,71 +80,119 @@ export function BookingListPage(): ReactElement {
   const [selectedBooking, setSelectedBooking] = useState<BookingItem | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const hasActiveFilters = Boolean(filters.search || (filters.status && filters.status !== 'ALL'));
+
   return (
-    <div className="container-page">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div className="container-page space-y-6">
+      {/* Tier 1: Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-h1 font-bold text-text">Bookings & Allotments</h1>
-          <p className="text-small text-text-muted mt-1">
-            Atomic property reservations, co-buyer allocations, and 72-hour hold management
-          </p>
+          <Breadcrumbs
+            items={[
+              { label: 'Overview', href: '/dashboard', onClick: () => navigate('/dashboard') },
+              { label: 'CRM & Sales', href: '/crm/leads', onClick: () => navigate('/crm/leads') },
+              { label: 'Bookings & Sales' },
+            ]}
+          />
+          <div className="flex items-center gap-3 mt-1.5">
+            <h1 className="text-h1 font-semibold text-text">Bookings & Sales</h1>
+            <span className="text-caption font-semibold px-2 py-0.5 rounded-full bg-surface-sunken text-text-2 border border-border">
+              {kpis.totalCount} Allotments
+            </span>
+          </div>
         </div>
+
         <PermissionGate permission={PERMISSIONS.BOOKING_CREATE} fallback={null}>
-          <Button variant="primary" onClick={() => setIsWizardOpen(true)}>
-            + New Booking Wizard
+          <Button variant="primary" className="gap-2" onClick={() => setIsWizardOpen(true)}>
+            <Plus className="w-4 h-4" />
+            <span>New Booking</span>
           </Button>
         </PermissionGate>
       </div>
 
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      {/* Tier 2: KPI Summary Strip */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         <div className="card-stat">
-          <div className="text-small font-medium text-text-muted">Total Allotments</div>
-          <div className="text-hero-num font-bold text-text mt-1">{kpis.totalCount}</div>
+          <span className="text-caption font-semibold uppercase tracking-wider text-text-muted block">
+            Total Allotments
+          </span>
+          <span className="text-hero-num font-bold text-text mt-1.5 block">{kpis.totalCount}</span>
         </div>
         <div className="card-stat">
-          <div className="text-small font-medium text-text-muted">72h Hold Reservations</div>
-          <div className="text-hero-num font-bold text-warning mt-1">{kpis.requestedCount}</div>
+          <span className="text-caption font-semibold uppercase tracking-wider text-text-muted block">
+            72h Hold Reservations
+          </span>
+          <span className="text-hero-num font-bold text-warning mt-1.5 block">
+            {kpis.requestedCount}
+          </span>
         </div>
         <div className="card-stat">
-          <div className="text-small font-medium text-text-muted">Pending Verification</div>
-          <div className="text-hero-num font-bold text-accent mt-1">
+          <span className="text-caption font-semibold uppercase tracking-wider text-text-muted block">
+            Pending Verification
+          </span>
+          <span className="text-hero-num font-bold text-accent mt-1.5 block">
             {kpis.pendingApprovalCount}
-          </div>
+          </span>
         </div>
         <div className="card-stat">
-          <div className="text-small font-medium text-text-muted">Confirmed Allotments</div>
-          <div className="text-hero-num font-bold text-success mt-1">{kpis.confirmedCount}</div>
+          <span className="text-caption font-semibold uppercase tracking-wider text-text-muted block">
+            Confirmed Allotments
+          </span>
+          <span className="text-hero-num font-bold text-success mt-1.5 block">
+            {kpis.confirmedCount}
+          </span>
         </div>
       </div>
 
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-        <div className="flex-1">
-          <Input
-            id="booking-search"
-            placeholder="Search bookings by booking #, allottee name, or unit..."
-            value={filters.search}
-            onChange={(e) => setFilters((prev) => ({ ...prev, search: e.target.value }))}
-          />
+      {/* Tier 3: Search and Filters */}
+      <StickyToolbar>
+        <div className="shadow-xs flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 p-2.5 bg-surface rounded-card border border-border">
+          <div className="flex flex-wrap items-center gap-2.5 flex-1">
+            <div className="relative w-full sm:w-80">
+              <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-text-muted pointer-events-none" />
+              <Input
+                id="booking-search"
+                inputSize="md"
+                placeholder="Search bookings by booking #, allottee name, or unit..."
+                value={filters.search}
+                onChange={(e) => setFilters((prev) => ({ ...prev, search: e.target.value }))}
+                className="pl-9 text-small"
+              />
+            </div>
+            <div className="w-44 sm:w-52">
+              <Select
+                id="booking-status-filter"
+                inputSize="md"
+                value={filters.status}
+                onChange={(val) =>
+                  setFilters((prev) => ({ ...prev, status: val as BookingStatusEnum | 'ALL' }))
+                }
+                options={[
+                  { value: 'ALL', label: 'All Statuses' },
+                  { value: 'REQUESTED', label: 'Requested (Hold)' },
+                  { value: 'PENDING_APPROVAL', label: 'Pending Approval' },
+                  { value: 'CONFIRMED', label: 'Confirmed' },
+                  { value: 'AGREEMENT_PENDING', label: 'Agreement Pending' },
+                  { value: 'AGREEMENT_COMPLETED', label: 'Agreement Completed' },
+                  { value: 'CANCELLED', label: 'Cancelled' },
+                ]}
+              />
+            </div>
+            {hasActiveFilters && (
+              <button
+                type="button"
+                onClick={() =>
+                  setFilters((prev) => ({ ...prev, search: '', status: 'ALL', page: 1 }))
+                }
+                className="flex items-center gap-1 px-2.5 py-1.5 text-small text-text-muted hover:text-text rounded-button hover:bg-surface-sunken transition-colors cursor-pointer"
+              >
+                <X className="w-3.5 h-3.5" />
+                <span>Clear</span>
+              </button>
+            )}
+          </div>
         </div>
-        <div className="w-full sm:w-48">
-          <Select
-            id="booking-status-filter"
-            value={filters.status}
-            onChange={(val) =>
-              setFilters((prev) => ({ ...prev, status: val as BookingStatusEnum | 'ALL' }))
-            }
-            options={[
-              { value: 'ALL', label: 'All Statuses' },
-              { value: 'REQUESTED', label: 'Requested (Hold)' },
-              { value: 'PENDING_APPROVAL', label: 'Pending Approval' },
-              { value: 'CONFIRMED', label: 'Confirmed' },
-              { value: 'AGREEMENT_PENDING', label: 'Agreement Pending' },
-              { value: 'AGREEMENT_COMPLETED', label: 'Agreement Completed' },
-              { value: 'CANCELLED', label: 'Cancelled' },
-            ]}
-          />
-        </div>
-      </div>
+      </StickyToolbar>
 
       {renderBookingTableContent({
         isLoading,
@@ -130,6 +201,7 @@ export function BookingListPage(): ReactElement {
         bookings,
         onRetry: () => void refetch(),
         onSelect: (b) => setSelectedBooking(b),
+        onOpenWizard: () => setIsWizardOpen(true),
       })}
 
       <BookingWizardModal

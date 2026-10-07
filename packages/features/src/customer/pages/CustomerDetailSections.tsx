@@ -2,7 +2,7 @@ import type { ReactElement } from 'react';
 import { Button, StatusBadge } from '@exzaestate/ui';
 import { PermissionGate } from '@exzaestate/app-core';
 import { PERMISSIONS } from '@exzaestate/shared';
-import { Phone, Mail, ShieldCheck, UserPlus, Users, FileText, Lock } from 'lucide-react';
+import { ShieldCheck, UserPlus, Users, FileText, Lock } from 'lucide-react';
 import type {
   CustomerDetailRecord,
   CoBuyerItem,
@@ -20,37 +20,41 @@ export function CustomerProfileHeader({
   return (
     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-5 bg-surface rounded-card border border-border shadow-xs">
       <div className="flex items-center gap-4">
-        <div className="w-14 h-14 rounded-full bg-primary/12 text-primary flex items-center justify-center font-bold text-h2">
+        <div className="w-12 h-12 rounded-full bg-primary/10 text-primary border border-primary/20 flex items-center justify-center font-bold text-h3">
           {customer.fullName.charAt(0)}
         </div>
         <div>
           <div className="flex items-center gap-2">
             <h1 className="text-h2 font-bold text-text">{customer.fullName}</h1>
-            <span className="font-mono text-caption text-primary font-semibold px-2 py-0.5 rounded-full bg-primary/12 border border-primary/20">
+            <span className="font-mono text-caption text-primary font-semibold px-2 py-0.5 rounded-button bg-primary/10 border border-primary/20">
               {customer.customerCode}
             </span>
             <StatusBadge value={customer.kycStatus} />
           </div>
-          <div className="flex flex-wrap items-center gap-4 mt-1.5 text-small text-text-muted">
-            <span className="flex items-center gap-1.5">
-              <Phone className="w-3.5 h-3.5" />
-              {customer.phone}
-            </span>
+          <div className="flex flex-wrap items-center gap-2 mt-1 text-small text-text-muted">
+            <span>{customer.phone}</span>
             {customer.email && (
-              <span className="flex items-center gap-1.5">
-                <Mail className="w-3.5 h-3.5" />
-                {customer.email}
-              </span>
+              <>
+                <span>•</span>
+                <span>{customer.email}</span>
+              </>
             )}
             {customer.occupation && (
-              <span className="text-text-2 font-medium">{customer.occupation}</span>
+              <>
+                <span>•</span>
+                <span className="text-text-2 font-medium">{customer.occupation}</span>
+              </>
             )}
           </div>
         </div>
       </div>
 
       <PermissionGate permission={PERMISSIONS.CUSTOMER_VERIFY_KYC}>
-        <Button variant="secondary" className="gap-2 shrink-0" onClick={onOpenKycModal}>
+        <Button
+          variant="secondary"
+          className="gap-2 shrink-0 rounded-button"
+          onClick={onOpenKycModal}
+        >
           <ShieldCheck className="w-4 h-4 text-primary" />
           <span>Audit KYC</span>
         </Button>

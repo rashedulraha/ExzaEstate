@@ -110,11 +110,11 @@ export function PropertyPlanView({
             onClick={() => setSelectedStatus(selectedStatus === 'AVAILABLE' ? '' : 'AVAILABLE')}
             className={`flex items-center gap-1.5 px-2.5 py-1 text-caption rounded-button border transition-colors cursor-pointer ${
               selectedStatus === 'AVAILABLE'
-                ? 'bg-success text-on-primary border-success font-semibold'
+                ? 'bg-surface text-text border-primary/50 font-semibold shadow-xs'
                 : 'bg-surface-sunken hover:bg-surface text-text-2 border-border'
             }`}
           >
-            <CheckCircle2 className="w-3.5 h-3.5" />
+            <CheckCircle2 className="w-3.5 h-3.5 text-text-muted" />
             <span>Available ({availableCount})</span>
           </button>
         </div>
@@ -162,24 +162,24 @@ export function PropertyPlanView({
 
       {/* Bottom Global Status Legend */}
       <div className="p-3 bg-surface rounded-card border border-border flex flex-wrap items-center justify-center gap-6 text-caption text-text-muted">
-        <div className="flex items-center gap-1.5">
-          <span className="w-3 h-3 rounded-button border border-success bg-success/20" />
+        <div className="flex items-center gap-2">
+          <span className="w-2 h-2 rounded-full bg-text-muted" />
           <span className="text-text-2 font-medium">Available</span>
         </div>
-        <div className="flex items-center gap-1.5">
-          <span className="w-3 h-3 rounded-button border border-warning bg-warning/20" />
+        <div className="flex items-center gap-2">
+          <span className="w-2 h-2 rounded-full bg-text-muted/60" />
           <span className="text-text-2 font-medium">Reserved (Dotted)</span>
         </div>
-        <div className="flex items-center gap-1.5">
-          <span className="w-3 h-3 rounded-button border border-special bg-special/20" />
+        <div className="flex items-center gap-2">
+          <span className="w-2 h-2 rounded-full bg-text-muted/60" />
           <span className="text-text-2 font-medium">Booked (Diagonal)</span>
         </div>
-        <div className="flex items-center gap-1.5">
-          <span className="w-3 h-3 rounded-button border border-border-strong bg-secondary/50" />
+        <div className="flex items-center gap-2">
+          <span className="w-2 h-2 rounded-full bg-text-muted/40" />
           <span className="text-text font-medium">Sold (Solid)</span>
         </div>
-        <div className="flex items-center gap-1.5">
-          <span className="w-3 h-3 rounded-button border border-danger bg-danger/20" />
+        <div className="flex items-center gap-2">
+          <span className="w-2 h-2 rounded-full bg-text-muted/30" />
           <span className="text-text-2 font-medium">Hold / Blocked (Hatch)</span>
         </div>
       </div>

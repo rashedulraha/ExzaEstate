@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { Building2, Compass, Eye, CheckCircle2, Clock } from 'lucide-react';
+import { Building2, Compass, Eye } from 'lucide-react';
 import { formatMoney, formatArea } from '@exzaestate/shared';
 import { StatusBadge } from '@exzaestate/ui';
 import type { PropertyItem } from '../hooks/usePropertyList.js';
@@ -32,25 +32,6 @@ function extractFloorMeta(prop: PropertyItem): { label: string; num: number } {
     return { label: `Level ${n}`, num: n };
   }
   return { label: 'Ground Level / General', num: 0 };
-}
-
-function getStatusBorderClass(status: string): string {
-  const s = status.toUpperCase();
-  switch (s) {
-    case 'AVAILABLE':
-      return 'border-t-2 border-t-success hover:border-success';
-    case 'RESERVED':
-      return 'border-t-2 border-t-warning hover:border-warning';
-    case 'BOOKED':
-      return 'border-t-2 border-t-special hover:border-special';
-    case 'SOLD':
-      return 'border-t-2 border-t-void/50 bg-surface-sunken/40';
-    case 'HOLD':
-    case 'BLOCKED':
-      return 'border-t-2 border-t-danger hover:border-danger';
-    default:
-      return 'border-t-2 border-t-border';
-  }
 }
 
 export function PropertyStackingPlan({
@@ -90,7 +71,7 @@ export function PropertyStackingPlan({
   }, [properties]);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {floorGroups.map((group) => {
         const total = group.properties.length || 1;
         const bookedOrSold = group.reservedCount + group.soldCount;
@@ -99,37 +80,29 @@ export function PropertyStackingPlan({
         return (
           <div
             key={group.floorKey}
-            className="p-4 bg-surface rounded-card border border-border shadow-xs"
+            className="p-3.5 bg-surface-sunken/50 rounded-card border border-border shadow-xs"
           >
             {/* Architectural Floor Header Strip */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 mb-3 border-b border-border">
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-button bg-surface-sunken flex items-center justify-center text-primary border border-border">
+                <div className="w-7 h-7 rounded-button bg-surface flex items-center justify-center text-text-muted border border-border">
                   <Building2 className="w-4 h-4" />
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
-                    <h3 className="text-body font-bold text-text uppercase tracking-wide">
+                    <h3 className="text-small font-semibold text-text uppercase tracking-wide">
                       {group.floorLabel}
                     </h3>
-                    <span className="text-caption font-semibold px-2 py-0.5 rounded-full bg-surface-sunken text-text-2 border border-border">
+                    <span className="text-caption font-bold px-2 py-0.5 rounded-full bg-surface text-text-muted border border-border">
                       {group.properties.length} {group.properties.length === 1 ? 'Unit' : 'Units'}
                     </span>
                   </div>
-                  <div className="flex items-center gap-3 text-caption text-text-muted mt-0.5">
-                    <span className="flex items-center gap-1 text-success font-medium">
-                      <CheckCircle2 className="w-3 h-3" /> {group.availableCount} Available
-                    </span>
-                    {group.reservedCount > 0 && (
-                      <span className="flex items-center gap-1 text-warning font-medium">
-                        <Clock className="w-3 h-3" /> {group.reservedCount} In Pipeline
-                      </span>
-                    )}
-                    {group.soldCount > 0 && (
-                      <span className="flex items-center gap-1 text-text-2 font-medium">
-                        ● {group.soldCount} Sold
-                      </span>
-                    )}
+                  <div className="flex items-center gap-2 text-caption text-text-muted mt-0.5">
+                    <span>{group.availableCount} Available</span>
+                    <span>·</span>
+                    <span>{group.reservedCount} In Pipeline</span>
+                    <span>·</span>
+                    <span>{group.soldCount} Sold</span>
                   </div>
                 </div>
               </div>
@@ -137,11 +110,11 @@ export function PropertyStackingPlan({
               {/* Floor Occupancy Mini Meter */}
               <div className="flex items-center gap-2 self-start sm:self-auto">
                 <span className="text-caption font-medium text-text-muted">
-                  Occupancy: <strong className="text-text">{occupancyPct}%</strong>
+                  Occupancy: <strong className="text-text font-mono">{occupancyPct}%</strong>
                 </span>
-                <div className="w-24 h-2 bg-surface-sunken rounded-full overflow-hidden border border-border">
+                <div className="w-20 h-1.5 bg-surface rounded-full overflow-hidden border border-border/60">
                   <div
-                    className="h-full bg-primary rounded-full transition-all duration-300"
+                    className="h-full bg-text-muted/60 rounded-full transition-all duration-300"
                     style={{ width: `${occupancyPct}%` }}
                   />
                 </div>
@@ -152,50 +125,55 @@ export function PropertyStackingPlan({
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
               {group.properties.map((prop) => {
                 const isSelected = selectedPropertyId === prop.id;
-                const borderClass = getStatusBorderClass(prop.status);
 
                 return (
                   <button
                     key={prop.id}
                     type="button"
                     onClick={() => onSelectProperty(prop)}
-                    className={`group relative text-left p-3.5 bg-surface hover:bg-surface-elevated rounded-card border transition-all duration-150 cursor-pointer shadow-xs hover:shadow-sm ${borderClass} ${
+                    className={`group relative text-left p-3 bg-surface hover:bg-surface-elevated/80 rounded-card border transition-all duration-150 cursor-pointer space-y-2.5 shadow-xs hover:shadow-md ${
                       isSelected
-                        ? 'ring-2 ring-focus border-focus bg-surface-elevated'
-                        : 'border-border'
-                    }`}
+                        ? 'border-primary ring-1 ring-primary/40 bg-surface-elevated'
+                        : 'border-border hover:border-primary/50'
+                    } ${prop.status.toUpperCase() === 'SOLD' ? 'opacity-80' : ''}`}
                   >
                     {/* Top Row: Unit Code & Status Badge */}
-                    <div className="flex items-center justify-between gap-1 mb-2">
-                      <span className="text-body font-bold text-text group-hover:text-primary transition-colors">
+                    <div className="flex items-start justify-between gap-2">
+                      <h4 className="font-semibold text-small text-text group-hover:text-primary transition-colors truncate">
                         {prop.code}
-                      </span>
+                      </h4>
                       <StatusBadge domain="property" value={prop.status} />
                     </div>
 
                     {/* Middle: Type & Area */}
-                    <div className="space-y-1 my-2 text-caption">
-                      <div className="flex items-center justify-between text-text-2">
-                        <span className="font-medium truncate">{prop.title || prop.type}</span>
-                        <span className="text-text font-semibold tabular-nums">
-                          {formatArea(prop.areaSqft, 'sqft')}
-                        </span>
-                      </div>
-                      {prop.facing && (
-                        <div className="flex items-center gap-1 text-text-muted">
-                          <Compass className="w-3 h-3 text-text-muted" />
-                          <span className="truncate">{prop.facing.replace('_', ' ')}</span>
-                        </div>
-                      )}
+                    <div className="flex items-center justify-between text-caption text-text-muted">
+                      <span className="truncate">{prop.title || prop.type}</span>
+                      <span className="font-mono text-text-2 font-medium shrink-0">
+                        {formatArea(prop.areaSqft, 'sqft')}
+                      </span>
                     </div>
 
-                    {/* Bottom: Price & Quick Action */}
-                    <div className="pt-2 border-t border-border flex items-center justify-between">
-                      <span className="text-small font-bold text-primary tabular-nums">
+                    {/* Price: Sunken pill matching LeadCard budget box */}
+                    <div className="text-caption font-mono text-text-2 font-medium bg-surface-sunken/50 px-2 py-1 rounded border border-border/50 truncate flex items-center justify-between">
+                      <span className="text-text-muted text-[11px] uppercase tracking-wider font-sans">
+                        Price
+                      </span>
+                      <span className="tabular-nums font-semibold">
                         {formatMoney(prop.netPricePaisa)}
                       </span>
-                      <span className="text-caption text-text-muted opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-0.5">
-                        <Eye className="w-3 h-3" /> View
+                    </div>
+
+                    {/* Bottom: Orientation & View Action */}
+                    <div className="pt-2 border-t border-border flex items-center justify-between text-caption text-text-muted">
+                      <div className="flex items-center gap-1.5 truncate">
+                        {prop.facing && <Compass className="w-3 h-3 text-text-muted/80 shrink-0" />}
+                        <span className="font-medium uppercase tracking-wider truncate">
+                          {prop.facing ? prop.facing.replace('_', ' ') : prop.type}
+                        </span>
+                      </div>
+                      <span className="opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1 text-text-muted group-hover:text-primary">
+                        <Eye className="w-3.5 h-3.5" />
+                        <span>View</span>
                       </span>
                     </div>
                   </button>

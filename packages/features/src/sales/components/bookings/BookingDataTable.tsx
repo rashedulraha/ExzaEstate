@@ -25,12 +25,14 @@ export function BookingDataTable({
         <div>
           <button
             type="button"
-            className="font-medium text-primary hover:underline text-left"
+            className="font-mono text-small font-semibold text-primary hover:underline text-left cursor-pointer"
             onClick={() => onSelectBooking(row)}
           >
             {row.bookingNumber}
           </button>
-          <div className="text-caption text-text-muted mt-0.5">Unit: {row.propertyCode ?? '—'}</div>
+          <div className="text-caption text-text-muted font-mono mt-0.5">
+            Unit: {row.propertyCode ?? '—'}
+          </div>
         </div>
       ),
     },
@@ -48,7 +50,9 @@ export function BookingDataTable({
       header: 'Contract Value',
       isMoney: true,
       render: (row) => (
-        <span className="font-semibold text-text">{formatMoney(row.netPricePaisa)}</span>
+        <span className="font-semibold text-text tabular-nums">
+          {formatMoney(row.netPricePaisa)}
+        </span>
       ),
     },
     {
@@ -56,7 +60,7 @@ export function BookingDataTable({
       header: 'Deposit Paid',
       isMoney: true,
       render: (row) => (
-        <span className="text-small font-medium text-text-2">
+        <span className="text-small font-medium text-text-2 tabular-nums">
           {formatMoney(row.bookingAmountPaisa)}
         </span>
       ),
@@ -74,14 +78,25 @@ export function BookingDataTable({
     {
       key: 'actions',
       header: 'Actions',
+      align: 'right',
       render: (row) => (
-        <div className="flex items-center gap-1.5">
-          <Button variant="secondary" size="sm" onClick={() => onSelectBooking(row)}>
+        <div className="flex items-center justify-end gap-1.5">
+          <Button
+            variant="secondary"
+            size="sm"
+            className="rounded-button"
+            onClick={() => onSelectBooking(row)}
+          >
             Details
           </Button>
           {(row.status === 'CONFIRMED' || row.status === 'AGREEMENT_PENDING') &&
             onGenerateAgreement && (
-              <Button variant="primary" size="sm" onClick={() => onGenerateAgreement(row)}>
+              <Button
+                variant="primary"
+                size="sm"
+                className="rounded-button"
+                onClick={() => onGenerateAgreement(row)}
+              >
                 Agreement
               </Button>
             )}

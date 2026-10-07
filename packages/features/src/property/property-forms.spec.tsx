@@ -54,7 +54,7 @@ describe('Property Forms & Detail Pages', () => {
       });
 
       await waitFor(() => {
-        expect(screen.getByText('৳1,25,00,000.00')).toBeDefined();
+        expect(screen.getByText('BDT 1,25,00,000.00')).toBeDefined();
       });
     });
 

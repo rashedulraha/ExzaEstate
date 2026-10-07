@@ -24,7 +24,7 @@ export function AgreementDataTable({
         <div>
           <button
             type="button"
-            className="font-medium text-primary hover:underline text-left"
+            className="font-mono text-small font-semibold text-primary hover:underline text-left cursor-pointer"
             onClick={() => onViewAgreement(row)}
           >
             {row.agreementNumber}
@@ -41,7 +41,9 @@ export function AgreementDataTable({
       render: (row) => (
         <div>
           <div className="font-medium text-text">{row.customerName ?? 'Allottee'}</div>
-          <div className="text-caption text-text-muted mt-0.5">Unit: {row.propertyCode ?? '—'}</div>
+          <div className="text-caption text-text-muted font-mono mt-0.5">
+            Unit: {row.propertyCode ?? '—'}
+          </div>
         </div>
       ),
     },
@@ -51,7 +53,7 @@ export function AgreementDataTable({
       render: (row) => {
         if (row.lockedAt) {
           return (
-            <div className="text-caption text-success font-medium">
+            <div className="text-caption text-success font-medium tabular-nums">
               Locked {formatDate(row.lockedAt, 'Asia/Dhaka')}
             </div>
           );
@@ -67,13 +69,24 @@ export function AgreementDataTable({
     {
       key: 'actions',
       header: 'Actions',
+      align: 'right',
       render: (row) => (
-        <div className="flex items-center gap-1.5">
-          <Button variant="secondary" size="sm" onClick={() => onViewAgreement(row)}>
+        <div className="flex items-center justify-end gap-1.5">
+          <Button
+            variant="secondary"
+            size="sm"
+            className="rounded-button"
+            onClick={() => onViewAgreement(row)}
+          >
             View
           </Button>
           {row.status === 'AGREEMENT_PENDING' && (
-            <Button variant="primary" size="sm" onClick={() => onSignAndLock(row)}>
+            <Button
+              variant="primary"
+              size="sm"
+              className="rounded-button"
+              onClick={() => onSignAndLock(row)}
+            >
               Sign & Lock
             </Button>
           )}

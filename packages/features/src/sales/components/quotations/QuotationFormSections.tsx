@@ -18,7 +18,7 @@ function parseDigitsToBigInt(val?: string | null): bigint {
 function computeQuotationNet(base?: string, premium?: string, discount?: string): string {
   const net =
     parseDigitsToBigInt(base) + parseDigitsToBigInt(premium) - parseDigitsToBigInt(discount);
-  return net > 0n ? formatMoney(net.toString()) : '৳0.00';
+  return net > 0n ? formatMoney(net.toString()) : 'BDT 0.00';
 }
 
 function QuotationDiscountNotice({ discountPct }: { discountPct: number }) {
@@ -58,7 +58,7 @@ export function QuotationPricingSection({
         >
           <Input
             id="quotation-basePrice"
-            placeholder="e.g. 500000000 (৳50,00,000)"
+            placeholder="e.g. 500000000 (BDT 50,00,000)"
             {...register('basePricePaisa')}
           />
         </FormField>
@@ -70,7 +70,7 @@ export function QuotationPricingSection({
         >
           <Input
             id="quotation-premium"
-            placeholder="e.g. 20000000 (৳2,00,000)"
+            placeholder="e.g. 20000000 (BDT 2,00,000)"
             {...register('premiumAmountPaisa')}
           />
         </FormField>

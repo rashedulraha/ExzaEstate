@@ -1,6 +1,7 @@
 import type { ReactElement } from 'react';
 import type { UseFormRegister, FieldErrors, UseFormWatch, UseFormSetValue } from 'react-hook-form';
 import { FormField, Input, Button } from '@exzaestate/ui';
+import { useCustomerList } from '../../../../customer/hooks/useCustomerList.js';
 import type { BookingWizardInput } from '../../../schemas/booking.schema.js';
 
 interface Step2CustomerCoBuyersProps {
@@ -17,6 +18,7 @@ export function Step2CustomerCoBuyers({
   errors,
 }: Step2CustomerCoBuyersProps): ReactElement {
   const coBuyers = watch('coBuyers') || [];
+  const { customers } = useCustomerList();
 
   const handleAddCoBuyer = () => {
     setValue('coBuyers', [...coBuyers, { customerId: '', customerName: '', sharePercentage: 50 }]);
@@ -42,10 +44,40 @@ export function Step2CustomerCoBuyers({
         </p>
       </div>
 
-      <div className="p-4 bg-surface-sunken border border-border rounded-card space-y-4 max-w-lg">
+      <div className="p-4 bg-surface-sunken/40 border border-border rounded-card space-y-4 max-w-lg">
         <h4 className="text-h5 font-semibold text-text-muted uppercase tracking-wider">
           Primary Allottee ({primaryShare}% Ownership)
         </h4>
+
+        {customers.length > 0 && (
+          <div className="space-y-1.5">
+            <label
+              htmlFor="select-registered-customer"
+              className="text-caption font-medium text-text-muted"
+            >
+              Select Registered Customer (Optional)
+            </label>
+            <select
+              id="select-registered-customer"
+              value={watch('customerId') || ''}
+              onChange={(e) => {
+                const selected = customers.find((c) => c.id === e.target.value);
+                if (selected) {
+                  setValue('customerId', selected.id, { shouldValidate: true });
+                  setValue('customerName', selected.fullName, { shouldValidate: true });
+                }
+              }}
+              className="w-full h-9 px-3 rounded-button bg-surface border border-border-input text-text text-small focus:outline-none focus:ring-2 focus:ring-focus cursor-pointer"
+            >
+              <option value="">— Choose a registered customer —</option>
+              {customers.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.customerCode} · {c.fullName} ({c.phone})
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
 
         <FormField
           id="booking-customerId"

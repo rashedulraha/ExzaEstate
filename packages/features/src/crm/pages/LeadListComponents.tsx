@@ -1,6 +1,6 @@
 import type { ReactElement } from 'react';
-import { Input, Select, LoadingState, ErrorState, EmptyState } from '@exzaestate/ui';
-import { Search, Users, Target, UserCheck, CheckCircle2, XCircle } from 'lucide-react';
+import { Input, Select, LoadingState, ErrorState, EmptyState, StickyToolbar } from '@exzaestate/ui';
+import { Search, X, Plus } from 'lucide-react';
 import type { LeadItem, LeadFilters, LeadKpis } from '../hooks/useLeadList.js';
 import { LeadDataTable } from '../components/LeadDataTable.js';
 import { LeadKanbanBoard } from '../components/LeadKanbanBoard.js';
@@ -11,53 +11,64 @@ import {
   type CreateLeadInput,
 } from '../schemas/crm.schema.js';
 
+const STAGE_LABELS: Record<string, string> = {
+  NEW: 'New Inquiries',
+  CONTACTED: 'Contacted',
+  INTERESTED: 'Interested',
+  QUALIFIED: 'Qualified',
+  SITE_VISIT: 'Site Visit',
+  NEGOTIATION: 'In Negotiation',
+  BOOKING: 'Booking Request',
+  CUSTOMER: 'Converted',
+  LOST: 'Lost',
+};
+
+const SOURCE_LABELS: Record<string, string> = {
+  FACEBOOK: 'Facebook',
+  GOOGLE: 'Google',
+  NEWSPAPER: 'Newspaper',
+  BILLBOARD: 'Billboard',
+  REFERRAL: 'Referral',
+  WALK_IN: 'Walk-in',
+  FAIR: 'Fair / Expo',
+  CALL_CENTER: 'Call Center',
+  OTHER: 'Other',
+};
+
 export function LeadKpiStrip({ kpis }: { kpis: LeadKpis }): ReactElement {
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
-      <div className="card-stat flex items-center gap-3">
-        <div className="p-2 rounded-button bg-primary/12 text-primary">
-          <Users className="w-4 h-4" />
-        </div>
-        <div>
-          <span className="text-caption text-text-muted block">Total Leads</span>
-          <span className="text-hero-num font-bold text-text">{kpis.totalLeads}</span>
-        </div>
+    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+      <div className="card-stat">
+        <span className="text-caption font-semibold uppercase tracking-wider text-text-muted block">
+          Total Leads
+        </span>
+        <span className="text-hero-num font-bold text-text mt-1.5 block">{kpis.totalLeads}</span>
       </div>
-      <div className="card-stat flex items-center gap-3">
-        <div className="p-2 rounded-button bg-info/12 text-info">
-          <Target className="w-4 h-4" />
-        </div>
-        <div>
-          <span className="text-caption text-text-muted block">New Inquiries</span>
-          <span className="text-hero-num font-bold text-text">{kpis.newLeads}</span>
-        </div>
+      <div className="card-stat">
+        <span className="text-caption font-semibold uppercase tracking-wider text-text-muted block">
+          New Inquiries
+        </span>
+        <span className="text-hero-num font-bold text-text mt-1.5 block">{kpis.newLeads}</span>
       </div>
-      <div className="card-stat flex items-center gap-3">
-        <div className="p-2 rounded-button bg-warning/12 text-warning">
-          <UserCheck className="w-4 h-4" />
-        </div>
-        <div>
-          <span className="text-caption text-text-muted block">In Negotiation</span>
-          <span className="text-hero-num font-bold text-text">{kpis.inNegotiation}</span>
-        </div>
+      <div className="card-stat">
+        <span className="text-caption font-semibold uppercase tracking-wider text-text-muted block">
+          In Negotiation
+        </span>
+        <span className="text-hero-num font-bold text-accent mt-1.5 block">
+          {kpis.inNegotiation}
+        </span>
       </div>
-      <div className="card-stat flex items-center gap-3">
-        <div className="p-2 rounded-button bg-success/12 text-success">
-          <CheckCircle2 className="w-4 h-4" />
-        </div>
-        <div>
-          <span className="text-caption text-text-muted block">Converted</span>
-          <span className="text-hero-num font-bold text-text">{kpis.converted}</span>
-        </div>
+      <div className="card-stat">
+        <span className="text-caption font-semibold uppercase tracking-wider text-text-muted block">
+          Converted
+        </span>
+        <span className="text-hero-num font-bold text-success mt-1.5 block">{kpis.converted}</span>
       </div>
-      <div className="card-stat flex items-center gap-3">
-        <div className="p-2 rounded-button bg-surface-sunken text-text-muted">
-          <XCircle className="w-4 h-4" />
-        </div>
-        <div>
-          <span className="text-caption text-text-muted block">Lost</span>
-          <span className="text-hero-num font-bold text-text">{kpis.lost}</span>
-        </div>
+      <div className="card-stat">
+        <span className="text-caption font-semibold uppercase tracking-wider text-text-muted block">
+          Lost
+        </span>
+        <span className="text-hero-num font-bold text-text-muted mt-1.5 block">{kpis.lost}</span>
       </div>
     </div>
   );
@@ -70,45 +81,62 @@ export function LeadListFilters({
   filters: LeadFilters;
   onFilterChange: (filters: LeadFilters) => void;
 }): ReactElement {
+  const hasActiveFilters = Boolean(filters.search || filters.status || filters.source);
+
   return (
-    <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 p-3 bg-surface rounded-card border border-border">
-      <div className="flex flex-1 items-center gap-2">
-        <div className="relative flex-1 max-w-sm">
-          <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
-          <Input
-            id="search-leads"
-            value={filters.search ?? ''}
-            onChange={(e) => onFilterChange({ ...filters, search: e.target.value })}
-            placeholder="Search by prospect name, phone, or email..."
-            className="pl-9 h-9"
-          />
-        </div>
-        <div className="w-40">
-          <Select
-            id="filter-lead-status"
-            value={filters.status ?? ''}
-            onChange={(val) => onFilterChange({ ...filters, status: val as LeadStatusEnum | '' })}
-            options={[
-              { label: 'All Stages', value: '' },
-              ...LEAD_STATUSES.map((s) => ({ label: s, value: s })),
-            ]}
-          />
-        </div>
-        <div className="w-40">
-          <Select
-            id="filter-lead-source"
-            value={filters.source ?? ''}
-            onChange={(val) =>
-              onFilterChange({ ...filters, source: val as CreateLeadInput['source'] | '' })
-            }
-            options={[
-              { label: 'All Sources', value: '' },
-              ...LEAD_SOURCES.map((s) => ({ label: s, value: s })),
-            ]}
-          />
+    <StickyToolbar>
+      <div className="shadow-xs flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 p-2.5 bg-surface rounded-card border border-border">
+        <div className="flex flex-wrap items-center gap-2.5 flex-1">
+          <div className="relative w-full sm:w-72 md:w-80">
+            <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-text-muted pointer-events-none" />
+            <Input
+              id="search-leads"
+              inputSize="md"
+              value={filters.search ?? ''}
+              onChange={(e) => onFilterChange({ ...filters, search: e.target.value })}
+              placeholder="Search by prospect name, phone, or email..."
+              className="pl-9 text-small"
+            />
+          </div>
+          <div className="w-40 sm:w-44">
+            <Select
+              id="filter-lead-status"
+              inputSize="md"
+              value={filters.status ?? ''}
+              onChange={(val) => onFilterChange({ ...filters, status: val as LeadStatusEnum | '' })}
+              options={[
+                { label: 'All Stages', value: '' },
+                ...LEAD_STATUSES.map((s) => ({ label: STAGE_LABELS[s] || s, value: s })),
+              ]}
+            />
+          </div>
+          <div className="w-36 sm:w-40">
+            <Select
+              id="filter-lead-source"
+              inputSize="md"
+              value={filters.source ?? ''}
+              onChange={(val) =>
+                onFilterChange({ ...filters, source: val as CreateLeadInput['source'] | '' })
+              }
+              options={[
+                { label: 'All Sources', value: '' },
+                ...LEAD_SOURCES.map((s) => ({ label: SOURCE_LABELS[s] || s, value: s })),
+              ]}
+            />
+          </div>
+          {hasActiveFilters && (
+            <button
+              type="button"
+              onClick={() => onFilterChange({ ...filters, search: '', status: '', source: '' })}
+              className="flex items-center gap-1 px-2.5 py-1.5 text-small text-text-muted hover:text-text rounded-button hover:bg-surface-sunken transition-colors cursor-pointer"
+            >
+              <X className="w-3.5 h-3.5" />
+              <span>Clear</span>
+            </button>
+          )}
         </div>
       </div>
-    </div>
+    </StickyToolbar>
   );
 }
 
@@ -153,9 +181,12 @@ export function LeadListContent({
   if (leads.length === 0) {
     return (
       <EmptyState
+        dashedBorder
         title="No prospects found"
         description="Capture incoming inquiries or add your first sales lead to begin tracking."
-        actionLabel="Add First Lead"
+        actionLabel="Add Lead"
+        actionVariant="secondary"
+        actionIcon={<Plus className="w-4 h-4" />}
         onAction={onOpenAddModal}
       />
     );

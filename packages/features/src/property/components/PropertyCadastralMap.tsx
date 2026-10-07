@@ -10,49 +10,6 @@ export interface PropertyCadastralMapProps {
   onSelectProperty: (property: PropertyItem) => void;
 }
 
-function getPlotStatusStyles(status: string): { border: string; bg: string; dot: string } {
-  const s = status.toUpperCase();
-  switch (s) {
-    case 'AVAILABLE':
-      return {
-        border: 'border-success hover:border-success',
-        bg: 'bg-surface hover:bg-success/5',
-        dot: 'bg-success',
-      };
-    case 'RESERVED':
-      return {
-        border: 'border-warning hover:border-warning',
-        bg: 'bg-surface hover:bg-warning/5',
-        dot: 'bg-warning',
-      };
-    case 'BOOKED':
-      return {
-        border: 'border-special hover:border-special',
-        bg: 'bg-surface hover:bg-special/5',
-        dot: 'bg-special',
-      };
-    case 'SOLD':
-      return {
-        border: 'border-border-strong',
-        bg: 'bg-surface-sunken opacity-75',
-        dot: 'bg-text-muted',
-      };
-    case 'HOLD':
-    case 'BLOCKED':
-      return {
-        border: 'border-danger hover:border-danger',
-        bg: 'bg-surface hover:bg-danger/5',
-        dot: 'bg-danger',
-      };
-    default:
-      return {
-        border: 'border-border',
-        bg: 'bg-surface',
-        dot: 'bg-text-muted',
-      };
-  }
-}
-
 export function PropertyCadastralMap({
   properties,
   selectedPropertyId,
@@ -112,28 +69,30 @@ export function PropertyCadastralMap({
       {/* Cadastral Blueprint Canvas */}
       <div className="w-full overflow-auto max-h-160 p-4 transition-transform duration-100">
         <div
-          className="space-y-8 min-w-max mx-auto origin-top transition-transform"
+          className="space-y-6 min-w-max mx-auto origin-top transition-transform"
           style={{ transform: `scale(${zoom})` }}
         >
           {blockGroups.map(([blockName, blockUnits]) => (
             <div
               key={blockName}
-              className="bg-surface rounded-card border border-border p-5 shadow-xs space-y-4"
+              className="bg-surface-sunken/50 rounded-card border border-border p-4 shadow-xs space-y-3"
             >
               {/* Sector / Road Arterial Header */}
               <div className="flex items-center justify-between pb-2 border-b border-border">
                 <div className="flex items-center gap-2">
-                  <MapPin className="w-4 h-4 text-primary" />
-                  <span className="text-small font-bold text-text uppercase tracking-wider">
+                  <div className="w-6 h-6 rounded-button bg-surface flex items-center justify-center text-text-muted border border-border">
+                    <MapPin className="w-3.5 h-3.5" />
+                  </div>
+                  <span className="text-small font-semibold text-text uppercase tracking-wider">
                     {blockName}
                   </span>
-                  <span className="text-caption text-text-muted">
-                    ({blockUnits.length} Registered Units)
+                  <span className="text-caption font-bold px-2 py-0.5 rounded-full bg-surface text-text-muted border border-border">
+                    {blockUnits.length} Units
                   </span>
                 </div>
                 <div className="flex items-center gap-1.5 text-caption text-text-muted">
-                  <span className="w-16 h-1 bg-border rounded-full" />
-                  <span>Main Arterial Road (40ft Corridor)</span>
+                  <span className="w-12 h-1 bg-border rounded-full" />
+                  <span>Main Corridor</span>
                 </div>
               </div>
 
@@ -141,40 +100,49 @@ export function PropertyCadastralMap({
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
                 {blockUnits.map((prop) => {
                   const isSelected = selectedPropertyId === prop.id;
-                  const style = getPlotStatusStyles(prop.status);
 
                   return (
                     <button
                       key={prop.id}
                       type="button"
                       onClick={() => onSelectProperty(prop)}
-                      className={`text-left p-3 rounded-card border transition-all duration-150 cursor-pointer shadow-xs ${style.border} ${style.bg} ${
-                        isSelected ? 'ring-2 ring-focus border-focus bg-surface-elevated' : ''
-                      }`}
+                      className={`group relative text-left p-3 rounded-card border transition-all duration-150 cursor-pointer space-y-2 shadow-xs hover:shadow-md bg-surface hover:bg-surface-elevated/80 ${
+                        isSelected
+                          ? 'border-primary ring-1 ring-primary/40 bg-surface-elevated'
+                          : 'border-border hover:border-primary/50'
+                      } ${prop.status.toUpperCase() === 'SOLD' ? 'opacity-80' : ''}`}
                     >
-                      <div className="flex items-center justify-between gap-1 mb-1.5">
-                        <span className="text-small font-bold text-text truncate">{prop.code}</span>
-                        <span className={`w-2 h-2 rounded-full ${style.dot}`} />
-                      </div>
-
-                      <div className="text-caption space-y-0.5 text-text-2">
-                        <div className="font-medium text-text">
-                          {formatArea(prop.areaSqft, 'sqft')}
-                        </div>
-                        {prop.facing && (
-                          <div className="flex items-center gap-1 text-text-muted truncate">
-                            <Compass className="w-3 h-3 shrink-0" />
-                            <span>{prop.facing.replace('_', ' ')}</span>
-                          </div>
-                        )}
-                      </div>
-
-                      <div className="mt-2 pt-1.5 border-t border-border flex items-center justify-between">
-                        <span className="text-caption font-bold text-primary tabular-nums">
-                          {formatMoney(prop.netPricePaisa)}
+                      <div className="flex items-start justify-between gap-1">
+                        <span className="text-small font-semibold text-text group-hover:text-primary transition-colors truncate">
+                          {prop.code}
                         </span>
                         <StatusBadge domain="property" value={prop.status} />
                       </div>
+
+                      <div className="flex items-center justify-between text-caption text-text-muted">
+                        <span className="truncate">{prop.title || prop.type}</span>
+                        <span className="font-mono text-text-2 font-medium shrink-0">
+                          {formatArea(prop.areaSqft, 'sqft')}
+                        </span>
+                      </div>
+
+                      <div className="text-caption font-mono text-text-2 font-medium bg-surface-sunken/50 px-2 py-0.5 rounded border border-border/50 truncate flex items-center justify-between">
+                        <span className="text-text-muted text-[10px] uppercase tracking-wider font-sans">
+                          Price
+                        </span>
+                        <span className="tabular-nums font-semibold">
+                          {formatMoney(prop.netPricePaisa)}
+                        </span>
+                      </div>
+
+                      {prop.facing && (
+                        <div className="pt-1.5 border-t border-border flex items-center gap-1 text-caption text-text-muted truncate">
+                          <Compass className="w-3 h-3 text-text-muted/80 shrink-0" />
+                          <span className="font-medium uppercase tracking-wider truncate">
+                            {prop.facing.replace('_', ' ')}
+                          </span>
+                        </div>
+                      )}
                     </button>
                   );
                 })}

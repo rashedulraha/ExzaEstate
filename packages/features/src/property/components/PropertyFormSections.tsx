@@ -159,7 +159,7 @@ export function PropertyPricingFields({
           label="Base Price (Paisa)"
           required
           error={errors.basePricePaisa?.message}
-          helperText="1 BDT = 100 Paisa (e.g. ৳50,00,000 = 500000000 paisa)"
+          helperText="1 BDT = 100 Paisa (e.g. BDT 50,00,000 = 500000000 paisa)"
         >
           <Input
             id="property-base-price"

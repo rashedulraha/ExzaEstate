@@ -208,9 +208,16 @@ describe('CRM Module: Leads & Follow-ups (B2)', () => {
 
     expect(screen.getByText('New Leads')).toBeDefined();
     expect(screen.getByText('Won / Customer')).toBeDefined();
+    expect(screen.getByRole('button', { name: /Scroll pipeline left/i })).toBeDefined();
+    expect(screen.getByRole('button', { name: /Scroll pipeline right/i })).toBeDefined();
+    expect(
+      screen.getByText(
+        /Tip: Hover and use mouse wheel or arrow buttons to scroll across pipeline stages/i,
+      ),
+    ).toBeDefined();
   });
 
-  it('opens LeadDrawer on prospect row click', async () => {
+  it('opens LeadDrawer on prospect row click with overflow-proof contact channels and WhatsApp actions', async () => {
     await act(async () => {
       renderWithProviders(<LeadListPage />, {
         queryClient,
@@ -229,6 +236,10 @@ describe('CRM Module: Leads & Follow-ups (B2)', () => {
 
     await waitFor(() => {
       expect(screen.getByText('Pipeline Stage')).toBeDefined();
+      expect(screen.getByText('Contact Channels')).toBeDefined();
+      expect(screen.getByTitle('Chat on WhatsApp')).toBeDefined();
+      expect(screen.getByTitle('Direct Call')).toBeDefined();
+      expect(screen.getByTitle(/Copy Email/i)).toBeDefined();
       expect(screen.getByText('Investment Budget')).toBeDefined();
     });
   });

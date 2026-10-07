@@ -66,7 +66,7 @@ export function Step3PricingDiscounts({
         >
           <Input
             id="booking-basePrice"
-            placeholder="e.g. 500000000 (৳50,00,000)"
+            placeholder="e.g. 500000000 (BDT 50,00,000)"
             {...register('basePricePaisa')}
           />
         </FormField>

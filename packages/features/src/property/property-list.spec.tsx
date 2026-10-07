@@ -65,9 +65,9 @@ describe('PropertyListPage — 3-Tier Standard & Acceptance Checks', () => {
       expect(screen.getByText('PLOT-12')).toBeDefined();
       expect(screen.getByText('COMM-SHOP-1')).toBeDefined();
 
-      expect(screen.getByText('৳1,25,00,000.00')).toBeDefined();
-      expect(screen.getByText('৳2,50,00,000.00')).toBeDefined();
-      expect(screen.getByText('৳80,00,000.00')).toBeDefined();
+      expect(screen.getByText('BDT 1,25,00,000.00')).toBeDefined();
+      expect(screen.getByText('BDT 2,50,00,000.00')).toBeDefined();
+      expect(screen.getByText('BDT 80,00,000.00')).toBeDefined();
 
       expect(screen.getByText('1,450.00 sq ft')).toBeDefined();
       expect(screen.getByText('(2.01 katha)')).toBeDefined();
@@ -119,8 +119,35 @@ describe('PropertyListPage — 3-Tier Standard & Acceptance Checks', () => {
       expect(screen.getByText('Pricing Breakdown')).toBeDefined();
       expect(screen.getByText('Specifications')).toBeDefined();
       expect(screen.getByText('Status Audit History')).toBeDefined();
-      expect(screen.getByText('৳1,20,00,000.00')).toBeDefined();
-      expect(screen.getByText('৳5,00,000.00')).toBeDefined();
+      expect(screen.getByText('BDT 1,20,00,000.00')).toBeDefined();
+      expect(screen.getByText('BDT 5,00,000.00')).toBeDefined();
     });
+  });
+
+  it('renders sticky filter toolbar with all canonical quick filter chips and handles filter selection', async () => {
+    await act(async () => {
+      renderWithProviders(<PropertyListPage />, { queryClient, mockSecureStorage });
+    });
+
+    await waitFor(() => {
+      expect(screen.getByText('Quick Filter:')).toBeDefined();
+    });
+
+    // Check all chips are rendered
+    expect(screen.getByRole('button', { name: 'All Units' })).toBeDefined();
+    expect(screen.getByRole('button', { name: 'Available' })).toBeDefined();
+    expect(screen.getByRole('button', { name: 'Reserved' })).toBeDefined();
+    expect(screen.getByRole('button', { name: 'Booked' })).toBeDefined();
+    expect(screen.getByRole('button', { name: 'Sold' })).toBeDefined();
+    expect(screen.getByRole('button', { name: 'Hold' })).toBeDefined();
+    expect(screen.getByRole('button', { name: 'Blocked' })).toBeDefined();
+
+    // Clicking Available pill filters without error
+    const availablePill = screen.getByRole('button', { name: 'Available' });
+    await act(async () => {
+      fireEvent.click(availablePill);
+    });
+
+    expect(availablePill.className).toContain('bg-primary');
   });
 });

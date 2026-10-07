@@ -1,7 +1,18 @@
 import { type ReactElement, useState } from 'react';
-import { Button, Input, Select, LoadingState, ErrorState, EmptyState } from '@exzaestate/ui';
+import { useNavigate } from 'react-router';
+import {
+  Breadcrumbs,
+  Button,
+  Input,
+  Select,
+  LoadingState,
+  ErrorState,
+  EmptyState,
+  StickyToolbar,
+} from '@exzaestate/ui';
 import { PermissionGate } from '@exzaestate/app-core';
 import { PERMISSIONS } from '@exzaestate/shared';
+import { Plus, Search, X } from 'lucide-react';
 import { useQuotationList } from '../hooks/useQuotationList.js';
 import { useQuotationActions } from '../hooks/useQuotationActions.js';
 import { QuotationDataTable } from '../components/quotations/QuotationDataTable.js';
@@ -10,6 +21,7 @@ import { QuotationPdfPreviewModal } from '../components/quotations/QuotationPdfP
 import type { QuotationItem, QuotationStatusEnum } from '../schemas/quotation.schema.js';
 
 export function QuotationListPage(): ReactElement {
+  const navigate = useNavigate();
   const { quotations, kpis, filters, setFilters, isLoading, isError, error, refetch } =
     useQuotationList();
   const { createQuotation, sendQuotation, isCreating } = useQuotationActions();
@@ -17,72 +29,121 @@ export function QuotationListPage(): ReactElement {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [previewQuotation, setPreviewQuotation] = useState<QuotationItem | null>(null);
 
+  const hasActiveFilters = Boolean(filters.search || (filters.status && filters.status !== 'ALL'));
+
   return (
-    <div className="container-page">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div className="container-page space-y-6">
+      {/* Tier 1: Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-h1 font-bold text-text">Quotations</h1>
-          <p className="text-small text-text-muted mt-1">
-            Commercial proposal management and automated discount approvals
-          </p>
+          <Breadcrumbs
+            items={[
+              { label: 'Overview', href: '/dashboard', onClick: () => navigate('/dashboard') },
+              { label: 'CRM & Sales', href: '/crm/leads', onClick: () => navigate('/crm/leads') },
+              { label: 'Price Quotations' },
+            ]}
+          />
+          <div className="flex items-center gap-3 mt-1.5">
+            <h1 className="text-h1 font-semibold text-text">Price Quotations</h1>
+            <span className="text-caption font-semibold px-2 py-0.5 rounded-full bg-surface-sunken text-text-2 border border-border">
+              {kpis.totalCount} Proposals
+            </span>
+          </div>
         </div>
+
         <PermissionGate permission={PERMISSIONS.QUOTATION_CREATE} fallback={null}>
-          <Button variant="primary" onClick={() => setIsFormOpen(true)}>
-            + Create Quotation
+          <Button variant="primary" className="gap-2" onClick={() => setIsFormOpen(true)}>
+            <Plus className="w-4 h-4" />
+            <span>Create Quotation</span>
           </Button>
         </PermissionGate>
       </div>
 
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      {/* Tier 2: KPI Summary Strip */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         <div className="card-stat">
-          <div className="text-small font-medium text-text-muted">Total Quotations</div>
-          <div className="text-hero-num font-bold text-text mt-1">{kpis.totalCount}</div>
+          <span className="text-caption font-semibold uppercase tracking-wider text-text-muted block">
+            Total Quotations
+          </span>
+          <span className="text-hero-num font-bold text-text mt-1.5 block">{kpis.totalCount}</span>
         </div>
         <div className="card-stat">
-          <div className="text-small font-medium text-text-muted">Pending Approval</div>
-          <div className="text-hero-num font-bold text-warning mt-1">
+          <span className="text-caption font-semibold uppercase tracking-wider text-text-muted block">
+            Pending Approval
+          </span>
+          <span className="text-hero-num font-bold text-warning mt-1.5 block">
             {kpis.pendingApprovalCount}
+          </span>
+        </div>
+        <div className="card-stat">
+          <span className="text-caption font-semibold uppercase tracking-wider text-text-muted block">
+            Client Accepted
+          </span>
+          <span className="text-hero-num font-bold text-success mt-1.5 block">
+            {kpis.acceptedCount}
+          </span>
+        </div>
+        <div className="card-stat">
+          <span className="text-caption font-semibold uppercase tracking-wider text-text-muted block">
+            Converted to Booking
+          </span>
+          <span className="text-hero-num font-bold text-accent mt-1.5 block">
+            {kpis.convertedCount}
+          </span>
+        </div>
+      </div>
+
+      {/* Tier 3: Search and Filters */}
+      <StickyToolbar>
+        <div className="shadow-xs flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 p-2.5 bg-surface rounded-card border border-border">
+          <div className="flex flex-wrap items-center gap-2.5 flex-1">
+            <div className="relative w-full sm:w-80">
+              <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-text-muted pointer-events-none" />
+              <Input
+                id="quotation-search"
+                inputSize="md"
+                placeholder="Search quotations by quote #, client name, or unit..."
+                value={filters.search}
+                onChange={(e) => setFilters((prev) => ({ ...prev, search: e.target.value }))}
+                className="pl-9 text-small"
+              />
+            </div>
+            <div className="w-44 sm:w-48">
+              <Select
+                id="quotation-status-filter"
+                inputSize="md"
+                value={filters.status}
+                onChange={(val) =>
+                  setFilters((prev) => ({ ...prev, status: val as QuotationStatusEnum | 'ALL' }))
+                }
+                options={[
+                  { value: 'ALL', label: 'All Statuses' },
+                  { value: 'DRAFT', label: 'Draft' },
+                  { value: 'PENDING_APPROVAL', label: 'Pending Approval' },
+                  { value: 'APPROVED', label: 'Approved' },
+                  { value: 'SENT', label: 'Sent' },
+                  { value: 'ACCEPTED', label: 'Accepted' },
+                  { value: 'CONVERTED', label: 'Converted' },
+                ]}
+              />
+            </div>
+            {hasActiveFilters && (
+              <button
+                type="button"
+                onClick={() =>
+                  setFilters((prev) => ({ ...prev, search: '', status: 'ALL', page: 1 }))
+                }
+                className="flex items-center gap-1 px-2.5 py-1.5 text-small text-text-muted hover:text-text rounded-button hover:bg-surface-sunken transition-colors cursor-pointer"
+              >
+                <X className="w-3.5 h-3.5" />
+                <span>Clear</span>
+              </button>
+            )}
           </div>
         </div>
-        <div className="card-stat">
-          <div className="text-small font-medium text-text-muted">Client Accepted</div>
-          <div className="text-hero-num font-bold text-success mt-1">{kpis.acceptedCount}</div>
-        </div>
-        <div className="card-stat">
-          <div className="text-small font-medium text-text-muted">Converted to Booking</div>
-          <div className="text-hero-num font-bold text-primary mt-1">{kpis.convertedCount}</div>
-        </div>
-      </div>
+      </StickyToolbar>
 
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-        <div className="flex-1">
-          <Input
-            id="quotation-search"
-            placeholder="Search quotations by quote #, client name, or unit..."
-            value={filters.search}
-            onChange={(e) => setFilters((prev) => ({ ...prev, search: e.target.value }))}
-          />
-        </div>
-        <div className="w-full sm:w-48">
-          <Select
-            id="quotation-status-filter"
-            value={filters.status}
-            onChange={(val) =>
-              setFilters((prev) => ({ ...prev, status: val as QuotationStatusEnum | 'ALL' }))
-            }
-            options={[
-              { value: 'ALL', label: 'All Statuses' },
-              { value: 'DRAFT', label: 'Draft' },
-              { value: 'PENDING_APPROVAL', label: 'Pending Approval' },
-              { value: 'APPROVED', label: 'Approved' },
-              { value: 'SENT', label: 'Sent' },
-              { value: 'ACCEPTED', label: 'Accepted' },
-              { value: 'CONVERTED', label: 'Converted' },
-            ]}
-          />
-        </div>
-      </div>
-
+      {/* Main Content Area */}
       {(() => {
         if (isLoading) {
           return <LoadingState variant="table" />;
@@ -98,21 +159,28 @@ export function QuotationListPage(): ReactElement {
         if (quotations.length === 0) {
           return (
             <EmptyState
+              dashedBorder
               title="No quotations found"
               description="Create your first commercial quotation to start the sales cycle."
+              actionLabel="Create Quotation"
+              actionVariant="secondary"
+              actionIcon={<Plus className="w-4 h-4" />}
+              onAction={() => setIsFormOpen(true)}
             />
           );
         }
         return (
-          <QuotationDataTable
-            quotations={quotations}
-            isLoading={isLoading}
-            onPreviewPdf={(q) => setPreviewQuotation(q)}
-            onSend={(q) => void sendQuotation(q.id)}
-            onConvertToBooking={(q) => {
-              setPreviewQuotation(q);
-            }}
-          />
+          <div className="bg-surface rounded-card border border-border overflow-hidden">
+            <QuotationDataTable
+              quotations={quotations}
+              isLoading={isLoading}
+              onPreviewPdf={(q) => setPreviewQuotation(q)}
+              onSend={(q) => void sendQuotation(q.id)}
+              onConvertToBooking={(q) => {
+                setPreviewQuotation(q);
+              }}
+            />
+          </div>
         );
       })()}
 

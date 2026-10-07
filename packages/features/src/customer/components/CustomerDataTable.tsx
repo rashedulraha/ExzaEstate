@@ -1,7 +1,7 @@
 import type { ReactElement } from 'react';
 import { DataTable, StatusBadge, Button, type ColumnDef } from '@exzaestate/ui';
 import { formatDate } from '@exzaestate/shared';
-import { Phone, Mail, ArrowUpRight } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 import type { CustomerItem } from '../hooks/useCustomerList.js';
 
 interface CustomerDataTableProps {
@@ -20,7 +20,9 @@ export function CustomerDataTable({
       key: 'code',
       header: 'Code',
       render: (item) => (
-        <span className="font-mono text-small font-semibold text-primary">{item.customerCode}</span>
+        <span className="font-mono text-small font-semibold text-primary px-2 py-0.5 rounded-button bg-primary/10 border border-primary/20">
+          {item.customerCode}
+        </span>
       ),
     },
     {
@@ -32,15 +34,12 @@ export function CustomerDataTable({
             {item.fullName}
           </span>
           <div className="flex items-center gap-2 mt-0.5 text-caption text-text-muted">
-            <span className="flex items-center gap-1">
-              <Phone className="w-3 h-3" />
-              {item.phone}
-            </span>
+            <span>{item.phone}</span>
             {item.email && (
-              <span className="flex items-center gap-1">
-                <Mail className="w-3 h-3" />
-                {item.email}
-              </span>
+              <>
+                <span>•</span>
+                <span>{item.email}</span>
+              </>
             )}
           </div>
         </div>
@@ -60,7 +59,7 @@ export function CustomerDataTable({
       key: 'registered',
       header: 'Registered',
       render: (item) => (
-        <span className="text-caption text-text-muted">
+        <span className="text-caption text-text-muted tabular-nums">
           {formatDate(item.createdAt, 'Asia/Dhaka')}
         </span>
       ),
@@ -74,7 +73,7 @@ export function CustomerDataTable({
           <Button
             variant="ghost"
             size="sm"
-            className="gap-1.5 text-primary hover:text-primary"
+            className="gap-1.5 text-primary hover:text-primary rounded-button"
             onClick={() => onSelectCustomer(item)}
           >
             <span>View 360</span>

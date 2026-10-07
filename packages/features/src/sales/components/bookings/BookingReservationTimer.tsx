@@ -64,7 +64,7 @@ export function BookingReservationTimer({
       title="Reservation hold countdown. Deposit must be received before expiry."
     >
       <Clock className="w-3.5 h-3.5" aria-hidden="true" />
-      <span>
+      <span className="tabular-nums">
         {remaining?.hours}h {remaining?.minutes}m hold remaining
       </span>
     </span>

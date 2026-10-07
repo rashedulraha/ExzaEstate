@@ -26,12 +26,14 @@ export function QuotationDataTable({
         <div>
           <button
             type="button"
-            className="font-medium text-primary hover:underline text-left"
+            className="font-mono text-small font-semibold text-primary hover:underline text-left cursor-pointer"
             onClick={() => onPreviewPdf(row)}
           >
             {row.quotationNumber}
           </button>
-          <div className="text-caption text-text-muted mt-0.5">Unit: {row.propertyCode ?? '—'}</div>
+          <div className="text-caption text-text-muted font-mono mt-0.5">
+            Unit: {row.propertyCode ?? '—'}
+          </div>
         </div>
       ),
     },
@@ -54,7 +56,9 @@ export function QuotationDataTable({
       header: 'Net Price',
       isMoney: true,
       render: (row) => (
-        <span className="font-semibold text-text">{formatMoney(row.netPricePaisa)}</span>
+        <span className="font-semibold text-text tabular-nums">
+          {formatMoney(row.netPricePaisa)}
+        </span>
       ),
     },
     {
@@ -65,7 +69,7 @@ export function QuotationDataTable({
           return <span className="text-text-muted">None</span>;
         }
         return (
-          <span className="text-accent font-medium">
+          <span className="text-accent font-medium tabular-nums">
             {row.discountPct ? `${row.discountPct}%` : formatMoney(row.discountAmountPaisa)}
           </span>
         );
@@ -75,7 +79,9 @@ export function QuotationDataTable({
       key: 'validity',
       header: 'Valid Until',
       render: (row) => (
-        <span className="text-caption text-text-2">{formatDate(row.validUntil, 'Asia/Dhaka')}</span>
+        <span className="text-caption text-text-muted tabular-nums">
+          {formatDate(row.validUntil, 'Asia/Dhaka')}
+        </span>
       ),
     },
     {
@@ -86,18 +92,34 @@ export function QuotationDataTable({
     {
       key: 'actions',
       header: 'Actions',
+      align: 'right',
       render: (row) => (
-        <div className="flex items-center gap-1.5">
-          <Button variant="secondary" size="sm" onClick={() => onPreviewPdf(row)}>
+        <div className="flex items-center justify-end gap-1.5">
+          <Button
+            variant="secondary"
+            size="sm"
+            className="rounded-button"
+            onClick={() => onPreviewPdf(row)}
+          >
             PDF
           </Button>
           {row.status === 'DRAFT' && (
-            <Button variant="ghost" size="sm" onClick={() => onSend(row)}>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="rounded-button"
+              onClick={() => onSend(row)}
+            >
               Send
             </Button>
           )}
           {(row.status === 'APPROVED' || row.status === 'ACCEPTED' || row.status === 'SENT') && (
-            <Button variant="primary" size="sm" onClick={() => onConvertToBooking(row)}>
+            <Button
+              variant="primary"
+              size="sm"
+              className="rounded-button"
+              onClick={() => onConvertToBooking(row)}
+            >
               Book
             </Button>
           )}

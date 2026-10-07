@@ -62,7 +62,14 @@ function BookingWizardStepContent({
 }: StepContentProps): ReactElement {
   switch (currentStep) {
     case 1:
-      return <Step1PropertySelect register={register} setValue={setValue} errors={errors} />;
+      return (
+        <Step1PropertySelect
+          register={register}
+          setValue={setValue}
+          watch={watch}
+          errors={errors}
+        />
+      );
     case 2:
       return (
         <Step2CustomerCoBuyers

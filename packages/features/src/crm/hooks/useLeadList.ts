@@ -101,7 +101,7 @@ function mapRawLead(item: Record<string, unknown>): LeadItem {
     phone: String(item.phone || ''),
     email: item.email ? String(item.email) : null,
     source: String(item.source || ''),
-    status: String(item.status || 'New'),
+    status: String(item.status || 'NEW').toUpperCase(),
     preferredType: details.type,
     budgetMinPaisa: budget.min,
     budgetMaxPaisa: budget.max,

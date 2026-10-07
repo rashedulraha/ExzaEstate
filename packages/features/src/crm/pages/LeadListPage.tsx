@@ -1,4 +1,5 @@
 import { useState, type ReactElement } from 'react';
+import { useNavigate } from 'react-router';
 import { Breadcrumbs, Button } from '@exzaestate/ui';
 import { PermissionGate } from '@exzaestate/app-core';
 import { PERMISSIONS } from '@exzaestate/shared';
@@ -15,6 +16,7 @@ import { LeadKpiStrip, LeadListFilters, LeadListContent } from './LeadListCompon
 type ViewMode = 'table' | 'kanban';
 
 export function LeadListPage(): ReactElement {
+  const navigate = useNavigate();
   const [viewMode, setViewMode] = useState<ViewMode>('table');
   const [selectedLead, setSelectedLead] = useState<LeadItem | null>(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
@@ -38,7 +40,16 @@ export function LeadListPage(): ReactElement {
       {/* Tier 1: Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <Breadcrumbs items={[{ label: 'Overview', href: '/' }, { label: 'CRM & Sales Leads' }]} />
+          <Breadcrumbs
+            items={[
+              {
+                label: 'Overview',
+                href: '/dashboard',
+                onClick: () => navigate('/dashboard'),
+              },
+              { label: 'CRM & Sales Leads' },
+            ]}
+          />
           <div className="flex items-center gap-3 mt-1.5">
             <h1 className="text-h1 font-semibold text-text">Lead Pipeline</h1>
             <span className="text-caption font-semibold px-2 py-0.5 rounded-full bg-surface-sunken text-text-2 border border-border">

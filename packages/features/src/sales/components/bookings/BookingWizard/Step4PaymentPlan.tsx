@@ -26,7 +26,7 @@ export function Step4PaymentPlan({ register, errors }: Step4PaymentPlanProps): R
         >
           <Input
             id="booking-bookingAmount"
-            placeholder="e.g. 50000000 (৳5,00,000)"
+            placeholder="e.g. 50000000 (BDT 5,00,000)"
             {...register('bookingAmountPaisa')}
           />
         </FormField>
@@ -38,7 +38,7 @@ export function Step4PaymentPlan({ register, errors }: Step4PaymentPlanProps): R
         >
           <Input
             id="booking-downPayment"
-            placeholder="e.g. 100000000 (৳10,00,000)"
+            placeholder="e.g. 100000000 (BDT 10,00,000)"
             {...register('downPaymentPaisa')}
           />
         </FormField>

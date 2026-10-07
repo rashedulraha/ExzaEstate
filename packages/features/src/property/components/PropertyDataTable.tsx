@@ -1,9 +1,62 @@
 import { useMemo } from 'react';
 import { Eye, Edit3, ShieldAlert } from 'lucide-react';
 import { DataTable, type ColumnDef, StatusBadge, IconButton } from '@exzaestate/ui';
-import { formatMoney, formatArea, PERMISSIONS } from '@exzaestate/shared';
+import { formatMoney, formatArea, cleanEnglishText, PERMISSIONS } from '@exzaestate/shared';
 import { usePermission } from '@exzaestate/app-core';
 import type { PropertyItem } from '../hooks/usePropertyList.js';
+
+function formatBlockDisplay(block?: { code?: string; name?: string } | null): string {
+  if (!block) return '';
+  if (block.code && /^TWR-(\d+)$/i.test(block.code)) {
+    const num = block.code.match(/^TWR-(\d+)$/i)?.[1];
+    return `Tower ${num}`;
+  }
+  const cleaned = cleanEnglishText(block.name, block.code || '');
+  return cleaned || block.code || '';
+}
+
+function getOrdinalSuffix(n: number): string {
+  const mod10 = n % 10;
+  const mod100 = n % 100;
+  if (mod10 === 1 && mod100 !== 11) {
+    return 'st';
+  }
+  if (mod10 === 2 && mod100 !== 12) {
+    return 'nd';
+  }
+  if (mod10 === 3 && mod100 !== 13) {
+    return 'rd';
+  }
+  return 'th';
+}
+
+function formatFloorDisplay(
+  floor?: {
+    code?: string;
+    name?: string;
+    floorNumber?: number | null;
+  } | null,
+): string {
+  if (!floor) {
+    return '';
+  }
+  if (floor.floorNumber !== null && floor.floorNumber !== undefined) {
+    if (floor.floorNumber === 0) {
+      return 'Ground Floor';
+    }
+    return `${floor.floorNumber}${getOrdinalSuffix(floor.floorNumber)} Floor`;
+  }
+  const code = floor.code ?? '';
+  const match = /^FL-(\d+)$/i.exec(code);
+  if (match) {
+    const num = parseInt(match[1], 10);
+    return `${num}${getOrdinalSuffix(num)} Floor`;
+  }
+  if (/^FL-G/i.test(code)) {
+    return 'Ground Floor';
+  }
+  return cleanEnglishText(floor.name, code) || code;
+}
 
 export interface PropertyDataTableProps {
   properties: PropertyItem[];
@@ -33,16 +86,23 @@ export function PropertyDataTable({
         key: 'code',
         header: 'Unit Code',
         sortable: true,
-        render: (row) => (
-          <div className="flex flex-col">
-            <span className="text-body font-semibold text-text hover:text-primary cursor-pointer transition-colors">
-              {row.code}
-            </span>
-            {row.title && (
-              <span className="text-caption text-text-muted truncate max-w-xs">{row.title}</span>
-            )}
-          </div>
-        ),
+        render: (row) => {
+          const cleanedTitle = cleanEnglishText(row.title);
+          const showSubtitle =
+            cleanedTitle && cleanedTitle.toLowerCase() !== row.code.toLowerCase();
+          return (
+            <div className="flex flex-col">
+              <span className="text-body font-semibold text-text hover:text-primary cursor-pointer transition-colors">
+                {row.code}
+              </span>
+              {showSubtitle && (
+                <span className="text-caption text-text-muted truncate max-w-xs">
+                  {cleanedTitle}
+                </span>
+              )}
+            </div>
+          );
+        },
       },
       {
         key: 'type',
@@ -58,16 +118,16 @@ export function PropertyDataTable({
         key: 'hierarchy',
         header: 'Block / Floor',
         render: (row) => {
-          const blockName = row.block?.name;
-          const floorName = row.floor?.name;
-          if (!blockName && !floorName) {
+          const blockDisplay = formatBlockDisplay(row.block);
+          const floorDisplay = formatFloorDisplay(row.floor);
+          if (!blockDisplay && !floorDisplay) {
             return <span className="text-text-disabled text-caption">—</span>;
           }
           return (
             <span className="text-small text-text-2">
-              {blockName ?? ''}
-              {blockName && floorName ? ' · ' : ''}
-              {floorName ?? ''}
+              {blockDisplay}
+              {blockDisplay && floorDisplay ? ' · ' : ''}
+              {floorDisplay}
             </span>
           );
         },

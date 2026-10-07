@@ -8,7 +8,7 @@ import {
   RefreshCw,
   Download,
 } from 'lucide-react';
-import { Breadcrumbs, Button, IconButton } from '@exzaestate/ui';
+import { Breadcrumbs, Button, IconButton, StickyToolbar } from '@exzaestate/ui';
 import { usePermission } from '@exzaestate/app-core';
 import { PERMISSIONS } from '@exzaestate/shared';
 import { usePropertyList, type PropertyItem } from '../hooks/usePropertyList.js';
@@ -163,9 +163,9 @@ export function PropertyListPage() {
       {/* TIER 2: KPI METRIC SUMMARY CARDS */}
       <PropertyKpiCards kpis={kpis} />
 
-      {/* TIER 3: MAIN DATA WORKSPACE */}
-      <div className="card-workspace">
-        {showFilters && (
+      {/* TIER 3: STICKY SEARCH & FILTER TOOLBAR */}
+      {showFilters && (
+        <StickyToolbar>
           <PropertyListFilters
             search={search}
             onSearchChange={(val) => {
@@ -185,8 +185,11 @@ export function PropertyListPage() {
             hasActiveFilters={hasActiveFilters}
             onClearFilters={handleClearFilters}
           />
-        )}
+        </StickyToolbar>
+      )}
 
+      {/* TIER 4: MAIN DATA WORKSPACE (DATA TABLE / PLAN VIEW + PAGINATION) */}
+      <div className="card-workspace">
         <PropertyListContent
           isLoading={isLoading}
           isError={isError}
