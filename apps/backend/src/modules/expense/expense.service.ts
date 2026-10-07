@@ -15,7 +15,12 @@ import {
   buildExpensePostingPayload,
   generateExpenseVoucherNumber,
 } from './expense-posting.helper.js';
-import { fetchProjectExpensesRollup, getVoucherOrThrow } from './expense-query.helper.js';
+import {
+  fetchProjectExpensesRollup,
+  getVoucherOrThrow,
+  fetchExpenseVouchers,
+  type ListExpenseVouchersQuery,
+} from './expense-query.helper.js';
 import {
   approveExpenseVoucher,
   rejectExpenseVoucher,
@@ -35,12 +40,7 @@ export class ExpenseService {
     @Optional() private readonly budgetService?: BudgetService,
   ) {}
 
-  async createVoucher(
-    companyId: string,
-    userId: string,
-    dto: CreateExpenseDto,
-    tx?: TenantPrisma,
-  ) {
+  async createVoucher(companyId: string, userId: string, dto: CreateExpenseDto, tx?: TenantPrisma) {
     const runner = async (db: TenantPrisma) => {
       const category = await this.categoryService.getCategoryById(companyId, dto.categoryId, db);
       if (!category.isActive) {
@@ -220,6 +220,11 @@ export class ExpenseService {
 
   async getVoucherById(companyId: string, voucherId: string, tx?: TenantPrisma) {
     const runner = (db: TenantPrisma) => getVoucherOrThrow(db, companyId, voucherId);
+    return tx ? runner(tx) : this.tenantDb.withCompany(companyId, runner);
+  }
+
+  async listVouchers(companyId: string, query?: ListExpenseVouchersQuery, tx?: TenantPrisma) {
+    const runner = (db: TenantPrisma) => fetchExpenseVouchers(db, companyId, query);
     return tx ? runner(tx) : this.tenantDb.withCompany(companyId, runner);
   }
 }

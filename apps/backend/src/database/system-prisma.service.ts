@@ -12,8 +12,15 @@ export class SystemPrisma implements OnModuleInit, OnModuleDestroy {
 
   constructor(configService: ConfigService) {
     const rawUrl =
+      configService.systemDatabaseUrl ||
       process.env.SYSTEM_DATABASE_URL ||
-      configService.databaseUrl.replace(/exza_app(:[^@]*)?@/, 'exza_system:exza_system_secret@');
+      (!configService.isProduction ? configService.databaseUrl : undefined);
+
+    if (!rawUrl) {
+      throw new Error(
+        'SYSTEM_DATABASE_URL is not configured. In production, SYSTEM_DATABASE_URL must be provided via environment variables.',
+      );
+    }
 
     const pool = new pg.Pool({ connectionString: rawUrl });
     const adapter = new PrismaPg(pool);

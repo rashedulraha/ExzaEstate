@@ -1,4 +1,5 @@
 import { INestApplication, ValidationPipe } from '@nestjs/common';
+import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter.js';
 import { ResponseEnvelopeInterceptor } from './common/interceptors/response-envelope.interceptor.js';
@@ -7,6 +8,9 @@ import { ConfigService } from './config/config.service.js';
 import { setupSwagger } from './config/swagger.config.js';
 
 export function configureApp(app: INestApplication, configService: ConfigService): void {
+  // Cookie parser for reading HttpOnly refresh token cookies
+  app.use(cookieParser());
+
   // Request ID and logging middleware
   app.use(requestIdMiddleware);
 

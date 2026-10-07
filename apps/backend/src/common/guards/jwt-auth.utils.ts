@@ -1,6 +1,12 @@
 import { ForbiddenException, UnauthorizedException, type Logger } from '@nestjs/common';
 import type { TenantDb } from '../../database/tenant-db.service.js';
-import type { JwtAccessTokenPayload } from '../../modules/auth/token.service.js';
+
+export interface JwtAccessTokenPayload {
+  sub: string;
+  companyId: string;
+  sid: string;
+  realm?: string;
+}
 
 interface CacheStoreLike {
   get(key: string): Promise<unknown>;

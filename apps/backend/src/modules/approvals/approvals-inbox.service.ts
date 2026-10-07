@@ -21,6 +21,60 @@ function expandAuthorizedPermissions(userPermissions: readonly string[]): string
   return Array.from(perms);
 }
 
+function applyStatusFilter(
+  where: Record<string, unknown>,
+  status: string | undefined,
+  expandedPerms: string[],
+): void {
+  const normalized = status?.trim().toUpperCase();
+  if (!normalized || normalized === 'PENDING') {
+    where.status = 'PENDING';
+    where.steps = {
+      some: {
+        status: 'PENDING',
+        requiredPermission: { in: expandedPerms },
+      },
+    };
+    return;
+  }
+
+  if (normalized !== 'ALL') {
+    where.status = normalized;
+  }
+  where.steps = {
+    some: {
+      requiredPermission: { in: expandedPerms },
+    },
+  };
+}
+
+function buildInboxWhere(
+  companyId: string,
+  userId: string,
+  expandedPerms: string[],
+  query: QueryApprovalsDto,
+): Record<string, unknown> {
+  const where: Record<string, unknown> = {
+    companyId,
+    deletedAt: null,
+    requesterId: { not: userId },
+  };
+
+  applyStatusFilter(where, query.status, expandedPerms);
+
+  if (query.type) where.type = query.type;
+  if (query.entityType) where.entityType = query.entityType;
+  if (query.search?.trim()) {
+    const s = query.search.trim();
+    where.OR = [
+      { title: { contains: s, mode: 'insensitive' } },
+      { approvalNumber: { contains: s, mode: 'insensitive' } },
+    ];
+  }
+
+  return where;
+}
+
 @Injectable()
 export class ApprovalsInboxService {
   constructor(private readonly tenantDb: TenantDb) {}
@@ -37,29 +91,7 @@ export class ApprovalsInboxService {
       const skip = (page - 1) * limit;
 
       const expandedPerms = expandAuthorizedPermissions(userPermissions);
-
-      const where: Record<string, unknown> = {
-        companyId,
-        status: query.status || 'PENDING',
-        deletedAt: null,
-        requesterId: { not: userId }, // Maker-checker: requester does not see own items in inbox
-        steps: {
-          some: {
-            status: 'PENDING',
-            requiredPermission: { in: expandedPerms },
-          },
-        },
-      };
-
-      if (query.type) where.type = query.type;
-      if (query.entityType) where.entityType = query.entityType;
-      if (query.search?.trim()) {
-        const s = query.search.trim();
-        where.OR = [
-          { title: { contains: s, mode: 'insensitive' } },
-          { approvalNumber: { contains: s, mode: 'insensitive' } },
-        ];
-      }
+      const where = buildInboxWhere(companyId, userId, expandedPerms, query);
 
       const [items, total] = await Promise.all([
         tx.approval.findMany({

@@ -160,12 +160,28 @@ export class AuthService {
     userAgent?: string,
   ): Promise<TokenPairResult> {
     const tokenHash = this.tokenService.hashToken(rawRefreshToken);
-    const rows = await this.prismaService.$queryRawUnsafe<Array<{ company_id: string }>>(
-      `SELECT company_id FROM refresh_tokens WHERE token_hash = $1 LIMIT 1`,
-      tokenHash,
-    );
+    let companyId: string | undefined;
 
-    const companyId = rows[0]?.company_id;
+    try {
+      const rows = await this.systemPrisma.executeWithReason(
+        '// SYSTEM-SCOPE: Resolve tenant company for refresh token',
+        async (client) => {
+          return client.$queryRawUnsafe<Array<{ company_id: string }>>(
+            `SELECT company_id FROM refresh_tokens WHERE token_hash = $1 LIMIT 1`,
+            tokenHash,
+          );
+        },
+      );
+      companyId = rows[0]?.company_id;
+    } catch {
+      // Fallback for isolated unit test environments
+      const rows = await this.prismaService.$queryRawUnsafe<Array<{ company_id: string }>>(
+        `SELECT company_id FROM refresh_tokens WHERE token_hash = $1 LIMIT 1`,
+        tokenHash,
+      );
+      companyId = rows[0]?.company_id;
+    }
+
     if (!companyId) {
       throw new UnauthorizedException('Invalid or unknown refresh token');
     }

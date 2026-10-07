@@ -1,5 +1,5 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
+import { Type, Transform } from 'class-transformer';
 import {
   IsEnum,
   IsIn,
@@ -44,16 +44,43 @@ export class QueryPropertyDto {
     description: 'Filter by canonical status',
     enum: CANONICAL_PROPERTY_STATUSES,
   })
+  @Transform(({ value }: { value: unknown }) => {
+    if (typeof value !== 'string') return value;
+    const trimmed = value.trim();
+    if (!trimmed) return undefined;
+    const match = CANONICAL_PROPERTY_STATUSES.find(
+      (s) => s.toLowerCase() === trimmed.toLowerCase(),
+    );
+    return match ?? trimmed;
+  })
   @IsIn(CANONICAL_PROPERTY_STATUSES)
   @IsOptional()
   status?: CanonicalPropertyStatus;
 
   @ApiPropertyOptional({ description: 'Filter by property type', enum: PropertyType })
+  @Transform(({ value }: { value: unknown }) => {
+    if (typeof value !== 'string') return value;
+    const trimmed = value.trim();
+    if (!trimmed) return undefined;
+    const upper = trimmed.toUpperCase();
+    return (Object.values(PropertyType) as string[]).includes(upper)
+      ? (upper as PropertyType)
+      : trimmed;
+  })
   @IsEnum(PropertyType)
   @IsOptional()
   type?: PropertyType;
 
   @ApiPropertyOptional({ description: 'Filter by facing direction', enum: FacingDirection })
+  @Transform(({ value }: { value: unknown }) => {
+    if (typeof value !== 'string') return value;
+    const trimmed = value.trim();
+    if (!trimmed) return undefined;
+    const upper = trimmed.toUpperCase();
+    return (Object.values(FacingDirection) as string[]).includes(upper)
+      ? (upper as FacingDirection)
+      : trimmed;
+  })
   @IsEnum(FacingDirection)
   @IsOptional()
   facing?: FacingDirection;

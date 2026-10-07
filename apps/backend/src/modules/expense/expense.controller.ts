@@ -68,13 +68,30 @@ export class ExpenseController {
     return this.expenseService.createVoucher(companyId, userId, dto);
   }
 
+  @Get('vouchers')
+  @RequirePermission(PERMISSIONS.EXPENSE_VIEW)
+  @ApiOperation({ summary: 'List operational expense vouchers' })
+  async listVouchers(
+    @CurrentUser('companyId') companyId: string,
+    @Query('status') status?: string,
+    @Query('projectId') projectId?: string,
+    @Query('categoryId') categoryId?: string,
+    @Query('limit') limit?: number,
+    @Query('offset') offset?: number,
+  ) {
+    return this.expenseService.listVouchers(companyId, {
+      status,
+      projectId,
+      categoryId,
+      limit,
+      offset,
+    });
+  }
+
   @Get('vouchers/:id')
   @RequirePermission(PERMISSIONS.EXPENSE_VIEW)
   @ApiOperation({ summary: 'Get an expense voucher by ID' })
-  async getVoucher(
-    @CurrentUser('companyId') companyId: string,
-    @Param('id') id: string,
-  ) {
+  async getVoucher(@CurrentUser('companyId') companyId: string, @Param('id') id: string) {
     return this.expenseService.getVoucherById(companyId, id);
   }
 

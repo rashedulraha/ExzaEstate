@@ -1,10 +1,28 @@
 import {
-  Body, Controller, Delete, Get, Headers, HttpCode, HttpStatus, Ip, Param, Post, Req, Res, UseGuards,
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Headers,
+  HttpCode,
+  HttpStatus,
+  Ip,
+  Param,
+  Post,
+  Req,
+  Res,
+  UseGuards,
 } from '@nestjs/common';
 import type { Request, Response } from 'express';
-import { CurrentUser, type AuthenticatedUser } from '../../common/decorators/current-user.decorator.js';
+import {
+  CurrentUser,
+  type AuthenticatedUser,
+} from '../../common/decorators/current-user.decorator.js';
 import { Public } from '../../common/decorators/public.decorator.js';
-import { ForbiddenException, UnauthorizedException } from '../../common/exceptions/app.exception.js';
+import {
+  ForbiddenException,
+  UnauthorizedException,
+} from '../../common/exceptions/app.exception.js';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard.js';
 import { ConfigService } from '../../config/config.service.js';
 import { AuthService } from './auth.service.js';
@@ -112,7 +130,10 @@ export class AuthController {
       throw new UnauthorizedException('Refresh token is required');
     }
 
-    const tokens = await this.authService.refresh(rawToken, ip, userAgent);
+    const clientIp =
+      (req.headers['x-forwarded-for'] as string)?.split(',')[0]?.trim() || ip || '127.0.0.1';
+
+    const tokens = await this.authService.refresh(rawToken, clientIp, userAgent);
 
     if (isWeb) {
       res.cookie('refresh_token', tokens.refreshToken, {

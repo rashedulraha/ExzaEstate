@@ -7,12 +7,7 @@ import { TenantDb } from '../../database/tenant-db.service.js';
 import type { TenantPrisma } from '../../database/tenant-prisma.js';
 import { CACHE_STORE, type CacheStore } from '../../ports/index.js';
 
-export interface JwtAccessTokenPayload {
-  sub: string;
-  companyId: string;
-  sid: string;
-  realm?: string;
-}
+export type { JwtAccessTokenPayload } from '../../common/guards/jwt-auth.utils.js';
 
 export interface SessionContext {
   userId: string;
@@ -25,6 +20,37 @@ export interface TokenPairResult {
   accessToken: string;
   refreshToken: string;
   sessionId: string;
+}
+
+function isEligibleForGracePeriod(
+  revokedAt: Date | null,
+  replacedById: string | null,
+  tokenIp: string | null,
+  clientIp?: string,
+): boolean {
+  if (!revokedAt || !replacedById) {
+    return false;
+  }
+  const elapsed = Date.now() - new Date(revokedAt).getTime();
+  if (elapsed >= 30_000) {
+    return false;
+  }
+  if (!clientIp || !tokenIp) {
+    return true;
+  }
+  return clientIp === tokenIp;
+}
+
+interface StoredRefreshTokenRow {
+  id: string;
+  company_id: string;
+  user_id: string;
+  session_id: string;
+  family_id: string;
+  revoked_at: Date | null;
+  expires_at: Date;
+  replaced_by_id: string | null;
+  ip_address: string | null;
 }
 
 @Injectable()
@@ -111,101 +137,16 @@ export class TokenService {
     };
   }
 
-  /**
-   * Rotates a refresh token inside its family with strict reuse detection.
-   */
-  async rotateRefreshToken(
+  private async persistRotatedTokens(
     tx: TenantPrisma,
-    rawRefreshToken: string,
-    opts: { userAgent?: string; ipAddress?: string } = {},
+    found: StoredRefreshTokenRow,
+    opts: { userAgent?: string; ipAddress?: string },
   ): Promise<TokenPairResult> {
-    const tokenHash = this.hashToken(rawRefreshToken);
-
-    const rows = await tx.$queryRawUnsafe<
-      Array<{
-        id: string;
-        company_id: string;
-        user_id: string;
-        session_id: string;
-        family_id: string;
-        revoked_at: Date | null;
-        expires_at: Date;
-      }>
-    >(
-      `SELECT id, company_id, user_id, session_id, family_id, revoked_at, expires_at
-       FROM refresh_tokens
-       WHERE token_hash = $1
-       LIMIT 1`,
-      tokenHash,
-    );
-
-    const found = rows[0];
-    if (!found) {
-      throw new UnauthorizedException('Invalid or unknown refresh token');
-    }
-
-    // THEFT / REUSE DETECTION: If token is already revoked, revoke the entire family!
-    if (found.revoked_at !== null) {
-      this.logger.warn(
-        `Refresh token reuse detected for family ${found.family_id} (user ${found.user_id}) from IP ${opts.ipAddress}`,
-      );
-
-      // Persist revocation and audit record in a dedicated transaction so it is preserved even when this call throws
-      await this.tenantDb.withCompany(found.company_id, async (tx) => {
-        await tx.$executeRawUnsafe(
-          `UPDATE refresh_tokens SET revoked_at = now() WHERE family_id = $1::uuid AND revoked_at IS NULL`,
-          found.family_id,
-        );
-        await tx.$executeRawUnsafe(
-          `UPDATE sessions SET revoked_at = now() WHERE family_id = $1::uuid AND revoked_at IS NULL`,
-          found.family_id,
-        );
-        await tx.$executeRawUnsafe(
-          `INSERT INTO audit_logs (id, company_id, module, record_type, record_id, action, reason, ip_address, request_id, created_at)
-           VALUES ($1::uuid, $2::uuid, 'auth', 'RefreshToken', $3::uuid, 'REFRESH_TOKEN_REUSE', 'Refresh token reuse detected — entire family revoked', $4, $5, now())`,
-          crypto.randomUUID(),
-          found.company_id,
-          found.id,
-          opts.ipAddress || null,
-          crypto.randomUUID(),
-        );
-      });
-
-      // Invalidate Redis session key if cacheStore available
-      if (this.cacheStore) {
-        await this.cacheStore.set(
-          `session-revoked:${found.company_id}:${found.session_id}`,
-          '1',
-          900,
-        );
-      }
-
-      throw new UnauthorizedException(
-        'Refresh token reuse detected; all sessions revoked and terminated',
-      );
-    }
-
-    // Check expiration
-    if (new Date(found.expires_at).getTime() < Date.now()) {
-      throw new UnauthorizedException('Refresh token has expired');
-    }
-
-    // Legitimate rotation:
     const newRawToken = crypto.randomBytes(32).toString('hex');
     const newTokenHash = this.hashToken(newRawToken);
     const newExpiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
     const newRefreshTokenId = crypto.randomUUID();
 
-    // 1. Mark current token revoked and replaced
-    await tx.$executeRawUnsafe(
-      `UPDATE refresh_tokens
-       SET revoked_at = now(), replaced_by_id = $1::uuid
-       WHERE id = $2::uuid`,
-      newRefreshTokenId,
-      found.id,
-    );
-
-    // 2. Insert new token in same family
     await tx.$executeRawUnsafe(
       `INSERT INTO refresh_tokens (id, company_id, user_id, session_id, family_id, token_hash, expires_at, user_agent, ip_address, created_at)
        VALUES ($1::uuid, $2::uuid, $3::uuid, $4::uuid, $5::uuid, $6, $7, $8, $9, now())`,
@@ -220,13 +161,11 @@ export class TokenService {
       opts.ipAddress || null,
     );
 
-    // 3. Update session last seen
     await tx.$executeRawUnsafe(
       `UPDATE sessions SET last_seen_at = now() WHERE id = $1::uuid`,
       found.session_id,
     );
 
-    // 4. Generate new access token
     const accessToken = this.generateAccessToken({
       sub: found.user_id,
       companyId: found.company_id,
@@ -238,6 +177,129 @@ export class TokenService {
       refreshToken: newRawToken,
       sessionId: found.session_id,
     };
+  }
+
+  private async tryGracePeriodRenewal(
+    tx: TenantPrisma,
+    found: StoredRefreshTokenRow,
+    opts: { userAgent?: string; ipAddress?: string },
+  ): Promise<TokenPairResult | null> {
+    if (
+      !isEligibleForGracePeriod(
+        found.revoked_at,
+        found.replaced_by_id,
+        found.ip_address,
+        opts.ipAddress,
+      )
+    ) {
+      return null;
+    }
+
+    const sessionRows = await tx.$queryRawUnsafe<Array<{ id: string; revoked_at: Date | null }>>(
+      `SELECT id, revoked_at FROM sessions WHERE id = $1::uuid LIMIT 1`,
+      found.session_id,
+    );
+    const session = sessionRows[0];
+    if (!session || session.revoked_at !== null) {
+      return null;
+    }
+
+    this.logger.log(
+      `Refresh token rotation grace period hit for family ${found.family_id}. Issuing token pair for active session.`,
+    );
+
+    return this.persistRotatedTokens(tx, found, opts);
+  }
+
+  private async handleTokenTheft(found: StoredRefreshTokenRow, ipAddress?: string): Promise<never> {
+    this.logger.warn(
+      `Refresh token reuse detected for family ${found.family_id} (user ${found.user_id}) from IP ${ipAddress}`,
+    );
+
+    await this.tenantDb.withCompany(found.company_id, async (tx) => {
+      await tx.$executeRawUnsafe(
+        `UPDATE refresh_tokens SET revoked_at = now() WHERE family_id = $1::uuid AND revoked_at IS NULL`,
+        found.family_id,
+      );
+      await tx.$executeRawUnsafe(
+        `UPDATE sessions SET revoked_at = now() WHERE family_id = $1::uuid AND revoked_at IS NULL`,
+        found.family_id,
+      );
+      await tx.$executeRawUnsafe(
+        `INSERT INTO audit_logs (id, company_id, module, record_type, record_id, action, reason, ip_address, request_id, created_at)
+         VALUES ($1::uuid, $2::uuid, 'auth', 'RefreshToken', $3::uuid, 'REFRESH_TOKEN_REUSE', 'Refresh token reuse detected — entire family revoked', $4, $5, now())`,
+        crypto.randomUUID(),
+        found.company_id,
+        found.id,
+        ipAddress || null,
+        crypto.randomUUID(),
+      );
+    });
+
+    if (this.cacheStore) {
+      await this.cacheStore.set(
+        `session-revoked:${found.company_id}:${found.session_id}`,
+        '1',
+        900,
+      );
+    }
+
+    throw new UnauthorizedException(
+      'Refresh token reuse detected; all sessions revoked and terminated',
+    );
+  }
+
+  private async issueRotatedTokenPair(
+    tx: TenantPrisma,
+    found: StoredRefreshTokenRow,
+    opts: { userAgent?: string; ipAddress?: string },
+  ): Promise<TokenPairResult> {
+    const result = await this.persistRotatedTokens(tx, found, opts);
+
+    await tx.$executeRawUnsafe(
+      `UPDATE refresh_tokens
+       SET revoked_at = now(), replaced_by_id = $1::uuid
+       WHERE id = $2::uuid`,
+      result.refreshToken,
+      found.id,
+    );
+
+    return result;
+  }
+
+  async rotateRefreshToken(
+    tx: TenantPrisma,
+    rawRefreshToken: string,
+    opts: { userAgent?: string; ipAddress?: string } = {},
+  ): Promise<TokenPairResult> {
+    const tokenHash = this.hashToken(rawRefreshToken);
+
+    const rows = await tx.$queryRawUnsafe<StoredRefreshTokenRow[]>(
+      `SELECT id, company_id, user_id, session_id, family_id, revoked_at, expires_at, replaced_by_id, ip_address
+       FROM refresh_tokens
+       WHERE token_hash = $1
+       LIMIT 1`,
+      tokenHash,
+    );
+
+    const found = rows[0];
+    if (!found) {
+      throw new UnauthorizedException('Invalid or unknown refresh token');
+    }
+
+    if (found.revoked_at !== null) {
+      const graceResult = await this.tryGracePeriodRenewal(tx, found, opts);
+      if (graceResult) {
+        return graceResult;
+      }
+      await this.handleTokenTheft(found, opts.ipAddress);
+    }
+
+    if (new Date(found.expires_at).getTime() < Date.now()) {
+      throw new UnauthorizedException('Refresh token has expired');
+    }
+
+    return this.issueRotatedTokenPair(tx, found, opts);
   }
 
   /**

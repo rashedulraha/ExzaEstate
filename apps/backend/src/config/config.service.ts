@@ -45,6 +45,10 @@ export class ConfigService {
     return this.config.MIGRATOR_DATABASE_URL;
   }
 
+  get systemDatabaseUrl(): string | undefined {
+    return this.config.SYSTEM_DATABASE_URL;
+  }
+
   get redisUrl(): string {
     return this.config.REDIS_URL;
   }
