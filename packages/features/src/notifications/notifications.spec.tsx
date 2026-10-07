@@ -12,7 +12,7 @@ const mockNotifications = [
   {
     id: 'notif-1',
     title: 'Payment Cleared',
-    body: '৳50,000 received for Plot 14',
+    body: 'BDT 50,000 received for Plot 14',
     category: 'PAYMENT',
     isRead: false,
     createdAt: '2026-10-05T12:00:00.000Z',

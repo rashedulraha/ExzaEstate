@@ -1,4 +1,5 @@
-import { DataTable, LoadingState, ErrorState, type ColumnDef } from '@exzaestate/ui';
+import { DataTable, LoadingState, ErrorState, EmptyState, type ColumnDef } from '@exzaestate/ui';
+import { ShieldCheck, ShieldAlert } from 'lucide-react';
 import type { AuditLogRecord, SecurityEventRecord } from '../types.js';
 
 interface AuditTrailPanelProps {
@@ -7,6 +8,7 @@ interface AuditTrailPanelProps {
   data: AuditLogRecord[];
   columns: ColumnDef<AuditLogRecord>[];
   onRetry: () => void;
+  toolbar?: React.ReactNode;
 }
 
 export function AuditTrailPanel({
@@ -15,9 +17,10 @@ export function AuditTrailPanel({
   data,
   columns,
   onRetry,
+  toolbar,
 }: AuditTrailPanelProps) {
   if (isLoading && data.length === 0) {
-    return <LoadingState />;
+    return <LoadingState variant="table" />;
   }
 
   if (isError) {
@@ -31,8 +34,24 @@ export function AuditTrailPanel({
   }
 
   return (
-    <div className="card-workspace overflow-hidden">
-      <DataTable data={data} columns={columns} keyExtractor={(r) => r.id} />
+    <div className="space-y-4">
+      {toolbar}
+      <div className="rounded-card border border-border bg-surface shadow-xs">
+        <DataTable
+          data={data}
+          columns={columns}
+          keyExtractor={(r) => r.id}
+          className="border-none shadow-none"
+          emptyState={
+            <EmptyState
+              icon={<ShieldCheck className="w-6 h-6 text-text-muted" />}
+              title="No Audit Records Found"
+              description="No state mutations match your selected filters or action criteria."
+              dashedBorder
+            />
+          }
+        />
+      </div>
     </div>
   );
 }
@@ -43,6 +62,7 @@ interface SecurityEventsPanelProps {
   data: SecurityEventRecord[];
   columns: ColumnDef<SecurityEventRecord>[];
   onRetry: () => void;
+  toolbar?: React.ReactNode;
 }
 
 export function SecurityEventsPanel({
@@ -51,9 +71,10 @@ export function SecurityEventsPanel({
   data,
   columns,
   onRetry,
+  toolbar,
 }: SecurityEventsPanelProps) {
   if (isLoading && data.length === 0) {
-    return <LoadingState />;
+    return <LoadingState variant="table" />;
   }
 
   if (isError) {
@@ -67,8 +88,24 @@ export function SecurityEventsPanel({
   }
 
   return (
-    <div className="card-workspace overflow-hidden">
-      <DataTable data={data} columns={columns} keyExtractor={(r) => r.id} />
+    <div className="space-y-4">
+      {toolbar}
+      <div className="rounded-card border border-border bg-surface shadow-xs">
+        <DataTable
+          data={data}
+          columns={columns}
+          keyExtractor={(r) => r.id}
+          className="border-none shadow-none"
+          emptyState={
+            <EmptyState
+              icon={<ShieldAlert className="w-6 h-6 text-text-muted" />}
+              title="No Security Events Found"
+              description="No authentication or authorization security events recorded for the current scope."
+              dashedBorder
+            />
+          }
+        />
+      </div>
     </div>
   );
 }

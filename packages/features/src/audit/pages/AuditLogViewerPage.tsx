@@ -1,6 +1,5 @@
 import { useState, useMemo } from 'react';
-import { ShieldCheck, ShieldAlert, Download, RefreshCw, Lock } from 'lucide-react';
-import { Button, Select, type SelectOption } from '@exzaestate/ui';
+import type { SelectOption } from '@exzaestate/ui';
 import {
   useAuditControllerGetAuditLogs,
   useAuditControllerGetSecurityEvents,
@@ -9,6 +8,14 @@ import type { AuditLogRecord, SecurityEventRecord } from '../types.js';
 import { AuditDetailDrawer } from '../components/AuditDetailDrawer.js';
 import { buildAuditColumns, SECURITY_COLUMNS } from './audit-columns.js';
 import { AuditTrailPanel, SecurityEventsPanel } from './AuditTabPanels.js';
+import {
+  AuditPageHeader,
+  AuditTabSwitcher,
+  AuditKpiCards,
+  AuditToolbar,
+  matchesAuditSearch,
+  matchesSecuritySearch,
+} from './AuditViewerComponents.js';
 
 const ACTION_OPTIONS: SelectOption[] = [
   { value: '', label: 'All Actions' },
@@ -44,109 +51,16 @@ function getExportEndpoint(activeTab: 'audit' | 'security'): string {
   return '/api/v1/audit-logs/export';
 }
 
-function AuditFilterBar({
-  activeTab,
-  actionFilter,
-  setActionFilter,
-  recordTypeFilter,
-  setRecordTypeFilter,
-  severityFilter,
-  setSeverityFilter,
-}: {
-  activeTab: 'audit' | 'security';
-  actionFilter: string;
-  setActionFilter: (v: string) => void;
-  recordTypeFilter: string;
-  setRecordTypeFilter: (v: string) => void;
-  severityFilter: string;
-  setSeverityFilter: (v: string) => void;
-}) {
-  if (activeTab === 'security') {
-    return (
-      <div className="flex items-center gap-2 text-small">
-        <span className="text-text-muted font-medium">Severity:</span>
-        <Select
-          options={SEVERITY_OPTIONS}
-          value={severityFilter}
-          onChange={setSeverityFilter}
-          className="text-small min-w-[140px]"
-        />
-      </div>
-    );
-  }
-
-  return (
-    <div className="flex flex-wrap items-center gap-3 text-small">
-      <div className="flex items-center gap-1.5">
-        <span className="text-text-muted font-medium">Action:</span>
-        <Select
-          options={ACTION_OPTIONS}
-          value={actionFilter}
-          onChange={setActionFilter}
-          className="text-small min-w-[130px]"
-        />
-      </div>
-
-      <div className="flex items-center gap-1.5">
-        <span className="text-text-muted font-medium">Entity Type:</span>
-        <Select
-          options={RECORD_TYPE_OPTIONS}
-          value={recordTypeFilter}
-          onChange={setRecordTypeFilter}
-          className="text-small min-w-[140px]"
-        />
-      </div>
-    </div>
-  );
-}
-
 function toFilterParam(val: string): string | undefined {
   if (val) return val;
   return undefined;
-}
-
-function AuditTabsHeader({
-  activeTab,
-  onSelectTab,
-}: {
-  activeTab: 'audit' | 'security';
-  onSelectTab: (tab: 'audit' | 'security') => void;
-}) {
-  return (
-    <div className="flex items-center gap-2 border-b border-border">
-      <button
-        type="button"
-        onClick={() => onSelectTab('audit')}
-        className={`px-4 py-2 text-small font-semibold border-b-2 transition-colors cursor-pointer flex items-center gap-2 ${
-          activeTab === 'audit'
-            ? 'border-primary text-primary'
-            : 'border-transparent text-text-muted hover:text-text'
-        }`}
-      >
-        <ShieldCheck className="w-4 h-4" />
-        <span>Audit Trail (Mutations)</span>
-      </button>
-
-      <button
-        type="button"
-        onClick={() => onSelectTab('security')}
-        className={`px-4 py-2 text-small font-semibold border-b-2 transition-colors cursor-pointer flex items-center gap-2 ${
-          activeTab === 'security'
-            ? 'border-primary text-primary'
-            : 'border-transparent text-text-muted hover:text-text'
-        }`}
-      >
-        <ShieldAlert className="w-4 h-4" />
-        <span>Security & Access Events</span>
-      </button>
-    </div>
-  );
 }
 
 export function AuditLogViewerPage() {
   const [activeTab, setActiveTab] = useState<'audit' | 'security'>('audit');
   const [selectedLog, setSelectedLog] = useState<AuditLogRecord | null>(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
 
   // Filters
   const [actionFilter, setActionFilter] = useState('');
@@ -174,89 +88,97 @@ export function AuditLogViewerPage() {
     [],
   );
 
-  const handleExportCsv = () => {
-    window.open(getExportEndpoint(activeTab), '_blank');
+  const rawAuditData = (auditLogsQuery.data?.items ?? []) as unknown as AuditLogRecord[];
+  const rawSecurityData = (securityEventsQuery.data?.items ??
+    []) as unknown as SecurityEventRecord[];
+
+  const filteredAuditData = useMemo(() => {
+    if (!searchTerm.trim()) return rawAuditData;
+    const term = searchTerm.toLowerCase();
+    return rawAuditData.filter((r) => matchesAuditSearch(r, term));
+  }, [rawAuditData, searchTerm]);
+
+  const filteredSecurityData = useMemo(() => {
+    if (!searchTerm.trim()) return rawSecurityData;
+    const term = searchTerm.toLowerCase();
+    return rawSecurityData.filter((s) => matchesSecuritySearch(s, term));
+  }, [rawSecurityData, searchTerm]);
+
+  const kpis = useMemo(() => {
+    const totalMutations = rawAuditData.length;
+    const totalSecurity = rawSecurityData.length;
+    const criticalCount = rawSecurityData.filter(
+      (s) => s.severity?.toUpperCase() === 'CRITICAL' || s.severity?.toUpperCase() === 'ERROR',
+    ).length;
+    return { totalMutations, totalSecurity, criticalCount };
+  }, [rawAuditData, rawSecurityData]);
+
+  const hasActiveFilters = Boolean(
+    searchTerm || actionFilter || recordTypeFilter || severityFilter,
+  );
+
+  const handleClearFilters = () => {
+    setSearchTerm('');
+    setActionFilter('');
+    setRecordTypeFilter('');
+    setSeverityFilter('');
   };
 
-  const handleRefresh = () => {
-    void auditLogsQuery.refetch();
-    void securityEventsQuery.refetch();
-  };
-
-  const auditData = (auditLogsQuery.data?.items ?? []) as unknown as AuditLogRecord[];
-  const securityData = (securityEventsQuery.data?.items ?? []) as unknown as SecurityEventRecord[];
+  const toolbarNode = (
+    <AuditToolbar
+      activeTab={activeTab}
+      searchTerm={searchTerm}
+      onSearchChange={setSearchTerm}
+      actionFilter={actionFilter}
+      onActionChange={setActionFilter}
+      recordTypeFilter={recordTypeFilter}
+      onRecordTypeChange={setRecordTypeFilter}
+      severityFilter={severityFilter}
+      onSeverityChange={setSeverityFilter}
+      hasActiveFilters={hasActiveFilters}
+      onReset={handleClearFilters}
+      actionOptions={ACTION_OPTIONS}
+      recordTypeOptions={RECORD_TYPE_OPTIONS}
+      severityOptions={SEVERITY_OPTIONS}
+    />
+  );
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border pb-4">
-        <div>
-          <h1 className="text-heading-2 text-text font-semibold flex items-center gap-2">
-            <Lock className="w-5 h-5 text-primary" />
-            <span>Audit & Security Event Viewer</span>
-          </h1>
-          <p className="text-caption text-text-muted mt-0.5">
-            Immutable append-only ledger of state mutations, privilege changes, and security events
-          </p>
-        </div>
+    <div className="container-page space-y-6">
+      <AuditPageHeader
+        onRefresh={() => {
+          void auditLogsQuery.refetch();
+          void securityEventsQuery.refetch();
+        }}
+        onExportCsv={() => window.open(getExportEndpoint(activeTab), '_blank')}
+      />
 
-        <div className="flex items-center gap-2">
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={handleRefresh}
-            leftIcon={<RefreshCw className="w-3.5 h-3.5" />}
-          >
-            Refresh
-          </Button>
+      <AuditKpiCards stats={kpis} />
 
-          <Button
-            variant="primary"
-            size="sm"
-            onClick={handleExportCsv}
-            leftIcon={<Download className="w-3.5 h-3.5" />}
-          >
-            Export CSV
-          </Button>
-        </div>
+      <div className="space-y-4">
+        <AuditTabSwitcher activeTab={activeTab} onSelectTab={setActiveTab} />
+
+        {activeTab === 'audit' ? (
+          <AuditTrailPanel
+            isLoading={auditLogsQuery.isLoading}
+            isError={auditLogsQuery.isError}
+            data={filteredAuditData}
+            columns={auditColumns}
+            onRetry={() => void auditLogsQuery.refetch()}
+            toolbar={toolbarNode}
+          />
+        ) : (
+          <SecurityEventsPanel
+            isLoading={securityEventsQuery.isLoading}
+            isError={securityEventsQuery.isError}
+            data={filteredSecurityData}
+            columns={SECURITY_COLUMNS}
+            onRetry={() => void securityEventsQuery.refetch()}
+            toolbar={toolbarNode}
+          />
+        )}
       </div>
 
-      {/* Tabs */}
-      <AuditTabsHeader activeTab={activeTab} onSelectTab={setActiveTab} />
-
-      {/* Filters Bar */}
-      <div className="card-workspace p-3 flex flex-wrap items-center justify-between gap-3">
-        <AuditFilterBar
-          activeTab={activeTab}
-          actionFilter={actionFilter}
-          setActionFilter={setActionFilter}
-          recordTypeFilter={recordTypeFilter}
-          setRecordTypeFilter={setRecordTypeFilter}
-          severityFilter={severityFilter}
-          setSeverityFilter={setSeverityFilter}
-        />
-      </div>
-
-      {/* Content */}
-      {activeTab === 'audit' ? (
-        <AuditTrailPanel
-          isLoading={auditLogsQuery.isLoading}
-          isError={auditLogsQuery.isError}
-          data={auditData}
-          columns={auditColumns}
-          onRetry={() => void auditLogsQuery.refetch()}
-        />
-      ) : (
-        <SecurityEventsPanel
-          isLoading={securityEventsQuery.isLoading}
-          isError={securityEventsQuery.isError}
-          data={securityData}
-          columns={SECURITY_COLUMNS}
-          onRetry={() => void securityEventsQuery.refetch()}
-        />
-      )}
-
-      {/* Audit Detail Drawer */}
       <AuditDetailDrawer
         isOpen={isDetailOpen}
         onClose={() => setIsDetailOpen(false)}

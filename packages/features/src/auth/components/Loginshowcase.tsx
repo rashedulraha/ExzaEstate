@@ -255,7 +255,9 @@ export function LoginShowcase({ side = 'left' }: LoginShowcaseProps) {
                       </span>
                       <span className="text-caption text-text-inverse">{row.account}</span>
                     </div>
-                    <span className="font-mono text-caption text-text-inverse">৳ {row.amount}</span>
+                    <span className="font-mono text-caption text-text-inverse">
+                      BDT {row.amount}
+                    </span>
                   </div>
                 ))}
               </div>
@@ -272,7 +274,7 @@ export function LoginShowcase({ side = 'left' }: LoginShowcaseProps) {
             <GlassCard className="p-4">
               <p className="text-caption text-text-muted">Installments collected</p>
               <div className="mt-1 flex items-baseline gap-2">
-                <span className="text-h2 font-bold text-text-inverse">৳ 4.82 Cr</span>
+                <span className="text-h2 font-bold text-text-inverse">BDT 4.82 Cr</span>
                 <span className="text-caption font-medium text-accent">+12.4%</span>
               </div>
               <div className="mt-3 flex h-14 items-end gap-1.5">

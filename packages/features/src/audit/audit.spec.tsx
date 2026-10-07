@@ -52,6 +52,12 @@ vi.mock('@exzaestate/api-client', () => ({
   }),
 }));
 
+import { MemoryRouter } from 'react-router';
+
+function renderWithRouter(ui: React.ReactElement) {
+  return render(<MemoryRouter>{ui}</MemoryRouter>);
+}
+
 describe('Audit & Security Log Viewer', () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -59,7 +65,7 @@ describe('Audit & Security Log Viewer', () => {
 
   describe('AuditLogViewerPage', () => {
     it('renders audit logs tab by default with records and columns', () => {
-      render(<AuditLogViewerPage />);
+      renderWithRouter(<AuditLogViewerPage />);
 
       expect(screen.getByText('Audit & Security Event Viewer')).toBeDefined();
       expect(screen.getByText('Audit Trail (Mutations)')).toBeDefined();
@@ -72,7 +78,7 @@ describe('Audit & Security Log Viewer', () => {
     });
 
     it('switches to Security Events tab', () => {
-      render(<AuditLogViewerPage />);
+      renderWithRouter(<AuditLogViewerPage />);
 
       const secTab = screen.getByText('Security & Access Events');
       fireEvent.click(secTab);
@@ -82,7 +88,7 @@ describe('Audit & Security Log Viewer', () => {
     });
 
     it('opens AuditDetailDrawer when clicking Diff', () => {
-      render(<AuditLogViewerPage />);
+      renderWithRouter(<AuditLogViewerPage />);
 
       const diffBtn = screen.getByRole('button', { name: /Diff/i });
       fireEvent.click(diffBtn);

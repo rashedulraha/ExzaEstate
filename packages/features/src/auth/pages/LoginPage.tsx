@@ -1,32 +1,23 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { t } from '@exzaestate/shared';
+import { useAuth } from '@exzaestate/app-core';
 import { useAuthFlow } from '../hooks/useAuthFlow.js';
 import { loginSchema, type LoginFormData } from '../schemas/auth.schema.js';
 import { TotpEnrollmentModal } from '../components/TotpEnrollmentModal.js';
-import { LoginShowcase } from '../components/Loginshowcase.js';
-import { ExzaLogoIcon, ThemeToggle } from '@exzaestate/ui';
+import { ExzaLogoIcon } from '@exzaestate/ui';
 
 export interface LoginPageProps {
   onSuccess?: () => void;
-  /**
-   * Desktop position of the product showcase. The login form takes the other side.
-   * 'left'  -> showcase left, form right (default)
-   * 'right' -> form left, showcase right
-   */
   showcaseSide?: 'left' | 'right';
   defaultEmail?: string;
   defaultPassword?: string;
 }
 
-/**
- * Every colour below comes from theme.css tokens, so the form follows
- * light / dark mode and any future brand change automatically.
- */
 const inputBase =
-  'block w-full rounded-button border bg-surface px-4 py-3 text-body text-text placeholder:text-text-disabled transition focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/20';
+  'block w-full h-10 rounded-button border border-border-input bg-surface-sunken/40 px-3.5 py-2 text-body text-text placeholder:text-text-disabled transition focus:border-focus focus:outline-none focus:ring-2 focus:ring-focus/20 hover:border-border-strong';
 
 function EyeIcon() {
   return (
@@ -109,10 +100,10 @@ function PasswordInputField({ register, error }: PasswordInputFieldProps) {
 
   return (
     <div>
-      <label htmlFor="login-password" className="block text-label">
+      <label htmlFor="login-password" className="block text-label font-medium text-text mb-1.5">
         Password
       </label>
-      <div className="relative mt-1.5">
+      <div className="relative">
         <input
           id="login-password"
           type={showPassword ? 'text' : 'password'}
@@ -121,12 +112,12 @@ function PasswordInputField({ register, error }: PasswordInputFieldProps) {
           aria-invalid={Boolean(error)}
           aria-describedby={error ? 'login-password-error' : undefined}
           {...register('password')}
-          className={`${inputBase} pr-11 ${error ? 'border-danger' : 'border-border-input'}`}
+          className={`${inputBase} pr-11 ${error ? 'border-danger' : ''}`}
         />
         <button
           type="button"
           onClick={() => setShowPassword((v) => !v)}
-          className="absolute inset-y-0 right-0 flex cursor-pointer items-center rounded-button pr-3.5 text-text-muted hover:text-text focus-visible:text-primary-fg"
+          className="absolute inset-y-0 right-0 flex cursor-pointer items-center pr-3 text-text-muted hover:text-text focus-visible:text-primary transition-colors"
           aria-label={showPassword ? 'Hide password' : 'Show password'}
           aria-pressed={showPassword}
         >
@@ -151,12 +142,12 @@ interface LoginFormFieldsProps {
 
 function LoginFormFields({ register, errors, isSubmitting, onSubmit }: LoginFormFieldsProps) {
   return (
-    <form onSubmit={onSubmit} className="space-y-5" noValidate>
+    <form onSubmit={onSubmit} className="space-y-4" noValidate>
       <div>
-        <label htmlFor="login-email" className="block text-label">
-          Email address
+        <label htmlFor="login-email" className="block text-label font-medium text-text mb-1.5">
+          Email Address
         </label>
-        <div className="mt-1.5">
+        <div>
           <input
             id="login-email"
             type="email"
@@ -166,7 +157,7 @@ function LoginFormFields({ register, errors, isSubmitting, onSubmit }: LoginForm
             aria-invalid={Boolean(errors.email)}
             aria-describedby={errors.email ? 'login-email-error' : undefined}
             {...register('email')}
-            className={`${inputBase} ${errors.email ? 'border-danger' : 'border-border-input'}`}
+            className={`${inputBase} ${errors.email ? 'border-danger' : ''}`}
           />
         </div>
         {errors.email && (
@@ -178,12 +169,12 @@ function LoginFormFields({ register, errors, isSubmitting, onSubmit }: LoginForm
 
       <PasswordInputField register={register} error={errors.password?.message} />
 
-      <div className="pt-3">
+      <div className="pt-2">
         <button
           type="submit"
           disabled={isSubmitting}
           aria-busy={isSubmitting}
-          className="flex w-full cursor-pointer items-center justify-center rounded-button bg-action px-4 py-3 text-btn font-semibold text-on-action shadow-sm transition enabled:hover:bg-action-hover enabled:active:bg-action-active disabled:cursor-not-allowed disabled:opacity-50"
+          className="flex w-full cursor-pointer items-center justify-center rounded-button bg-action px-4 py-2.5 text-btn font-semibold text-on-action shadow-sm transition enabled:hover:bg-action-hover enabled:active:bg-action-active active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
         >
           {isSubmitting ? (
             <span className="flex items-center gap-2">
@@ -191,7 +182,7 @@ function LoginFormFields({ register, errors, isSubmitting, onSubmit }: LoginForm
               <span>{t('common.loading')}</span>
             </span>
           ) : (
-            'Sign in'
+            'Sign In'
           )}
         </button>
       </div>
@@ -199,14 +190,21 @@ function LoginFormFields({ register, errors, isSubmitting, onSubmit }: LoginForm
   );
 }
 
-export function LoginPage({
-  onSuccess,
-  showcaseSide = 'left',
-  defaultEmail,
-  defaultPassword,
-}: LoginPageProps) {
+export function LoginPage({ onSuccess, defaultEmail, defaultPassword }: LoginPageProps) {
+  const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
   const { handleLogin, isSubmitting, errorMessage, errorCode } = useAuthFlow();
   const [showTotpEnrollment, setShowTotpEnrollment] = useState(false);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      if (onSuccess) {
+        onSuccess();
+      } else {
+        navigate('/dashboard', { replace: true });
+      }
+    }
+  }, [isAuthenticated, navigate, onSuccess]);
 
   const {
     register,
@@ -229,77 +227,78 @@ export function LoginPage({
   const onSubmit = async (data: LoginFormData) => {
     const success = await handleLogin(data);
     if (success) {
-      onSuccess?.();
+      if (onSuccess) {
+        onSuccess();
+      } else {
+        navigate('/dashboard', { replace: true });
+      }
     }
   };
 
-  const orderClass = showcaseSide === 'left' ? 'lg:order-2' : 'lg:order-1';
-
   return (
-    <div className="flex min-h-screen w-full bg-bg text-text">
-      <div className="grid min-h-screen w-full grid-cols-1 lg:grid-cols-12">
-        <LoginShowcase side={showcaseSide} />
-
-        <main
-          className={`relative flex flex-col justify-center bg-surface px-6 py-12 lg:col-span-5 lg:px-12 xl:px-16 ${orderClass}`}
-        >
-          <div className="absolute top-4 right-4 z-10">
-            <ThemeToggle />
-          </div>
-
-          <div className="mx-auto w-full max-w-sm">
-            {/* Mobile brand (the showcase is hidden below lg) */}
-            <div className="mb-10 lg:hidden">
-              <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-button border border-sidebar-border bg-sidebar">
-                  <ExzaLogoIcon size={26} variant="gold" />
-                </div>
-                <div>
-                  <div className="text-h2 font-bold text-text">{t('app.name')}</div>
-                  <p className="text-caption text-text-muted">
-                    Enterprise Real Estate Management & ERP
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div className="mb-8">
-              <h1 className="text-display font-bold text-text">Sign in</h1>
-              <p className="mt-2 text-body text-text-muted">
-                Enter your credentials to open your workspace.
-              </p>
-            </div>
-
-            <LoginErrorBanner
-              errorMessage={errorMessage}
-              errorCode={errorCode}
-              onOpenTotp={() => setShowTotpEnrollment(true)}
-            />
-
-            <LoginFormFields
-              register={register}
-              errors={errors}
-              isSubmitting={isSubmitting}
-              onSubmit={handleSubmit(onSubmit)}
-            />
-
-            <div className="mt-4 text-center">
-              <Link
-                to="/setup/first-launch"
-                className="text-caption font-semibold text-primary hover:underline cursor-pointer"
-              >
-                First time setup? Activate License & Register Organization →
-              </Link>
-            </div>
-
-            <div className="mt-10 border-t border-border pt-6 text-center">
-              <p className="text-caption text-text-muted">
-                Protected by hardware-bound cryptographic security and row-level isolation
-              </p>
-            </div>
-          </div>
-        </main>
+    <div className="min-h-screen w-full bg-bg text-text flex items-center justify-center p-4 sm:p-6 relative select-none">
+      {/* Executive ambient background lighting for depth */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+        <div className="absolute -top-32 left-1/2 -translate-x-1/2 w-[540px] h-[340px] bg-primary/5 rounded-full blur-3xl" />
       </div>
+
+      <main className="w-full max-w-[460px] bg-surface border border-border rounded-modal p-7 sm:p-9 shadow-lg relative overflow-hidden space-y-6">
+        {/* Subtle accent hairline highlight at top edge */}
+        <div
+          className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent"
+          aria-hidden="true"
+        />
+
+        {/* Brand header */}
+        <div className="flex items-center gap-3">
+          <div className="flex h-11 w-11 items-center justify-center rounded-button border border-border bg-surface-dark text-primary shadow-xs shrink-0">
+            <ExzaLogoIcon size={26} variant="gold" />
+          </div>
+          <div>
+            <div className="text-h2 font-bold text-text leading-tight">{t('app.name')}</div>
+            <p className="text-caption text-text-muted">Enterprise Real Estate Management & ERP</p>
+          </div>
+        </div>
+
+        <div>
+          <h1 className="text-display font-bold text-text tracking-tight">Sign In</h1>
+          <p className="mt-1 text-body text-text-muted leading-relaxed">
+            Enter your credentials to access your workspace.
+          </p>
+        </div>
+
+        <LoginErrorBanner
+          errorMessage={errorMessage}
+          errorCode={errorCode}
+          onOpenTotp={() => setShowTotpEnrollment(true)}
+        />
+
+        <LoginFormFields
+          register={register}
+          errors={errors}
+          isSubmitting={isSubmitting}
+          onSubmit={handleSubmit(onSubmit)}
+        />
+
+        <div className="pt-1 text-center">
+          <Link
+            to="/setup/first-launch"
+            className="inline-flex items-center justify-center gap-1.5 text-caption font-semibold text-primary hover:text-primary-light transition-colors cursor-pointer group whitespace-nowrap"
+          >
+            <span>First time setup? Activate License & Register Organization</span>
+            <span className="transition-transform group-hover:translate-x-0.5" aria-hidden="true">
+              →
+            </span>
+          </Link>
+        </div>
+
+        <div className="border-t border-border pt-4 text-center">
+          <div className="inline-flex items-center justify-center gap-2 text-caption text-text-muted whitespace-nowrap">
+            <span className="w-1.5 h-1.5 rounded-full bg-success shrink-0" aria-hidden="true" />
+            <span>Hardware-bound cryptographic security • Row-level isolation</span>
+          </div>
+        </div>
+      </main>
 
       <TotpEnrollmentModal
         isOpen={showTotpEnrollment}

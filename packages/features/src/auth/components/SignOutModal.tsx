@@ -80,11 +80,11 @@ export function SignOutModal({
             type="button"
             disabled={isSigningOut}
             onClick={() => void onConfirm()}
-            className="flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-button bg-danger px-4 py-2.5 text-btn font-medium text-white shadow-sm transition hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-danger disabled:cursor-not-allowed disabled:opacity-50"
+            className="flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-button bg-danger px-4 py-2.5 text-btn font-medium text-on-action shadow-sm transition hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-danger disabled:cursor-not-allowed disabled:opacity-50"
           >
             {isSigningOut ? (
               <>
-                <span className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                <span className="h-4 w-4 animate-spin rounded-full border-2 border-on-action border-t-transparent" />
                 <span>{inProgressText}</span>
               </>
             ) : (

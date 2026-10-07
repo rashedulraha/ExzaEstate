@@ -11,7 +11,9 @@ export interface ApprovalFilters {
 
 export function computeApprovalKpis(items: ApprovalItem[]) {
   const pending = items.filter((i) => i.status === 'PENDING').length;
-  const discounts = items.filter((i) => i.type === 'DISCOUNT' && i.status === 'PENDING').length;
+  const discounts = items.filter(
+    (i) => (i.type === 'DISCOUNT' || i.type === 'PRICE_EXCEPTION') && i.status === 'PENDING',
+  ).length;
   const expenses = items.filter((i) => i.type === 'EXPENSE' && i.status === 'PENDING').length;
   const approvedToday = items.filter((i) => i.status === 'APPROVED').length;
 
@@ -21,6 +23,86 @@ export function computeApprovalKpis(items: ApprovalItem[]) {
     expenseCount: expenses,
     approvedCount: approvedToday,
   };
+}
+
+function parseString(val: unknown, fallback: string): string {
+  return typeof val === 'string' && val.length > 0 ? val : fallback;
+}
+
+function parseNumber(val: unknown, fallback: number): number {
+  if (typeof val === 'number') return val;
+  if (typeof val === 'string') {
+    const num = Number(val);
+    if (!Number.isNaN(num)) return num;
+  }
+  return fallback;
+}
+
+function parseNullableString(val: unknown): string | null {
+  if (val === null || val === undefined) return null;
+  return String(val);
+}
+
+function parseNullableNumber(val: unknown): number | null {
+  if (val === null || val === undefined) return null;
+  const num = Number(val);
+  return Number.isNaN(num) ? null : num;
+}
+
+function resolveEntityId(r: Record<string, unknown>): string {
+  if (typeof r.entityId === 'string' && r.entityId.length > 0) return r.entityId;
+  if (typeof r.approvalNumber === 'string' && r.approvalNumber.length > 0) return r.approvalNumber;
+  if (typeof r.id === 'string') return r.id;
+  return '';
+}
+
+function resolveReason(r: Record<string, unknown>): string | null {
+  if (typeof r.reason === 'string') return r.reason;
+  if (typeof r.description === 'string') return r.description;
+  if (typeof r.rejectionReason === 'string') return r.rejectionReason;
+  return null;
+}
+
+function mapToApprovalItem(raw: unknown): ApprovalItem {
+  const r = (raw && typeof raw === 'object' ? raw : {}) as Record<string, unknown>;
+  const status = (r.status as ApprovalStatusEnum) || 'PENDING';
+
+  return {
+    id: parseString(r.id, ''),
+    type: parseString(r.type, 'OTHER'),
+    entityType: parseString(r.entityType, 'Approval'),
+    entityId: resolveEntityId(r),
+    title: parseString(r.title, 'Approval Request'),
+    requesterId: parseString(r.requesterId, ''),
+    requesterName: typeof r.requesterName === 'string' ? r.requesterName : undefined,
+    amountPaisa: parseNullableString(r.amountPaisa),
+    percentage: parseNullableNumber(r.percentage),
+    status,
+    currentTier: parseNumber(r.currentTier ?? r.currentStepOrder, 1),
+    maxTier: parseNumber(r.maxTier ?? r.totalSteps, 1),
+    reason: resolveReason(r),
+    createdAt: parseString(r.createdAt, new Date().toISOString()),
+    updatedAt: parseString(r.updatedAt, new Date().toISOString()),
+  };
+}
+
+function extractRawList(rawData: unknown): unknown[] {
+  if (Array.isArray(rawData)) {
+    return rawData;
+  }
+  if (!rawData || typeof rawData !== 'object') {
+    return [];
+  }
+  const record = rawData as Record<string, unknown>;
+  if (Array.isArray(record.items)) {
+    return record.items;
+  }
+  if (record.data && typeof record.data === 'object') {
+    const nested = record.data as Record<string, unknown>;
+    if (Array.isArray(nested.items)) return nested.items;
+    if (Array.isArray(nested)) return nested as unknown[];
+  }
+  return [];
 }
 
 export function useApprovalList() {
@@ -43,16 +125,10 @@ export function useApprovalList() {
   const query = useApprovalsControllerGetInbox(queryParams);
 
   const rawData: unknown = query.data;
-  let items: ApprovalItem[] = [];
 
-  if (Array.isArray(rawData)) {
-    items = rawData as ApprovalItem[];
-  } else if (rawData && typeof rawData === 'object' && 'data' in rawData) {
-    const nested = (rawData as Record<string, unknown>).data;
-    if (Array.isArray(nested)) {
-      items = nested as ApprovalItem[];
-    }
-  }
+  const items: ApprovalItem[] = useMemo(() => {
+    return extractRawList(rawData).map(mapToApprovalItem);
+  }, [rawData]);
 
   const kpis = useMemo(() => computeApprovalKpis(items), [items]);
 
