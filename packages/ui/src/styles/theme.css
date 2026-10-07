@@ -488,7 +488,6 @@
   --gradient-brand: linear-gradient(135deg, #fbbf24 0%, #f59e0b 50%, #b45309 100%);
   --shadow-brand: none;
 }
-}
 
 /* ── Base ─────────────────────────────────────────────────────────────────── */
 @layer base {

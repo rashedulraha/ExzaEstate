@@ -1,3 +1,3 @@
 fn main() {
-    // Build script for exzaestate-desktop
+    tauri_build::build();
 }

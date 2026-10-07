@@ -1,4 +1,4 @@
-import type { PlatformAdapters, ApiConfig } from '@exzaestate/app-core';
+import { type PlatformAdapters, type ApiConfig, getEnvApiBaseUrl } from '@exzaestate/app-core';
 import { DesktopKeychainSecureStorage } from './secure-storage.js';
 import { DesktopFileDialog } from './file-dialog.js';
 import { DesktopUpdater } from './updater.js';
@@ -13,12 +13,7 @@ function getDefaultBaseUrl(): string {
       return '';
     }
   }
-  return (
-    (typeof import.meta !== 'undefined' &&
-      (import.meta as unknown as { env?: { VITE_API_BASE_URL?: string } }).env
-        ?.VITE_API_BASE_URL) ||
-    'http://localhost:3000'
-  );
+  return getEnvApiBaseUrl();
 }
 
 export const desktopApiConfig: ApiConfig = {

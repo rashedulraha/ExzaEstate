@@ -1,5 +1,6 @@
 import type { SidecarControl, SidecarStatus } from '@exzaestate/app-core';
 import { invoke } from '@tauri-apps/api/core';
+import { apiClient } from '@exzaestate/api-client';
 
 function isTauriEnvironment(): boolean {
   return typeof window !== 'undefined' && '__TAURI_INTERNALS__' in window;
@@ -70,12 +71,11 @@ export class DesktopSidecarControl implements SidecarControl {
 
     while (Date.now() - startTime < timeoutMs) {
       try {
-        const res = await fetch(`http://127.0.0.1:${port}/api/v1/health`, {
-          method: 'GET',
+        const res = await apiClient.get(`http://127.0.0.1:${port}/api/v1/health`, {
           headers,
-          signal: AbortSignal.timeout(2000),
+          timeout: 2000,
         });
-        if (res.ok) {
+        if (res.status === 200) {
           this.currentPort = port;
           this.restartAttempts = 0;
           return true;

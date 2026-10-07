@@ -1,0 +1,15 @@
+{
+  "default": {
+    "identifier": "default",
+    "description": "Default least-privilege capability set for ExzaEstate desktop",
+    "local": true,
+    "windows": ["main"],
+    "permissions": [
+      "core:default",
+      "dialog:default",
+      "notification:default",
+      "updater:default",
+      { "identifier": "shell:allow-open", "allow": [{ "href": "https://*" }] }
+    ]
+  }
+}

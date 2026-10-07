@@ -103,17 +103,28 @@ export class DesktopLicensingService implements DesktopLicensing {
         if (fp?.machineId) {
           return fp;
         }
-      } catch {
-        // Fallback below
+      } catch (err) {
+        throw new Error(
+          `Hardware fingerprint detection failed: ${err instanceof Error ? err.message : String(err)}`,
+        );
       }
     }
 
-    return {
-      machineId: '8f4c2b9a7d1e3f5a8b0c4e6d2f1a9b7c5e3d1f9a7b5c3d1e9f7a5b3c1d9e7f5a',
-      motherboardUuid: 'MB-SYS-DEFAULT-001',
-      cpuSerial: 'CPU-GEN-DEFAULT-001',
-      diskSerial: 'DISK-PRIMARY-DEFAULT-001',
-    };
+    const nodeEnv = (
+      globalThis as unknown as { process?: { env?: Record<string, string | undefined> } }
+    ).process?.env;
+    if (nodeEnv?.NODE_ENV === 'test') {
+      return {
+        machineId: '8f4c2b9a7d1e3f5a8b0c4e6d2f1a9b7c5e3d1f9a7b5c3d1e9f7a5b3c1d9e7f5a',
+        motherboardUuid: 'TEST-MOTHERBOARD-UUID',
+        cpuSerial: 'TEST-CPU-SERIAL',
+        diskSerial: 'TEST-DISK-SERIAL',
+      };
+    }
+
+    throw new Error(
+      'Hardware fingerprint detection is only available in the Tauri desktop application runtime',
+    );
   }
 
   async getStoredLicense(): Promise<StoredLicenseRecord | null> {
