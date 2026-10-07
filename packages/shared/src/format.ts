@@ -9,6 +9,7 @@ import { TZDate } from '@date-fns/tz';
 export interface FormatMoneyOptions {
   showCurrency?: boolean;
   showDecimals?: boolean;
+  currencySymbol?: string;
 }
 
 /**
@@ -37,12 +38,12 @@ export function formatBangladeshiGrouping(intStr: string): string {
 
 /**
  * Formats a BigInt paisa amount into Bangladeshi currency representation.
- * Groups by lakh/crore, uses English digits, and prefixes with '৳'.
+ * Groups by lakh/crore, uses English digits, and prefixes with 'BDT '.
  *
  * Example:
- *   formatMoney(50000000n) -> "৳5,00,000.00" (Acceptance AT-19)
- *   formatMoney(-50000000n) -> "-৳5,00,000.00"
- *   formatMoney(50000000n, { showDecimals: false }) -> "৳5,00,000"
+ *   formatMoney(50000000n) -> "BDT 5,00,000.00"
+ *   formatMoney(-50000000n) -> "-BDT 5,00,000.00"
+ *   formatMoney(50000000n, { showDecimals: false }) -> "BDT 5,00,000"
  */
 function parseToBigIntPaisa(paisa: bigint | number | string): bigint {
   if (typeof paisa === 'bigint') return paisa;
@@ -54,7 +55,7 @@ export function formatMoney(
   paisa: bigint | number | string,
   options: FormatMoneyOptions = {},
 ): string {
-  const { showCurrency = true, showDecimals = true } = options;
+  const { showCurrency = true, showDecimals = true, currencySymbol = 'BDT ' } = options;
   const bigPaisa = parseToBigIntPaisa(paisa);
 
   const isNegative = bigPaisa < 0n;
@@ -69,9 +70,9 @@ export function formatMoney(
   const numberPart = showDecimals === false ? formattedTaka : `${formattedTaka}.${formattedPoisha}`;
 
   if (isNegative) {
-    return showCurrency ? `-৳${numberPart}` : `-${numberPart}`;
+    return showCurrency ? `-${currencySymbol}${numberPart}` : `-${numberPart}`;
   }
-  return showCurrency ? `৳${numberPart}` : numberPart;
+  return showCurrency ? `${currencySymbol}${numberPart}` : numberPart;
 }
 
 export interface FormatNumberOptions {
@@ -310,4 +311,44 @@ export function amountToWords(
   const remPaisa = Number(absPaisa % 100n);
 
   return formatEnglishWords(taka, remPaisa, isNegative);
+}
+
+/**
+ * Strips any Bengali characters (U+0980–U+09FF) and associated parenthesized/bracketed artifacts
+ * from a string, ensuring clean English text throughout the UI.
+ *
+ * Examples:
+ *   "ExzaEstate Development Ltd. (রূপায়ণ)" -> "ExzaEstate Development Ltd."
+ *   "আনোয়ার হোসেন (Anwar Hossain)" -> "Anwar Hossain"
+ *   "Head Office (প্রধান কার্যালয়)" -> "Head Office"
+ *   "রূপায়ণ" -> fallback (e.g. "ExzaEstate Development Ltd.")
+ */
+export function cleanEnglishText(raw?: string | null, fallback = ''): string {
+  if (!raw) return fallback;
+
+  // Case 1: Format like "বাংলা নাম (English Name)" -> extract English candidate inside parentheses/brackets
+  const parenMatch = raw.match(/[[({]([^()[\]{}]+)[\])}]/);
+  if (
+    parenMatch &&
+    parenMatch[1] &&
+    /[A-Za-z]/.test(parenMatch[1]) &&
+    !/[\u0980-\u09FF]/.test(parenMatch[1])
+  ) {
+    const candidate = parenMatch[1].trim();
+    if (candidate.length > 0) return candidate;
+  }
+
+  // Case 2: Remove parenthesized / bracketed segments containing Bengali characters, e.g. " (রূপায়ণ)"
+  let cleaned = raw.replace(/\s*[[({][^[\](){}]*[\u0980-\u09FF][^[\](){}]*[\])}]/g, '');
+
+  // Case 3: Strip any remaining Bengali characters (excluding currency symbol ৳ \u09F3)
+  cleaned = cleaned.replace(/[\u0980-\u09F2\u09F4-\u09FF]/g, '');
+
+  // Case 4: Clean up excess whitespace and dangling outer punctuation like hyphens, colons, commas
+  cleaned = cleaned
+    .replace(/\s+/g, ' ')
+    .replace(/^[\s\-_:–—,()[\]{}]+|[\s\-_:–—,()[\]{}]+$/g, '')
+    .trim();
+
+  return cleaned.length > 0 ? cleaned : fallback;
 }
