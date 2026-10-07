@@ -15,6 +15,8 @@ import { DemoCustomerStep } from './steps/demo-customer.step.js';
 import { DemoPaymentPlanStep } from './steps/demo-payment-plan.step.js';
 import { DemoChargeStep } from './steps/demo-charge.step.js';
 import { DemoQuotationStep } from './steps/demo-quotation.step.js';
+import { DemoApprovalStep } from './steps/demo-approval.step.js';
+import { DemoExpenseStep } from './steps/demo-expense.step.js';
 
 export * from './demo-seed-step.interface.js';
 
@@ -35,6 +37,8 @@ export class DemoSeedService implements OnModuleInit {
     private readonly demoPaymentPlanStep: DemoPaymentPlanStep,
     private readonly demoChargeStep: DemoChargeStep,
     private readonly demoQuotationStep: DemoQuotationStep,
+    private readonly demoApprovalStep: DemoApprovalStep,
+    private readonly demoExpenseStep: DemoExpenseStep,
   ) {
     this.registerStep(this.demoStaffStep);
     this.registerStep(this.demoLandStep);
@@ -45,6 +49,8 @@ export class DemoSeedService implements OnModuleInit {
     this.registerStep(this.demoPaymentPlanStep);
     this.registerStep(this.demoChargeStep);
     this.registerStep(this.demoQuotationStep);
+    this.registerStep(this.demoApprovalStep);
+    this.registerStep(this.demoExpenseStep);
   }
 
   onModuleInit(): void {
@@ -57,6 +63,8 @@ export class DemoSeedService implements OnModuleInit {
     this.registerStep(this.demoPaymentPlanStep);
     this.registerStep(this.demoChargeStep);
     this.registerStep(this.demoQuotationStep);
+    this.registerStep(this.demoApprovalStep);
+    this.registerStep(this.demoExpenseStep);
   }
 
   registerStep(step: DemoSeedStep): void {
@@ -76,14 +84,14 @@ export class DemoSeedService implements OnModuleInit {
 
   async runDemoSeed(dto?: ProvisionCompanyDto): Promise<ProvisioningResult> {
     const defaultDto: ProvisionCompanyDto = {
-      name: 'ExzaEstate Development Ltd. (রূপায়ণ)',
+      name: 'ExzaEstate Development Ltd.',
       code: 'EXZA',
       timezone: 'Asia/Dhaka',
-      branchName: 'Head Office (প্রধান কার্যালয়)',
+      branchName: 'Head Office',
       branchCode: 'HO',
       managingDirector: {
         email: 'md@exzaestate.com',
-        fullName: 'আনোয়ার হোসেন (Anwar Hossain)',
+        fullName: 'Anwar Hossain',
         phone: '+8801700000001',
         password: 'ExzaEstate@2026!',
         isLocalMode: true,

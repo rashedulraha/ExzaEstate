@@ -23,7 +23,7 @@ interface DemoProjectTemplate {
 const DEMO_PROJECT_TEMPLATES: DemoProjectTemplate[] = [
   {
     code: 'PRJ-PUR-001',
-    name: 'পূর্বাচল গ্রীন সিটি ফেজ ১ (Purbachal Green City Phase 1)',
+    name: 'Purbachal Green City Phase 1',
     type: 'LAND_DEVELOPMENT',
     status: 'UNDER_CONSTRUCTION',
     landCode: 'LND-PUR-001',
@@ -35,13 +35,13 @@ const DEMO_PROJECT_TEMPLATES: DemoProjectTemplate[] = [
     expectedCompletionDate: new Date('2027-12-31T00:00:00Z'),
     estimatedBudgetPaisa: 25000000000n, // 25 Crore BDT
     costCenterCode: 'CC-PUR-001',
-    costCenterName: 'পূর্বাচল গ্রীন সিটি কস্ট সেন্টার',
+    costCenterName: 'Purbachal Green City Cost Center',
     description:
       'Premier eco-planned gated community project spanning master land parcel LND-PUR-001',
   },
   {
     code: 'PRJ-BRV-002',
-    name: 'বসুন্ধরা রিভারভিউ হাইটস (Bashundhara Riverview Heights)',
+    name: 'Bashundhara Riverview Heights',
     type: 'RESIDENTIAL',
     status: 'PLANNING',
     landCode: 'LND-BRV-002',
@@ -53,7 +53,7 @@ const DEMO_PROJECT_TEMPLATES: DemoProjectTemplate[] = [
     expectedCompletionDate: new Date('2028-06-30T00:00:00Z'),
     estimatedBudgetPaisa: 60000000000n, // 60 Crore BDT
     costCenterCode: 'CC-BRV-002',
-    costCenterName: 'বসুন্ধরা রিভারভিউ কস্ট সেন্টার',
+    costCenterName: 'Bashundhara Riverview Cost Center',
     description: 'Luxury 24-storey residential twin-tower overlooking Buriganga riverfront',
   },
 ];

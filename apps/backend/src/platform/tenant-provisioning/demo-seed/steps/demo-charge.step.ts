@@ -18,7 +18,7 @@ interface DemoChargeTypeDef {
 const DEMO_CHARGE_TYPES: DemoChargeTypeDef[] = [
   {
     code: 'REGISTRATION',
-    name: 'Registration & Stamp Duty (রেজিস্ট্রেশন ও স্ট্যাম্প ডিউটি)',
+    name: 'Registration & Stamp Duty',
     description:
       'Government land and property registration, stamp duty, local council tax, and deed processing charges.',
     calculationType: 'PERCENTAGE',
@@ -30,7 +30,7 @@ const DEMO_CHARGE_TYPES: DemoChargeTypeDef[] = [
   },
   {
     code: 'UTILITY',
-    name: 'Utility Connection Fees (বিদ্যুৎ, গ্যাস ও ওয়াসা সংযোগ ফি)',
+    name: 'Utility Connection Fees',
     description:
       'DESCO/DPDC electricity substation share, WASA water/sewerage connection, and gas utility distribution infrastructure.',
     calculationType: 'FIXED',
@@ -42,7 +42,7 @@ const DEMO_CHARGE_TYPES: DemoChargeTypeDef[] = [
   },
   {
     code: 'PARKING',
-    name: 'Car Parking Space Allocation (গাড়ি পার্কিং স্থান বরাদ্দ)',
+    name: 'Car Parking Space Allocation',
     description:
       'Basement or ground floor reserved covered car parking lot space allocation charge.',
     calculationType: 'FIXED',
@@ -54,7 +54,7 @@ const DEMO_CHARGE_TYPES: DemoChargeTypeDef[] = [
   },
   {
     code: 'DEVELOPMENT',
-    name: 'Development & Municipal Charge (উন্নয়ন ও পৌর চার্জ)',
+    name: 'Development & Municipal Charge',
     description:
       'City corporation/municipal infrastructure development charge, fire safety system share, and perimeter security levy.',
     calculationType: 'PERCENTAGE',
@@ -66,7 +66,7 @@ const DEMO_CHARGE_TYPES: DemoChargeTypeDef[] = [
   },
   {
     code: 'LEGAL',
-    name: 'Legal & Documentation Fee (আইনি ও দলিল ফি)',
+    name: 'Legal & Documentation Fee',
     description:
       'Legal vetting, title search, deed drafting, affidavit preparation, and notary verification fees.',
     calculationType: 'FIXED',
@@ -78,7 +78,7 @@ const DEMO_CHARGE_TYPES: DemoChargeTypeDef[] = [
   },
   {
     code: 'CLUB',
-    name: 'Club & Community Membership (কমিউনিটি ও ক্লাব মেম্বারশিপ)',
+    name: 'Club & Community Membership',
     description: 'Access to rooftop lounge, swimming pool, gymnasium, and resident community hall.',
     calculationType: 'FIXED',
     defaultAmountPaisa: 20_000_000n, // ৳2,00,000
@@ -89,7 +89,7 @@ const DEMO_CHARGE_TYPES: DemoChargeTypeDef[] = [
   },
   {
     code: 'TRANSFER',
-    name: 'Ownership Transfer Fee (মালিকানা হস্তান্তর ফি)',
+    name: 'Ownership Transfer Fee',
     description:
       'Standard administrative and transfer documentation charge on assignment or resale prior to registration.',
     calculationType: 'PERCENTAGE',

@@ -32,7 +32,7 @@ interface DemoLandParcel {
 const DEMO_LAND_PARCELS: DemoLandParcel[] = [
   {
     code: 'LND-PUR-001',
-    name: 'পূর্বাচল গ্রীন সিটি জমি (Purbachal Green City Land)',
+    name: 'Purbachal Green City Land',
     district: 'Gazipur',
     upazila: 'Kaliganj',
     mouza: 'Nagari',
@@ -58,7 +58,7 @@ const DEMO_LAND_PARCELS: DemoLandParcel[] = [
   },
   {
     code: 'LND-BRV-002',
-    name: 'বসুন্ধরা রিভারভিউ এক্সটেনশন (Bashundhara Riverview Extension)',
+    name: 'Bashundhara Riverview Extension',
     district: 'Dhaka',
     upazila: 'Keraniganj',
     mouza: 'Hasnabad',

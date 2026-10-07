@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '../../config/config.service.js';
 import { SystemPrisma } from '../../database/system-prisma.service.js';
 import { TenantDb } from '../../database/tenant-db.service.js';
@@ -186,29 +186,47 @@ export class LocalProvisioningService {
   private resolveLicenseKey(input?: LocalProvisioningDto): string {
     const fromInput = input?.licenseKey?.trim();
     if (fromInput) return fromInput;
-    return this.configService.initialLicenseKey || 'EXZA-ENTERPRISE-2026-ABCD-EF01-9999';
+    if (this.configService.initialLicenseKey) return this.configService.initialLicenseKey;
+    throw new BadRequestException(
+      'Software purchase license key is required for local standalone provisioning',
+    );
+  }
+
+  private validateRequiredStrings(
+    records: Array<{ value?: string; message: string; minLength?: number }>,
+  ) {
+    for (const { value, message, minLength = 1 } of records) {
+      if (!value || value.trim().length < minLength) {
+        throw new BadRequestException(message);
+      }
+    }
   }
 
   private resolveProvisioningConfig(input?: LocalProvisioningDto) {
-    const raw = input ?? {};
-    const companyCode = (raw.companyCode || 'EXZA01').toUpperCase().trim();
-    const companyName = raw.companyName || 'ExzaEstate Development Ltd.';
-    const email = (raw.adminEmail || 'admin@exzaestate.local').toLowerCase().trim();
-    const fullName = raw.adminName || 'Managing Director';
-    const timezone = raw.timezone || 'Asia/Dhaka';
-    const rawPassword = raw.adminPassword || 'AdminLocal1234!';
-    const licenseKey = this.resolveLicenseKey(input);
-    const machineId = raw.machineId ? raw.machineId.trim() : null;
+    if (!input) {
+      throw new BadRequestException('Local provisioning input is required');
+    }
+    this.validateRequiredStrings([
+      { value: input.companyCode, message: 'Company code is required for provisioning' },
+      { value: input.companyName, message: 'Legal company name is required for provisioning' },
+      { value: input.adminEmail, message: 'Administrator email is required for provisioning' },
+      { value: input.adminName, message: 'Administrator full name is required for provisioning' },
+      {
+        value: input.adminPassword,
+        message: 'Administrator password is required (minimum 8 characters)',
+        minLength: 8,
+      },
+    ]);
 
     return {
-      companyCode,
-      companyName,
-      email,
-      fullName,
-      timezone,
-      rawPassword,
-      licenseKey,
-      machineId,
+      companyCode: input.companyCode.trim().toUpperCase(),
+      companyName: input.companyName.trim(),
+      email: input.adminEmail.trim().toLowerCase(),
+      fullName: input.adminName.trim(),
+      timezone: input.timezone?.trim() || 'Asia/Dhaka',
+      rawPassword: input.adminPassword,
+      licenseKey: this.resolveLicenseKey(input),
+      machineId: input.machineId ? input.machineId.trim() : null,
     };
   }
 

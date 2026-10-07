@@ -21,7 +21,10 @@ export class ManagingDirectorStep implements ProvisioningStep {
 
     if (isLocalMode) {
       status = 'ACTIVE';
-      const rawPassword = ctx.managingDirector.password || 'AdminLocal1234!';
+      if (!ctx.managingDirector.password) {
+        throw new Error('Local Managing Director requires an explicit initial password');
+      }
+      const rawPassword = ctx.managingDirector.password;
       passwordHash = await argon2.hash(rawPassword, {
         type: argon2.argon2id,
         memoryCost: 65536,

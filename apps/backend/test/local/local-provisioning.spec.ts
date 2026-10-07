@@ -92,6 +92,9 @@ describe('A10.1 — Local First-Launch Provisioning', () => {
       companyName: 'Acme Real Estate',
       companyCode: 'ACME01',
       adminEmail: 'admin@acme.local',
+      adminName: 'Managing Director',
+      adminPassword: 'Password123!',
+      licenseKey: 'EXZA-ENTERPRISE-2026-ABCD-EF01-9999',
     });
 
     expect(result.provisioned).toBe(true);
@@ -103,6 +106,8 @@ describe('A10.1 — Local First-Launch Provisioning', () => {
         code: 'ACME01',
         managingDirector: expect.objectContaining({
           email: 'admin@acme.local',
+          fullName: 'Managing Director',
+          password: 'Password123!',
           isLocalMode: true,
         }),
       }),
@@ -119,6 +124,27 @@ describe('A10.1 — Local First-Launch Provisioning', () => {
       }),
     );
     expect(mockTx.license.upsert).toHaveBeenCalled();
+  });
+
+  it('throws BadRequestException when required fields are missing', async () => {
+    const mockSystemPrisma = {
+      executeWithReason: vi
+        .fn()
+        .mockImplementation(async (_reason: string, cb: (client: unknown) => Promise<unknown>) => {
+          const client = { user: { count: vi.fn().mockResolvedValue(0) } };
+          return cb(client);
+        }),
+    } as unknown as SystemPrisma;
+
+    const service = new LocalProvisioningService(
+      mockSystemPrisma,
+      {} as TenantDb,
+      {} as TenantProvisioningService,
+      mockTokenService,
+      mockConfigService,
+    );
+
+    await expect(service.provisionLocalStandalone({})).rejects.toThrow();
   });
 
   it('skips provisioning if company already exists (idempotency)', async () => {

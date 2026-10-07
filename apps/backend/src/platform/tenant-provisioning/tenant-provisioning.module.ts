@@ -12,6 +12,7 @@ import { DefaultCoaStep } from './steps/default-coa.step.js';
 import { DefaultPeriodsStep } from './steps/default-periods.step.js';
 import { DefaultPostingRulesStep } from './steps/default-posting-rules.step.js';
 import { DefaultBanksStep } from './steps/default-banks.step.js';
+import { DefaultExpenseCategoriesStep } from './steps/default-expense-categories.step.js';
 import { TenantProvisioningService } from './tenant-provisioning.service.js';
 import { DemoStaffStep } from './demo-seed/steps/demo-staff.step.js';
 import { DemoLandStep } from './demo-seed/steps/demo-land.step.js';
@@ -22,6 +23,8 @@ import { DemoCustomerStep } from './demo-seed/steps/demo-customer.step.js';
 import { DemoPaymentPlanStep } from './demo-seed/steps/demo-payment-plan.step.js';
 import { DemoChargeStep } from './demo-seed/steps/demo-charge.step.js';
 import { DemoQuotationStep } from './demo-seed/steps/demo-quotation.step.js';
+import { DemoApprovalStep } from './demo-seed/steps/demo-approval.step.js';
+import { DemoExpenseStep } from './demo-seed/steps/demo-expense.step.js';
 import { DemoSeedService } from './demo-seed/demo-seed.service.js';
 
 @Module({
@@ -39,6 +42,7 @@ import { DemoSeedService } from './demo-seed/demo-seed.service.js';
     DefaultPeriodsStep,
     DefaultPostingRulesStep,
     DefaultBanksStep,
+    DefaultExpenseCategoriesStep,
     TenantProvisioningService,
     DemoStaffStep,
     DemoLandStep,
@@ -49,6 +53,8 @@ import { DemoSeedService } from './demo-seed/demo-seed.service.js';
     DemoPaymentPlanStep,
     DemoChargeStep,
     DemoQuotationStep,
+    DemoApprovalStep,
+    DemoExpenseStep,
     DemoSeedService,
   ],
   exports: [
@@ -65,6 +71,7 @@ import { DemoSeedService } from './demo-seed/demo-seed.service.js';
     DefaultPeriodsStep,
     DefaultPostingRulesStep,
     DefaultBanksStep,
+    DefaultExpenseCategoriesStep,
     DemoStaffStep,
     DemoLandStep,
     DemoProjectStep,
@@ -74,6 +81,8 @@ import { DemoSeedService } from './demo-seed/demo-seed.service.js';
     DemoPaymentPlanStep,
     DemoChargeStep,
     DemoQuotationStep,
+    DemoApprovalStep,
+    DemoExpenseStep,
     DemoSeedService,
   ],
 })

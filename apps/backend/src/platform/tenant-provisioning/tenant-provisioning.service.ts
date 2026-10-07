@@ -19,6 +19,7 @@ import { DefaultApprovalRulesStep } from './steps/default-approval-rules.step.js
 import { DefaultCoaStep } from './steps/default-coa.step.js';
 import { DefaultPeriodsStep } from './steps/default-periods.step.js';
 import { DefaultPostingRulesStep } from './steps/default-posting-rules.step.js';
+import { DefaultExpenseCategoriesStep } from './steps/default-expense-categories.step.js';
 
 export * from './provisioning-step.interface.js';
 
@@ -41,6 +42,7 @@ export class TenantProvisioningService implements OnModuleInit {
     private readonly defaultCoaStep: DefaultCoaStep,
     private readonly defaultPeriodsStep: DefaultPeriodsStep,
     private readonly defaultPostingRulesStep: DefaultPostingRulesStep,
+    private readonly defaultExpenseCategoriesStep: DefaultExpenseCategoriesStep,
   ) {
     this.registerStep(this.companyBranchStep);
     this.registerStep(this.rolesPermissionsStep);
@@ -53,6 +55,7 @@ export class TenantProvisioningService implements OnModuleInit {
     this.registerStep(this.defaultCoaStep);
     this.registerStep(this.defaultPeriodsStep);
     this.registerStep(this.defaultPostingRulesStep);
+    this.registerStep(this.defaultExpenseCategoriesStep);
   }
 
   onModuleInit(): void {
@@ -68,6 +71,7 @@ export class TenantProvisioningService implements OnModuleInit {
     this.registerStep(this.defaultCoaStep);
     this.registerStep(this.defaultPeriodsStep);
     this.registerStep(this.defaultPostingRulesStep);
+    this.registerStep(this.defaultExpenseCategoriesStep);
   }
 
   /**

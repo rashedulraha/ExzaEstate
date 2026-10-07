@@ -16,6 +16,7 @@ import { DefaultCoaStep } from '../src/platform/tenant-provisioning/steps/defaul
 import { DefaultPeriodsStep } from '../src/platform/tenant-provisioning/steps/default-periods.step.js';
 import { DefaultPostingRulesStep } from '../src/platform/tenant-provisioning/steps/default-posting-rules.step.js';
 import { DefaultBanksStep } from '../src/platform/tenant-provisioning/steps/default-banks.step.js';
+import { DefaultExpenseCategoriesStep } from '../src/platform/tenant-provisioning/steps/default-expense-categories.step.js';
 import { TenantProvisioningService } from '../src/platform/tenant-provisioning/tenant-provisioning.service.js';
 import { DemoStaffStep } from '../src/platform/tenant-provisioning/demo-seed/steps/demo-staff.step.js';
 import { DemoLandStep } from '../src/platform/tenant-provisioning/demo-seed/steps/demo-land.step.js';
@@ -26,6 +27,8 @@ import { DemoCustomerStep } from '../src/platform/tenant-provisioning/demo-seed/
 import { DemoPaymentPlanStep } from '../src/platform/tenant-provisioning/demo-seed/steps/demo-payment-plan.step.js';
 import { DemoChargeStep } from '../src/platform/tenant-provisioning/demo-seed/steps/demo-charge.step.js';
 import { DemoQuotationStep } from '../src/platform/tenant-provisioning/demo-seed/steps/demo-quotation.step.js';
+import { DemoApprovalStep } from '../src/platform/tenant-provisioning/demo-seed/steps/demo-approval.step.js';
+import { DemoExpenseStep } from '../src/platform/tenant-provisioning/demo-seed/steps/demo-expense.step.js';
 import { DemoSeedService } from '../src/platform/tenant-provisioning/demo-seed/demo-seed.service.js';
 import { FieldCryptoService } from '../src/platform/security/field-crypto.service.js';
 
@@ -68,6 +71,7 @@ async function runDemoSeed() {
   const defaultPeriodsStep = new DefaultPeriodsStep();
   const defaultPostingRulesStep = new DefaultPostingRulesStep();
   const defaultBanksStep = new DefaultBanksStep();
+  const defaultExpenseCategoriesStep = new DefaultExpenseCategoriesStep();
 
   await defaultBanksStep.seedGlobalBanks(systemPrisma);
   console.log('✓ Global banks and branches reference data seeded');
@@ -86,6 +90,7 @@ async function runDemoSeed() {
     defaultCoaStep,
     defaultPeriodsStep,
     defaultPostingRulesStep,
+    defaultExpenseCategoriesStep,
   );
   provisioningService.onModuleInit();
 
@@ -99,6 +104,8 @@ async function runDemoSeed() {
   const demoPaymentPlanStep = new DemoPaymentPlanStep();
   const demoChargeStep = new DemoChargeStep();
   const demoQuotationStep = new DemoQuotationStep();
+  const demoApprovalStep = new DemoApprovalStep();
+  const demoExpenseStep = new DemoExpenseStep();
 
   const demoSeedService = new DemoSeedService(
     tenantDb,
@@ -112,6 +119,8 @@ async function runDemoSeed() {
     demoPaymentPlanStep,
     demoChargeStep,
     demoQuotationStep,
+    demoApprovalStep,
+    demoExpenseStep,
   );
   demoSeedService.onModuleInit();
 
