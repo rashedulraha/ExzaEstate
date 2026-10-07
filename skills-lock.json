@@ -1,6 +1,18 @@
 {
   "version": 1,
   "skills": {
+    "accessibility-diff": {
+      "source": "AccessLint/claude-marketplace",
+      "sourceType": "github",
+      "skillPath": "plugins/accesslint/skills/accessibility-diff/SKILL.md",
+      "computedHash": "0fe35de7ad63c36fc8b5a28cff090e34a174e7e1200656e84feb9067f5db17c5"
+    },
+    "best-practices": {
+      "source": "addyosmani/web-quality-skills",
+      "sourceType": "github",
+      "skillPath": "skills/best-practices/SKILL.md",
+      "computedHash": "ca00ef2671d65a7442bc796e8744cd3d759f92c01640f2fbcab638889c494424"
+    },
     "better-typography": {
       "source": "jakubkrehel/skills",
       "sourceType": "github",
@@ -18,6 +30,12 @@
       "sourceType": "github",
       "skillPath": "skills/frontend-design/SKILL.md",
       "computedHash": "89496d5dd00f4810205f351759594fc2742bf8eea85a2f2b2d1de59f4bd91576"
+    },
+    "performance": {
+      "source": "addyosmani/web-quality-skills",
+      "sourceType": "github",
+      "skillPath": "skills/performance/SKILL.md",
+      "computedHash": "ce9d36f139a1b2a6a8ac2cb222698963b8076d2dd8b41685e8e8ae589cdcf1e4"
     },
     "ui-ux-pro-max": {
       "source": "nextlevelbuilder/ui-ux-pro-max-skill",

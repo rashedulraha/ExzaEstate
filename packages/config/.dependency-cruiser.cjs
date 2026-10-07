@@ -180,16 +180,20 @@ module.exports = {
       severity: 'error',
       comment: 'Within L4 Transactions, only sales -> collection is permitted.',
       from: {
-        path: '^apps/backend/src/modules/(collection|expense|procurement|development|maintenance|commission)/',
+        path: '^apps/backend/src/modules/([^/]+)/',
+        pathNot: '\\.spec\\.ts$',
       },
       to: {
-        path: '^apps/backend/src/modules/(sales|expense|procurement|development|maintenance|commission)/',
+        path: '^apps/backend/src/modules/(?!$1)(sales|expense|procurement|development|maintenance|commission)/',
       },
     },
   ],
   options: {
     doNotFollow: {
-      path: 'node_modules',
+      path: 'node_modules|src-tauri/target|dist|build',
+    },
+    exclude: {
+      path: 'src-tauri/target|dist|build|\\.turbo',
     },
     tsPreCompilationDeps: true,
     tsConfig: {
