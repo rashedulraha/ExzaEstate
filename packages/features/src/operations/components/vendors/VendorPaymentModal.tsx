@@ -104,7 +104,7 @@ export function VendorPaymentModal({
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        <FormField id="vendor-pay-amount" label="Payment Amount (৳)" required>
+        <FormField id="vendor-pay-amount" label="Payment Amount (BDT)" required>
           <Input
             id="vendor-pay-amount"
             type="number"

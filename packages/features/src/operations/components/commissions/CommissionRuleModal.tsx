@@ -123,7 +123,7 @@ export function CommissionRuleModal({
         </FormField>
 
         {calculationType === 'FIXED_AMOUNT' ? (
-          <FormField id="rule-fixed-amount" label="Fixed Commission (৳)" required>
+          <FormField id="rule-fixed-amount" label="Fixed Commission (BDT)" required>
             <Input
               id="rule-fixed-amount"
               type="number"

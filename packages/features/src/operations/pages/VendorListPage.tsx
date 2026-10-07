@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Plus, Building2, Receipt } from 'lucide-react';
 import { formatMoney } from '@exzaestate/shared';
-import { Button } from '@exzaestate/ui';
+import { Button, EmptyState } from '@exzaestate/ui';
 import { useVendors } from '../hooks/useVendors.js';
 import { VendorDataTable } from '../components/vendors/VendorDataTable.js';
 import { VendorModal } from '../components/vendors/VendorModal.js';
@@ -15,6 +15,86 @@ import type {
   CreateVendorBillInput,
   CreateVendorPaymentInput,
 } from '../schemas/operations.schema.js';
+
+function getBillStatusBadge(status: VendorBillItem['status']) {
+  switch (status) {
+    case 'DRAFT':
+      return 'border-border bg-surface-sunken text-text-muted';
+    case 'POSTED':
+      return 'border-info/30 bg-info/10 text-info';
+    case 'PAID':
+      return 'border-success/30 bg-success/10 text-success';
+    case 'CANCELLED':
+      return 'border-danger/30 bg-danger/10 text-danger';
+  }
+}
+
+function VendorBillsTab({
+  bills,
+  onOpenNewBill,
+  onSelectBill,
+}: {
+  bills: VendorBillItem[];
+  onOpenNewBill: () => void;
+  onSelectBill: (bill: VendorBillItem) => void;
+}) {
+  if (bills.length === 0) {
+    return (
+      <EmptyState
+        dashedBorder
+        title="No vendor bills recorded"
+        description="Record procurement bills from suppliers to manage accounts payable and withholding tax (TDS / VDS)."
+        actionLabel="New Bill"
+        actionVariant="secondary"
+        actionIcon={<Plus className="w-4 h-4" />}
+        onAction={onOpenNewBill}
+      />
+    );
+  }
+
+  return (
+    <div className="overflow-x-auto card-workspace">
+      <table className="w-full text-left">
+        <thead className="border-b border-border bg-surface-sunken/60">
+          <tr>
+            <th className="px-4 py-3 text-th">Bill Number</th>
+            <th className="px-4 py-3 text-th">Vendor</th>
+            <th className="px-4 py-3 text-th">Date</th>
+            <th className="px-4 py-3 text-right text-th">Net Payable</th>
+            <th className="px-4 py-3 text-center text-th">Status</th>
+            <th className="px-4 py-3 text-right text-th">Action</th>
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-border text-body">
+          {bills.map((bill: VendorBillItem) => (
+            <tr key={bill.id} className="transition-colors hover:bg-surface-sunken/40">
+              <td className="px-4 py-3 font-mono font-medium text-primary">{bill.billNumber}</td>
+              <td className="px-4 py-3 font-medium text-text">{bill.vendorName}</td>
+              <td className="px-4 py-3 text-text-muted">{bill.billDate}</td>
+              <td className="px-4 py-3 text-right font-semibold text-text tabular-nums">
+                {formatMoney(BigInt(bill.netPayablePaisa))}
+              </td>
+              <td className="px-4 py-3 text-center">
+                <span
+                  className={`inline-flex rounded-full border px-2 py-0.5 text-caption font-semibold ${getBillStatusBadge(
+                    bill.status,
+                  )}`}
+                >
+                  {bill.status}
+                </span>
+              </td>
+              <td className="px-4 py-3 text-right">
+                <Button variant="ghost" size="sm" onClick={() => onSelectBill(bill)}>
+                  View
+                </Button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
 
 export function VendorListPage() {
   const [tab, setTab] = useState<'VENDORS' | 'BILLS'>('VENDORS');
@@ -57,19 +137,6 @@ export function VendorListPage() {
     await createPayment(input);
     refetchBills();
     refetchVendors();
-  };
-
-  const getBillStatusBadge = (status: VendorBillItem['status']) => {
-    switch (status) {
-      case 'DRAFT':
-        return 'border-border bg-surface-sunken text-text-muted';
-      case 'POSTED':
-        return 'border-info/30 bg-info/10 text-info';
-      case 'PAID':
-        return 'border-success/30 bg-success/10 text-success';
-      case 'CANCELLED':
-        return 'border-danger/30 bg-danger/10 text-danger';
-    }
   };
 
   return (
@@ -149,48 +216,14 @@ export function VendorListPage() {
           }}
         />
       ) : (
-        <div className="overflow-x-auto card-workspace">
-          <table className="w-full text-left">
-            <thead className="border-b border-border bg-surface-sunken/60">
-              <tr>
-                <th className="px-4 py-3 text-th">Bill Number</th>
-                <th className="px-4 py-3 text-th">Vendor</th>
-                <th className="px-4 py-3 text-th">Date</th>
-                <th className="px-4 py-3 text-right text-th">Net Payable</th>
-                <th className="px-4 py-3 text-center text-th">Status</th>
-                <th className="px-4 py-3 text-right text-th">Action</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-border text-body">
-              {bills.map((bill: VendorBillItem) => (
-                <tr key={bill.id} className="transition-colors hover:bg-surface-sunken/40">
-                  <td className="px-4 py-3 font-mono font-medium text-primary">
-                    {bill.billNumber}
-                  </td>
-                  <td className="px-4 py-3 font-medium text-text">{bill.vendorName}</td>
-                  <td className="px-4 py-3 text-text-muted">{bill.billDate}</td>
-                  <td className="px-4 py-3 text-right font-semibold text-text tabular-nums">
-                    {formatMoney(BigInt(bill.netPayablePaisa))}
-                  </td>
-                  <td className="px-4 py-3 text-center">
-                    <span
-                      className={`inline-flex rounded-full border px-2 py-0.5 text-caption font-semibold ${getBillStatusBadge(
-                        bill.status,
-                      )}`}
-                    >
-                      {bill.status}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3 text-right">
-                    <Button variant="ghost" size="sm" onClick={() => setSelectedBill(bill)}>
-                      View
-                    </Button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <VendorBillsTab
+          bills={bills}
+          onOpenNewBill={() => {
+            setSelectedVendor(null);
+            setIsBillModalOpen(true);
+          }}
+          onSelectBill={setSelectedBill}
+        />
       )}
 
       <VendorModal

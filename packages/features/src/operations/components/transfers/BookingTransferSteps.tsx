@@ -201,7 +201,7 @@ export function Step3FeeReason({
 }) {
   return (
     <div className="space-y-4">
-      <FormField id="transfer-fee" label="Transfer Processing Fee (৳)">
+      <FormField id="transfer-fee" label="Transfer Processing Fee (BDT)">
         <Input
           id="transfer-fee"
           type="number"

@@ -112,20 +112,20 @@ describe('Operations Module (B6) - S2: Vendors, Bills & Accounts Payable (AP)', 
 
     // Fill line item
     const descInput = screen.getByPlaceholderText('Item description');
-    const amountInput = screen.getByPlaceholderText('Amount (৳)');
+    const amountInput = screen.getByPlaceholderText('Amount (BDT)');
 
     fireEvent.change(descInput, { target: { value: '500 Bags OPC Cement' } });
-    fireEvent.change(amountInput, { target: { value: '500000' } }); // ৳5,00,000
+    fireEvent.change(amountInput, { target: { value: '500000' } }); // BDT 5,00,000
 
     // Fill TDS and VDS withholdings
     const tdsInputs = screen.getAllByDisplayValue('0');
     const tdsInput = tdsInputs[0];
     if (tdsInput) {
-      fireEvent.change(tdsInput, { target: { value: '25000' } }); // ৳25,000 TDS
+      fireEvent.change(tdsInput, { target: { value: '25000' } }); // BDT 25,00,000 TDS
     }
 
-    // Verify net payable update: ৳5,00,000 - ৳25,000 = ৳4,75,000
-    expect(screen.getByText(/Net Payable: ৳4,75,000/)).toBeDefined();
+    // Verify net payable update: BDT 5,00,000 - BDT 25,000 = BDT 4,75,000
+    expect(screen.getByText(/Net Payable: BDT 4,75,000/)).toBeDefined();
 
     const saveBtn = screen.getByText('Save Vendor Bill');
     fireEvent.submit(saveBtn.closest('form')!);

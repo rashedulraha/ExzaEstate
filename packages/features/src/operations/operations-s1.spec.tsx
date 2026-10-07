@@ -56,24 +56,43 @@ describe('Operations Module (B6) - S1: Expense Vouchers & Threshold Governance',
     }
   });
 
-  it('enforces threshold governance banner: MD approval required for > ৳5,00,000', () => {
-    const highValueVoucher = testVouchers[1]; // ৳7,50,000 (> ৳5,00,000)
+  it('renders dashed-border EmptyState when vouchers list is empty', () => {
+    const onSelect = vi.fn();
+    const onCreate = vi.fn();
+    render(
+      <ExpenseDataTable vouchers={[]} onSelectVoucher={onSelect} onCreateVoucher={onCreate} />,
+    );
+
+    expect(screen.getByText('No expense vouchers recorded')).toBeDefined();
+    expect(
+      screen.getByText(
+        'Record operational expenses, vendor bills, or utility disbursements to initiate approval governance.',
+      ),
+    ).toBeDefined();
+    const actionBtn = screen.getByText('New Voucher');
+    expect(actionBtn).toBeDefined();
+    fireEvent.click(actionBtn);
+    expect(onCreate).toHaveBeenCalled();
+  });
+
+  it('enforces threshold governance banner: MD approval required for > BDT 5,00,000', () => {
+    const highValueVoucher = testVouchers[1]; // BDT 7,50,000 (> BDT 5,00,000)
     render(<ExpenseDrawer isOpen={true} onClose={vi.fn()} voucher={highValueVoucher ?? null} />);
 
     // Should render MD approval requirement banner
     expect(
       screen.getByText(
-        /High-Value Voucher \(> ৳5,00,000\): Requires Managing Director \(MD\) Approval/,
+        /High-Value Voucher \(> BDT 5,00,000\): Requires Managing Director \(MD\) Approval/,
       ),
     ).toBeDefined();
   });
 
-  it('displays standard GM / MD threshold banner for vouchers <= ৳5,00,000', () => {
-    const lowValueVoucher = testVouchers[0]; // ৳15,000 (≤ ৳5,00,000)
+  it('displays standard GM / MD threshold banner for vouchers <= BDT 5,00,000', () => {
+    const lowValueVoucher = testVouchers[0]; // BDT 15,000 (≤ BDT 5,00,000)
     render(<ExpenseDrawer isOpen={true} onClose={vi.fn()} voucher={lowValueVoucher ?? null} />);
 
     expect(
-      screen.getByText(/Standard Voucher \(≤ ৳5,00,000\): GM or MD Approval Authorized/),
+      screen.getByText(/Standard Voucher \(≤ BDT 5,00,000\): GM or MD Approval Authorized/),
     ).toBeDefined();
   });
 

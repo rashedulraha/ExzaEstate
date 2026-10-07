@@ -198,7 +198,7 @@ export function VendorBillModal({
                   step="0.01"
                   min="0"
                   required
-                  placeholder="Amount (৳)"
+                  placeholder="Amount (BDT)"
                   value={l.amountTaka}
                   onChange={(e) => updateLine(idx, 'amountTaka', e.target.value)}
                   className="w-32 rounded-button border border-border-input bg-surface px-3 py-1.5 text-right text-body text-text placeholder:text-text-muted focus:border-focus focus:outline-none tabular-nums"
@@ -220,7 +220,7 @@ export function VendorBillModal({
         <div className="rounded-card border border-border bg-surface-sunken/50 p-3.5">
           <h4 className="mb-2 text-th">Withholdings & Net Payable (BDT)</h4>
           <div className="grid grid-cols-2 gap-3 text-small">
-            <FormField id="vendor-tax-withholding" label="TDS / Income Tax Withholding (৳)">
+            <FormField id="vendor-tax-withholding" label="TDS / Income Tax Withholding (BDT)">
               <Input
                 id="vendor-tax-withholding"
                 type="number"
@@ -230,7 +230,7 @@ export function VendorBillModal({
                 onChange={(e) => setTaxWithholdingTaka(e.target.value)}
               />
             </FormField>
-            <FormField id="vendor-vat-withholding" label="VDS / VAT Withholding (৳)">
+            <FormField id="vendor-vat-withholding" label="VDS / VAT Withholding (BDT)">
               <Input
                 id="vendor-vat-withholding"
                 type="number"

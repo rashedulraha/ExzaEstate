@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Plus, Receipt } from 'lucide-react';
-import { Button, Select } from '@exzaestate/ui';
+import { Button, Select, EmptyState, FilteredEmptyState, DataTableSkeleton } from '@exzaestate/ui';
+import { useProjectControllerListProjects } from '@exzaestate/api-client';
 import { useExpenses } from '../hooks/useExpenses.js';
 import { ExpenseDataTable } from '../components/expenses/ExpenseDataTable.js';
 import { ExpenseCreateModal } from '../components/expenses/ExpenseCreateModal.js';
@@ -30,6 +31,13 @@ export function ExpenseListPage() {
     payVoucher,
     rejectVoucher,
   } = useExpenses();
+
+  const projectsQuery = useProjectControllerListProjects({ limit: 100 });
+  const rawProjects =
+    (projectsQuery.data as unknown as { items?: Array<{ id: string; name: string }> })?.items ?? [];
+  const projectList = useMemo(() => {
+    return rawProjects.map((p) => ({ id: p.id, name: p.name }));
+  }, [rawProjects]);
 
   const filteredVouchers = vouchers.filter((v: ExpenseVoucherItem) => {
     if (statusFilter === 'ALL') return true;
@@ -91,7 +99,7 @@ export function ExpenseListPage() {
             <h1 className="text-h1 font-semibold text-text">Operational Expenses & Vouchers</h1>
           </div>
           <p className="mt-1 text-caption text-text-muted">
-            Threshold-driven approval governance (GM ≤ ৳5,00,000 / MD &gt; ৳5,00,000)
+            Threshold-driven approval governance (GM ≤ BDT 5,00,000 / MD &gt; BDT 5,00,000)
           </p>
         </div>
 
@@ -114,17 +122,49 @@ export function ExpenseListPage() {
         </div>
       </div>
 
-      <ExpenseDataTable
-        vouchers={filteredVouchers}
-        isLoading={isLoading}
-        onSelectVoucher={(v) => setSelectedVoucher(v)}
-      />
+      {(() => {
+        if (isLoading) {
+          return <DataTableSkeleton rows={6} cols={6} />;
+        }
+        if (vouchers.length === 0) {
+          return (
+            <EmptyState
+              dashedBorder
+              title="No expense vouchers recorded"
+              description="Record operational expenses, vendor bills, or utility disbursements to initiate approval governance."
+              actionLabel="New Voucher"
+              actionVariant="secondary"
+              actionIcon={<Plus className="w-4 h-4" />}
+              onAction={() => setIsCreateOpen(true)}
+            />
+          );
+        }
+        if (filteredVouchers.length === 0) {
+          return (
+            <div className="card-workspace border border-border bg-surface p-6">
+              <FilteredEmptyState
+                title="No matching vouchers found"
+                description="No expense vouchers match your selected filter criteria. Try resetting your filter."
+                onResetFilters={() => setStatusFilter('ALL')}
+              />
+            </div>
+          );
+        }
+        return (
+          <ExpenseDataTable
+            vouchers={filteredVouchers}
+            onSelectVoucher={(v) => setSelectedVoucher(v)}
+            onCreateVoucher={() => setIsCreateOpen(true)}
+          />
+        );
+      })()}
 
       <ExpenseCreateModal
         isOpen={isCreateOpen}
         onClose={() => setIsCreateOpen(false)}
         onSubmit={handleCreated}
         categories={categories}
+        projects={projectList}
       />
 
       <ExpenseDrawer

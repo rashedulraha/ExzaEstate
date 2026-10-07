@@ -1,6 +1,6 @@
 import { Building2, Phone, Mail, FileText, DollarSign, Eye } from 'lucide-react';
 import { formatMoney } from '@exzaestate/shared';
-import { IconButton } from '@exzaestate/ui';
+import { IconButton, EmptyState } from '@exzaestate/ui';
 import type { VendorItem } from '../../schemas/operations.schema.js';
 
 export interface VendorDataTableProps {
@@ -176,13 +176,12 @@ export function VendorDataTable({
 
   if (vendors.length === 0) {
     return (
-      <div className="flex h-48 flex-col items-center justify-center rounded-card border border-dashed border-border bg-surface-sunken/30 p-6 text-center">
-        <Building2 className="mb-2 h-8 w-8 text-text-muted" />
-        <p className="text-body font-medium text-text">No vendors found</p>
-        <p className="mt-1 text-caption text-text-muted">
-          Add a new supplier or vendor to track accounts payable.
-        </p>
-      </div>
+      <EmptyState
+        dashedBorder
+        icon={<Building2 className="w-6 h-6" />}
+        title="No vendors found"
+        description="Add a new supplier or vendor to track accounts payable."
+      />
     );
   }
 

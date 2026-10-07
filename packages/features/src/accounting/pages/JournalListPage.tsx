@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Button, Input, Select } from '@exzaestate/ui';
+import { Button, Input, Select, StickyToolbar } from '@exzaestate/ui';
 import { usePermission } from '@exzaestate/app-core';
 import { PERMISSIONS, formatMoney } from '@exzaestate/shared';
 import { Plus, Search, ShieldCheck } from 'lucide-react';
@@ -105,53 +105,55 @@ export function JournalListPage() {
       </div>
 
       {/* Filters Bar */}
-      <div className="p-3.5 rounded-card border border-border bg-surface flex flex-wrap items-center gap-3">
-        <div className="w-64">
-          <Input
-            placeholder="Search voucher # or narration..."
-            value={filters.search || ''}
-            onChange={(e) => setFilters((prev) => ({ ...prev, search: e.target.value }))}
-            prefixIcon={<Search className="w-4 h-4 text-text-muted" />}
-          />
-        </div>
+      <StickyToolbar>
+        <div className="shadow-xs p-3.5 rounded-card border border-border bg-surface flex flex-wrap items-center gap-3">
+          <div className="w-64">
+            <Input
+              placeholder="Search voucher # or narration..."
+              value={filters.search || ''}
+              onChange={(e) => setFilters((prev) => ({ ...prev, search: e.target.value }))}
+              prefixIcon={<Search className="w-4 h-4 text-text-muted" />}
+            />
+          </div>
 
-        <div className="w-40">
-          <Select
-            value={filters.status || 'ALL'}
-            options={[
-              { value: 'ALL', label: 'All Statuses' },
-              ...JOURNAL_STATUSES.map((s) => ({ value: s, label: s })),
-            ]}
-            onChange={(val) =>
-              setFilters((prev) => ({
-                ...prev,
-                status: val as JournalStatusEnum | 'ALL',
-              }))
-            }
-          />
-        </div>
+          <div className="w-40">
+            <Select
+              value={filters.status || 'ALL'}
+              options={[
+                { value: 'ALL', label: 'All Statuses' },
+                ...JOURNAL_STATUSES.map((s) => ({ value: s, label: s })),
+              ]}
+              onChange={(val) =>
+                setFilters((prev) => ({
+                  ...prev,
+                  status: val as JournalStatusEnum | 'ALL',
+                }))
+              }
+            />
+          </div>
 
-        <div className="w-40">
-          <Select
-            value={filters.type || 'ALL'}
-            options={[
-              { value: 'ALL', label: 'All Types' },
-              ...JOURNAL_TYPES.map((t) => ({ value: t, label: t })),
-            ]}
-            onChange={(val) =>
-              setFilters((prev) => ({
-                ...prev,
-                type: val as JournalTypeEnum | 'ALL',
-              }))
-            }
-          />
-        </div>
+          <div className="w-40">
+            <Select
+              value={filters.type || 'ALL'}
+              options={[
+                { value: 'ALL', label: 'All Types' },
+                ...JOURNAL_TYPES.map((t) => ({ value: t, label: t })),
+              ]}
+              onChange={(val) =>
+                setFilters((prev) => ({
+                  ...prev,
+                  type: val as JournalTypeEnum | 'ALL',
+                }))
+              }
+            />
+          </div>
 
-        <div className="ml-auto text-caption text-text-muted flex items-center gap-1.5">
-          <ShieldCheck className="w-4 h-4 text-primary" />
-          <span>RULE-DOUBLE-ENTRY Enforced</span>
+          <div className="ml-auto text-caption text-text-muted flex items-center gap-1.5">
+            <ShieldCheck className="w-4 h-4 text-primary" />
+            <span>RULE-DOUBLE-ENTRY Enforced</span>
+          </div>
         </div>
-      </div>
+      </StickyToolbar>
 
       {/* Journals Table */}
       <JournalDataTable journals={items} isLoading={isLoading} onViewJournal={handleViewJournal} />

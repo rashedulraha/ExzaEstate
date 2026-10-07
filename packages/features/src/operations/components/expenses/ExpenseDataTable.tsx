@@ -1,6 +1,7 @@
+import { useMemo } from 'react';
 import { formatMoney } from '@exzaestate/shared';
-import { DataTable, type ColumnDef, Button } from '@exzaestate/ui';
-import { Eye, Plus } from 'lucide-react';
+import { DataTable, type ColumnDef, Button, EmptyState } from '@exzaestate/ui';
+import { Eye, Plus, Receipt } from 'lucide-react';
 import type { ExpenseVoucherItem, ExpenseStatusEnum } from '../../schemas/operations.schema.js';
 
 export interface ExpenseDataTableProps {
@@ -8,6 +9,7 @@ export interface ExpenseDataTableProps {
   isLoading?: boolean;
   onSelectVoucher: (voucher: ExpenseVoucherItem) => void;
   onCreateVoucher?: () => void;
+  emptyState?: React.ReactNode;
 }
 
 export function getExpenseStatusBadge(status: ExpenseStatusEnum) {
@@ -35,13 +37,10 @@ export function getExpenseStatusBadge(status: ExpenseStatusEnum) {
   );
 }
 
-export function ExpenseDataTable({
-  vouchers,
-  isLoading = false,
-  onSelectVoucher,
-  onCreateVoucher,
-}: ExpenseDataTableProps) {
-  const columns: ColumnDef<ExpenseVoucherItem>[] = [
+function createExpenseColumns(
+  onSelectVoucher: (voucher: ExpenseVoucherItem) => void,
+): ColumnDef<ExpenseVoucherItem>[] {
+  return [
     {
       key: 'voucherNumber',
       header: 'Voucher #',
@@ -80,7 +79,7 @@ export function ExpenseDataTable({
     },
     {
       key: 'amountPaisa',
-      header: 'Amount (৳)',
+      header: 'Amount (BDT)',
       align: 'right',
       isMoney: true,
       render: (row) => (
@@ -111,6 +110,46 @@ export function ExpenseDataTable({
       ),
     },
   ];
+}
+
+function ExpenseEmptyState({
+  onCreateVoucher,
+  icon,
+}: {
+  onCreateVoucher?: () => void;
+  icon?: React.ReactNode;
+}) {
+  return (
+    <EmptyState
+      dashedBorder
+      icon={icon}
+      title="No expense vouchers recorded"
+      description="Record operational expenses, vendor bills, or utility disbursements to initiate approval governance."
+      actionLabel={onCreateVoucher ? 'New Voucher' : undefined}
+      actionVariant="secondary"
+      actionIcon={onCreateVoucher ? <Plus className="w-4 h-4" /> : undefined}
+      onAction={onCreateVoucher}
+    />
+  );
+}
+
+export function ExpenseDataTable({
+  vouchers,
+  isLoading = false,
+  onSelectVoucher,
+  onCreateVoucher,
+  emptyState,
+}: ExpenseDataTableProps) {
+  const columns = useMemo(() => createExpenseColumns(onSelectVoucher), [onSelectVoucher]);
+
+  if (vouchers.length === 0 && !isLoading) {
+    if (emptyState) return <>{emptyState}</>;
+    return <ExpenseEmptyState onCreateVoucher={onCreateVoucher} />;
+  }
+
+  const defaultEmpty = emptyState ?? (
+    <ExpenseEmptyState onCreateVoucher={onCreateVoucher} icon={<Receipt className="w-6 h-6" />} />
+  );
 
   return (
     <div className="space-y-4" data-testid="expense-data-table">
@@ -128,9 +167,8 @@ export function ExpenseDataTable({
         columns={columns}
         isLoading={isLoading}
         keyExtractor={(item) => item.id}
-        emptyState={
-          <div className="text-center py-6 text-text-muted">No Expense Vouchers Found</div>
-        }
+        emptyState={defaultEmpty}
+        className="border-none shadow-none"
       />
     </div>
   );

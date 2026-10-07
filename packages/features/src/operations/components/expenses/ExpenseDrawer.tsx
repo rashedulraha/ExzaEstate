@@ -46,13 +46,13 @@ function ExpenseThresholdBanner({ exceedsMdThreshold }: { exceedsMdThreshold: bo
       <div>
         <span className="font-semibold block text-body">
           {exceedsMdThreshold
-            ? 'High-Value Voucher (> ৳5,00,000): Requires Managing Director (MD) Approval'
-            : 'Standard Voucher (≤ ৳5,00,000): GM or MD Approval Authorized'}
+            ? 'High-Value Voucher (> BDT 5,00,000): Requires Managing Director (MD) Approval'
+            : 'Standard Voucher (≤ BDT 5,00,000): GM or MD Approval Authorized'}
         </span>
         <span className="text-caption text-text-muted mt-0.5 block">
           {exceedsMdThreshold
-            ? 'Amount exceeds ৳5,00,000 threshold (FLOW-11). Only Managing Director role may approve.'
-            : 'Amount is within standard ৳5,00,000 limit. General Manager or Managing Director can approve.'}
+            ? 'Amount exceeds BDT 5,00,000 threshold (FLOW-11). Only Managing Director role may approve.'
+            : 'Amount is within standard BDT 5,00,000 limit. General Manager or Managing Director can approve.'}
         </span>
       </div>
     </div>

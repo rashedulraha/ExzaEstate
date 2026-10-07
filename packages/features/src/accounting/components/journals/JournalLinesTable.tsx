@@ -25,8 +25,8 @@ export function JournalLinesTable({
         <thead className="bg-surface-sunken border-b border-border text-th font-semibold text-text-muted">
           <tr>
             <th className="px-3 py-2 text-left">Target Account</th>
-            <th className="px-3 py-2 text-right w-36">Debit (৳)</th>
-            <th className="px-3 py-2 text-right w-36">Credit (৳)</th>
+            <th className="px-3 py-2 text-right w-36">Debit (BDT)</th>
+            <th className="px-3 py-2 text-right w-36">Credit (BDT)</th>
             <th className="px-3 py-2 text-left">Narration / Memo</th>
             <th className="px-2 py-2 text-center w-12" aria-label="Actions"></th>
           </tr>

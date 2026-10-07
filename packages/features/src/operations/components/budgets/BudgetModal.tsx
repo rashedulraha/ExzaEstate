@@ -114,7 +114,7 @@ export function BudgetModal({
 
         <FormField
           id="budget-amount"
-          label="Budget Cap Amount (৳)"
+          label="Budget Cap Amount (BDT)"
           required
           helperText="Alerts trigger at 70% (Info), 85% (Warning), and 100% (Critical Overrun)."
         >

@@ -134,7 +134,7 @@ export function ExpenseCreateModal({
             />
           </FormField>
 
-          <FormField id="amountTaka" label="Amount (BDT ৳)" required error={errors.amount}>
+          <FormField id="amountTaka" label="Amount (BDT)" required error={errors.amount}>
             <Input
               id="amountTaka"
               placeholder="e.g. 50,000"

@@ -1,4 +1,4 @@
-import { useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   useExpenseControllerListCategories,
   useExpenseControllerCreateVoucher,
@@ -7,6 +7,7 @@ import {
   useExpenseControllerVerifyVoucher,
   useExpenseControllerPayVoucher,
   useExpenseControllerRejectVoucher,
+  http,
 } from '@exzaestate/api-client';
 import type {
   CreateExpenseInput,
@@ -16,10 +17,46 @@ import type {
   ExpenseCategoryItem,
 } from '../schemas/operations.schema.js';
 
-export function useExpenses() {
+export interface UseExpensesOptions {
+  status?: string;
+  projectId?: string;
+  categoryId?: string;
+}
+
+function extractItems<T>(raw: unknown): T[] {
+  if (Array.isArray(raw)) return raw as T[];
+  if (
+    raw &&
+    typeof raw === 'object' &&
+    'items' in raw &&
+    Array.isArray((raw as { items: unknown }).items)
+  ) {
+    return (raw as { items: T[] }).items;
+  }
+  if (
+    raw &&
+    typeof raw === 'object' &&
+    'data' in raw &&
+    Array.isArray((raw as { data: unknown }).data)
+  ) {
+    return (raw as { data: T[] }).data;
+  }
+  return [];
+}
+
+export function useExpenses(options?: UseExpensesOptions) {
   const queryClient = useQueryClient();
 
   const categoriesQuery = useExpenseControllerListCategories({ activeOnly: true });
+
+  const vouchersQuery = useQuery({
+    queryKey: ['/api/v1/expenses/vouchers', options],
+    queryFn: async () => {
+      return http.get<{ items: ExpenseVoucherItem[]; total: number }>('/api/v1/expenses/vouchers', {
+        params: options,
+      });
+    },
+  });
 
   const createMutation = useExpenseControllerCreateVoucher();
   const submitMutation = useExpenseControllerSubmitVoucher();
@@ -95,12 +132,16 @@ export function useExpenses() {
     return res;
   };
 
+  const rawCategories = extractItems<ExpenseCategoryItem>(categoriesQuery.data);
+  const rawVouchers = extractItems<ExpenseVoucherItem>(vouchersQuery.data);
+
   return {
-    vouchers: [] as ExpenseVoucherItem[],
-    isLoading: false,
-    refetch: () => {},
-    categories: (categoriesQuery.data || []) as ExpenseCategoryItem[],
+    vouchers: rawVouchers,
+    isLoading: vouchersQuery.isLoading,
+    refetch: () => vouchersQuery.refetch(),
+    categories: rawCategories,
     isLoadingCategories: categoriesQuery.isLoading,
+    refetchCategories: () => categoriesQuery.refetch(),
     createVoucher,
     submitVoucher,
     approveVoucher,
