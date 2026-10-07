@@ -1226,7 +1226,7 @@ These are applied as defaults in `architecture.md` v4 but are still **"Needs sig
 
 #### C1 — Web SPA Shell, Platform Adapters & Cookie-Refresh Auth
 
-- **Status:** [ ] · **Size:** M (3 steps) · **Depends:** B8
+- **Status:** [x] · **Size:** M (3 steps) · **Depends:** B8
 - **Reads:** `architecture.md` §4.3, §12.3, §12.7; `rules.md` §4.3.
 - **Touches:** `apps/web/**`.
 - **Steps:** **S1** Vite shell mounting the shared route tree. **S2** `platform/` adapters (file dialog, `window.open`, Notification API, `VITE_API_BASE_URL`). **S3** auth with in-memory access token + `httpOnly` refresh cookie (`X-Client: web`), no token in `localStorage`/`sessionStorage`. Verify: `{web} build && {web} test`.

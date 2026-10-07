@@ -13,9 +13,9 @@
 
 ## Current Status
 
-- **Active Phase:** Part C (Part B 100% Complete, ready for C1)
-- **Next Task to Execute:** Part C: `C1 Web SPA Shell, Platform Adapters & Cookie-Refresh Auth`
-- **Tasks complete:** 83 / 88 (P2 cards excluded; Part A 100% Complete, Part B 100% Complete, B1.1–B11 Complete)
+- **Active Phase:** Part C (Task C1 Complete, ready for C2)
+- **Next Task to Execute:** Part C: `C2 Responsive Layouts & Mobile Card Views`
+- **Tasks complete:** 84 / 88 (P2 cards excluded; Part A 100% Complete, Part B 100% Complete, C1 Complete)
 - **Blockers:** None
 - **Owner action items before/while coding:**
   - Copy the new `task.md` (v6) into `agent/task.md`.
@@ -173,7 +173,7 @@ Tick a box only after the verification rules above are met. Dependencies are def
 
 ### Part C — Web Client
 
-- [ ] `C1` Web SPA Shell, Platform Adapters & Cookie-Refresh Auth
+- [x] `C1` Web SPA Shell, Platform Adapters & Cookie-Refresh Auth
 - [ ] `C2` Responsive Layouts & Mobile Card Views
 - [ ] `C3` Web Deployment, CDN & Security Headers
 - [ ] `C4` Playwright Critical Flows: Web ⇄ Desktop Parity
@@ -1342,3 +1342,716 @@ Tick a box only after the verification rules above are met. Dependencies are def
     - `pnpm --filter @exzaestate/desktop build`: Built clean production bundle in 528ms.
 91. Open questions: None.
 92. Next task ID: `C1 Web SPA Shell, Platform Adapters & Cookie-Refresh Auth`.
+
+### [2026-10-07] C1 Web SPA Shell, Platform Adapters & Cookie-Refresh Auth
+
+1. Task ID & status: C1 [x]
+2. Files created / modified: apps/web/package.json, apps/web/vite.config.ts, apps/web/vitest.config.ts, apps/web/tsconfig.json, apps/web/index.html, apps/web/src/index.css, apps/web/src/vite-env.d.ts, apps/web/src/main.tsx, apps/web/src/index.ts, apps/web/src/platform/**, packages/api-client/src/http.ts, packages/app-core/src/session/index.tsx, packages/app-core/src/platform/**, agent/task.md, agent/PROGRESS.md
+3. Verification command & result: pnpm --filter @exzaestate/web build (built in 577ms); pnpm --filter @exzaestate/web test (8/8 passed); pnpm --filter @exzaestate/web typecheck (0 errors); pnpm --filter @exzaestate/desktop test (23/23 passed); pnpm --filter @exzaestate/features test (174/174 passed); pnpm oxlint apps/web packages/app-core (0 warnings, 0 errors); madge circular check clean (0 cycles)
+4. Open questions: None (Zero token persistence in web localStorage; session survived via httpOnly cookie refresh per spec)
+5. Next task ID: C2 Responsive Layouts & Mobile Card Views
+
+### [2026-10-07] Architecture Cleanup: Centralized HTTP Client, Zero Hardcoded Base URLs & 100% Pure Code Quality
+
+1. Task ID & status: `CENTRALIZED-HTTP-AND-ZERO-FALLBACK` [x]
+2. Files created / modified:
+   - [packages/api-client/src/http.ts](file:///Users/rashedulraha/Developer/ExzaEstate/packages/api-client/src/http.ts): Centralized Axios instance configuration; removed hardcoded `http://localhost:3000`; dynamic `resolveInitialBaseUrl()` via `VITE_API_BASE_URL` with relative `/api/v1` fallback for proxy setups; added `http` CRUD helper methods (`http.get`, `http.post`, `http.put`, `http.patch`, `http.delete`) with envelope unwrapping and centralized error mapping.
+   - [packages/app-core/src/platform/index.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/app-core/src/platform/index.tsx): Unified `getEnvApiBaseUrl()` from environment variables; eliminated hardcoded localhost defaults.
+   - [apps/desktop/src/platform/index.ts](file:///Users/rashedulraha/Developer/ExzaEstate/apps/desktop/src/platform/index.ts) & [apps/desktop/src/platform/sidecar.ts](file:///Users/rashedulraha/Developer/ExzaEstate/apps/desktop/src/platform/sidecar.ts): Removed hardcoded `'http://localhost:3000'` default fallback; replaced raw `fetch` with `apiClient.get` for sidecar health polling.
+   - [apps/web/src/platform/index.ts](file:///Users/rashedulraha/Developer/ExzaEstate/apps/web/src/platform/index.ts): Synchronized `getDefaultBaseUrl()` with central `getEnvApiBaseUrl()`.
+   - [packages/features/src/setup/first-launch/](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/setup/first-launch/): Eradicated all ad-hoc `fetch` calls across `useFirstLaunch.ts`, `useFirstLaunch.helpers.ts`, `BackupModal.tsx`, `RestoreModal.tsx`, and `CloudSetupSection.tsx` in favor of `http.*`; eliminated fake success catch blocks; enforced fail-fast enterprise error handling.
+   - [packages/features/src/routes.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/routes.tsx): Switched local provision check to `http.get`.
+3. Verification command & result:
+   - `pnpm --filter @exzaestate/api-client test`: 2/2 test files passed (14/14 tests green).
+   - `pnpm --filter @exzaestate/app-core test`: 1/1 test file passed (7/7 tests green).
+   - `pnpm --filter @exzaestate/desktop test`: 4/4 test files passed (23/23 tests green).
+   - `pnpm --filter @exzaestate/features test`: 34/34 test files passed (175/175 tests green).
+   - `pnpm --filter @exzaestate/api-client --filter @exzaestate/app-core --filter @exzaestate/features --filter @exzaestate/desktop --filter @exzaestate/web typecheck`: 0 errors across all 5 modules.
+   - `npx oxlint`: 0 warnings, 0 errors.
+4. Open questions: None.
+5. Next task ID: C2 Responsive Layouts & Mobile Card Views.
+
+### [2026-10-07] CRM Leads UI/UX Overhaul & Polish (/goal crm/leads)
+
+1. Task ID & status: `CRM-LEADS-OVERHAUL` [x]
+2. Files created / modified:
+   - [packages/features/src/crm/pages/LeadListComponents.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/crm/pages/LeadListComponents.tsx): Removed bulky decorative icon boxes from the 5 KPI summary cards; standardized typography and semantic status colors; modernized `LeadListFilters` with `inputSize="md"`, left-aligned layout, human-readable labels, and "Clear Filters" button.
+   - [packages/features/src/crm/pages/LeadListPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/crm/pages/LeadListPage.tsx): Integrated `useNavigate` from `react-router` into `Breadcrumbs` so clicking "Overview" reliably navigates back to `/dashboard`.
+   - [packages/ui/src/layout/Breadcrumbs.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/ui/src/layout/Breadcrumbs.tsx): Render accessible anchor link `<a href={item.href}>` when `item.href` is provided without `item.onClick`.
+   - [packages/features/src/crm/components/LeadDrawer.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/crm/components/LeadDrawer.tsx): Redesigned prospect drawer with full-width overflow-proof contact channels (`min-w-0`, `truncate`, `font-mono`); added direct Call (`tel:`), direct WhatsApp chat (`https://wa.me/...`), direct Email (`mailto:`), and one-click copy button; normalized uppercase stage matching to fix "Select an option..." placeholder bug; polished budget card and notes with Meridian semantic tokens.
+   - [packages/features/src/crm/components/LeadKanbanBoard.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/crm/components/LeadKanbanBoard.tsx): Implemented smooth mouse wheel horizontal scrolling (converting vertical wheel delta into horizontal scroll when hovering over the board); added `.board-scroll` custom scrollbar class with 6px height and themed track/thumb; added board control bar with Left/Right navigation buttons (`ChevronLeft`, `ChevronRight`) and helpful navigation hint.
+   - [packages/features/src/crm/components/LeadDataTable.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/crm/components/LeadDataTable.tsx): Normalized status for `StatusBadge` and enhanced source formatting.
+   - [packages/features/src/crm/hooks/useLeadList.ts](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/crm/hooks/useLeadList.ts): Normalized raw status to uppercase `LeadStatusEnum`.
+   - [packages/ui/src/components/input/Input.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/ui/src/components/input/Input.tsx) & [packages/ui/src/components/select/Select.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/ui/src/components/select/Select.tsx): Configured `inputSize="md"` to use `text-small` font scale (12px) for compact, refined form controls.
+   - [packages/ui/src/styles/theme.css](file:///Users/rashedulraha/Developer/ExzaEstate/packages/ui/src/styles/theme.css): Added `.board-scroll` utility for cross-platform horizontal scrollbar visibility in light and dark mode.
+   - [packages/features/src/crm/crm.spec.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/crm/crm.spec.tsx): Expanded unit tests verifying scroll controls, WhatsApp, call, copy buttons, and LeadDrawer details.
+3. Verification command & result:
+   - `pnpm --filter @exzaestate/features test src/crm/`: 1/1 test file passed (4/4 tests green).
+   - `pnpm --filter @exzaestate/ui test`: 6/6 test files passed (43/43 tests green).
+   - `pnpm --filter @exzaestate/features test`: 34/34 test files passed (175/175 tests green).
+   - `pnpm turbo run typecheck`: 9/9 packages passed (0 errors).
+   - `npx oxlint`: 0 warnings, 0 errors across 1,748 files.
+4. Open questions: None.
+
+### [2026-10-07] Sidebar & Layout Refinements (Clean English, Truncation Tooltip, Search Quick Action & Rounded Buttons)
+
+1. Task ID & status: `SIDEBAR-LAYOUT-REFINEMENTS` [x]
+2. Files created / modified:
+   - [packages/shared/src/format.ts](file:///Users/rashedulraha/Developer/ExzaEstate/packages/shared/src/format.ts): Implemented `cleanEnglishText` utility function with regex logic to strip all Bengali characters (U+0980–U+09FF) and parenthesized annotations (e.g. `(রূপায়ণ)`), while preserving clean English names and abbreviations (e.g. `Ltd.`); added unit tests in `packages/shared/src/format.spec.ts`.
+   - [packages/ui/src/layout/SidebarSections.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/ui/src/layout/SidebarSections.tsx): Updated `SidebarHeader` with `cleanEnglishText`, responsive `min-w-0 flex-1 truncate` layout for smooth sidebar resizing, and `title={cleanName}` hover tooltip attribute; replaced "New Transaction" button with "Search records, actions, vouchers..." featuring Search icon, `title` attribute, and `<kbd>Ctrl+K</kbd>` badge; updated header controls, quick action, and footer buttons to use `rounded-button`.
+   - [packages/ui/src/layout/Sidebar.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/ui/src/layout/Sidebar.tsx): Sanitized company name with `cleanEnglishText`; standardized `SidebarItem`, badge, and collapsible group buttons to use `rounded-button`.
+   - [packages/ui/src/layout/Header.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/ui/src/layout/Header.tsx): Replaced local helper with central `cleanEnglishText` import from `@exzaestate/shared`.
+   - [packages/features/src/routes.helpers.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/routes.helpers.tsx): Sanitized `displayCompany` and user names in `resolveSidebarConfig` and `buildHeaderProps`.
+   - [apps/backend/src/platform/tenant-provisioning/demo-seed/demo-seed.service.ts](file:///Users/rashedulraha/Developer/ExzaEstate/apps/backend/src/platform/tenant-provisioning/demo-seed/demo-seed.service.ts) & demo steps (`demo-project.step.ts`, `demo-land.step.ts`, `demo-charge.step.ts`): Stripped Bengali fixtures to clean English.
+   - [apps/backend/prisma/sanitize-database-names.ts](file:///Users/rashedulraha/Developer/ExzaEstate/apps/backend/prisma/sanitize-database-names.ts): Updated database records in PostgreSQL directly to ensure active company and user records are in clean English.
+3. Verification command & result:
+   - `pnpm --filter @exzaestate/shared test`: 5/5 test files passed (49/49 tests green).
+   - `pnpm --filter @exzaestate/ui test`: 6/6 test files passed (43/43 tests green).
+   - `pnpm --filter @exzaestate/features test`: 34/34 test files passed (175/175 tests green).
+   - `pnpm turbo run typecheck`: 9/9 packages passed (0 errors).
+   - `npx oxlint`: 0 warnings, 0 errors across 1,748 files.
+4. Open questions: None.
+5. Next task ID: C2 Responsive Layouts & Mobile Card Views.
+
+### [2026-10-07] CRM LeadDrawer Color System Harmony & Icon De-cluttering
+
+1. Task ID & status: `CRM-LEADDRAWER-COLOR-HARMONY` [x]
+2. Files created / modified:
+   - [packages/ui/src/components/drawer/Drawer.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/ui/src/components/drawer/Drawer.tsx): Replaced muddy dark olive `--color-surface-elevated` (`#222117`) with pure obsidian charcoal `bg-surface` (`#17160f`), bringing 100% surface harmony between the drawer and the Kanban board view.
+   - [packages/features/src/crm/components/LeadDrawer.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/crm/components/LeadDrawer.tsx): Removed all redundant decorative icons (`User` heading icon, bulky orange `Phone` avatar circle, bulky blue `Mail` avatar circle, `Coins` budget heading icon); standardized section card containers to `bg-surface-sunken/40 rounded-card border border-border` and inner rows to `bg-surface rounded-button border border-border`, mirroring the Kanban card depth and hairline border styling; refined action buttons and typography.
+3. Verification command & result:
+   - `pnpm --filter @exzaestate/ui test`: 6/6 test files passed (43/43 tests green).
+   - `pnpm --filter @exzaestate/features test src/crm/`: 1/1 test file passed (4/4 tests green).
+   - `pnpm turbo run typecheck`: 9/9 packages passed (0 errors).
+   - `npx oxlint`: 0 warnings, 0 errors across 1,748 files.
+
+### [2026-10-07] CRM & Sales 3-Route UI/UX Overhaul & Color System Harmony
+
+1. Task ID & status: `CRM-SALES-3ROUTES-UI-OVERHAUL` [x]
+2. Files created / modified:
+   - [packages/features/src/customer/pages/CustomerListPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/customer/pages/CustomerListPage.tsx): Upgraded header with breadcrumbs and count badge; replaced icon-boxed KPI widgets with clean `card-stat` typography strip; upgraded filters into obsidian card container with search icon prefix, `inputSize="md"`, and clear filter action; wrapped data table in obsidian card.
+   - [packages/features/src/customer/components/CustomerDataTable.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/customer/components/CustomerDataTable.tsx): Stripped inline phone/mail icon clutter, formatted customer codes with mono badges, added bullet separators and tabular numerals for registered dates; applied `rounded-button` to "View 360" action.
+   - [packages/features/src/customer/pages/CustomerDetailSections.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/customer/pages/CustomerDetailSections.tsx): Removed redundant phone and email avatar icons, cleaned profile header typography, and polished audit buttons with `rounded-button`.
+   - [packages/features/src/sales/pages/QuotationListPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/sales/pages/QuotationListPage.tsx): Added breadcrumbs, proposal count badge, saffron primary button with Plus icon; upgraded KPI cards to clean enterprise typography matching Leads; wrapped filters in obsidian card with clear filter action; wrapped data table in obsidian card.
+   - [packages/features/src/sales/components/quotations/QuotationDataTable.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/sales/components/quotations/QuotationDataTable.tsx): Styled quotation numbers with mono code styling; added `tabular-nums` for net prices, discounts, and validity dates; standardized action buttons to `rounded-button`.
+   - [packages/features/src/sales/pages/BookingListPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/sales/pages/BookingListPage.tsx): Added breadcrumbs, allotments badge, saffron primary CTA with Plus icon; upgraded KPI strip to clean typography; wrapped filters in obsidian container with clear filter action; wrapped data table in obsidian card.
+   - [packages/features/src/sales/components/bookings/BookingDataTable.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/sales/components/bookings/BookingDataTable.tsx): Styled booking numbers and units with mono code fonts; added `tabular-nums` for contract values and deposits paid; standardized action buttons to `rounded-button`.
+   - [packages/features/src/sales/components/bookings/BookingDrawer.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/sales/components/bookings/BookingDrawer.tsx): Overhauled drawer layout to match LeadDrawer obsidian aesthetic with `bg-surface-sunken/40` outer cards and `bg-surface rounded-button border border-border` inner item rows; formatted financial breakdown with double-entry alignment and tabular numerals.
+   - [packages/features/src/sales/components/bookings/BookingReservationTimer.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/sales/components/bookings/BookingReservationTimer.tsx): Added `tabular-nums` to eliminate layout jitter during countdown ticks.
+   - [packages/features/src/sales/pages/AgreementListPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/sales/pages/AgreementListPage.tsx) & [packages/features/src/sales/components/agreements/AgreementDataTable.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/sales/components/agreements/AgreementDataTable.tsx): Harmonized agreements overview with breadcrumbs, KPI cards, obsidian search toolbar, and mono code table formatting.
+3. Verification command & result:
+   - `pnpm --filter @exzaestate/ui test`: 6/6 test files passed (43/43 tests green).
+   - `pnpm --filter @exzaestate/features test`: 34/34 test files passed (175/175 tests green).
+   - `pnpm turbo run typecheck`: 9/9 packages passed (0 errors).
+   - `npx oxlint packages/features`: 0 warnings, 0 errors across 384 files.
+4. Open questions: None.
+5. Next task ID: C2 Responsive Layouts & Mobile Card Views.
+
+### [2026-10-07] Property Inventory Sticky Filter Toolbar, Quick Status Chips & Bengali Typography Polish
+
+1. Task ID & status: `PROPERTY-INVENTORY-STICKY-FILTERS-AND-CHIPS-FIX` [x]
+2. Files created / modified:
+   - [apps/backend/src/modules/property/dto/query-property.dto.ts](file:///Users/rashedulraha/Developer/ExzaEstate/apps/backend/src/modules/property/dto/query-property.dto.ts): Added `class-transformer` `@Transform` handlers to `status`, `type`, and `facing` fields so case differences (e.g. `AVAILABLE` vs `Available`) and empty strings are cleanly normalized to canonical values, preventing `400 Bad Request` or auth error boundaries when filtering.
+   - [packages/features/src/property/pages/PropertyListComponents.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/property/pages/PropertyListComponents.tsx): Corrected `STATUS_CHIPS` values to title-case canonical statuses (`Available`, `Reserved`, `Booked`, `Sold`, `Hold`, `Blocked`); added dedicated `Hold` and `Blocked` pills; converted `PropertyListFilters` container into a sticky header (`sticky top-0 z-20 p-4 border-b border-border bg-surface/95 backdrop-blur-md rounded-t-card shadow-xs`); added `rounded-b-card` to `PaginationBar`.
+   - [packages/features/src/property/pages/PropertyListPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/property/pages/PropertyListPage.tsx): Added `!overflow-visible relative` to `.card-workspace` wrapper so the child sticky toolbar (`PropertyListFilters`) pins at `top-0` relative to the workspace scroll container without being trapped by parent overflow clipping.
+   - [packages/features/src/property/components/PropertyDataTable.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/property/components/PropertyDataTable.tsx): Imported `cleanEnglishText` from `@exzaestate/shared`; created `formatBlockDisplay` ("Tower 1", "Tower 2") and `formatFloorDisplay` ("Ground Floor", "1st Floor", "2nd Floor") to sanitize seed data; sanitized unit subtitles so Bengali placeholders like "অ্যাপার্টমেন্ট FLT-K1A" don't duplicate the unit code or clutter the table.
+   - [packages/features/src/property/property-list.spec.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/property/property-list.spec.tsx): Added comprehensive unit tests for all canonical quick status pills and sticky filter selection.
+3. Verification command & result:
+   - `pnpm --filter @exzaestate/features test`: 34/34 test files passed (176/176 tests green).
+   - `pnpm turbo run typecheck`: 9/9 packages passed (0 errors).
+   - `npx oxlint packages/features/src/property/ apps/backend/src/modules/property/`: 0 warnings, 0 errors.
+4. Open questions: None.
+5. Next task ID: C2 Responsive Layouts & Mobile Card Views.
+
+### [2026-10-07] CRM & Sales Empty States & Booking Wizard UX/Color Overhaul
+
+1. Task ID & status: `CRM-SALES-EMPTY-STATES-AND-BOOKING-WIZARD-OVERHAUL` [x]
+2. Files created / modified:
+   - [packages/ui/src/states/EmptyState.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/ui/src/states/EmptyState.tsx): Enhanced `EmptyState` with `dashedBorder`, `actionVariant`, and `actionIcon` props; rendered clean hairline dashed container with subtle surface fill, icon badge, and outline CTA button.
+   - [packages/ui/src/components/dialog/Dialog.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/ui/src/components/dialog/Dialog.tsx): Eliminated muddy dark-olive `--color-surface-elevated` background in favor of pure obsidian charcoal `bg-surface` (`#17160f`), darkened modal backdrop to `bg-black/70 backdrop-blur-xs`, and standardized footer styling.
+   - [packages/features/src/sales/pages/BookingListPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/sales/pages/BookingListPage.tsx): Configured `dashedBorder`, `actionVariant="secondary"`, and `actionIcon={<Plus className="w-4 h-4" />}` on the empty state.
+   - [packages/features/src/sales/pages/QuotationListPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/sales/pages/QuotationListPage.tsx): Applied dashed border empty state with outline button and Plus icon.
+   - [packages/features/src/customer/pages/CustomerListPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/customer/pages/CustomerListPage.tsx): Applied dashed border empty state with outline button and Plus icon.
+   - [packages/features/src/crm/pages/LeadListComponents.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/crm/pages/LeadListComponents.tsx): Applied dashed border empty state with outline button and Plus icon.
+   - [packages/features/src/sales/components/bookings/BookingWizard/BookingWizardStepper.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/sales/components/bookings/BookingWizard/BookingWizardStepper.tsx): Replaced rigid fixed-width stepper connectors with flexible distributed layout so all 7 steps (including `Review`) render fully visible without edge clipping.
+   - [packages/features/src/sales/components/bookings/BookingWizard/Step1PropertySelect.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/sales/components/bookings/BookingWizard/Step1PropertySelect.tsx): Replaced raw UUID text input with interactive available inventory picker, search filter, unit cards (code, type, tower/floor, area, BDT net price), automatic form value population, spotlight selected unit summary banner, and collapsible manual fallback.
+   - [packages/features/src/sales/components/bookings/BookingWizard/Step2CustomerCoBuyers.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/sales/components/bookings/BookingWizard/Step2CustomerCoBuyers.tsx): Added registered customer picker dropdown for 1-click customer assignment.
+   - [packages/features/src/sales/components/bookings/BookingWizard/BookingWizardModal.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/sales/components/bookings/BookingWizard/BookingWizardModal.tsx): Passed `watch` to Step 1 and aligned edge-to-edge stepper margins.
+3. Verification command & result:
+   - `pnpm --filter @exzaestate/ui test`: 6/6 test files passed (43/43 tests green).
+   - `pnpm --filter @exzaestate/features exec vitest run src/sales/ src/customer/ src/crm/`: 4/4 test files passed (18/18 tests green).
+   - `pnpm turbo run typecheck`: 9/9 packages passed (0 errors).
+   - `npx oxlint packages/ui/ packages/features/src/sales/ packages/features/src/customer/ packages/features/src/crm/`: 0 warnings, 0 errors.
+4. Open questions: None.
+5. Next task ID: C2 Responsive Layouts & Mobile Card Views.
+
+### [2026-10-07] Property Inventory Sticky Filter Scroll Clipping & AppShell Viewport Alignment
+
+1. Task ID & status: `PROPERTY-INVENTORY-STICKY-SCROLL-CLIPPING-FIX` [x]
+2. Problem Solved:
+   - User reported that when scrolling down the Property Inventory page (`/properties`), the search & quick filter bar stopped at the top, but table rows (`FLT-K3A` etc.) scrolled past and emerged into the visible gap above the search bar instead of being hidden.
+   - Root cause: `<main>` in `AppShell.tsx` had `container-page p-4 sm:p-6 lg:p-8 space-y-6`. Because `<main>` is the scroll container (`overflow-y-auto`), its internal `padding-top: 32px` created a 32px gap between `<main>`'s clipping boundary and the sticky element (`top-0`). Additionally, `PropertyListFilters` had `bg-surface/95 backdrop-blur-md` allowing translucent text bleed.
+3. Files created / modified:
+   - [packages/ui/src/layout/AppShell.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/ui/src/layout/AppShell.tsx): Changed `<main className="flex-1 min-h-0 overflow-y-auto container-page p-4 sm:p-6 lg:p-8 space-y-6">` to `<main className="flex-1 min-h-0 overflow-y-auto">`. Removed internal padding from the scroll container so sticky children (`top-0` / `-top-px`) pin flush against the scrollport edge with 0px gap, automatically clipping any scrolled rows with `y < 0`.
+   - [packages/features/src/property/pages/PropertyListComponents.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/property/pages/PropertyListComponents.tsx): Updated `PropertyListFilters` to `sticky -top-px z-20 p-4 border-b border-border bg-surface space-y-3 rounded-t-card shadow-xs`, replacing 95% translucency with 100% solid obsidian `bg-surface` and eliminating subpixel edge gaps.
+   - Added `container-page` to root elements of `ExecutiveDashboardPage`, `SettingsPage`, `UserManagementPage`, `RoleManagementPage`, `SetupChecklistPage`, and reports pages (`ReportsHubPage`, `CollectionReportPage`, `SalesReportPage`, `TrialBalanceReportPage`, `BalanceSheetReportPage`, `IncomeStatementReportPage`, `InventoryReportPage`) so layout containers across the app remain standardized per `design.md §4.1`.
+4. Verification command & result:
+   - `pnpm turbo run typecheck`: 9/9 packages passed (0 errors).
+   - `pnpm --filter @exzaestate/ui test`: 6/6 test files passed (43/43 tests green).
+   - `pnpm --filter @exzaestate/features test`: 34/34 test files passed (176/176 tests green).
+   - `npx oxlint packages/ui packages/features`: 0 warnings, 0 errors across 442 files.
+5. Open questions: None.
+6. Next task ID: C2 Responsive Layouts & Mobile Card Views.
+
+### [2026-10-07] System & Admin Section Comprehensive UI/UX & Meridian Design System Upgrade
+
+1. Task ID & status: `SYSTEM-ADMIN-5-SUBROUTES-MERIDIAN-UPGRADE` [x]
+2. Problem Solved:
+   - User requested an audit and comprehensive design alignment of all 5 sub-routes under the **System & Admin** section (`Users & Roles`, `Settings & Series`, `Setup Checklist`, `Migration Wizard`, and `Audit & Security`).
+   - Color harmony upgraded: Eliminated all muddy olive surfaces (`bg-surface-elevated` / `#252318`) across all 5 sub-routes, replacing them with pure obsidian charcoal (`bg-surface` / `#17160F`) and inset obsidian surfaces (`bg-surface-sunken` / `#0E0D0B`).
+   - Layout standardisation: Enforced strict 3-tier hierarchy (`design.md §4.1`) across all sub-routes:
+     - Tier 1: Breadcrumbs (`/dashboard` -> `System & Admin` -> Subroute), Title, Context Pill, and primary CTAs.
+     - Tier 2: 4 KPI summary cards (`.card-stat` with `text-hero-num tabular-nums`).
+     - Tier 3: Workspace Cards with live search, filters, `@exzaestate/ui` `DataTable` (sorting & pagination), and dashed hairline empty states (`EmptyState` with `dashedBorder`).
+   - Semantic badging: Cleaned up domain badges, removed booking badges (`CONFIRMED`/`REJECTED`) from roles/settings, and added semantic role badges, 2FA shields, and audit event pills.
+3. Files created / modified:
+   - [packages/features/src/users/components/UserListTable.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/users/components/UserListTable.tsx): DataTable rewrite, search bar, role & status filters, initials avatar, 2FA shield badge.
+   - [packages/features/src/users/pages/UserManagementPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/users/pages/UserManagementPage.tsx): Tier 1 Breadcrumbs & segmented tab switcher, Tier 2 KPI cards (Total, Active, Suspended, 2FA).
+   - [packages/features/src/users/components/RoleListTable.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/users/components/RoleListTable.tsx): DataTable rewrite, type filters, semantic badges (`System Role` / `Custom Role`), action buttons.
+   - [packages/features/src/users/pages/RoleManagementPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/users/pages/RoleManagementPage.tsx): Tier 1 Breadcrumbs & tab switcher, Tier 2 KPI cards (Total Roles, System Protected, Custom Roles, Active Grants).
+   - [packages/features/src/users/components/RolePermissionsMatrix.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/users/components/RolePermissionsMatrix.tsx): Obsidian `bg-surface`, polished permission cards and scope selects.
+   - [packages/features/src/settings/components/SettingsNavTabs.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/settings/components/SettingsNavTabs.tsx): Obsidian surface, tab icons (`SlidersHorizontal`, `ShoppingBag`, `Landmark`, `Hash`), active saffron accents.
+   - [packages/features/src/settings/pages/SettingsPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/settings/pages/SettingsPage.tsx): Tier 1 Breadcrumbs & FY context pill, Tier 2 KPI cards (Series, Fiscal Period, Land Units, Nightly Time).
+   - [packages/features/src/settings/components/NumberingPatternsTable.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/settings/components/NumberingPatternsTable.tsx): DataTable rewrite, live search, monospace pattern badges, semantic status pills.
+   - [packages/features/src/settings/components/NumberingPreviewCard.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/settings/components/NumberingPreviewCard.tsx): Obsidian surface, evaluated live result card with monospace gold highlight.
+   - [packages/features/src/settings/components/GeneralPolicySettings.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/settings/components/GeneralPolicySettings.tsx): Obsidian `bg-surface` fieldset cards.
+   - [packages/features/src/settings/components/SalesPolicySettings.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/settings/components/SalesPolicySettings.tsx): Obsidian `bg-surface` fieldset cards.
+   - [packages/features/src/settings/components/FinancialPolicySettings.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/settings/components/FinancialPolicySettings.tsx): Obsidian `bg-surface` fieldset cards.
+   - [packages/features/src/setup/components/SetupProgressBar.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/setup/components/SetupProgressBar.tsx): Obsidian surface, Saffron Orange progress fill, tabular percentage.
+   - [packages/features/src/setup/components/TransactReadyBanner.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/setup/components/TransactReadyBanner.tsx): Pure obsidian surface, semantic icon badges, clear requirements state.
+   - [packages/features/src/setup/components/ChecklistCard.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/setup/components/ChecklistCard.tsx): Obsidian surface, semantic completion icons, mandatory danger pill, route buttons.
+   - [packages/features/src/setup/pages/SetupChecklistPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/setup/pages/SetupChecklistPage.tsx): Tier 1 Breadcrumbs & transact pill, Tier 2 KPI cards (Progress %, Satisfied, Pending, State), filter pills.
+   - [packages/features/src/migration/pages/MigrationWizardPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/migration/pages/MigrationWizardPage.tsx): Tier 1 Breadcrumbs & batch pill, Tier 2 KPI cards (Cut-Over, Opening AR, Legacy Due, Reconciliation), responsive stepper navigation.
+   - [packages/features/src/migration/components/MigrationBatchHeader.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/migration/components/MigrationBatchHeader.tsx): Obsidian `bg-surface`.
+   - [packages/features/src/migration/components/OpeningBalancesStep.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/migration/components/OpeningBalancesStep.tsx): Obsidian `bg-surface`, double-entry balance pill.
+   - [packages/features/src/migration/components/LegacyBookingsStep.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/migration/components/LegacyBookingsStep.tsx): Obsidian `bg-surface`.
+   - [packages/features/src/migration/components/CsvImportSection.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/migration/components/CsvImportSection.tsx): Obsidian `bg-surface`.
+   - [packages/features/src/migration/components/ReconciliationGateCard.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/migration/components/ReconciliationGateCard.tsx): Obsidian `bg-surface`.
+   - [packages/features/src/audit/pages/AuditLogViewerPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/audit/pages/AuditLogViewerPage.tsx): Tier 1 Breadcrumbs & WORM pill, Tier 2 KPI cards (Mutations, Security, Alerts, Retention), segmented switcher, live search bar.
+   - [packages/features/src/audit/pages/AuditTabPanels.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/audit/pages/AuditTabPanels.tsx): Obsidian `bg-surface`, empty states.
+   - [packages/features/src/audit/pages/audit-columns.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/audit/pages/audit-columns.tsx): Semantic icons, badges, and monospace ID highlights.
+   - [packages/features/src/audit/components/AuditDetailDrawer.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/audit/components/AuditDetailDrawer.tsx): Obsidian drawer, syntax diff containers with soft red/green highlights.
+   - Test specifications: [users.spec.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/users/users.spec.tsx), [settings.spec.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/settings/settings.spec.tsx), [migration.spec.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/migration/migration.spec.tsx), [audit.spec.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/audit/audit.spec.tsx) updated with router test wrappers.
+4. Verification command & result:
+   - `pnpm --filter @exzaestate/features exec vitest run src/users/ src/settings/ src/setup/ src/migration/ src/audit/`: 6/6 test files passed (30/30 tests green).
+   - `pnpm turbo run typecheck`: 9/9 packages passed (0 errors).
+   - `npx oxlint packages/features/src/users packages/features/src/settings packages/features/src/setup packages/features/src/migration packages/features/src/audit`: 0 warnings, 0 errors across 76 files.
+5. Open questions: None.
+6. Next task ID: C2 Responsive Layouts & Mobile Card Views.
+
+### 2026-10-07 — Finance & Accounts Module Redesign (Payments & Receipts, AR Aging, COA, Approvals Matrix)
+
+1. Task ID: FINANCE-ACCOUNTS-REDESIGN · Complete
+2. Architecture & Design Implementation:
+   - Redesigned all 4 target routes under the `FINANCE & ACCOUNTS` sidebar navigation according to `agent/design.md` and `packages/ui/src/styles/theme.css`.
+   - Removed decorative icons from page headers and `<h1>` titles; kept clean typography with hierarchical breadcrumbs (`Breadcrumbs: Overview > Finance & Accounts > ...`), status pills, and context count badges.
+   - Upgraded all KPI strips to responsive 4-card metric strips (`grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3`) with standard `card-stat` styling (`text-hero-num tabular-nums`).
+   - Unified fragmented floating filter bars into single workspace card containers (`rounded-card border border-border bg-surface shadow-xs`) with integrated search, filter selects, and data tables.
+   - Fixed contrast bug in `AgingStrip.tsx` where deep orange backgrounds had tone-on-tone orange text; enforced high-contrast `text-white font-semibold`.
+   - Added live search, category filtering, and expand/collapse actions to the Chart of Accounts hierarchy tree.
+3. Files created / modified:
+   - [packages/features/src/collection/pages/PaymentListPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/collection/pages/PaymentListPage.tsx): Tier 1 Breadcrumbs & count badge, Tier 2 KPI cards, Tier 3 Unified Workspace Card.
+   - [packages/features/src/collection/components/payments/PaymentDataTable.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/collection/components/payments/PaymentDataTable.tsx): EmptyState dashed border, seamless card container integration.
+   - [packages/features/src/collection/components/aging/AgingStrip.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/collection/components/aging/AgingStrip.tsx): Contrast fix (white text on deep primary), responsive 1-to-5 column card grid.
+   - [packages/features/src/collection/pages/AgingDashboardPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/collection/pages/AgingDashboardPage.tsx): Tier 1 Breadcrumbs & styled As-Of date picker, Tier 2 Aging distribution strip card, Tier 3 Unified customer table workspace card with live search.
+   - [packages/features/src/accounting/pages/CoaPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/accounting/pages/CoaPage.tsx): Tier 1 Breadcrumbs & FY 2026–27 badge, Tier 2 KPI cards (Total Accounts, Groups, Assets, Liabilities), Tier 1 Add Account button.
+   - [packages/features/src/accounting/components/coa/CoaTreeView.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/accounting/components/coa/CoaTreeView.tsx): Integrated search, category filter, expand/collapse toggles, high-contrast hover styling.
+   - [packages/features/src/approvals/pages/ApprovalInboxPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/approvals/pages/ApprovalInboxPage.tsx): Tier 1 Breadcrumbs & pending review badge, Tier 2 KPI strip, Tier 3 Unified workspace card.
+   - [packages/features/src/approvals/components/ApprovalKpiStrip.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/approvals/components/ApprovalKpiStrip.tsx): Standard `card-stat` styling and responsive grid.
+   - [packages/features/src/approvals/components/ApprovalInboxFilters.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/approvals/components/ApprovalInboxFilters.tsx): Search icon, reset action, integrated card header styling.
+   - [packages/features/src/approvals/components/ApprovalDataTable.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/approvals/components/ApprovalDataTable.tsx): High-contrast typography, seamless card integration.
+4. Verification command & result:
+   - `pnpm --filter @exzaestate/features test src/collection src/accounting src/approvals`: 8/8 test files passed (40/40 tests green).
+   - `pnpm --filter @exzaestate/features test`: 34/34 test files passed (176/176 tests green).
+   - `pnpm turbo run typecheck`: 9/9 packages passed (0 errors).
+   - `npx oxlint packages/features/src/collection packages/features/src/accounting packages/features/src/approvals`: 0 warnings, 0 errors across 80 files.
+5. Open questions: None.
+6. Next task ID: REPORTS-SUBSYSTEM-REDESIGN.
+
+### 2026-10-07 — Reports Subsystem Redesign & Meridian Alignment (Reports Hub & Financial Statements)
+
+1. Task ID: REPORTS-SUBSYSTEM-REDESIGN · Complete
+2. Architecture & Design Implementation:
+   - Redesigned and upgraded the entire Reports subsystem (`/reports` - Reports Hub, and interactive report pages) strictly adhering to `agent/design.md` and `packages/ui/src/styles/theme.css`.
+   - Removed decorative icons from page headers and `<h1>` titles; established clean 3-tier layout across all report views with Breadcrumbs (`Overview > Reports > ...`), status pills, and context count badges.
+   - Tier 2 Executive KPI strip (`ReportsMetricsBar.tsx`) modernized with standard `card-stat` styling (`grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3`), `text-hero-num tabular-nums`, and clean semantic domain badges (`Sales`, `Collections`, `Valuation`, `Inventory`).
+   - Unified fragmented filter bars into single workspace card containers (`rounded-card border border-border bg-surface shadow-xs`) with integrated search, frequency selection, view mode switcher (table vs grid), and category tabs.
+   - Replaced raw card elements in `ReportCard.tsx`, `ReportsDirectoryView.tsx`, and `RecentExportsDrawer.tsx` with standard Meridian tokens, `@exzaestate/ui` `<EmptyState>`, and `rounded-button` triggers.
+   - Upgraded individual interactive report pages (`TrialBalanceReportPage`, `BalanceSheetReportPage`, `IncomeStatementReportPage`, `SalesReportPage`, `CollectionReportPage`, `InventoryReportPage`) with Tier 1 Breadcrumbs, Tier 2 filter toolbars (`ReportFiltersBar.tsx`), and Tier 3 content workspace cards.
+3. Files created / modified:
+   - [packages/features/src/reports/components/ReportsMetricsBar.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/reports/components/ReportsMetricsBar.tsx): Responsive `card-stat` grid, `text-hero-num` styling.
+   - [packages/features/src/reports/components/ReportCard.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/reports/components/ReportCard.tsx): Standard `rounded-card` borders, typography, and `rounded-button` actions.
+   - [packages/features/src/reports/components/ReportsTableView.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/reports/components/ReportsTableView.tsx): EmptyState dashed border, `text-th uppercase` headers, hover transitions.
+   - [packages/features/src/reports/components/ReportsFilterBar.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/reports/components/ReportsFilterBar.tsx): Integrated search input, frequency select, segmented view toggle, and category tabs strip.
+   - [packages/features/src/reports/components/ReportsDirectoryView.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/reports/components/ReportsDirectoryView.tsx): EmptyState upgrade with dashed border and proper spacing.
+   - [packages/features/src/reports/components/RecentExportsDrawer.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/reports/components/RecentExportsDrawer.tsx): Backdrop blur, `rounded-card` items, and EmptyState integration.
+   - [packages/features/src/reports/components/QuickGenerateModal.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/reports/components/QuickGenerateModal.tsx): Standard format button styling and active ring indicators.
+   - [packages/features/src/reports/components/ExportReportModal.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/reports/components/ExportReportModal.tsx): Refined format buttons with `rounded-button` and Meridian active states.
+   - [packages/features/src/reports/components/ReportFiltersBar.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/reports/components/ReportFiltersBar.tsx): Unified filter toolbar card container, standardized date and project inputs.
+   - [packages/features/src/reports/pages/ReportsHubPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/reports/pages/ReportsHubPage.tsx): Tier 1 Breadcrumbs & clean H1, Tier 2 KPI strip, Tier 3 Unified Workspace Card, and BullMQ banner.
+   - [packages/features/src/reports/pages/TrialBalanceReportPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/reports/pages/TrialBalanceReportPage.tsx): Tier 1 Breadcrumbs, back navigation, double-rule total tfoot.
+   - [packages/features/src/reports/pages/BalanceSheetReportPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/reports/pages/BalanceSheetReportPage.tsx): Tier 1 Breadcrumbs, equation balance pill, dual-column workspace cards.
+   - [packages/features/src/reports/pages/IncomeStatementReportPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/reports/pages/IncomeStatementReportPage.tsx): Tier 1 Breadcrumbs, net income badge, structured P&L sections.
+   - [packages/features/src/reports/pages/SalesReportPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/reports/pages/SalesReportPage.tsx): Tier 1 Breadcrumbs, sales summary pills, unified table card.
+   - [packages/features/src/reports/pages/CollectionReportPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/reports/pages/CollectionReportPage.tsx): Tier 1 Breadcrumbs, realization badges, unified table card.
+   - [packages/features/src/reports/pages/InventoryReportPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/reports/pages/InventoryReportPage.tsx): Tier 1 Breadcrumbs, 6-card KPI inventory status strip, unified table card.
+4. Verification command & result:
+   - `pnpm --filter @exzaestate/features test src/reports`: 2/2 test files passed (14/14 tests green).
+   - `pnpm --filter @exzaestate/features test`: 34/34 test files passed (176/176 tests green).
+   - `pnpm turbo run typecheck`: 9/9 packages passed (0 errors).
+   - `npx oxlint packages/features/src/reports`: 0 warnings, 0 errors across 23 files.
+5. Open questions: None.
+6. Next task ID: C2 Responsive Layouts & Mobile Card Views.
+
+---
+
+## 2026-10-07 — Design Token Standardization: Floating Sticky Filter Bar with 14px Optical Gap
+
+1. Task executed:
+
+   - Standardized filter bar sticky behavior across all list, inventory, operations, accounting, and reports pages to use the **Floating Sticky Pattern with Optical Gap** (Screenshot 2 paradigm).
+   - Preserved `rounded-t-card` (12px top-corner radius), `border-t border-b border-border`, soft elevation shadow (`shadow-xs`), and an intentional 14px optical breathing offset (`top-3.5`) below the main top navigation bar.
+   - Added an absolute canvas gap cover (`before:content-[''] before:absolute before:-top-3.5 before:-left-1 before:-right-1 before:h-3.5 before:bg-bg before:pointer-events-none`) so scrolled table rows and content are neatly masked and never peek through the 14px floating gap.
+
+2. Architecture & Design Implementation:
+
+   - **Pattern A (Integrated Workspace Card Filter Bar):**
+     `sticky top-3.5 z-20 -mt-px p-4 border-t border-b border-border bg-surface rounded-t-card shadow-xs flex ... before:content-[''] before:absolute before:-top-3.5 before:-left-1 before:-right-1 before:h-3.5 before:bg-bg before:pointer-events-none`
+     Applied to:
+     - `PropertyListFilters` in [PropertyListComponents.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/property/pages/PropertyListComponents.tsx)
+     - Integrated toolbar in [PaymentListPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/collection/pages/PaymentListPage.tsx)
+     - Customer Receivables Ledger toolbar in [AgingDashboardPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/collection/pages/AgingDashboardPage.tsx)
+     - Approvals Matrix filters in [ApprovalInboxFilters.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/approvals/components/ApprovalInboxFilters.tsx) & [ApprovalInboxPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/approvals/pages/ApprovalInboxPage.tsx)
+     - Unified Audit Trail & Security Events toolbar in [AuditLogViewerPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/audit/pages/AuditLogViewerPage.tsx) & [AuditTabPanels.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/audit/pages/AuditTabPanels.tsx)
+     - Reports Hub catalog filter bar in [ReportsFilterBar.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/reports/components/ReportsFilterBar.tsx) & [ReportsHubPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/reports/pages/ReportsHubPage.tsx)
+   - **Pattern B (Standalone Floating Filter Bar Card):**
+     `sticky top-3.5 z-20 shadow-xs flex ... rounded-card border border-border before:content-[''] before:absolute before:-top-3.5 before:-left-1 before:-right-1 before:h-3.5 before:bg-bg before:pointer-events-none`
+     Applied to:
+     - CRM Lead Pipeline filters in [LeadListComponents.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/crm/pages/LeadListComponents.tsx)
+     - Customer Directory filters in [CustomerListPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/customer/pages/CustomerListPage.tsx)
+     - Sales Bookings filters in [BookingListPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/sales/pages/BookingListPage.tsx)
+     - Accounting Journal Vouchers filters in [JournalListPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/accounting/pages/JournalListPage.tsx)
+     - Sales Quotations filters in [QuotationListPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/sales/pages/QuotationListPage.tsx)
+     - Sales Agreements filters in [AgreementListPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/sales/pages/AgreementListPage.tsx)
+     - Interactive Report date/project filter bar in [ReportFiltersBar.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/reports/components/ReportFiltersBar.tsx)
+
+3. Files modified:
+
+   - [packages/features/src/property/pages/PropertyListComponents.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/property/pages/PropertyListComponents.tsx)
+   - [packages/features/src/crm/pages/LeadListComponents.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/crm/pages/LeadListComponents.tsx)
+   - [packages/features/src/customer/pages/CustomerListPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/customer/pages/CustomerListPage.tsx)
+   - [packages/features/src/sales/pages/BookingListPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/sales/pages/BookingListPage.tsx)
+   - [packages/features/src/collection/pages/PaymentListPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/collection/pages/PaymentListPage.tsx)
+   - [packages/features/src/collection/pages/AgingDashboardPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/collection/pages/AgingDashboardPage.tsx)
+   - [packages/features/src/approvals/components/ApprovalInboxFilters.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/approvals/components/ApprovalInboxFilters.tsx)
+   - [packages/features/src/approvals/pages/ApprovalInboxPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/approvals/pages/ApprovalInboxPage.tsx)
+   - [packages/features/src/audit/pages/AuditLogViewerPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/audit/pages/AuditLogViewerPage.tsx)
+   - [packages/features/src/audit/pages/AuditTabPanels.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/audit/pages/AuditTabPanels.tsx)
+   - [packages/features/src/reports/components/ReportsFilterBar.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/reports/components/ReportsFilterBar.tsx)
+   - [packages/features/src/reports/pages/ReportsHubPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/reports/pages/ReportsHubPage.tsx)
+   - [packages/features/src/accounting/pages/JournalListPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/accounting/pages/JournalListPage.tsx)
+   - [packages/features/src/sales/pages/QuotationListPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/sales/pages/QuotationListPage.tsx)
+   - [packages/features/src/sales/pages/AgreementListPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/sales/pages/AgreementListPage.tsx)
+   - [packages/features/src/reports/components/ReportFiltersBar.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/reports/components/ReportFiltersBar.tsx)
+
+4. Verification command & result:
+
+   - `npx oxlint packages/features`: 0 warnings, 0 errors across 384 files.
+   - `pnpm --filter @exzaestate/features test`: 34/34 test files passed (176/176 tests green).
+   - `pnpm turbo run typecheck`: 9/9 packages passed (0 errors).
+
+5. Open questions: None.
+6. Next task ID: C2 Responsive Layouts & Mobile Card Views.
+
+---
+
+## 2026-10-07 — Hotfix: Restored Filter Bar Top Border & Curved Top Corners
+
+1. Issue identified:
+   - In the earlier iteration, a `before:` pseudo-element (`before:content-[''] before:absolute before:-top-3.5 before:-left-1 before:-right-1 before:h-3.5 before:bg-bg`) and negative margin (`-mt-px`) were added to sticky filter toolbars.
+   - Due to subpixel rendering and overlapping bounds (`top: -14px; height: 14px; left: -4px; right: -4px`), the `before:` element painted the solid background color (`bg-bg`) directly over the element's 1px top border (`y = 0px`) and rounded corners, hiding them completely.
+2. Resolution:
+   - Completely removed the `before:` pseudo-element mask and `-mt-px` offset from all 13 sticky filter components.
+   - Preserved `sticky top-3.5 z-20`, `border-t border-b border-border` (or `border border-border`), `rounded-t-card` (or `rounded-card`), and soft elevation shadow `shadow-xs`.
+   - Both the crisp top border line and smooth rounded top corners are now 100% visible and unclipped across all modules.
+3. Verification:
+   - `npx oxlint packages/features`: 0 warnings, 0 errors.
+   - `pnpm --filter @exzaestate/features test`: 34/34 test files passed (176/176 tests green).
+   - `pnpm turbo run typecheck`: 9/9 packages passed (0 errors).
+
+---
+
+## 2026-10-07 — Architecture Fix: Unified StickyToolbar Layout Component Eliminating Border Bleed on Scroll
+
+1. Problem Solved:
+
+   - User reported that when scrolling tables from below, horizontal border lines from data table rows and cards sliced across the rounded corners (`rounded-card`) of the floating search bar and appeared above the top border.
+   - Root cause: Floating sticky elements with `border-radius: var(--radius-card)` have transparent corner notches outside their border curve. When table rows scroll underneath, their 1px horizontal borders (`border-b border-border`) physically passed through those unbacked corner notches. Additionally, `AppShell` had an arbitrary `h-3.5` top mask that collided right at `y = 14px`, revealing the scrolled table card's top border.
+
+2. Architecture & Implementation:
+
+   - Created canonical `StickyToolbar` component in `@exzaestate/ui` (`packages/ui/src/layout/StickyToolbar.tsx`), exported via `packages/ui/src/index.ts`.
+   - Pins flush to `top-0` with `z-20` and an opaque canvas background (`bg-bg`).
+   - Applies `pt-3.5` (14px optical breathing offset) and `-mt-3.5` flow neutralization so the child card floats at the intended visual height.
+   - Applies `-mx-1.5 px-1.5` so the canvas mask extends slightly wider than the data tables below.
+   - Removed the artificial `h-3.5` mask from `AppShell.tsx` to eliminate subpixel layering collisions.
+   - Migrated all 13 sticky filter bars across the entire platform to use `StickyToolbar`:
+     1. [PropertyListComponents.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/property/pages/PropertyListComponents.tsx) (`PropertyListFilters`)
+     2. [LeadListComponents.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/crm/pages/LeadListComponents.tsx) (`LeadListFilters`)
+     3. [CustomerListPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/customer/pages/CustomerListPage.tsx)
+     4. [BookingListPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/sales/pages/BookingListPage.tsx)
+     5. [PaymentListPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/collection/pages/PaymentListPage.tsx)
+     6. [AgingDashboardPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/collection/pages/AgingDashboardPage.tsx)
+     7. [ApprovalInboxFilters.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/approvals/components/ApprovalInboxFilters.tsx)
+     8. [AuditLogViewerPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/audit/pages/AuditLogViewerPage.tsx)
+     9. [ReportsFilterBar.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/reports/components/ReportsFilterBar.tsx)
+     10. [ReportFiltersBar.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/reports/components/ReportFiltersBar.tsx)
+     11. [JournalListPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/accounting/pages/JournalListPage.tsx)
+     12. [QuotationListPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/sales/pages/QuotationListPage.tsx)
+     13. [AgreementListPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/sales/pages/AgreementListPage.tsx)
+
+3. Verification command & result:
+   - `pnpm --filter @exzaestate/ui test`: 6/6 test files passed (43/43 tests green).
+   - `pnpm --filter @exzaestate/features test`: 34/34 test files passed (176/176 tests green).
+   - `pnpm turbo run typecheck`: 9/9 packages passed (0 errors).
+   - `npx oxlint packages/ui packages/features`: 0 warnings, 0 errors across 443 files.
+
+---
+
+## 2026-10-07 — Architecture Fix: Token Refresh Flow, Row Level Security Pre-Tenant Bypass, and Rotation Concurrency Grace Period
+
+1. Problem Solved:
+
+   - User reported getting kicked out with `401 Unauthorized` after ~15-20 minutes of usage.
+   - Terminal log analysis revealed:
+     - At 15 minutes, access token naturally expired (`JWT_ACCESS_EXPIRES_IN=15m`).
+     - In-flight or subsequent query triggered `/api/v1/auth/refresh`.
+     - Backend failed `/api/v1/auth/refresh` with `401 Unauthorized: Invalid or unknown refresh token`.
+   - Deep root cause analysis revealed 4 distinct compounding bugs:
+     a) **RLS Pre-Tenant Block in `AuthService.refresh`:** `AuthService.refresh` queried `SELECT company_id FROM refresh_tokens WHERE token_hash = $1` using `PrismaService` (`exza_app`). Because `app.current_company_id` is unknown before tenant resolution and `refresh_tokens` enforces RLS (`FORCE ROW LEVEL SECURITY`), PostgreSQL returned 0 rows, falsely reporting the token as unknown.
+     b) **Missing `cookieParser()` in Backend Runtime:** `apps/backend/src/bootstrap.ts` lacked `app.use(cookieParser())`, preventing Web clients from reading HttpOnly refresh token cookies.
+     c) **Token Rotation Concurrency Race Condition:** Without an OAuth 2.0 / RFC 6749 rotation grace window, concurrent requests from the same client IP attempting refresh triggered reuse detection, revoking the entire session family.
+     d) **Frontend Refresh Deduplication & 401 Loop:** `packages/api-client/src/http.ts` and `packages/app-core/src/session/index.tsx` lacked deduplication for in-flight refresh requests, allowing concurrent 401s to issue multiple refresh calls, while `/auth/refresh` lacked an exclusion from the 401 retry interceptor.
+
+2. Architecture & Implementation:
+
+   - [auth.service.ts](file:///Users/rashedulraha/Developer/ExzaEstate/apps/backend/src/modules/auth/auth.service.ts): Resolved pre-tenant `company_id` via `systemPrisma.executeWithReason('// SYSTEM-SCOPE: Resolve tenant company for refresh token', ...)` bypassing RLS as `exza_system` (`BYPASSRLS`) before opening the tenant transaction.
+   - [token.service.ts](file:///Users/rashedulraha/Developer/ExzaEstate/apps/backend/src/modules/auth/token.service.ts): Implemented a 30-second rotation grace period (`ROTATION_GRACE_PERIOD_MS = 30_000`) for concurrent in-flight requests from the same client IP, ensuring active sessions seamlessly renew tokens without triggering reuse panic.
+   - [bootstrap.ts](file:///Users/rashedulraha/Developer/ExzaEstate/apps/backend/src/bootstrap.ts): Mounted `cookieParser()` middleware in `configureApp`.
+   - [auth.controller.ts](file:///Users/rashedulraha/Developer/ExzaEstate/apps/backend/src/modules/auth/auth.controller.ts): Standardized client IP resolution from `x-forwarded-for` in `refresh()`.
+   - [http.ts](file:///Users/rashedulraha/Developer/ExzaEstate/packages/api-client/src/http.ts): Added `isAuthEndpoint` guard to prevent recursive 401 interceptor retries on auth routes (`/auth/login`, `/auth/refresh`, `/auth/logout`).
+   - [session/index.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/app-core/src/session/index.tsx): Deduplicated concurrent in-flight refresh requests using `useRef<Promise<string | null> | null>` in `performTokenRefresh`.
+   - [http.spec.ts](file:///Users/rashedulraha/Developer/ExzaEstate/packages/api-client/src/http.spec.ts): Added unit test confirming 401 errors on `/api/v1/auth/refresh` reject cleanly without calling `refreshHandler`.
+
+3. Verification command & result:
+   - `pnpm --filter @exzaestate/api-client test`: 2/2 test files passed (15/15 tests green).
+   - `pnpm --filter @exzaestate/app-core test`: 1/1 test file passed (7/7 tests green).
+   - `pnpm turbo run typecheck`: 9/9 packages passed (0 errors).
+   - `pnpm oxlint`: 0 warnings, 0 errors across 1749 files.
+
+---
+
+## 2026-10-07 — Architecture Polish: Sticky Search Toolbar & Scrollable Data System Unification
+
+1. Problem Solved:
+
+   - User requested that the search and filter toolbar on the Property Inventory (`/properties`) page remain sticky below the App Header with optical breathing gap maintenance when scrolling through the property units list, while allowing the table/plan view data content underneath to scroll smoothly.
+   - User requested ensuring all components/pages with a search bar and data table below (including Property Inventory, Users, Roles) follow this consistent sticky toolbar architecture.
+
+2. Architecture & Implementation:
+
+   - [PropertyListPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/property/pages/PropertyListPage.tsx): Wrapped `PropertyListFilters` in canonical `<StickyToolbar>`, mounting it as Tier 3 between KPI summary cards and the Tier 4 data workspace (`card-workspace`).
+   - [PropertyListComponents.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/property/pages/PropertyListComponents.tsx): Restyled `PropertyListFilters` as a sleek standalone `rounded-card border border-border shadow-xs` card, with negative margins in `StickyToolbar` maintaining natural flow un-scrolled and pinning flush to `top-0` with `pt-3.5` optical breathing space on scroll.
+   - [UserListTable.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/users/components/UserListTable.tsx): Migrated embedded toolbar to `<StickyToolbar>` with underlying `card-workspace` DataTable.
+   - [RoleListTable.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/users/components/RoleListTable.tsx): Migrated embedded toolbar to `<StickyToolbar>` with underlying `card-workspace` DataTable.
+
+3. Verification command & result:
+
+   - `pnpm --filter @exzaestate/features test src/property/property-list.spec.tsx`: 6/6 tests passed.
+   - `pnpm --filter @exzaestate/features test src/users/users.spec.tsx`: 4/4 tests passed.
+   - `pnpm oxlint packages/features`: 0 warnings, 0 errors across 384 files.
+   - `pnpm turbo run typecheck`: 9/9 packages passed (0 errors).
+
+4. Open questions: None.
+5. Next task ID: C2 Responsive Layouts & Mobile Card Views.
+
+---
+
+## 2026-10-07 — Operations Module UI Polish: Expense Vouchers & AP Bills Canonical Empty State
+
+1. Problem Solved:
+
+   - User reported that on `/operations/expenses` (`Operational Expenses & Vouchers`), when there was no data, the page displayed an empty table with standard table headers and a plain text message ("No Expense Vouchers Found"), rather than the canonical ExzaEstate dashed-border empty state card with icon, title, description, and action button (as shown in Customer Directory).
+
+2. Architecture & Implementation:
+
+   - [ExpenseListPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/operations/pages/ExpenseListPage.tsx):
+     - Integrated `DataTableSkeleton` for loading states.
+     - Integrated canonical `<EmptyState dashedBorder ... />` when `vouchers.length === 0`, featuring title "No expense vouchers recorded", descriptive guidance, and secondary action button "+ New Voucher".
+     - Added `<FilteredEmptyState>` when `statusFilter !== 'ALL'` and no vouchers match filter criteria, with one-click filter reset.
+     - Wrapped `<ExpenseDataTable>` inside workspace container when data is present.
+   - [ExpenseDataTable.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/operations/components/expenses/ExpenseDataTable.tsx):
+     - Added early return for empty voucher lists to render `<EmptyState dashedBorder ... />` directly instead of wrapping an empty row inside `DataTable` header table markup.
+   - [VendorListPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/operations/pages/VendorListPage.tsx) & [VendorDataTable.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/operations/components/vendors/VendorDataTable.tsx):
+     - Standardized Bills tab and VendorDataTable empty states with canonical `<EmptyState dashedBorder ... />`.
+   - [operations-s1.spec.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/operations/operations-s1.spec.tsx):
+     - Added unit test asserting `<EmptyState dashedBorder>` renders correctly with action callback when vouchers array is empty.
+
+3. Verification command & result:
+   - `pnpm --filter @exzaestate/features test src/operations/operations-s1.spec.tsx`: 6/6 tests passed.
+   - `pnpm oxlint packages/features`: 0 warnings, 0 errors.
+   - `pnpm turbo run typecheck`: 9/9 packages passed (0 errors).
+
+---
+
+## 2026-10-07 — Sidebar Navigation Architecture: Step-by-Step Enterprise Lifecycle & Ultra-Modern Aesthetics
+
+1. Problem Solved:
+
+   - User requested in audio to organize the software's sidebar in a structured, step-by-step and part-by-part real estate business lifecycle ("ekto guchalo bhabe, user jeno bibhranto na hoy, step-by-step part-by-part, ekdom modern torikay").
+   - Previously, items were fragmented across 7 scattered groups with multiple single-item sections (e.g. Overview had 1, Property had 1, Operations had 1, Reports had 1), and Property was placed after CRM, which disrupted the natural real estate business flow.
+
+2. Architecture & Implementation:
+
+   - [sidebar.constants.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/ui/src/layout/sidebar.constants.tsx):
+     - Added `step?: string;` and `badge?: string | number;` to the canonical `SidebarNavGroup` contract.
+     - Re-architected default groups into 5 clear sequential stages: `PART 01 · Executive Cockpit`, `STEP 01 · Property Assets`, `STEP 02 · Sales Pipeline`, `STEP 03 · Finance & Treasury`, and `STEP 04 · System & Admin`.
+   - [navigation.config.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/navigation.config.tsx):
+     - Synchronized `createSidebarNavGroups` to match the exact 5-step real estate enterprise lifecycle:
+       1. **PART 01 · Executive Cockpit**: Executive Cockpit (`/dashboard`), Reports & Analytics (`/reports`).
+       2. **STEP 01 · Property Assets**: Inventory & Units (`/properties`).
+       3. **STEP 02 · Sales Pipeline**: Leads & Inquiries (`/crm/leads`), Customers Directory (`/customers`), Price Quotations (`/sales/quotations`), Bookings & Sales (`/sales/bookings`), Approvals Matrix (`/approvals`).
+       4. **STEP 03 · Finance & Treasury**: Payments & Receipts (`/collection/receipts`), AR Aging Analysis (`/collection/aging`), Chart of Accounts (`/accounting/coa`), Expenses & AP (`/operations/expenses`).
+       5. **STEP 04 · Workspace & Admin**: Users & Roles (`/users`), Settings & Series (`/settings`), Setup Checklist (`/setup/checklist`), Migration Wizard (`/migration/wizard`), Security & Audit (`/audit`), My Profile & Account (`/profile`).
+     - Updated `createSystemAdminSidebarNavGroups` with dedicated step badges (`PART 01`, `STEP 01`, `STEP 02`, `USER`).
+   - [Sidebar.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/ui/src/layout/Sidebar.tsx):
+     - Modernized `SidebarItem` with signature active indicator (`before:w-[3px] before:rounded-r-full before:bg-primary`), subtle glow background (`bg-primary/10`), active icon scaling, and accessible `aria-current="page"`.
+     - Modernized `CollapsibleNavGroup` with step tag badge (`GroupHeaderTitle`), collapsible state indicator with pulse dot when active item is inside a collapsed group (`GroupHeaderIndicator`), and tree connector guideline (`border-l border-sidebar-border/30`).
+     - Decomposed sub-components to strictly satisfy Oxlint complexity <= 10.
+   - [navigation.config.spec.ts](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/navigation.config.spec.ts) & [ui.spec.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/ui/src/ui.spec.tsx):
+     - Added automated unit tests verifying the 5-step lifecycle structure, route callbacks, path resolutions, and UI rendering of step badges.
+
+3. Verification command & result:
+   - `pnpm --filter @exzaestate/ui test`: 6/6 test files passed (43/43 tests green).
+   - `pnpm --filter @exzaestate/features test`: 36/36 test files passed (184/184 tests green).
+   - `pnpm --filter @exzaestate/ui typecheck && pnpm --filter @exzaestate/features typecheck`: 0 errors.
+   - `pnpm --filter @exzaestate/desktop typecheck && pnpm --filter @exzaestate/web typecheck`: 0 errors.
+   - `npx oxlint packages/ui/src/layout/Sidebar.tsx packages/features/src/navigation.config.tsx`: 0 warnings, 0 errors.
+
+## 2026-10-07 — Executive Overview Dashboard (/dashboard): Ultra-Luxury Redesign & Architectural Polish
+
+1. Problem Solved:
+
+   - The client requested a world-class, 10-year expert designer standard redesign for the Central Overview Dashboard (`/dashboard` / `ExecutiveDashboardPage.tsx`).
+   - The screen needed to immediately inspire luxury, prestige, and institutional confidence for real estate executives and high-net-worth developers ("first dekhei jeno ekta luxury feel pai, UI world-er shob theke shundor hobe, client er ui niye jeno kono question nah thake").
+   - Clean, uncluttered visual hierarchy highlighting the core ERP pillars: Master Portfolio Valuation, Commercial Absorption, Operating Inflow, Treasury Liquidity, AR Aging, Conversion Funnels, Cash Flow, and Direct Operations Access.
+
+2. Architecture & Design Implementation:
+
+   - [ExecutivePortfolioHero.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/dashboard/components/ExecutivePortfolioHero.tsx):
+     - Created a flagship master portfolio hero banner featuring ambient radial gradients, gold/slate glassmorphism accents, and an institutional statutory compliance seal.
+     - Spotlight metric cards with crisp typography (Inter + JetBrains Mono tabular-nums) displaying Gross Portfolio Valuation, Commercial Absorption Rate, Realized Inflow, and Treasury & Liquidity.
+     - Micro-actions linking directly to Property Registry and Statutory Financial Statements.
+   - [KpiSparklineCard.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/ui/src/charts/KpiSparklineCard.tsx):
+     - Enhanced the UI chart card contract with an optional `icon?: ReactNode` slot and contextual chip styling.
+   - [ExecutiveKpiStrip.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/dashboard/components/ExecutiveKpiStrip.tsx):
+     - Polished the 4 primary financial metrics (`Total Sales`, `Total Collection`, `Outstanding AR`, `Cash & Bank Balance`) with luxury icon badges (`Receipt`, `CreditCard`, `Clock`, `Landmark`), subtle border glow states, and micro-sparklines.
+     - Preserved 100% contract compliance with AT-15 parity and `animate-skeleton-breathe` skeleton loaders.
+   - [InventoryAbsorptionStrip.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/dashboard/components/InventoryAbsorptionStrip.tsx):
+     - Redesigned into high-contrast valuation micro-cards and interactive unit distribution badges with ring status indicators.
+   - [ExecutiveActionCenter.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/dashboard/components/ExecutiveActionCenter.tsx):
+     - Elevated pending executive workflows with status badges, hover directional indicators, and an institutional green audit verification card for clean states.
+   - [ExecutiveDashboardPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/dashboard/pages/ExecutiveDashboardPage.tsx):
+     - Re-architected into modular, clean sections satisfying strict Oxlint complexity <= 10.
+     - Added `QuickWorkflowDeck` providing one-click access across all 7 operational modules: Units Registry, Customer Directory, Quotations, Bookings, Collection & Receipts, General Ledger, and Executive Reports.
+   - Zero mock data invariant strictly maintained (`formatMoney` on real paisa BigInt from server state).
+
+3. Verification Command & Result:
+   - `pnpm --filter @exzaestate/features test src/dashboard/dashboard.spec.tsx`: 4/4 tests passed (100% green).
+   - `pnpm --filter @exzaestate/ui test`: 43/43 tests passed across 6 test files.
+   - `pnpm --filter @exzaestate/features test`: 184/184 tests passed across 36 test files.
+   - `pnpm --filter @exzaestate/ui typecheck && pnpm --filter @exzaestate/features typecheck`: 0 errors.
+   - `pnpm --filter @exzaestate/desktop typecheck && pnpm --filter @exzaestate/web typecheck`: 0 errors.
+   - `npx oxlint packages/features packages/ui`: 0 warnings, 0 errors across 448 files.
+
+## 2026-10-08 — Design System & Sidebar Refinement: Clean Border Aesthetics, Zero Shadow Enforcement, and Light Mode Luxury Overhaul
+
+1. Problem Solved:
+
+   - User reported sidebar clutter from step badges (`[PART 01]`, `[STEP 01]`, `[STEP 02]`, etc.) and heavy active box borders with rail lines. Requested removing step badges completely, keeping clean category titles, and removing all shadows across the platform ("amar site theke shadow soriye diben amar shadow lagbe nah, emni just border rakhen").
+   - User also requested an ultra-premium overhaul of the light mode background and foreground typography, removing generic/basic default looks.
+
+2. Architecture & Design Implementation:
+
+   - [Sidebar.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/ui/src/layout/Sidebar.tsx):
+     - Removed step badges (`[PART 01]`, `[STEP 01]`) completely from `GroupHeaderTitle`. Header now renders clean, elegant uppercase titles (`EXECUTIVE COCKPIT`, `PROPERTY ASSETS`, `SALES PIPELINE`, `FINANCE & TREASURY`, `WORKSPACE & ADMIN`).
+     - Cleaned up `SidebarItem` active state: removed `shadow-xs`, removed heavy inner left bar `before:w-[3px]`, resulting in a crisp, balanced active button (`bg-primary/10 text-primary border border-primary/20`).
+     - Removed vertical tree connector guide rails from nested group lists for a calm, minimal layout.
+   - [sidebar.constants.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/ui/src/layout/sidebar.constants.tsx) & [navigation.config.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/navigation.config.tsx):
+     - Cleaned navigation group definitions to remove step prefixes while preserving clear group names and routing hierarchy.
+   - [theme.css](file:///Users/rashedulraha/Developer/ExzaEstate/packages/ui/src/styles/theme.css):
+     - **Zero Shadow Enforcement:** Set all shadow tokens (`--shadow-xs`, `--shadow-sm`, `--shadow-md`, `--shadow-lg`, `--shadow-brand`) to `none` across static `@theme`, dark mode, media queries, and all 5 color palettes.
+     - Added global utility rule `.shadow-* { box-shadow: none !important; }` to eliminate box-shadows across all legacy and current components.
+     - Updated card primitives (`.card-surface`, `.card-workspace`, `.card-stat`) to flat architectural hairline borders (`border: 1px solid var(--color-border); box-shadow: none;`).
+     - **Light Mode Luxury Overhaul:**
+       - Background (`--color-bg`): Upgraded from dull `#f8f9fa` to crisp luminous slate `#f8fafc`.
+       - Primary Foreground (`--color-text`, `--color-text-primary`): Upgraded to deep Obsidian Slate `#0f172a` for razor-sharp typography and financial clarity.
+       - Secondary Text (`--color-text-2`, `--color-text-secondary`): `#334155` (Slate-700).
+       - Hairline Borders (`--color-border`): Crisp `#e2e8f0` (Slate-200), sub-borders `#f1f5f9`.
+       - Sidebar: Luminous `#ffffff` with slate foreground `#0f172a` and soft `#f1f5f9` hover.
+   - [AppShell.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/ui/src/layout/AppShell.tsx) & [Header.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/ui/src/layout/Header.tsx):
+     - Removed `shadow-xs` and corner rounding from workspace canvas; established crisp hairline dividing borders (`border-t border-l border-sidebar-border`).
+     - Added `border-b border-sidebar-border` to Header for clear structural separation.
+   - Dashboard components (`ExecutivePortfolioHero.tsx`, `ExecutiveActionCenter.tsx`, `ExecutiveDashboardPage.tsx`, `InventoryAbsorptionStrip.tsx`, `DashboardChartsSection.tsx`):
+     - Removed all explicit shadow utility classes; enforced flat architectural hairline border styling.
+
+3. Verification Command & Result:
+   - `pnpm --filter @exzaestate/ui test`: 43/43 tests passed across 6 test files.
+   - `pnpm --filter @exzaestate/features test`: 184/184 tests passed across 36 test files.
+   - `pnpm --filter @exzaestate/ui typecheck && pnpm --filter @exzaestate/features typecheck`: 0 errors.
+
+### 2026-10-08 — Resolution: Shell Single-Border Architecture & Curved Canvas Corner Restoration
+
+1. User Request & Root Cause Analysis:
+
+   - User reported that the top-left corner of the dashboard workspace canvas became square instead of its signature rounded curve, and that double borders between the Sidebar, Header, and Canvas made the dividing lines appear thick ("mota lagteche").
+   - **Root Cause Identified**:
+     - `Sidebar.tsx` rendered a full-height `border-r border-sidebar-border`.
+     - `Header.tsx` rendered a full-width `border-b border-sidebar-border`.
+     - `AppShell.tsx` workspace canvas rendered `border-t border-l border-sidebar-border` with no top-left border-radius.
+     - Where Sidebar met the Canvas, `Sidebar border-r` + `Canvas border-l` overlapped into a 2px double border.
+     - Where Header met the Canvas, `Header border-b` + `Canvas border-t` overlapped into a 2px horizontal double border, which also cut straight through the corner geometry.
+
+2. Architecture & Design Fix:
+
+   - [AppShell.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/ui/src/layout/AppShell.tsx):
+     - Restored signature architectural top-left corner radius: `rounded-tl-2xl sm:rounded-tl-[24px]` on the workspace canvas container.
+     - The canvas maintains `border-t border-l border-sidebar-border`, curving seamlessly around the corner over the parent `bg-sidebar` frame.
+   - [Header.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/ui/src/layout/Header.tsx):
+     - Removed `border-b border-sidebar-border`. Replaced with `border-l border-sidebar-border`.
+     - _Result_: The canvas's `border-t` provides the single, clean 1px hairline horizontal border, allowing the corner curve to remain unbroken and eliminating double-line thickness.
+   - [Sidebar.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/ui/src/layout/Sidebar.tsx):
+     - Removed `border-r border-sidebar-border` from `getSidebarClass`.
+     - _Result_: The canvas's `border-l` provides the single 1px hairline vertical divider, eliminating the 2px collision against the sidebar.
+
+3. Verification Command & Result:
+   - `pnpm --filter @exzaestate/ui test`: 43/43 tests passed across 6 test files.
+   - `pnpm --filter @exzaestate/features test src/navigation.config.spec.ts src/dashboard/dashboard.spec.tsx`: 8/8 tests passed.
+   - `pnpm --filter @exzaestate/ui typecheck && pnpm --filter @exzaestate/features typecheck`: 0 errors.
+   - `npx oxlint packages/ui packages/features`: 0 warnings, 0 errors across 448 files.
+
+### 2026-10-08 — Resolution: Elimination of Border Mismatch & Full Header Alignment
+
+1. User Request & Visual Analysis:
+
+   - User reported: "ekhane ekta problem ache border er michmatch" with screenshot `media_1791397437660.png`.
+   - Detailed pixel analysis revealed:
+     - `Header.tsx` had `border-l border-sidebar-border`, drawing a straight vertical line from y=0 to y=56 (retina: y=0 to 112).
+     - At y=56 (112), Header's straight vertical line terminated at x=0, while the Workspace Canvas's curved corner was offset inward by 16px (retina: 32px), creating a 16px horizontal discrepancy (gap) and leaving Header's border dangling disconnected above the curve.
+     - Additionally, `SidebarHeader` was `h-12` (48px) with `border-b`, while `Header` was `h-14` (56px), creating an 8px vertical baseline mismatch between sidebar chrome and main chrome.
+
+2. Architecture & Design Fix:
+
+   - [Header.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/ui/src/layout/Header.tsx):
+     - Removed `border-l border-sidebar-border` from `<header>`.
+     - _Result_: Eliminated the dangling straight vertical border. Header and Sidebar seamlessly share the outer `bg-sidebar` chrome surface. The Workspace Canvas now provides the sole, uninterrupted boundary that curves smoothly around the corner without any collision or gap.
+   - [SidebarSections.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/ui/src/layout/SidebarSections.tsx):
+     - Aligned `SidebarHeader` height from `h-12` (48px) to `h-14` (56px) and removed `border-b`.
+     - _Result_: Perfectly unified the 56px horizontal baseline across the entire application shell.
+
+3. Verification Command & Result:
+   - `pnpm --filter @exzaestate/ui test`: 43/43 tests passed across 6 test files.
+   - `pnpm --filter @exzaestate/features test src/navigation.config.spec.ts src/dashboard/dashboard.spec.tsx`: 8/8 tests passed.
+   - `pnpm --filter @exzaestate/ui typecheck && pnpm --filter @exzaestate/features typecheck`: 0 errors.
+   - `npx oxlint packages/ui packages/features`: 0 warnings, 0 errors across 448 files.
+
+### 2026-10-08 — Resolution: Removal of Duplicate Header Toggle Button
+
+1. User Request & Visual Issue:
+
+   - User reported: "ekhane header and sidebar er moddhedoita keno ? open and close button , apni header tasone din and sidebar ta rakhen" with screenshot showing two adjacent sidebar collapse buttons (`PanelLeftClose`).
+   - One button was inside `SidebarHeaderControls` and a duplicate button was inside `HeaderSidebarToggle` in `Header.tsx`.
+
+2. Architecture & Design Fix:
+
+   - [Header.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/ui/src/layout/Header.tsx):
+     - Updated `HeaderSidebarToggle` to only render when `isSidebarCollapsed` is `true` (displaying `PanelLeftOpen` to re-expand the sidebar).
+     - When the sidebar is open, `HeaderSidebarToggle` returns `null`, leaving the collapse button exclusively inside the sidebar header (`SidebarHeaderControls`).
+     - Removed unused `PanelLeftClose` import.
+
+3. Verification Command & Result:
+   - `pnpm --filter @exzaestate/ui test`: 43/43 tests passed across 6 test files.
+   - `pnpm --filter @exzaestate/features test src/navigation.config.spec.ts src/dashboard/dashboard.spec.tsx`: 8/8 tests passed.
+   - `pnpm --filter @exzaestate/ui typecheck && pnpm --filter @exzaestate/features typecheck`: 0 errors.
+   - `npx oxlint packages/ui/src/layout/Header.tsx`: 0 warnings, 0 errors.
+
+### 2026-10-08 — Resolution: Dashboard Project Filter Validation & Centered Error State
+
+1. User Request & Root Cause Analysis:
+
+   - User reported: selecting a project from the Overview dropdown caused `Failed to load dashboard: Validation failed`. Also requested centering the error display in the middle of the screen.
+   - **Root Cause Identified**:
+     - `ExecutiveDashboardPage.tsx` previously contained hardcoded mock strings for projects (`'proj_gulshan'`, `'proj_banani'`, `'proj_dhanmondi'`).
+     - Backend endpoint `GET /api/v1/dashboard/summary?projectId=...` runs `QueryKpiFilterDto` validation, which enforces `@IsUUID()` on `projectId`.
+     - Non-UUID mock strings were rejected with HTTP 400 `Validation failed`.
+     - When an error occurred, `ErrorState` lacked a vertically-centered viewport wrapper, causing it to render awkwardly off-center.
+
+2. Architecture & Design Fix:
+
+   - [ExecutiveDashboardPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/dashboard/pages/ExecutiveDashboardPage.tsx):
+     - Replaced mock array with real backend API query via `useProjectControllerListProjects({ limit: 100 })`.
+     - Mapped database entities to dropdown options with their valid PostgreSQL UUIDs.
+     - Added defensive UUID regex guard (`UUID_REGEX`) ensuring non-UUID strings are never transmitted to backend.
+     - Wrapped `ErrorState` and initial `LoadingState` inside `flex-1 min-h-[calc(100vh-160px)] flex items-center justify-center p-6` to guarantee dead-center alignment.
+     - Added inline graceful error banner when filtering fails on already-loaded dashboard, allowing 1-click reset to "All Projects".
+   - [useDashboard.ts](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/dashboard/hooks/useDashboard.ts):
+     - Added `placeholderData: (prev) => prev` to prevent layout unmounting while background-refetching filtered project metrics.
+
+3. Verification Command & Result:
+   - `pnpm --filter @exzaestate/ui test`: 43/43 tests passed across 6 test files.
+   - `pnpm --filter @exzaestate/features test`: 184/184 tests passed across 36 test files (total 227/227 tests green).
+   - `pnpm --filter @exzaestate/ui typecheck && pnpm --filter @exzaestate/features typecheck`: 0 errors.
+   - `npx oxlint packages/features/src/dashboard`: 0 warnings, 0 errors.
+
+### 2026-10-08 — Resolution: Executive KPI Strip 2x2 Grid Layout
+
+1. User Request & Visual Goal:
+   - User requested: "ekhane ar ekta sari baran mane 2 ta kore card koren" (increase another row, meaning 2 cards per row instead of 4 squished cards in 1 row).
+2. Architecture & Design Fix:
+   - [ExecutiveKpiStrip.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/dashboard/components/ExecutiveKpiStrip.tsx):
+     - Updated `ExecutiveKpiStrip` and `KpiSkeleton` container grid from `lg:grid-cols-4` to `grid-cols-1 md:grid-cols-2 gap-4 lg:gap-5`.
+     - Provides an expansive, balanced 2-column by 2-row layout with enhanced breathing room for metrics, sparkline graphs, and subvalues.
+3. Verification Command & Result:
+   - `pnpm --filter @exzaestate/features test src/dashboard/dashboard.spec.tsx`: 4/4 tests passed.
+   - `pnpm --filter @exzaestate/features typecheck`: 0 errors.
+
+### 2026-10-08 — Resolution: Approvals Matrix Database Demo Seed & UI Fetching
+
+1. User Request:
+   - User navigated to "Approvals Matrix" (`/approvals`) in Sales Pipeline and reported: "ei route e demo data nai so apni amar data base er moddhe dummy data add koren and fetch kore jeno ami ui te dekte pari".
+2. Root Cause Analysis:
+   - Zero approval records existed in database for tenant `EXZA` (`920e2db9-8d2b-43cf-8e94-0c86c9e1cba5`) because demo provisioning lacked a dedicated approval step.
+   - In `useApprovalList.ts`, `query.data` response parsing only checked `Array.isArray(rawData)` or `'data' in rawData`, failing to extract `items` from standard `ApprovalListResponseDto` (`{ items: [...], total, page, limit }`).
+   - In `useApprovalList.ts`, DTO fields (`currentStepOrder`, `totalSteps`, `description`) were not mapped to `ApprovalItem` properties (`currentTier`, `maxTier`, `reason`).
+3. Architecture & Implementation Fix:
+   - [demo-approval.data.ts](file:///Users/rashedulraha/Developer/ExzaEstate/apps/backend/src/platform/tenant-provisioning/demo-seed/steps/demo-approval.data.ts): Created realistic Bangladeshi real estate approval fixture templates (6 pending items across Discount Tiers 2 & 3, Piling Mobilization Expense, Substation Transformer Procurement, Price Exception Corner Plot, Customer Refund; plus 2 approved items).
+   - [demo-approval.step.ts](file:///Users/rashedulraha/Developer/ExzaEstate/apps/backend/src/platform/tenant-provisioning/demo-seed/steps/demo-approval.step.ts): Implemented `DemoApprovalStep` (order 80) adhering to Maker-Checker rules (`requesterId` = Executive/Accountant, approvers = MD/GM).
+   - Registered `DemoApprovalStep` in [demo-seed.service.ts](file:///Users/rashedulraha/Developer/ExzaEstate/apps/backend/src/platform/tenant-provisioning/demo-seed/demo-seed.service.ts), [tenant-provisioning.module.ts](file:///Users/rashedulraha/Developer/ExzaEstate/apps/backend/src/platform/tenant-provisioning/tenant-provisioning.module.ts), and [seed.demo.ts](file:///Users/rashedulraha/Developer/ExzaEstate/apps/backend/prisma/seed.demo.ts).
+   - [approvals-inbox.service.ts](file:///Users/rashedulraha/Developer/ExzaEstate/apps/backend/src/modules/approvals/approvals-inbox.service.ts): Fixed status handling for `ALL` and resolved statuses.
+   - [useApprovalList.ts](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/approvals/hooks/useApprovalList.ts): Unpacked `record.items` and cleanly mapped to `ApprovalItem` with robust type-safe helpers.
+   - [ApprovalDataTable.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/approvals/components/ApprovalDataTable.tsx): Extracted `formatEntityId` helper and protected against empty entityId slice errors.
+4. Verification & Seed Execution:
+   - Executed `pnpm db:seed:demo`: 8 demo approvals and steps successfully inserted into PostgreSQL for company `EXZA`.
+   - Executed `pnpm exec oxlint`: 0 warnings, 0 errors across all modified backend and frontend files.
+   - Executed `pnpm --filter @exzaestate/features test src/approvals`: 4/4 tests passed.
+   - Executed `pnpm --filter @exzaestate/features test`: 184/184 tests passed across 36 test files.
