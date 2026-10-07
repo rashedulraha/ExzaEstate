@@ -143,7 +143,7 @@ export function GlobalSearchCommandPalette({ isOpen, onClose }: GlobalSearchComm
   return (
     <div
       role="presentation"
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-all duration-200 animate-in fade-in"
+      className="fixed inset-0 z-50 flex items-start justify-center pt-[12vh] sm:pt-[14vh] p-4 bg-black/60 backdrop-blur-sm transition-all duration-200 animate-in fade-in"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
@@ -152,7 +152,7 @@ export function GlobalSearchCommandPalette({ isOpen, onClose }: GlobalSearchComm
         role="dialog"
         aria-modal="true"
         aria-label="Global Search and Command Palette"
-        className="w-full max-w-2xl bg-surface-elevated border border-border-strong rounded-2xl shadow-2xl overflow-hidden flex flex-col transform transition-all duration-200 ease-out animate-in fade-in zoom-in-95"
+        className="w-full max-w-2xl bg-surface-elevated border border-border-strong rounded-2xl shadow-2xl overflow-hidden flex flex-col transform transition-all duration-150 ease-out animate-in fade-in zoom-in-95"
         onKeyDown={handleKeyDownInList}
       >
         {/* Search Bar Input */}
@@ -216,8 +216,8 @@ export function GlobalSearchCommandPalette({ isOpen, onClose }: GlobalSearchComm
           </span>
         </div>
 
-        {/* Results List or Quick Commands */}
-        <div className="max-h-[460px] overflow-y-auto p-2">
+        {/* Results List or Quick Commands with Stable Min-Height */}
+        <div className="min-h-[320px] max-h-[460px] overflow-y-auto p-2 sidebar-scroll flex flex-col transition-[height] duration-150">
           <SearchPaletteResults
             searchTerm={searchTerm}
             isLoading={isLoading}

@@ -133,7 +133,7 @@ export function RolePermissionsMatrix({
   };
 
   return (
-    <div className="rounded-card border border-border bg-surface-elevated p-6 space-y-6">
+    <div className="rounded-card border border-border bg-surface p-6 space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-border gap-2">
         <div>
           <h3 className="text-h3 font-semibold text-text">

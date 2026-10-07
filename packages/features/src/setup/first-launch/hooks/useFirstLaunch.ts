@@ -1,12 +1,26 @@
 import { useState, useCallback, useEffect } from 'react';
-import { usePlatform, useAuth, initApiClient, type MachineFingerprint } from '@exzaestate/app-core';
-import type { RuntimeModeChoice, CreateLocalCompanyInput } from '../schemas/first-launch.schema.js';
+import { http } from '@exzaestate/api-client';
+import {
+  usePlatform,
+  useAuth,
+  initApiClient,
+  getEnvApiBaseUrl,
+  getEnvInitialLicenseKey,
+  type MachineFingerprint,
+} from '@exzaestate/app-core';
+import type {
+  RuntimeModeChoice,
+  CreateLocalCompanyInput,
+  CloudConfigInput,
+} from '../schemas/first-launch.schema.js';
 import {
   buildProvisionPayload,
   establishProvisionedSession,
   postProvisionRequest,
   saveLocalOfflineLicense,
 } from './useFirstLaunch.helpers.js';
+
+import { useOnboardingStore } from '../store/onboarding.store.js';
 
 export interface FirstLaunchState {
   currentStep: number;
@@ -22,22 +36,23 @@ export interface FirstLaunchState {
 export function useFirstLaunch() {
   const platform = usePlatform();
   const { setSession } = useAuth();
-  const [selectedMode, setSelectedMode] = useState<RuntimeModeChoice>(
-    platform.apiConfig.runtimeMode || 'local',
-  );
-  const [currentStep, setCurrentStep] = useState(1);
+  const currentStep = useOnboardingStore((s) => s.currentStep);
+  const selectedMode = useOnboardingStore((s) => s.selectedMode);
+  const provisionedDetails = useOnboardingStore((s) => s.provisionedDetails);
+  const setCurrentStep = useOnboardingStore((s) => s.setStep);
+  const nextStep = useOnboardingStore((s) => s.nextStep);
+  const prevStep = useOnboardingStore((s) => s.prevStep);
+  const setMode = useOnboardingStore((s) => s.setMode);
+  const setProvisionedDetails = useOnboardingStore((s) => s.setProvisionedDetails);
+  const updateCompanyData = useOnboardingStore((s) => s.updateCompanyData);
+
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isAlreadyProvisioned, setIsAlreadyProvisioned] = useState(false);
   const [machineFingerprint, setMachineFingerprint] = useState<MachineFingerprint | null>(null);
   const [verificationCodeSent, setVerificationCodeSent] = useState(false);
   const [isEmailVerified, setIsEmailVerified] = useState(false);
-  const [activeCode, setActiveCode] = useState('202601');
-  const [provisionedDetails, setProvisionedDetails] = useState<{
-    companyName?: string;
-    companyCode?: string;
-    adminEmail?: string;
-  } | null>(null);
+  const [activeCode, setActiveCode] = useState('');
 
   // Load hardware fingerprint from motherboard detection
   useEffect(() => {
@@ -48,8 +63,8 @@ export function useFirstLaunch() {
           const fp = await platform.licensing.getMachineFingerprint();
           if (active) setMachineFingerprint(fp);
         }
-      } catch {
-        // Fallback
+      } catch (err) {
+        console.error('Failed to read machine fingerprint:', err);
       }
     }
     void fetchFingerprint();
@@ -62,34 +77,62 @@ export function useFirstLaunch() {
   useEffect(() => {
     let active = true;
     async function checkProvisioned() {
+      if (
+        typeof window !== 'undefined' &&
+        window.localStorage.getItem('exzaestate_workspace_provisioned') === 'true'
+      ) {
+        if (active) setIsAlreadyProvisioned(true);
+        return;
+      }
       try {
-        const res = await fetch(`${platform.apiConfig.baseUrl}/api/v1/local-data/is-provisioned`, {
-          method: 'GET',
+        const data = await http.get<{
+          provisioned?: boolean;
+          data?: { provisioned?: boolean };
+        }>('/api/v1/local-data/is-provisioned', {
           signal: AbortSignal.timeout(3000),
         });
-        if (res.ok) {
-          const data = (await res.json()) as {
-            provisioned?: boolean;
-            data?: { provisioned?: boolean };
-          };
-          const flag = Boolean(data.provisioned || data.data?.provisioned);
-          if (active) setIsAlreadyProvisioned(flag);
+        const flag = Boolean(data.provisioned || data.data?.provisioned);
+        if (active) {
+          setIsAlreadyProvisioned(flag);
+          if (flag && typeof window !== 'undefined') {
+            window.localStorage.setItem('exzaestate_workspace_provisioned', 'true');
+          }
         }
       } catch {
-        // Fallback
+        // Server not ready / offline
       }
     }
     void checkProvisioned();
     return () => {
       active = false;
     };
-  }, [platform.apiConfig.baseUrl]);
-
-  const selectMode = useCallback((mode: RuntimeModeChoice) => {
-    setSelectedMode(mode);
-    setCurrentStep(2);
-    setError(null);
   }, []);
+
+  const selectMode = useCallback(
+    (mode: RuntimeModeChoice) => {
+      setMode(mode);
+      setError(null);
+    },
+    [setMode],
+  );
+
+  const goToNextStep = useCallback(() => {
+    nextStep();
+    setError(null);
+  }, [nextStep]);
+
+  const goToPreviousStep = useCallback(() => {
+    prevStep();
+    setError(null);
+  }, [prevStep]);
+
+  const goToStep = useCallback(
+    (step: number) => {
+      setCurrentStep(step);
+      setError(null);
+    },
+    [setCurrentStep],
+  );
 
   const sendVerificationCode = useCallback((_email: string) => {
     const code = Math.floor(100000 + Math.random() * 900000).toString();
@@ -100,7 +143,7 @@ export function useFirstLaunch() {
 
   const verifyCode = useCallback(
     (inputCode: string) => {
-      if (inputCode.trim() === activeCode || inputCode.trim() === '202601') {
+      if (activeCode && inputCode.trim() === activeCode) {
         setIsEmailVerified(true);
         return true;
       }
@@ -109,11 +152,36 @@ export function useFirstLaunch() {
     [activeCode],
   );
 
+  function getValidString(val?: string, fallback = ''): string {
+    if (val && val.trim()) return val.trim();
+    return fallback;
+  }
+
+  function parseCloudConfig(config: CloudConfigInput | string) {
+    if (typeof config === 'string') {
+      const baseUrl = getValidString(config, getEnvApiBaseUrl());
+      if (!baseUrl) throw new Error('Server URL is required');
+      return { baseUrl, companyName: '', licenseKey: getEnvInitialLicenseKey() };
+    }
+    const baseUrl = getValidString(config.baseUrl, getEnvApiBaseUrl());
+    const companyName = getValidString(config.companyName);
+    if (!baseUrl) throw new Error('Server URL is required');
+    if (!companyName) throw new Error('Organization name is required');
+    return {
+      baseUrl,
+      companyName,
+      licenseKey: getValidString(config.licenseKey, getEnvInitialLicenseKey()),
+    };
+  }
+
   const configureCloud = useCallback(
-    async (baseUrl: string) => {
+    async (config: CloudConfigInput | string) => {
       setIsLoading(true);
       setError(null);
       try {
+        const { baseUrl, companyName, licenseKey } = parseCloudConfig(config);
+        updateCompanyData({ companyName, licenseKey });
+
         const updatedConfig = {
           ...platform.apiConfig,
           baseUrl: baseUrl.replace(/\/+$/, ''),
@@ -122,14 +190,40 @@ export function useFirstLaunch() {
         initApiClient(updatedConfig);
         platform.apiConfig.baseUrl = updatedConfig.baseUrl;
         platform.apiConfig.runtimeMode = 'cloud';
-        setCurrentStep(3);
+
+        setProvisionedDetails({
+          companyName,
+          companyCode: '',
+          adminEmail: '',
+        });
+
+        if (platform.licensing) {
+          await saveLocalOfflineLicense(
+            platform.licensing,
+            'cloud-org',
+            machineFingerprint?.machineId,
+          );
+        }
+
+        if (typeof window !== 'undefined') {
+          window.localStorage.setItem('exzaestate_workspace_provisioned', 'true');
+        }
+
+        setCurrentStep(4);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to configure cloud API');
       } finally {
         setIsLoading(false);
       }
     },
-    [platform.apiConfig],
+    [
+      platform.apiConfig,
+      platform.licensing,
+      machineFingerprint?.machineId,
+      setCurrentStep,
+      setProvisionedDetails,
+      updateCompanyData,
+    ],
   );
 
   const createLocalCompany = useCallback(
@@ -138,11 +232,7 @@ export function useFirstLaunch() {
       setError(null);
       try {
         const payload = buildProvisionPayload(data, machineFingerprint?.machineId);
-        const result = await postProvisionRequest(
-          platform.apiConfig.baseUrl,
-          payload,
-          platform.apiConfig.localSecret,
-        );
+        const result = await postProvisionRequest(payload, platform.apiConfig.localSecret);
 
         await establishProvisionedSession(setSession, result, data.companyName);
         await saveLocalOfflineLicense(
@@ -151,21 +241,37 @@ export function useFirstLaunch() {
           machineFingerprint?.machineId,
         );
 
+        const finalCompanyCode = result.companyCode || data.companyCode;
+        if (!finalCompanyCode) {
+          throw new Error('Provisioning failed: company code was not generated');
+        }
+
         setProvisionedDetails({
           companyName: result.companyName || data.companyName,
-          companyCode: result.companyCode || data.companyCode || 'EXZA01',
+          companyCode: finalCompanyCode,
           adminEmail: data.adminEmail,
         });
 
+        if (typeof window !== 'undefined') {
+          window.localStorage.setItem('exzaestate_workspace_provisioned', 'true');
+        }
+
         platform.apiConfig.runtimeMode = 'local';
-        setCurrentStep(3);
+        setCurrentStep(4);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Provisioning failed');
       } finally {
         setIsLoading(false);
       }
     },
-    [platform.apiConfig, platform.licensing, machineFingerprint, setSession],
+    [
+      platform.apiConfig,
+      platform.licensing,
+      machineFingerprint,
+      setSession,
+      setCurrentStep,
+      setProvisionedDetails,
+    ],
   );
 
   const restoreLocalBackup = useCallback(
@@ -173,30 +279,20 @@ export function useFirstLaunch() {
       setIsLoading(true);
       setError(null);
       try {
-        const res = await fetch(`${platform.apiConfig.baseUrl}/api/v1/local-data/restore`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            ...(platform.apiConfig.localSecret
-              ? { 'X-Local-Secret': platform.apiConfig.localSecret }
-              : {}),
-          },
-          body: JSON.stringify({ backupFilePath: backupPath }),
-        });
-
-        if (!res.ok) {
-          throw new Error(`Restore failed with status ${res.status}`);
-        }
+        const headers = platform.apiConfig.localSecret
+          ? { 'X-Local-Secret': platform.apiConfig.localSecret }
+          : undefined;
+        await http.post('/api/v1/local-data/restore', { backupFilePath: backupPath }, { headers });
 
         platform.apiConfig.runtimeMode = 'local';
-        setCurrentStep(3);
+        setCurrentStep(4);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Restore failed');
       } finally {
         setIsLoading(false);
       }
     },
-    [platform.apiConfig],
+    [platform.apiConfig, setCurrentStep],
   );
 
   const handleBrowseFile = useCallback(async (): Promise<string | null> => {
@@ -224,6 +320,9 @@ export function useFirstLaunch() {
     activeCode,
     provisionedDetails,
     setCurrentStep,
+    goToNextStep,
+    goToPreviousStep,
+    goToStep,
     selectMode,
     sendVerificationCode,
     verifyCode,

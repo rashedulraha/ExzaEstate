@@ -1,14 +1,36 @@
 import { useState } from 'react';
-import { LoadingState, ErrorState } from '@exzaestate/ui';
+import { useNavigate, useSearchParams } from 'react-router';
+import { Breadcrumbs, LoadingState, ErrorState } from '@exzaestate/ui';
 import { useSettings, useNumbering } from '../hooks/useSettings.js';
 import { SettingsNavTabs, type SettingsTabId } from '../components/SettingsNavTabs.js';
-import { GeneralPolicySettings } from '../components/GeneralPolicySettings.js';
-import { SalesPolicySettings } from '../components/SalesPolicySettings.js';
-import { FinancialPolicySettings } from '../components/FinancialPolicySettings.js';
-import { NumberingPatternsTable } from '../components/NumberingPatternsTable.js';
+import {
+  getFiscalMonthName,
+  SettingsKpiCards,
+  SettingsTabContent,
+} from './SettingsPageComponents.js';
+
+const VALID_TABS: readonly SettingsTabId[] = [
+  'general',
+  'sales',
+  'finance',
+  'numbering',
+  'profile',
+];
+
+function resolveInitialTab(tabParam: string | null): SettingsTabId {
+  if (tabParam && VALID_TABS.includes(tabParam as SettingsTabId)) {
+    return tabParam as SettingsTabId;
+  }
+  return 'general';
+}
 
 export function SettingsPage() {
-  const [activeTab, setActiveTab] = useState<SettingsTabId>('general');
+  const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [activeTab, setActiveTab] = useState<SettingsTabId>(() =>
+    resolveInitialTab(searchParams.get('tab')),
+  );
+
   const { settings, isLoading, isError, refetch, updateBatchSettings, isUpdating } = useSettings();
   const {
     patterns,
@@ -17,7 +39,14 @@ export function SettingsPage() {
     isUpdating: isUpdatingPattern,
   } = useNumbering();
 
-  if (isLoading || (activeTab === 'numbering' && isLoadingPatterns)) {
+  const handleTabChange = (tab: SettingsTabId) => {
+    setActiveTab(tab);
+    setSearchParams({ tab });
+  };
+
+  const isDataLoading = isLoading || (activeTab === 'numbering' && isLoadingPatterns);
+
+  if (isDataLoading) {
     return <LoadingState variant="table" />;
   }
 
@@ -31,11 +60,25 @@ export function SettingsPage() {
     );
   }
 
+  const fiscalMonthName = getFiscalMonthName(settings.fiscal_year_start_month);
+
   return (
-    <div className="space-y-6">
+    <div className="container-page space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-h1 font-bold text-text">Company Settings & Policies</h1>
+          <Breadcrumbs
+            items={[
+              { label: 'Overview', href: '/dashboard', onClick: () => navigate('/dashboard') },
+              { label: 'System & Admin' },
+              { label: 'Company Settings' },
+            ]}
+          />
+          <div className="flex items-center gap-3 mt-1.5">
+            <h1 className="text-h1 font-bold text-text">Company Settings & Policies</h1>
+            <span className="text-caption font-semibold px-2.5 py-0.5 rounded-full bg-surface-sunken text-primary border border-primary/20">
+              FY 2026-27 Active
+            </span>
+          </div>
           <p className="text-body text-text-muted mt-1">
             Enterprise system configurations, statutory accounting defaults, and document numbering
             series.
@@ -43,39 +86,23 @@ export function SettingsPage() {
         </div>
       </div>
 
-      <SettingsNavTabs activeTab={activeTab} onTabChange={setActiveTab} />
+      <SettingsKpiCards
+        patternsCount={patterns.length}
+        fiscalMonthName={fiscalMonthName}
+        nightlyJobTime={settings.nightly_job_time}
+      />
 
-      {activeTab === 'general' && (
-        <GeneralPolicySettings
-          settings={settings}
-          onSave={updateBatchSettings}
-          isSaving={isUpdating}
-        />
-      )}
+      <SettingsNavTabs activeTab={activeTab} onTabChange={handleTabChange} />
 
-      {activeTab === 'sales' && (
-        <SalesPolicySettings
-          settings={settings}
-          onSave={updateBatchSettings}
-          isSaving={isUpdating}
-        />
-      )}
-
-      {activeTab === 'finance' && (
-        <FinancialPolicySettings
-          settings={settings}
-          onSave={updateBatchSettings}
-          isSaving={isUpdating}
-        />
-      )}
-
-      {activeTab === 'numbering' && (
-        <NumberingPatternsTable
-          patterns={patterns}
-          onUpdatePattern={updatePattern}
-          isUpdating={isUpdatingPattern}
-        />
-      )}
+      <SettingsTabContent
+        activeTab={activeTab}
+        settings={settings}
+        updateBatchSettings={updateBatchSettings}
+        isUpdating={isUpdating}
+        patterns={patterns}
+        updatePattern={updatePattern}
+        isUpdatingPattern={isUpdatingPattern}
+      />
     </div>
   );
 }

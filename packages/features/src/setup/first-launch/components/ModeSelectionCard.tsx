@@ -1,96 +1,146 @@
-import { type ReactElement } from 'react';
+import { type ReactElement, useState } from 'react';
+import { Button } from '@exzaestate/ui';
 import type { RuntimeModeChoice } from '../schemas/first-launch.schema.js';
 
 interface ModeOptionProps {
   mode: RuntimeModeChoice;
   selected: boolean;
   title: string;
+  badgeText?: string;
   description: string;
-  badges: string[];
+  details: string[];
   icon: ReactElement;
   onSelect: (mode: RuntimeModeChoice) => void;
 }
 
-function ModeOptionCard({
+function ModeListItem({
   mode,
   selected,
   title,
+  badgeText,
   description,
-  badges,
+  details,
   icon,
   onSelect,
 }: ModeOptionProps): ReactElement {
+  const [showDetails, setShowDetails] = useState(false);
+
   const borderClass = selected
-    ? 'border-accent ring-2 ring-accent/30 bg-surface'
-    : 'border-border bg-surface hover:border-border-input';
+    ? 'border-primary ring-1 ring-primary/40 bg-primary/[0.03]'
+    : 'border-border bg-surface hover:border-border-strong hover:bg-surface-elevated/40';
 
   return (
-    <button
-      type="button"
+    <div
       onClick={() => onSelect(mode)}
-      className={`text-left w-full p-6 rounded-card border transition-all cursor-pointer shadow-sm relative focus:outline-none ${borderClass}`}
-      aria-pressed={selected}
+      role="radio"
+      aria-checked={selected}
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === ' ' || e.key === 'Enter') {
+          e.preventDefault();
+          onSelect(mode);
+        }
+      }}
+      className={`text-left w-full p-5 sm:p-6 rounded-card border transition-all cursor-pointer relative ${borderClass}`}
     >
       <div className="flex items-start gap-4">
-        <div className="w-12 h-12 rounded-card bg-surface-sunken flex items-center justify-center shrink-0 border border-border text-primary">
+        {/* Modern Icon Box */}
+        <div className="w-11 h-11 rounded-button bg-surface-sunken flex items-center justify-center shrink-0 border border-border text-primary">
           {icon}
         </div>
-        <div className="flex-1">
-          <div className="flex items-center justify-between">
-            <h3 className="text-h3 font-semibold text-text">{title}</h3>
+
+        {/* Content */}
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-2 flex-wrap">
+              <h3 className="text-h3 font-semibold text-text">{title}</h3>
+              {badgeText && (
+                <span className="badge-pill badge-primary text-caption font-semibold">
+                  {badgeText}
+                </span>
+              )}
+            </div>
+
+            {/* Radio Selection Indicator */}
             <span
-              className={`w-5 h-5 rounded-full border flex items-center justify-center transition-colors ${
-                selected ? 'border-accent bg-accent text-primary' : 'border-border-input'
+              className={`w-5 h-5 rounded-full border shrink-0 flex items-center justify-center transition-colors ${
+                selected ? 'border-primary bg-primary text-on-primary' : 'border-border-input'
               }`}
             >
-              {selected && <span className="text-caption font-bold">✓</span>}
+              {selected && <span className="text-caption font-bold leading-none">✓</span>}
             </span>
           </div>
-          <p className="mt-2 text-body text-text-muted leading-relaxed">{description}</p>
-          <div className="mt-4 flex flex-wrap gap-2">
-            {badges.map((b) => (
-              <span
-                key={b}
-                className="text-caption font-medium px-2.5 py-1 rounded-full bg-surface-sunken text-text-2 border border-border"
-              >
-                {b}
-              </span>
-            ))}
+
+          <p className="mt-1.5 text-body text-text-muted leading-relaxed">{description}</p>
+
+          {/* Expandable Details Toggle */}
+          <div className="mt-3">
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowDetails((prev) => !prev);
+              }}
+              className="text-caption font-medium text-text-muted hover:text-primary transition-colors inline-flex items-center gap-1 cursor-pointer"
+            >
+              <span>{showDetails ? 'Hide details' : 'More details'}</span>
+              <span aria-hidden="true">{showDetails ? '▲' : '▼'}</span>
+            </button>
+
+            {showDetails && (
+              <ul className="mt-2.5 space-y-1.5 text-caption text-text-2 bg-surface-sunken/60 p-3 rounded-button border border-border/50">
+                {details.map((item) => (
+                  <li key={item} className="flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-primary shrink-0" />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
         </div>
       </div>
-    </button>
+    </div>
   );
 }
 
 interface ModeSelectionProps {
   selectedMode: RuntimeModeChoice;
   onSelectMode: (mode: RuntimeModeChoice) => void;
+  onNext?: () => void;
+  onBack?: () => void;
 }
 
 export function ModeSelectionCard({
   selectedMode,
   onSelectMode,
+  onNext,
+  onBack,
 }: ModeSelectionProps): ReactElement {
   return (
-    <div className="space-y-4">
+    <div className="flex flex-col justify-between flex-1 space-y-4">
       <div>
-        <h2 className="text-h2 font-bold text-text">Choose Runtime Engine</h2>
-        <p className="mt-1 text-body text-text-muted">
-          Select how your desktop client connects to the ExzaEstate financial system.
+        <h2 className="text-h2 font-bold text-text">Choose How to Run ExzaEstate</h2>
+        <p className="mt-1 text-body text-text-muted leading-relaxed">
+          Select where your organization's data will be stored.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-5 pt-2">
-        <ModeOptionCard
+      <div className="space-y-3.5 pt-1">
+        <ModeListItem
           mode="cloud"
           selected={selectedMode === 'cloud'}
           title="Cloud-Hosted Multi-User"
-          description="Connect to your organization's cloud deployment. Real-time multi-branch sync, browser portal access, and automatic server backups."
-          badges={['Multi-Branch', 'Web Portal', 'Automatic Sync', 'Centralized Ledgers']}
+          badgeText="Recommended for Teams"
+          description="Your company data is securely hosted in the cloud. Multiple branch offices and team members can collaborate in real-time from any computer or browser."
+          details={[
+            'Secure cloud database with automatic real-time sync',
+            'Log in from both desktop app and web browser',
+            'Centralized accounting ledgers and automated backups',
+          ]}
           icon={
             <svg
-              className="w-6 h-6"
+              className="w-5 h-5"
               fill="none"
               stroke="currentColor"
               strokeWidth={1.75}
@@ -106,15 +156,19 @@ export function ModeSelectionCard({
           onSelect={onSelectMode}
         />
 
-        <ModeOptionCard
+        <ModeListItem
           mode="local"
           selected={selectedMode === 'local'}
           title="Local Standalone (100% Offline)"
-          description="Run completely on this PC with an embedded database. Zero cloud data transmission, full accounting immutability, and hardware-bound encryption."
-          badges={['100% Offline', 'Embedded Postgres', 'Zero Cloud Transmission', 'Air-Gapped']}
+          description="All company data stays strictly on this computer. Works 100% offline with no internet required. No data is ever transmitted to the cloud."
+          details={[
+            'Complete offline privacy — no internet connection needed',
+            'Embedded database running locally on this PC',
+            'Full property inventory, customer bookings, and installment accounts',
+          ]}
           icon={
             <svg
-              className="w-6 h-6"
+              className="w-5 h-5"
               fill="none"
               stroke="currentColor"
               strokeWidth={1.75}
@@ -123,12 +177,32 @@ export function ModeSelectionCard({
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"
+                d="M9.75 17L9 20m0 0l3-1.5m-3 1.5l-3-1.5m6-17H6a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2h-3.75"
               />
             </svg>
           }
           onSelect={onSelectMode}
         />
+      </div>
+
+      <div className="pt-4 flex items-center justify-between border-t border-border/40 mt-6">
+        {onBack ? (
+          <Button type="button" variant="secondary" onClick={onBack}>
+            ← Back to Welcome
+          </Button>
+        ) : (
+          <div />
+        )}
+        {onNext && (
+          <Button
+            type="button"
+            variant="primary"
+            onClick={onNext}
+            className="px-6 py-2.5 font-semibold text-btn shadow-sm"
+          >
+            Continue to Workspace Setup →
+          </Button>
+        )}
       </div>
     </div>
   );

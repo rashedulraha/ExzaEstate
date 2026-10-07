@@ -147,6 +147,8 @@ vi.mock('@exzaestate/api-client', () => ({
   }),
 }));
 
+import { MemoryRouter } from 'react-router';
+
 function renderWithClient(ui: React.ReactElement) {
   const queryClient = new QueryClient({
     defaultOptions: {
@@ -154,7 +156,11 @@ function renderWithClient(ui: React.ReactElement) {
       mutations: { retry: false },
     },
   });
-  return render(<QueryClientProvider client={queryClient}>{ui}</QueryClientProvider>);
+  return render(
+    <QueryClientProvider client={queryClient}>
+      <MemoryRouter>{ui}</MemoryRouter>
+    </QueryClientProvider>,
+  );
 }
 
 describe('Users & Roles Management Module', () => {

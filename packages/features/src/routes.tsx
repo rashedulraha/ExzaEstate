@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Outlet, Navigate, useNavigate, useLocation, type RouteObject } from 'react-router';
-import { useAuth, usePlatform } from '@exzaestate/app-core';
+import { useAuth } from '@exzaestate/app-core';
+import { http } from '@exzaestate/api-client';
 import { AppShell, ThemeProvider, ToastProvider } from '@exzaestate/ui';
 import { authRoutes } from './auth/auth.routes.js';
 import { StepUpModal } from './auth/components/StepUpModal.js';
@@ -23,6 +24,7 @@ import { publicSetupRoutes, setupRoutes } from './setup/setup.routes.js';
 import { migrationRoutes } from './migration/migration.routes.js';
 import { licenseRoutes } from './license/license.routes.js';
 import { systemAdminRoutes } from './system-admin/system-admin.routes.js';
+import { ProfilePage } from './profile/pages/ProfilePage.js';
 import { NotificationDrawer } from './notifications/components/NotificationDrawer.js';
 import { RouteErrorBoundary } from './common/RouteErrorBoundary.js';
 import { resolveCurrentRouteId } from './navigation.config.js';
@@ -49,26 +51,31 @@ export function RootLayout() {
 
 export function AppRootRedirect() {
   const { isAuthenticated, isLoading, user } = useAuth();
-  const platform = usePlatform();
-  const [isProvisioned, setIsProvisioned] = useState<boolean | null>(null);
+  const [isProvisioned, setIsProvisioned] = useState<boolean | null>(() => {
+    if (typeof window !== 'undefined') {
+      const stored = window.localStorage.getItem('exzaestate_workspace_provisioned');
+      if (stored === 'true') return true;
+    }
+    return null;
+  });
 
   useEffect(() => {
     let active = true;
     async function checkProvisioned() {
+      if (isProvisioned === true) return;
       try {
-        const res = await fetch(`${platform.apiConfig.baseUrl}/api/v1/local-data/is-provisioned`, {
-          method: 'GET',
+        const data = await http.get<{
+          provisioned?: boolean;
+          data?: { provisioned?: boolean };
+        }>('/api/v1/local-data/is-provisioned', {
           signal: AbortSignal.timeout(3000),
         });
-        if (res.ok) {
-          const data = (await res.json()) as {
-            provisioned?: boolean;
-            data?: { provisioned?: boolean };
-          };
-          const flag = Boolean(data.provisioned || data.data?.provisioned);
-          if (active) setIsProvisioned(flag);
-        } else {
-          if (active) setIsProvisioned(true);
+        const flag = Boolean(data.provisioned || data.data?.provisioned);
+        if (active) {
+          setIsProvisioned(flag);
+          if (flag && typeof window !== 'undefined') {
+            window.localStorage.setItem('exzaestate_workspace_provisioned', 'true');
+          }
         }
       } catch {
         if (active) setIsProvisioned(true);
@@ -78,7 +85,7 @@ export function AppRootRedirect() {
     return () => {
       active = false;
     };
-  }, [platform.apiConfig.baseUrl]);
+  }, [isProvisioned]);
 
   if (isLoading || isProvisioned === null) {
     return (
@@ -148,7 +155,7 @@ export function ProtectedLayout() {
   const headerProps = buildHeaderProps(user, isSuperAdmin, {
     onSearch: () => setIsSearchOpen(true),
     onNotif: () => setIsNotifOpen(true),
-    onProfile: () => setIsSignOutModalOpen(true),
+    onProfile: () => navigate('/profile'),
   });
 
   return (
@@ -210,6 +217,10 @@ export const routes: RouteObject[] = [
               ...operationsRoutes,
               ...reportsRoutes,
               ...auditRoutes,
+              {
+                path: '/profile',
+                element: <ProfilePage />,
+              },
               ...settingsRoutes,
               ...usersRoutes,
               ...setupRoutes,

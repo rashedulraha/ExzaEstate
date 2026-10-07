@@ -1,6 +1,7 @@
 export * from './schemas/first-launch.schema.js';
 export * from './hooks/useFirstLaunch.js';
 export * from './components/ModeSelectionCard.js';
+export * from './components/WelcomeSection.js';
 export * from './components/CloudSetupSection.js';
 export * from './components/LocalSetupSection.js';
 export * from './components/BackupBanner.js';

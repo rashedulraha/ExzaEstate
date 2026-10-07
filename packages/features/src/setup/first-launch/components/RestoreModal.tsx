@@ -1,6 +1,7 @@
 import { type ReactElement, useState } from 'react';
 import { Dialog, Button, FormField, Input } from '@exzaestate/ui';
 import { usePlatform } from '@exzaestate/app-core';
+import { http } from '@exzaestate/api-client';
 
 interface RestoreModalProps {
   isOpen: boolean;
@@ -29,37 +30,31 @@ export function RestoreModal({ isOpen, onClose, onSuccess }: RestoreModalProps):
     }
   };
 
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
   const handleExecuteRestore = async () => {
     if (!backupPath.trim()) return;
     setIsRestoring(true);
     setStatusMessage(null);
+    setErrorMessage(null);
 
     try {
-      const response = await fetch(`${platform.apiConfig.baseUrl}/local-data/restore`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          ...(platform.apiConfig.localSecret
-            ? { 'X-Local-Secret': platform.apiConfig.localSecret }
-            : {}),
-        },
-        body: JSON.stringify({ backupFilePath: backupPath.trim() }),
-      });
+      const headers = platform.apiConfig.localSecret
+        ? { 'X-Local-Secret': platform.apiConfig.localSecret }
+        : undefined;
 
-      if (!response.ok) {
-        throw new Error(`Restore failed with HTTP ${response.status}`);
-      }
+      await http.post(
+        '/api/v1/local-data/restore',
+        { backupFilePath: backupPath.trim() },
+        { headers },
+      );
 
       setStatusMessage('Database restored successfully from backup.');
       setTimeout(() => {
         onSuccess?.();
       }, 1000);
-    } catch {
-      // Simulated fallback for tests/air-gapped mocks
-      setStatusMessage('Database restored successfully from snapshot.');
-      setTimeout(() => {
-        onSuccess?.();
-      }, 1000);
+    } catch (err) {
+      setErrorMessage(err instanceof Error ? err.message : 'Database restore operation failed.');
     } finally {
       setIsRestoring(false);
     }
@@ -122,6 +117,13 @@ export function RestoreModal({ isOpen, onClose, onSuccess }: RestoreModalProps):
             sure you have exported any current changes before restoring.
           </div>
         </div>
+
+        {errorMessage && (
+          <div className="p-3 bg-danger/10 border border-danger/30 rounded-card text-caption text-danger flex items-center gap-2">
+            <span>✕</span>
+            <span>{errorMessage}</span>
+          </div>
+        )}
 
         {statusMessage && (
           <div className="p-3 bg-success/10 border border-success/30 rounded-card text-caption text-success flex items-center gap-2">

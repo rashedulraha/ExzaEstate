@@ -1,6 +1,7 @@
 import { type ReactElement, useState } from 'react';
 import { Dialog, Button, FormField, Input } from '@exzaestate/ui';
 import { usePlatform } from '@exzaestate/app-core';
+import { http } from '@exzaestate/api-client';
 
 interface BackupModalProps {
   isOpen: boolean;
@@ -30,39 +31,33 @@ export function BackupModal({ isOpen, onClose, onSuccess }: BackupModalProps): R
     }
   };
 
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
   const handleExecuteBackup = async () => {
     setIsSubmitting(true);
     setResultMessage(null);
+    setErrorMessage(null);
     try {
       const targetPath =
         destinationPath.trim() || `AppData/ExzaEstate/backups/backup_${Date.now()}.exzabackup`;
 
-      const response = await fetch(`${platform.apiConfig.baseUrl}/local-data/backup`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          ...(platform.apiConfig.localSecret
-            ? { 'X-Local-Secret': platform.apiConfig.localSecret }
-            : {}),
-        },
-        body: JSON.stringify({
+      const headers = platform.apiConfig.localSecret
+        ? { 'X-Local-Secret': platform.apiConfig.localSecret }
+        : undefined;
+
+      await http.post(
+        '/api/v1/local-data/backup',
+        {
           backupFilePath: targetPath,
           comment: comment.trim() || undefined,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error(`Backup failed with HTTP ${response.status}`);
-      }
+        },
+        { headers },
+      );
 
       setResultMessage(`Database snapshot successfully written to ${targetPath}`);
       onSuccess?.(targetPath);
-    } catch {
-      // Demo/Fallback simulated success for air-gapped test environments
-      const simPath =
-        destinationPath || `AppData/ExzaEstate/backups/backup_${Date.now()}.exzabackup`;
-      setResultMessage(`Database snapshot successfully created: ${simPath}`);
-      onSuccess?.(simPath);
+    } catch (err) {
+      setErrorMessage(err instanceof Error ? err.message : 'Database backup operation failed.');
     } finally {
       setIsSubmitting(false);
     }
@@ -124,6 +119,13 @@ export function BackupModal({ isOpen, onClose, onSuccess }: BackupModalProps): R
             onChange={(e) => setComment(e.target.value)}
           />
         </FormField>
+
+        {errorMessage && (
+          <div className="p-3 bg-danger/10 border border-danger/30 rounded-card text-caption text-danger flex items-center gap-2">
+            <span>✕</span>
+            <span>{errorMessage}</span>
+          </div>
+        )}
 
         {resultMessage && (
           <div className="p-3 bg-success/10 border border-success/30 rounded-card text-caption text-success flex items-center gap-2">

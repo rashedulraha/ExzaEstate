@@ -7,6 +7,7 @@ import {
   defaultPlatformAdapters,
   InMemorySecureStorage,
 } from '@exzaestate/app-core';
+import { http } from '@exzaestate/api-client';
 import { ModeSelectionCard } from './components/ModeSelectionCard.js';
 import { CloudSetupSection } from './components/CloudSetupSection.js';
 import { LocalSetupSection } from './components/LocalSetupSection.js';
@@ -38,7 +39,6 @@ describe('First-Launch Wizard & Local Standalone (Task B9)', () => {
 
       expect(screen.getByText('Cloud-Hosted Multi-User')).toBeDefined();
       expect(screen.getByText('Local Standalone (100% Offline)')).toBeDefined();
-      expect(screen.getByText('Embedded Postgres')).toBeDefined();
 
       const localOption = screen.getByText('Local Standalone (100% Offline)');
       fireEvent.click(localOption);
@@ -48,9 +48,19 @@ describe('First-Launch Wizard & Local Standalone (Task B9)', () => {
 
   describe('CloudSetupSection', () => {
     it('renders server url input and connection test button', async () => {
+      const getSpy = vi.spyOn(http, 'get').mockResolvedValue({ status: 'ok' });
       const onConfirm = vi.fn();
-      render(<CloudSetupSection onConfirm={onConfirm} />);
+      render(
+        <CloudSetupSection
+          onConfirm={onConfirm}
+          initialShowAdvanced={true}
+          initialCompanyName="Exzazon Real Estate Ltd."
+          initialLicenseKey="EXZA-ENTERPRISE-2026-ABCD"
+        />,
+      );
 
+      expect(screen.getByLabelText(/Legal Company Name/i)).toBeDefined();
+      expect(screen.getByLabelText(/Software Purchase License Key/i)).toBeDefined();
       expect(screen.getByLabelText(/Enterprise Server URL/i)).toBeDefined();
       const testBtn = screen.getByRole('button', { name: /Test Connection/i });
       fireEvent.click(testBtn);
@@ -64,29 +74,44 @@ describe('First-Launch Wizard & Local Standalone (Task B9)', () => {
       await waitFor(() => {
         expect(onConfirm).toHaveBeenCalled();
       });
+      getSpy.mockRestore();
     });
   });
 
   describe('LocalSetupSection', () => {
-    it('switches between New Company and Restore Backup tabs', () => {
+    it('renders local setup form with explicit organization and administrator fields', () => {
       const onCreate = vi.fn();
-      const onRestore = vi.fn();
-      render(
-        <LocalSetupSection
-          onCreateCompany={onCreate}
-          onRestoreBackup={onRestore}
-          isLoading={false}
-        />,
-      );
+      render(<LocalSetupSection onCreateCompany={onCreate} isLoading={false} />);
 
+      expect(screen.getByText('Local Standalone Workspace Setup')).toBeDefined();
       expect(screen.getByLabelText(/Legal Company Name/i)).toBeDefined();
-      expect(screen.getByLabelText(/Full Name/i)).toBeDefined();
+      expect(screen.getByLabelText(/Company Code/i)).toBeDefined();
+      expect(screen.getByLabelText(/Administrator Full Name/i)).toBeDefined();
+      expect(screen.getByLabelText(/Administrator Email/i)).toBeDefined();
+      expect(screen.getByLabelText(/Master Password/i)).toBeDefined();
+      expect(screen.getByLabelText(/Confirm Password/i)).toBeDefined();
+      expect(screen.getByLabelText(/Software Purchase License Key/i)).toBeDefined();
+      expect(screen.getByRole('button', { name: /Install & Launch Workspace/i })).toBeDefined();
+      expect(screen.getByText(/Hardware-Bound Lock Active/i)).toBeDefined();
+    });
 
-      const restoreTab = screen.getByRole('button', { name: 'Restore Backup' });
-      fireEvent.click(restoreTab);
+    it('displays validation errors on screen and blocks submission when required fields are missing', async () => {
+      const onCreate = vi.fn();
+      render(<LocalSetupSection onCreateCompany={onCreate} isLoading={false} />);
 
-      expect(screen.getByLabelText(/Select Backup Archive/i)).toBeDefined();
-      expect(screen.getByText(/Destructive Operation:/i)).toBeDefined();
+      const submitBtn = screen.getByRole('button', { name: /Install & Launch Workspace/i });
+      fireEvent.click(submitBtn);
+
+      await waitFor(() => {
+        expect(screen.getByText(/Company name must be at least 2 characters/i)).toBeDefined();
+        expect(screen.getByText(/Administrator full name is required/i)).toBeDefined();
+        expect(screen.getByText(/Valid administrator email address is required/i)).toBeDefined();
+        expect(
+          screen.getByText(/Administrator password must be at least 8 characters/i),
+        ).toBeDefined();
+      });
+
+      expect(onCreate).not.toHaveBeenCalled();
     });
   });
 
@@ -142,7 +167,7 @@ describe('First-Launch Wizard & Local Standalone (Task B9)', () => {
 
       expect(screen.getByText('Workspace Initialized')).toBeDefined();
       expect(screen.getByText(/local enterprise workspace is provisioned/i)).toBeDefined();
-      expect(screen.getByText('ENFORCED (RULE-IMMUTABLE)')).toBeDefined();
+      expect(screen.getByText(/Double-Entry & Audit Protected/i)).toBeDefined();
 
       const proceedBtn = screen.getByRole('button', { name: /Launch Executive Dashboard/i });
       fireEvent.click(proceedBtn);
@@ -151,14 +176,14 @@ describe('First-Launch Wizard & Local Standalone (Task B9)', () => {
   });
 
   describe('FirstLaunchWizardPage', () => {
-    it('renders wizard layout with step indicator', () => {
+    it('renders wizard layout and advances to mode selection', () => {
       renderWithPlatform(<FirstLaunchWizardPage />);
 
-      expect(screen.getByText('Enterprise Onboarding & License Activation')).toBeDefined();
-      expect(screen.getByText('Choose Mode')).toBeDefined();
-      expect(screen.getByText('Organization & License')).toBeDefined();
-      expect(screen.getByText('Ready')).toBeDefined();
-      expect(screen.getByText('Choose Runtime Engine')).toBeDefined();
+      expect(screen.getByText('Welcome to ExzaEstate')).toBeDefined();
+
+      const getStartedBtn = screen.getByRole('button', { name: /Get Started/i });
+      fireEvent.click(getStartedBtn);
+      expect(screen.getByText('Choose How to Run ExzaEstate')).toBeDefined();
     });
   });
 });

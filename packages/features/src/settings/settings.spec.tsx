@@ -72,6 +72,28 @@ vi.mock('@exzaestate/api-client', () => ({
   }),
 }));
 
+vi.mock('@exzaestate/app-core', () => ({
+  useAuth: () => ({
+    user: {
+      id: 'usr-12345678',
+      fullName: 'Anwar Hossain',
+      email: 'md@exzaestate.com',
+      companyId: 'comp-1',
+      companyName: 'ExzaEstate Development Ltd.',
+      isTwoFactorEnabled: true,
+      permissions: ['*'],
+      scopes: { role: 'Managing Director' },
+      branchIds: [],
+    },
+    isAuthenticated: true,
+    isLoading: false,
+    logout: vi.fn(),
+    logoutAll: vi.fn(),
+  }),
+}));
+
+import { MemoryRouter } from 'react-router';
+
 function renderWithClient(ui: React.ReactElement) {
   const queryClient = new QueryClient({
     defaultOptions: {
@@ -79,7 +101,11 @@ function renderWithClient(ui: React.ReactElement) {
       mutations: { retry: false },
     },
   });
-  return render(<QueryClientProvider client={queryClient}>{ui}</QueryClientProvider>);
+  return render(
+    <QueryClientProvider client={queryClient}>
+      <MemoryRouter>{ui}</MemoryRouter>
+    </QueryClientProvider>,
+  );
 }
 
 describe('Settings & Numbering Module', () => {
@@ -134,6 +160,21 @@ describe('Settings & Numbering Module', () => {
       expect(screen.getByText('BOOKING')).toBeDefined();
       expect(screen.getByText('{PREFIX}-{YEAR}-{SEQ:5}')).toBeDefined();
       expect(screen.getByText('PAYMENT_RECEIPT')).toBeDefined();
+    });
+
+    it('switches to Profile & Account tab and renders session controls and buttons', () => {
+      renderWithClient(<SettingsPage />);
+
+      const tab = screen.getByText('Profile & Account');
+      fireEvent.click(tab);
+
+      expect(screen.getByText('Account Security & Verification')).toBeDefined();
+      expect(screen.getByText('Meridian Saffron')).toBeDefined();
+      expect(screen.getByText('Emerald Estate')).toBeDefined();
+      expect(screen.getByText('Account Session Controls')).toBeDefined();
+      expect(screen.getByText('Sign Out of Session')).toBeDefined();
+      expect(screen.getByText('Switch Account / Log In As Another User')).toBeDefined();
+      expect(screen.getByText('Revoke All Other Sessions')).toBeDefined();
     });
   });
 

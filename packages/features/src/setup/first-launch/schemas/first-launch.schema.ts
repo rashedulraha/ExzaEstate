@@ -4,7 +4,13 @@ export type RuntimeModeChoice = 'cloud' | 'local';
 export type LocalSetupAction = 'new_company' | 'restore_backup';
 
 export const cloudConfigSchema = z.object({
-  baseUrl: z.string().trim().min(1, 'API Server URL is required'),
+  companyName: z
+    .string()
+    .trim()
+    .min(2, 'Company name must be at least 2 characters')
+    .max(100, 'Company name cannot exceed 100 characters'),
+  licenseKey: z.string().trim().min(8, 'Valid license key from purchase receipt is required'),
+  baseUrl: z.string().trim(),
 });
 
 export type CloudConfigInput = z.infer<typeof cloudConfigSchema>;
@@ -17,14 +23,19 @@ export const createLocalCompanySchema = z
       .trim()
       .min(2, 'Company name must be at least 2 characters')
       .max(100, 'Company name cannot exceed 100 characters'),
-    companyCode: z.string().trim().optional(),
+    companyCode: z
+      .string()
+      .trim()
+      .min(2, 'Company code must be at least 2 characters')
+      .max(10, 'Company code cannot exceed 10 characters')
+      .regex(/^[A-Za-z0-9]+$/, 'Company code must be alphanumeric (letters and numbers only)'),
     tradeLicense: z.string().trim().optional(),
-    adminName: z.string().trim().min(2, 'Administrator name must be at least 2 characters'),
-    adminEmail: z.string().trim().email('Please enter a valid corporate email address'),
+    adminName: z.string().trim().min(2, 'Administrator full name is required'),
+    adminEmail: z.string().trim().email('Valid administrator email address is required'),
     phone: z.string().trim().optional(),
     verificationCode: z.string().trim().optional(),
-    adminPassword: z.string().min(8, 'Password must be at least 8 characters long'),
-    confirmPassword: z.string().min(8, 'Confirm password is required'),
+    adminPassword: z.string().min(8, 'Administrator password must be at least 8 characters'),
+    confirmPassword: z.string().min(8, 'Please confirm your password'),
   })
   .refine((data) => data.adminPassword === data.confirmPassword, {
     message: 'Passwords do not match',

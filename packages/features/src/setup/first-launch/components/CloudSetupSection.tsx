@@ -1,20 +1,41 @@
 import { type ReactElement, useState } from 'react';
+import { http } from '@exzaestate/api-client';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { getEnvApiBaseUrl, getEnvInitialLicenseKey } from '@exzaestate/app-core';
 import { Button, FormField, Input } from '@exzaestate/ui';
 import { cloudConfigSchema, type CloudConfigInput } from '../schemas/first-launch.schema.js';
+import { CloudStatusRow, CloudAdvancedSettings } from './CloudSetupComponents.js';
 
 interface CloudSetupSectionProps {
   initialBaseUrl?: string;
-  onConfirm: (baseUrl: string) => void;
+  initialCompanyName?: string;
+  initialLicenseKey?: string;
+  initialShowAdvanced?: boolean;
+  onConfirm: (config: CloudConfigInput | string) => void;
   isConnecting?: boolean;
+  onBack?: () => void;
+}
+
+function resolveDefaultString(custom?: string, fallback = ''): string {
+  if (custom && custom.trim()) return custom.trim();
+  return fallback;
 }
 
 export function CloudSetupSection({
-  initialBaseUrl = 'https://api.exzaestate.com/api/v1',
+  initialBaseUrl,
+  initialCompanyName,
+  initialLicenseKey,
+  initialShowAdvanced = false,
   onConfirm,
   isConnecting = false,
+  onBack,
 }: CloudSetupSectionProps): ReactElement {
+  const defaultBaseUrl = resolveDefaultString(initialBaseUrl, getEnvApiBaseUrl());
+  const defaultCompanyName = resolveDefaultString(initialCompanyName);
+  const defaultLicenseKey = resolveDefaultString(initialLicenseKey, getEnvInitialLicenseKey());
+
+  const [showAdvanced, setShowAdvanced] = useState(initialShowAdvanced);
   const [testStatus, setTestStatus] = useState<'idle' | 'testing' | 'success' | 'failed'>('idle');
   const [testMessage, setTestMessage] = useState<string>('');
 
@@ -26,88 +47,108 @@ export function CloudSetupSection({
   } = useForm<CloudConfigInput>({
     resolver: zodResolver(cloudConfigSchema),
     defaultValues: {
-      baseUrl: initialBaseUrl,
+      companyName: defaultCompanyName,
+      licenseKey: defaultLicenseKey,
+      baseUrl: defaultBaseUrl,
     },
   });
 
-  const currentUrl = watch('baseUrl');
+  const currentUrl = resolveDefaultString(watch('baseUrl'), defaultBaseUrl);
 
   const handleTestConnection = async () => {
     setTestStatus('testing');
     setTestMessage('Verifying connection to cloud server...');
     try {
       const cleanUrl = currentUrl.replace(/\/+$/, '');
-      const healthUrl = `${cleanUrl}/health`;
-      const res = await fetch(healthUrl, { method: 'GET', signal: AbortSignal.timeout(4000) });
-      if (res.ok) {
-        setTestStatus('success');
-        setTestMessage('Cloud endpoint connection verified. Enterprise server is active.');
-      } else {
-        setTestStatus('failed');
-        setTestMessage(`Server responded with status HTTP ${res.status}`);
-      }
-    } catch {
-      // In air-gapped test or demo, allow graceful confirmation
+      await http.get(`${cleanUrl}/health`, { timeout: 4000 });
       setTestStatus('success');
-      setTestMessage('Endpoint format verified and ready for cloud authentication.');
+      setTestMessage('Cloud endpoint connection verified. Enterprise server is active.');
+    } catch (err) {
+      setTestStatus('failed');
+      const detail = err instanceof Error ? err.message : 'Please check network.';
+      setTestMessage(`Server connection failed: ${detail}`);
     }
   };
 
   const onSubmit = (data: CloudConfigInput) => {
-    onConfirm(data.baseUrl);
+    const finalUrl = resolveDefaultString(data.baseUrl, defaultBaseUrl);
+    onConfirm({
+      companyName: data.companyName.trim(),
+      licenseKey: data.licenseKey.trim(),
+      baseUrl: finalUrl,
+    });
   };
 
   return (
-    <div className="card-surface space-y-6">
+    <div className="flex flex-col justify-between flex-1 space-y-4">
       <div>
-        <h3 className="text-h3 font-semibold text-text">Cloud Connection Setup</h3>
-        <p className="mt-1 text-body text-text-muted">
-          Provide your enterprise ExzaEstate API cluster address.
+        <h2 className="text-h2 font-bold text-text">Cloud Workspace Setup</h2>
+        <p className="mt-1 text-body text-text-muted leading-relaxed">
+          Enter your company details and license key to connect to ExzaEstate Cloud for multi-user
+          collaboration.
         </p>
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-5" noValidate>
         <FormField
-          id="cloud-baseUrl"
-          label="Enterprise Server URL"
+          id="cloud-companyName"
+          label="Legal Company Name"
           required
-          error={errors.baseUrl?.message}
-          helperText="Default production endpoint: https://api.exzaestate.com/api/v1"
+          error={errors.companyName?.message}
+          helperText="Enter your official real estate organization or business name"
         >
-          <div className="flex gap-2">
-            <Input
-              id="cloud-baseUrl"
-              placeholder="https://api.yourcompany.com/api/v1"
-              {...register('baseUrl')}
-              className="flex-1"
-            />
-            <Button
-              type="button"
-              variant="secondary"
-              onClick={() => void handleTestConnection()}
-              disabled={isConnecting || testStatus === 'testing'}
-            >
-              {testStatus === 'testing' ? 'Testing...' : 'Test Connection'}
-            </Button>
-          </div>
+          <Input
+            id="cloud-companyName"
+            placeholder="e.g. Exzazon Real Estate Ltd."
+            {...register('companyName')}
+            autoFocus
+          />
         </FormField>
 
-        {testStatus !== 'idle' && (
-          <div
-            className={`p-3.5 rounded-card border text-caption flex items-start gap-2.5 ${
-              testStatus === 'success'
-                ? 'bg-success/10 border-success/30 text-success'
-                : 'bg-danger/10 border-danger/30 text-danger'
-            }`}
-          >
-            <span className="font-bold text-small">{testStatus === 'success' ? '✓' : '⚠'}</span>
-            <span className="flex-1 font-medium">{testMessage}</span>
-          </div>
-        )}
+        <FormField
+          id="cloud-licenseKey"
+          label="Software Purchase License Key"
+          required
+          error={errors.licenseKey?.message}
+          helperText="Enter the enterprise license key from your purchase receipt"
+        >
+          <Input
+            id="cloud-licenseKey"
+            placeholder="e.g. EXZA-XXXX-XXXX-XXXX-XXXX"
+            {...register('licenseKey')}
+          />
+        </FormField>
 
-        <div className="pt-2 flex justify-end">
-          <Button type="submit" variant="primary" disabled={isConnecting} isLoading={isConnecting}>
-            Save & Connect to Cloud →
+        <CloudStatusRow />
+
+        <CloudAdvancedSettings
+          showAdvanced={showAdvanced}
+          onToggleAdvanced={() => setShowAdvanced(!showAdvanced)}
+          defaultBaseUrl={defaultBaseUrl}
+          errorMessage={errors.baseUrl?.message}
+          register={register}
+          onTestConnection={() => void handleTestConnection()}
+          isConnecting={isConnecting}
+          testStatus={testStatus}
+          testMessage={testMessage}
+        />
+
+        <div className="pt-4 flex items-center justify-between border-t border-border/40">
+          {onBack ? (
+            <Button type="button" variant="secondary" onClick={onBack} disabled={isConnecting}>
+              ← Back to Choose Mode
+            </Button>
+          ) : (
+            <div />
+          )}
+          <Button
+            type="submit"
+            variant="primary"
+            disabled={isConnecting}
+            isLoading={isConnecting}
+            className="px-6 py-2.5 font-semibold text-btn shadow-sm"
+          >
+            {isConnecting ? 'Connecting to Cloud...' : 'Save & Connect to Cloud →'}
           </Button>
         </div>
       </form>

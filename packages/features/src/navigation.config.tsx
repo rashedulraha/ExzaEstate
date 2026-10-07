@@ -17,6 +17,7 @@ import {
   ArrowRightLeft,
   ShieldCheck,
   Clock,
+  User,
 } from 'lucide-react';
 
 export const ROUTE_PREFIX_MAP: Array<[string, string]> = [
@@ -33,6 +34,7 @@ export const ROUTE_PREFIX_MAP: Array<[string, string]> = [
   ['/operations', 'operations'],
   ['/reports', 'reports'],
   ['/audit', 'audit'],
+  ['/profile', 'profile'],
   ['/settings', 'settings'],
   ['/users', 'users'],
   ['/roles', 'users'],
@@ -60,6 +62,12 @@ export function createSystemAdminSidebarNavGroups(
           icon: <LayoutDashboard className="w-4 h-4 shrink-0" aria-hidden="true" />,
           onClick: () => navigate('/system/dashboard'),
         },
+        {
+          id: 'audit',
+          label: 'Platform Audit Trail',
+          icon: <ShieldCheck className="w-4 h-4 shrink-0" aria-hidden="true" />,
+          onClick: () => navigate('/audit'),
+        },
       ],
     },
     {
@@ -84,11 +92,17 @@ export function createSystemAdminSidebarNavGroups(
           icon: <BarChart3 className="w-4 h-4 shrink-0" aria-hidden="true" />,
           onClick: () => navigate('/system/dashboard'),
         },
+      ],
+    },
+    {
+      id: 'account',
+      title: 'My Profile & Account',
+      items: [
         {
-          id: 'audit',
-          label: 'Platform Audit Trail',
-          icon: <ShieldCheck className="w-4 h-4 shrink-0" aria-hidden="true" />,
-          onClick: () => navigate('/audit'),
+          id: 'profile',
+          label: 'My Profile & Account',
+          icon: <User className="w-4 h-4 shrink-0" aria-hidden="true" />,
+          onClick: () => navigate('/profile'),
         },
       ],
     },
@@ -99,19 +113,37 @@ export function createSidebarNavGroups(navigate: (path: string) => void): Sideba
   return [
     {
       id: 'overview',
-      title: 'Overview',
+      title: 'Executive Cockpit',
       items: [
         {
           id: 'dashboard',
-          label: 'Dashboard',
+          label: 'Executive Cockpit',
           icon: <LayoutDashboard className="w-4 h-4 shrink-0" aria-hidden="true" />,
           onClick: () => navigate('/dashboard'),
+        },
+        {
+          id: 'reports',
+          label: 'Reports & Analytics',
+          icon: <BarChart3 className="w-4 h-4 shrink-0" aria-hidden="true" />,
+          onClick: () => navigate('/reports'),
+        },
+      ],
+    },
+    {
+      id: 'property',
+      title: 'Property Assets',
+      items: [
+        {
+          id: 'properties',
+          label: 'Inventory & Units',
+          icon: <Building2 className="w-4 h-4 shrink-0" aria-hidden="true" />,
+          onClick: () => navigate('/properties'),
         },
       ],
     },
     {
       id: 'crm',
-      title: 'CRM & Sales',
+      title: 'Sales Pipeline',
       items: [
         {
           id: 'leads',
@@ -137,23 +169,17 @@ export function createSidebarNavGroups(navigate: (path: string) => void): Sideba
           icon: <Receipt className="w-4 h-4 shrink-0" aria-hidden="true" />,
           onClick: () => navigate('/sales/bookings'),
         },
-      ],
-    },
-    {
-      id: 'property',
-      title: 'Property',
-      items: [
         {
-          id: 'properties',
-          label: 'Inventory & Units',
-          icon: <Building2 className="w-4 h-4 shrink-0" aria-hidden="true" />,
-          onClick: () => navigate('/properties'),
+          id: 'approvals',
+          label: 'Approvals Matrix',
+          icon: <CheckCheck className="w-4 h-4 shrink-0" aria-hidden="true" />,
+          onClick: () => navigate('/approvals'),
         },
       ],
     },
     {
       id: 'finance',
-      title: 'Finance & Accounts',
+      title: 'Finance & Treasury',
       items: [
         {
           id: 'collections',
@@ -174,18 +200,6 @@ export function createSidebarNavGroups(navigate: (path: string) => void): Sideba
           onClick: () => navigate('/accounting/coa'),
         },
         {
-          id: 'approvals',
-          label: 'Approvals Matrix',
-          icon: <CheckCheck className="w-4 h-4 shrink-0" aria-hidden="true" />,
-          onClick: () => navigate('/approvals'),
-        },
-      ],
-    },
-    {
-      id: 'procurement',
-      title: 'Operations',
-      items: [
-        {
           id: 'operations',
           label: 'Expenses & AP',
           icon: <Briefcase className="w-4 h-4 shrink-0" aria-hidden="true" />,
@@ -194,20 +208,8 @@ export function createSidebarNavGroups(navigate: (path: string) => void): Sideba
       ],
     },
     {
-      id: 'reports',
-      title: 'Reports',
-      items: [
-        {
-          id: 'reports',
-          label: 'Reports Hub',
-          icon: <BarChart3 className="w-4 h-4 shrink-0" aria-hidden="true" />,
-          onClick: () => navigate('/reports'),
-        },
-      ],
-    },
-    {
       id: 'system',
-      title: 'System & Admin',
+      title: 'Workspace & Admin',
       items: [
         {
           id: 'users',
@@ -235,9 +237,15 @@ export function createSidebarNavGroups(navigate: (path: string) => void): Sideba
         },
         {
           id: 'audit',
-          label: 'Audit & Security',
+          label: 'Security & Audit',
           icon: <ShieldCheck className="w-4 h-4 shrink-0" aria-hidden="true" />,
           onClick: () => navigate('/audit'),
+        },
+        {
+          id: 'profile',
+          label: 'My Profile & Account',
+          icon: <User className="w-4 h-4 shrink-0" aria-hidden="true" />,
+          onClick: () => navigate('/profile'),
         },
       ],
     },

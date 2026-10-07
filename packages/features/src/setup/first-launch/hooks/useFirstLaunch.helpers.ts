@@ -1,4 +1,5 @@
-import type { User } from '@exzaestate/app-core';
+import { getEnvInitialLicenseKey, type DesktopLicensing, type User } from '@exzaestate/app-core';
+import { http } from '@exzaestate/api-client';
 import type { CreateLocalCompanyInput } from '../schemas/first-launch.schema.js';
 
 export interface ProvisionResponse {
@@ -15,16 +16,59 @@ export interface ProvisionResponse {
   };
 }
 
+function resolveCompanyCode(code?: string, name?: string): string {
+  const custom = code?.trim().toUpperCase();
+  if (custom) return custom;
+  const fallback = (name || '')
+    .replace(/[^A-Za-z0-9]/g, '')
+    .slice(0, 6)
+    .toUpperCase();
+  if (!fallback) {
+    throw new Error('Company code could not be determined');
+  }
+  return fallback;
+}
+
+function validateAdminFields(
+  adminName?: string,
+  adminEmail?: string,
+  adminPassword?: string,
+): void {
+  if (!adminName) throw new Error('Administrator full name is required');
+  if (!adminEmail) throw new Error('Administrator email is required');
+  if (!adminPassword || adminPassword.length < 8) {
+    throw new Error('Administrator password must be at least 8 characters');
+  }
+}
+
+function resolveLicenseKey(licenseKey?: string): string {
+  const key = licenseKey?.trim() || getEnvInitialLicenseKey();
+  if (!key) throw new Error('Software purchase license key is required');
+  return key;
+}
+
 export function buildProvisionPayload(data: CreateLocalCompanyInput, machineId?: string) {
+  const companyName = data.companyName?.trim();
+  if (!companyName) {
+    throw new Error('Organization legal name is required');
+  }
+
+  const code = resolveCompanyCode(data.companyCode, companyName);
+  const adminName = data.adminName?.trim();
+  const adminEmail = data.adminEmail?.trim().toLowerCase();
+  validateAdminFields(adminName, adminEmail, data.adminPassword);
+  const licenseKey = resolveLicenseKey(data.licenseKey);
+
   return {
-    companyName: data.companyName,
-    companyCode: data.companyCode || undefined,
-    tradeLicense: data.tradeLicense || undefined,
-    adminFullName: data.adminName,
-    adminEmail: data.adminEmail,
+    companyName,
+    companyCode: code,
+    tradeLicense: data.tradeLicense?.trim() || undefined,
+    adminFullName: adminName,
+    adminEmail,
     adminPassword: data.adminPassword,
-    licenseKey: data.licenseKey || 'EXZA-ENTERPRISE-2026-ABCD-EF01-9999',
+    licenseKey,
     machineId: machineId || undefined,
+    timezone: 'Asia/Dhaka',
   };
 }
 
@@ -52,16 +96,19 @@ export async function establishProvisionedSession(
 }
 
 export async function saveLocalOfflineLicense(
-  licensing: { saveStoredLicense: (data: unknown) => Promise<unknown> } | undefined,
+  licensing: Pick<DesktopLicensing, 'saveStoredLicense'> | undefined,
   companyId?: string,
   machineId?: string,
 ) {
   if (!licensing) return;
+  if (!companyId) {
+    throw new Error('Cannot save offline license: company identifier is required');
+  }
 
   await licensing.saveStoredLicense({
-    signature: 'ED25519_ENTERPRISE_VALID_SIGNATURE',
+    signature: 'OFFLINE_PROVISIONED_STANDALONE',
     payload: {
-      companyId: companyId || 'local-standalone',
+      companyId,
       kid: 'exza-ed25519-v1',
       machineId: machineId || 'local-standalone',
       maxSeats: 50,
@@ -72,25 +119,9 @@ export async function saveLocalOfflineLicense(
 }
 
 export async function postProvisionRequest(
-  baseUrl: string,
   payload: unknown,
   localSecret?: string,
 ): Promise<ProvisionResponse> {
-  const headers: Record<string, string> = { 'Content-Type': 'application/json' };
-  if (localSecret) {
-    headers['X-Local-Secret'] = localSecret;
-  }
-
-  const res = await fetch(`${baseUrl}/api/v1/local-data/provision`, {
-    method: 'POST',
-    headers,
-    body: JSON.stringify(payload),
-  });
-
-  if (!res.ok) {
-    const body = (await res.json().catch(() => ({}))) as { message?: string };
-    throw new Error(body.message || `Provisioning failed with status ${res.status}`);
-  }
-
-  return (await res.json()) as ProvisionResponse;
+  const headers = localSecret ? { 'X-Local-Secret': localSecret } : undefined;
+  return http.post<ProvisionResponse>('/api/v1/local-data/provision', payload, { headers });
 }

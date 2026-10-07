@@ -2,6 +2,7 @@ import { useEffect, type ReactNode } from 'react';
 import type { NavigateFunction } from 'react-router';
 import type { User } from '@exzaestate/app-core';
 import type { HeaderProps } from '@exzaestate/ui';
+import { cleanEnglishText } from '@exzaestate/shared';
 import { PlatformCommandPalette } from './system-admin/components/PlatformCommandPalette.js';
 import { GlobalSearchCommandPalette } from './search/components/GlobalSearchCommandPalette.js';
 import { createSidebarNavGroups, createSystemAdminSidebarNavGroups } from './navigation.config.js';
@@ -16,7 +17,7 @@ export function resolveSidebarConfig(
     : createSidebarNavGroups(navigate);
   const displayCompany = isSuperAdmin
     ? 'Exzazon Platform Administration'
-    : user?.companyName || 'ExzaEstate Development Ltd.';
+    : cleanEnglishText(user?.companyName, 'ExzaEstate Development Ltd.');
   return { sidebarGroups, displayCompany };
 }
 
@@ -60,8 +61,8 @@ export function buildHeaderProps(
 ): HeaderProps {
   if (isSuperAdmin) {
     return {
-      userName: user?.fullName || 'Exzazon Team',
-      companyName: 'Exzazon Platform Administration',
+      userName: user?.fullName || 'Super Administrator',
+      companyName: 'Platform Administration',
       userEmail: user?.email,
       branchName: 'Platform Realm',
       fiscalYear: 'System v2.4.0',
@@ -73,8 +74,8 @@ export function buildHeaderProps(
   }
 
   return {
-    userName: user?.fullName || 'Managing Director',
-    companyName: user?.companyName || 'ExzaEstate Development Ltd.',
+    userName: cleanEnglishText(user?.fullName, 'User'),
+    companyName: cleanEnglishText(user?.companyName, 'ExzaEstate Development Ltd.'),
     userEmail: user?.email,
     branchName: 'Head Office',
     fiscalYear: 'FY 2026–27 (Q3)',

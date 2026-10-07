@@ -106,9 +106,9 @@ function NavCommandRow({
 
 function EmptySearchState({ searchTerm }: { searchTerm: string }) {
   return (
-    <div className="p-8 text-center text-text-muted text-small space-y-1.5">
+    <div className="flex-1 flex flex-col items-center justify-center p-8 text-center text-text-muted text-small space-y-1.5 min-h-[280px]">
       <p className="font-semibold text-text">No matches for &ldquo;{searchTerm}&rdquo;</p>
-      <p className="text-caption">
+      <p className="text-caption max-w-sm">
         Try typing a module name (e.g. &ldquo;leads&rdquo;, &ldquo;bookings&rdquo;,
         &ldquo;reports&rdquo;) or a customer name / plot number.
       </p>
@@ -131,7 +131,14 @@ export function SearchPaletteResults({
   const isTyping = searchTerm.trim().length > 0;
 
   if (!hasDbItems && !hasNavCommands) {
-    if (isLoading) return null;
+    if (isLoading) {
+      return (
+        <div className="flex-1 flex flex-col items-center justify-center p-8 text-center min-h-[280px]">
+          <div className="w-6 h-6 border-2 border-accent border-t-transparent rounded-full animate-spin mb-2" />
+          <span className="text-caption text-text-muted">Searching records...</span>
+        </div>
+      );
+    }
     return <EmptySearchState searchTerm={searchTerm} />;
   }
 

@@ -133,7 +133,7 @@ function QueueDispatcherCard({ health, isLoading }: SystemHealthCardGridProps) {
 }
 
 function DatabaseStatusCard({ health, isLoading }: SystemHealthCardGridProps) {
-  const backupText = health?.backupStatus.status || 'Verified Clean';
+  const backupText = health?.backupStatus?.status || '—';
 
   return (
     <div className="rounded-card border border-border bg-surface p-4 shadow-xs transition hover:shadow-sm">

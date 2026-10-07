@@ -17,7 +17,7 @@ export function NumberingPreviewCard() {
   });
 
   return (
-    <div className="rounded-card border border-border bg-surface-elevated p-6 space-y-4">
+    <div className="rounded-card border border-border bg-surface p-6 space-y-4">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
         <div>
           <h3 className="text-h3 font-semibold text-text">Numbering Pattern Sandbox</h3>

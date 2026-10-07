@@ -43,7 +43,7 @@ export function GeneralPolicySettings({ settings, onSave, isSaving }: GeneralPol
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="rounded-card border border-border bg-surface-elevated p-6 space-y-6">
+      <div className="rounded-card border border-border bg-surface p-6 space-y-6">
         <div>
           <h3 className="text-h3 font-semibold text-text">Fiscal Year & Operating Calendar</h3>
           <p className="text-body-sm text-text-muted mt-1">
@@ -85,7 +85,7 @@ export function GeneralPolicySettings({ settings, onSave, isSaving }: GeneralPol
         </div>
       </div>
 
-      <div className="rounded-card border border-border bg-surface-elevated p-6 space-y-6">
+      <div className="rounded-card border border-border bg-surface p-6 space-y-6">
         <div>
           <h3 className="text-h3 font-semibold text-text">
             Bangladeshi Land Unit Conversion Factors
