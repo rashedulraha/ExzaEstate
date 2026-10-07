@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { setBaseUrl, setClientInfo } from '@exzaestate/api-client';
+import { setBaseUrl, setClientInfo, setLocalSecret } from '@exzaestate/api-client';
 import { formatMoney, formatDate } from '@exzaestate/shared';
 import { usePlatform, type ApiConfig } from '../platform/index.js';
 
@@ -9,6 +9,9 @@ import { usePlatform, type ApiConfig } from '../platform/index.js';
 export function initApiClient(config: ApiConfig): void {
   setBaseUrl(config.baseUrl);
   setClientInfo(config.clientType, config.clientVersion);
+  if (config.localSecret !== undefined) {
+    setLocalSecret(config.localSecret || null);
+  }
 }
 
 /**
@@ -21,7 +24,7 @@ export function useApiConfig(): ApiConfig {
 
 /**
  * Currency formatting hook following ARCH-MONEY & Bangladeshi localization.
- * Formats integer paisa as ৳5,00,000.00.
+ * Formats integer paisa as BDT 5,00,000.00.
  */
 export function useCurrency(amountPaisa: bigint | number | string, showCurrency = true): string {
   return useMemo(() => formatMoney(amountPaisa, { showCurrency }), [amountPaisa, showCurrency]);

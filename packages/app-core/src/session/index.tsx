@@ -1,4 +1,12 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import {
   customInstance,
   setAuthFailureHandler,
@@ -12,6 +20,7 @@ import type {
   AuthProviderProps,
   BackendLoginResponse,
   BackendMeResponse,
+  LoginCredentials,
   User,
 } from './types.js';
 
@@ -20,14 +29,17 @@ export * from './types.js';
 const AuthContext = createContext<AuthContextType | null>(null);
 
 const REFRESH_TOKEN_STORAGE_KEY = 'refresh_token';
+const ACCESS_TOKEN_STORAGE_KEY = 'access_token';
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  const { secureStorage } = usePlatform();
+  const { secureStorage, apiConfig } = usePlatform();
+  const isWeb = apiConfig.clientType === 'web';
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [sessionExpired, setSessionExpired] = useState<boolean>(false);
   const [stepUpRequired, setStepUpRequired] = useState<boolean>(false);
   const [twoFactorRequired, setTwoFactorRequired] = useState<boolean>(false);
+  const refreshPromiseRef = useRef<Promise<string | null> | null>(null);
 
   const fetchUserProfile = useCallback(async (): Promise<User | null> => {
     try {
@@ -58,26 +70,45 @@ export function AuthProvider({ children }: AuthProviderProps) {
   }, [fetchUserProfile]);
 
   const performTokenRefresh = useCallback(async (): Promise<string | null> => {
-    try {
-      const storedRefreshToken = await secureStorage.getItem(REFRESH_TOKEN_STORAGE_KEY);
-      if (!storedRefreshToken) {
-        return null;
-      }
-
-      const res = await customInstance<{ accessToken: string; refreshToken?: string }>({
-        url: '/api/v1/auth/refresh',
-        method: 'POST',
-        data: { refreshToken: storedRefreshToken },
-      });
-
-      if (res.refreshToken) {
-        await secureStorage.setItem(REFRESH_TOKEN_STORAGE_KEY, res.refreshToken);
-      }
-      return res.accessToken;
-    } catch {
-      return null;
+    if (refreshPromiseRef.current) {
+      return refreshPromiseRef.current;
     }
-  }, [secureStorage]);
+
+    const task = (async () => {
+      try {
+        let payload: Record<string, string> = {};
+        if (!isWeb) {
+          const storedRefreshToken = await secureStorage.getItem(REFRESH_TOKEN_STORAGE_KEY);
+          if (!storedRefreshToken) {
+            return null;
+          }
+          payload = { refreshToken: storedRefreshToken };
+        }
+
+        const res = await customInstance<{ accessToken: string; refreshToken?: string }>({
+          url: '/api/v1/auth/refresh',
+          method: 'POST',
+          data: payload,
+        });
+
+        if (res.accessToken) {
+          setAuthToken(res.accessToken);
+          await secureStorage.setItem(ACCESS_TOKEN_STORAGE_KEY, res.accessToken);
+        }
+        if (!isWeb && res.refreshToken) {
+          await secureStorage.setItem(REFRESH_TOKEN_STORAGE_KEY, res.refreshToken);
+        }
+        return res.accessToken;
+      } catch {
+        return null;
+      } finally {
+        refreshPromiseRef.current = null;
+      }
+    })();
+
+    refreshPromiseRef.current = task;
+    return task;
+  }, [secureStorage, isWeb]);
 
   // Configure api-client hooks
   useEffect(() => {
@@ -86,23 +117,48 @@ export function AuthProvider({ children }: AuthProviderProps) {
       setSessionExpired(true);
       setUser(null);
       setAuthToken(null);
-      void secureStorage.removeItem(REFRESH_TOKEN_STORAGE_KEY);
+      void secureStorage.removeItem(ACCESS_TOKEN_STORAGE_KEY);
+      if (!isWeb) {
+        void secureStorage.removeItem(REFRESH_TOKEN_STORAGE_KEY);
+      }
     });
-  }, [performTokenRefresh, secureStorage]);
+  }, [performTokenRefresh, secureStorage, isWeb]);
 
-  // Initial bootstrap: restore session from keychain
+  async function restoreViaRefresh(
+    isWeb: boolean,
+    secureStorage: { getItem: (key: string) => Promise<string | null> },
+    refresh: () => Promise<string | null>,
+  ): Promise<string | null> {
+    if (isWeb) {
+      return refresh();
+    }
+    const storedRefreshToken = await secureStorage.getItem(REFRESH_TOKEN_STORAGE_KEY);
+    if (!storedRefreshToken) return null;
+    return refresh();
+  }
+
+  // Initial bootstrap: restore session from keychain or web storage
   useEffect(() => {
     let isMounted = true;
 
     async function bootstrap() {
       try {
-        const storedRefreshToken = await secureStorage.getItem(REFRESH_TOKEN_STORAGE_KEY);
-        if (storedRefreshToken) {
-          const newAccessToken = await performTokenRefresh();
-          if (newAccessToken && isMounted) {
-            setAuthToken(newAccessToken);
-            await fetchUserProfile();
+        // Fast-path: Check if valid access token is already saved from prior active session
+        const storedAccessToken = await secureStorage.getItem(ACCESS_TOKEN_STORAGE_KEY);
+        if (storedAccessToken && isMounted) {
+          setAuthToken(storedAccessToken);
+          const profile = await fetchUserProfile();
+          if (profile && isMounted) {
+            setIsLoading(false);
+            return;
           }
+        }
+
+        // If access token expired or not stored, restore session via refresh
+        const newAccessToken = await restoreViaRefresh(isWeb, secureStorage, performTokenRefresh);
+        if (newAccessToken && isMounted) {
+          setAuthToken(newAccessToken);
+          await fetchUserProfile();
         }
       } catch (err) {
         console.error('Session bootstrap failed:', err);
@@ -118,7 +174,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     return () => {
       isMounted = false;
     };
-  }, [secureStorage, performTokenRefresh, fetchUserProfile]);
+  }, [secureStorage, performTokenRefresh, fetchUserProfile, isWeb]);
 
   const login = useCallback(
     async (credentials: LoginCredentials): Promise<void> => {
@@ -129,7 +185,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
       });
 
       setAuthToken(response.accessToken);
-      if (response.refreshToken) {
+      await secureStorage.setItem(ACCESS_TOKEN_STORAGE_KEY, response.accessToken);
+      if (!isWeb && response.refreshToken) {
         await secureStorage.setItem(REFRESH_TOKEN_STORAGE_KEY, response.refreshToken);
       }
 
@@ -156,13 +213,14 @@ export function AuthProvider({ children }: AuthProviderProps) {
       // Refresh full profile in background to get all RBAC details
       void fetchUserProfile();
     },
-    [secureStorage, fetchUserProfile],
+    [secureStorage, fetchUserProfile, isWeb],
   );
 
   const setSession = useCallback(
     async (accessToken: string, refreshToken?: string, initialUser?: User): Promise<void> => {
       setAuthToken(accessToken);
-      if (refreshToken) {
+      await secureStorage.setItem(ACCESS_TOKEN_STORAGE_KEY, accessToken);
+      if (!isWeb && refreshToken) {
         await secureStorage.setItem(REFRESH_TOKEN_STORAGE_KEY, refreshToken);
       }
       if (initialUser) {
@@ -171,7 +229,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       setSessionExpired(false);
       void fetchUserProfile();
     },
-    [secureStorage, fetchUserProfile],
+    [secureStorage, fetchUserProfile, isWeb],
   );
 
   const logout = useCallback(async (): Promise<void> => {
@@ -185,12 +243,15 @@ export function AuthProvider({ children }: AuthProviderProps) {
     } finally {
       setUser(null);
       setAuthToken(null);
-      await secureStorage.removeItem(REFRESH_TOKEN_STORAGE_KEY);
+      await secureStorage.removeItem(ACCESS_TOKEN_STORAGE_KEY);
+      if (!isWeb) {
+        await secureStorage.removeItem(REFRESH_TOKEN_STORAGE_KEY);
+      }
       setSessionExpired(false);
       setStepUpRequired(false);
       setTwoFactorRequired(false);
     }
-  }, [secureStorage]);
+  }, [secureStorage, isWeb]);
 
   const logoutAll = useCallback(async (): Promise<void> => {
     try {
@@ -203,12 +264,15 @@ export function AuthProvider({ children }: AuthProviderProps) {
     } finally {
       setUser(null);
       setAuthToken(null);
-      await secureStorage.removeItem(REFRESH_TOKEN_STORAGE_KEY);
+      await secureStorage.removeItem(ACCESS_TOKEN_STORAGE_KEY);
+      if (!isWeb) {
+        await secureStorage.removeItem(REFRESH_TOKEN_STORAGE_KEY);
+      }
       setSessionExpired(false);
       setStepUpRequired(false);
       setTwoFactorRequired(false);
     }
-  }, [secureStorage]);
+  }, [secureStorage, isWeb]);
 
   const verifyStepUp = useCallback(async (token: string): Promise<boolean> => {
     try {

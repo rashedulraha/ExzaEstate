@@ -43,13 +43,21 @@ describe('packages/app-core', () => {
         return <div>Base: {resolvedBaseUrl}</div>;
       }
 
+      const customAdapters = {
+        ...defaultPlatformAdapters,
+        apiConfig: {
+          ...defaultPlatformAdapters.apiConfig,
+          baseUrl: 'https://api.exzaestate.com',
+        },
+      };
+
       render(
-        <PlatformProvider adapters={defaultPlatformAdapters}>
+        <PlatformProvider adapters={customAdapters}>
           <TestComponent />
         </PlatformProvider>,
       );
 
-      expect(resolvedBaseUrl).toBe('http://localhost:3000');
+      expect(resolvedBaseUrl).toBe('https://api.exzaestate.com');
     });
   });
 
@@ -142,7 +150,7 @@ describe('packages/app-core', () => {
         </PlatformProvider>,
       );
 
-      expect(screen.getByTestId('money').textContent).toBe('৳5,00,000.00');
+      expect(screen.getByTestId('money').textContent).toBe('BDT 5,00,000.00');
       expect(screen.getByTestId('date').textContent).toBe('04 Oct 2026');
     });
   });

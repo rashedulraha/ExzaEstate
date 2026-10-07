@@ -10,3 +10,4 @@ export * from './session/index.js';
 export * from './permissions/index.js';
 export * from './errors/index.js';
 export * from './runtime/index.js';
+export { apiClient, http, setBaseUrl, getBaseUrl, setLocalSecret } from '@exzaestate/api-client';

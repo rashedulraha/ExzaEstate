@@ -236,4 +236,24 @@ describe('HTTP Mutator & Client Runtime (Task A2.3 S3)', () => {
     await expect(customInstance({ url: '/protected', method: 'GET' })).rejects.toThrow();
     expect(failureHandler).toHaveBeenCalledTimes(1);
   });
+
+  it('does not attempt refresh when 401 occurs on auth endpoints (/auth/refresh)', async () => {
+    const refreshFn = vi.fn().mockResolvedValue('new-token');
+    setRefreshHandler(refreshFn);
+
+    apiClient.defaults.adapter = async (config) => {
+      throw new AxiosError('Unauthorized', 'ERR_BAD_REQUEST', config, undefined, {
+        status: 401,
+        statusText: 'Unauthorized',
+        data: { error: { code: 'UNAUTHORIZED', message: 'Invalid refresh token' } },
+        headers: {},
+        config,
+      } as AxiosResponse);
+    };
+
+    await expect(customInstance({ url: '/api/v1/auth/refresh', method: 'POST' })).rejects.toThrow();
+
+    // refreshHandler should NEVER be called recursively for auth endpoints
+    expect(refreshFn).not.toHaveBeenCalled();
+  });
 });

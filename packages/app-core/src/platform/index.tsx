@@ -207,129 +207,42 @@ export const defaultOpenExternal: OpenExternalFn = async (url: string) => {
   }
 };
 
+export function getEnvApiBaseUrl(): string {
+  if (typeof import.meta !== 'undefined') {
+    const metaEnv = (import.meta as unknown as { env?: Record<string, string> }).env;
+    if (metaEnv?.VITE_API_BASE_URL !== undefined) {
+      return metaEnv.VITE_API_BASE_URL.replace(/\/+$/, '');
+    }
+  }
+  const nodeEnv = (
+    globalThis as unknown as { process?: { env?: Record<string, string | undefined> } }
+  ).process?.env;
+  if (nodeEnv?.VITE_API_BASE_URL !== undefined) {
+    return nodeEnv.VITE_API_BASE_URL.replace(/\/+$/, '');
+  }
+  return '';
+}
+
+export function getEnvInitialLicenseKey(): string {
+  if (typeof import.meta !== 'undefined') {
+    const metaEnv = (import.meta as unknown as { env?: Record<string, string> }).env;
+    if (metaEnv?.VITE_INITIAL_LICENSE_KEY) return metaEnv.VITE_INITIAL_LICENSE_KEY;
+  }
+  const nodeEnv = (
+    globalThis as unknown as { process?: { env?: Record<string, string | undefined> } }
+  ).process?.env;
+  if (nodeEnv?.VITE_INITIAL_LICENSE_KEY) {
+    return nodeEnv.VITE_INITIAL_LICENSE_KEY;
+  }
+  return '';
+}
+
 export const defaultApiConfig: ApiConfig = {
-  baseUrl: 'http://localhost:3000',
+  baseUrl: getEnvApiBaseUrl(),
   runtimeMode: 'cloud',
   clientType: 'desktop',
   clientVersion: '0.1.0',
 };
-
-export class InMemoryDesktopLicensing implements DesktopLicensing {
-  private license: StoredLicenseRecord | null = null;
-  private readonly defaultHardware: MachineFingerprint = {
-    machineId: '8f4c2b9a7d1e3f5a8b0c4e6d2f1a9b7c5e3d1f9a7b5c3d1e9f7a5b3c1d9e7f5a',
-    motherboardUuid: 'MB-SYS-DEFAULT-001',
-    cpuSerial: 'CPU-GEN-DEFAULT-001',
-    diskSerial: 'DISK-PRIMARY-DEFAULT-001',
-  };
-
-  async getMachineFingerprint(): Promise<MachineFingerprint> {
-    return this.defaultHardware;
-  }
-
-  async getStoredLicense(): Promise<StoredLicenseRecord | null> {
-    return this.license;
-  }
-
-  async saveStoredLicense(license: StoredLicenseRecord): Promise<void> {
-    this.license = license;
-  }
-
-  async removeStoredLicense(): Promise<void> {
-    this.license = null;
-  }
-
-  async verifyOfflineLicense(
-    payload: StoredLicensePayload,
-    signature: string,
-  ): Promise<LicenseVerificationOutcome> {
-    if (signature === 'INVALID_SIGNATURE' || payload.validUntil === 'INVALID') {
-      return {
-        status: 'INVALID',
-        isWriteLocked: true,
-        canExport: true,
-        plan: payload.plan,
-        maxSeats: payload.maxSeats,
-        validUntil: payload.validUntil,
-        machineId: payload.machineId,
-        message: 'Cryptographic signature mismatch or corrupted license',
-      };
-    }
-
-    if (payload.machineId && payload.machineId !== this.defaultHardware.machineId) {
-      return {
-        status: 'INVALID',
-        isWriteLocked: true,
-        canExport: true,
-        plan: payload.plan,
-        maxSeats: payload.maxSeats,
-        validUntil: payload.validUntil,
-        machineId: payload.machineId,
-        message: 'Hardware binding mismatch: license is bound to another machine',
-      };
-    }
-
-    const expiryTime = new Date(payload.validUntil).getTime();
-    const now = Date.now();
-    const gracePeriodMs = 7 * 86400 * 1000;
-
-    if (now <= expiryTime) {
-      return {
-        status: 'ACTIVE',
-        isWriteLocked: false,
-        canExport: true,
-        plan: payload.plan,
-        maxSeats: payload.maxSeats,
-        validUntil: payload.validUntil,
-        machineId: payload.machineId,
-      };
-    }
-
-    if (now <= expiryTime + gracePeriodMs) {
-      const remainingMs = expiryTime + gracePeriodMs - now;
-      const daysRemaining = Math.max(1, Math.ceil(remainingMs / (86400 * 1000)));
-      return {
-        status: 'GRACE',
-        isWriteLocked: false,
-        canExport: true,
-        plan: payload.plan,
-        maxSeats: payload.maxSeats,
-        validUntil: payload.validUntil,
-        machineId: payload.machineId,
-        daysRemaining,
-      };
-    }
-
-    return {
-      status: 'EXPIRED',
-      isWriteLocked: true,
-      canExport: true,
-      plan: payload.plan,
-      maxSeats: payload.maxSeats,
-      validUntil: payload.validUntil,
-      machineId: payload.machineId,
-      message: 'License has expired. Write operations are locked. Data export is available.',
-    };
-  }
-
-  async generateRenewalRequestCode(companyId: string, plan: string): Promise<string> {
-    const mShort = this.defaultHardware.machineId
-      .replace(/[^a-zA-Z0-9]/g, '')
-      .padEnd(8, '0')
-      .slice(0, 8)
-      .toUpperCase();
-    const cShort = companyId
-      .replace(/[^a-zA-Z0-9]/g, '')
-      .padEnd(8, '0')
-      .slice(0, 8)
-      .toUpperCase();
-    return `EXZA-REQ-${mShort}-${cShort}-${plan.toUpperCase()}-B10RNW`;
-  }
-
-  async checkClockIntegrity(): Promise<{ isTampered: boolean; message?: string }> {
-    return { isTampered: false };
-  }
-}
 
 export const defaultPlatformAdapters: PlatformAdapters = {
   secureStorage: new InMemorySecureStorage(),
@@ -338,7 +251,6 @@ export const defaultPlatformAdapters: PlatformAdapters = {
   openExternal: defaultOpenExternal,
   notifier: new FallbackNotifier(),
   apiConfig: defaultApiConfig,
-  licensing: new InMemoryDesktopLicensing(),
 };
 
 const PlatformContext = createContext<PlatformAdapters>(defaultPlatformAdapters);

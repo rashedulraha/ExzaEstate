@@ -35,6 +35,27 @@ export class ApiError extends Error {
   }
 }
 
+/**
+ * Resolves API Base URL from runtime environment without hardcoded fallback URLs.
+ * If VITE_API_BASE_URL is defined, it is trimmed and used; otherwise defaults to empty string
+ * allowing relative root routing (/api/v1) or dynamic configuration via setBaseUrl().
+ */
+export function resolveInitialBaseUrl(): string {
+  if (typeof import.meta !== 'undefined') {
+    const metaEnv = (import.meta as unknown as { env?: Record<string, string> }).env;
+    if (metaEnv?.VITE_API_BASE_URL !== undefined) {
+      return metaEnv.VITE_API_BASE_URL.replace(/\/+$/, '');
+    }
+  }
+  const nodeEnv = (
+    globalThis as unknown as { process?: { env?: Record<string, string | undefined> } }
+  ).process?.env;
+  if (nodeEnv?.VITE_API_BASE_URL !== undefined) {
+    return nodeEnv.VITE_API_BASE_URL.replace(/\/+$/, '');
+  }
+  return '';
+}
+
 // Client configuration state
 let currentAuthToken: string | null = null;
 let tokenGetter: (() => string | null | Promise<string | null>) | null = null;
@@ -71,7 +92,20 @@ export function setClientInfo(type: string, version: string): void {
 }
 
 export function setBaseUrl(url: string): void {
-  apiClient.defaults.baseURL = url;
+  const clean = (url || '').replace(/\/+$/, '');
+  apiClient.defaults.baseURL = clean;
+}
+
+export function getBaseUrl(): string {
+  return apiClient.defaults.baseURL || '';
+}
+
+export function setLocalSecret(secret: string | null): void {
+  if (secret) {
+    apiClient.defaults.headers.common['X-Local-Secret'] = secret;
+  } else {
+    delete apiClient.defaults.headers.common['X-Local-Secret'];
+  }
 }
 
 export function resetClientState(): void {
@@ -83,14 +117,17 @@ export function resetClientState(): void {
   clientVersion = '0.1.0';
   isRefreshing = false;
   refreshSubscribers = [];
+  delete apiClient.defaults.headers.common['X-Local-Secret'];
 }
 
-// Axios instance with default base URL
+// Central Axios instance controlled uniformly from packages/api-client
 export const apiClient: AxiosInstance = axios.create({
-  baseURL: 'http://localhost:3000',
+  baseURL: resolveInitialBaseUrl(),
+  timeout: 15000,
   headers: {
     'Content-Type': 'application/json',
   },
+  withCredentials: true,
 });
 
 // Request interceptor: attach token, X-Client, X-Client-Version
@@ -157,6 +194,35 @@ function queueRefresh(
   });
 }
 
+const AUTH_ENDPOINTS = ['/auth/refresh', '/auth/login', '/auth/logout'] as const;
+
+function isAuthUrl(url?: string): boolean {
+  if (!url) return false;
+  return AUTH_ENDPOINTS.some((ep) => url.includes(ep));
+}
+
+function shouldAttemptTokenRefresh(
+  status?: number,
+  req?: InternalAxiosRequestConfig & { _retry?: boolean },
+): boolean {
+  if (status !== 401 || !req || req._retry) return false;
+  return !isAuthUrl(req.url);
+}
+
+function handle401Refresh(
+  req: InternalAxiosRequestConfig & { _retry?: boolean },
+  err: unknown,
+): Promise<AxiosResponse> | undefined {
+  if (!refreshHandler) {
+    authFailureHandler?.();
+    return undefined;
+  }
+  if (!isRefreshing) {
+    return executeRefresh(req);
+  }
+  return queueRefresh(req, err);
+}
+
 // Response interceptor: handle 401 with single refresh attempt and error mapping
 apiClient.interceptors.response.use(
   (response: AxiosResponse) => response,
@@ -165,15 +231,9 @@ apiClient.interceptors.response.use(
       | (InternalAxiosRequestConfig & { _retry?: boolean })
       | undefined;
 
-    // Handle 401 Unauthorized with single refresh attempt
-    if (error.response?.status === 401 && originalRequest && !originalRequest._retry) {
-      if (refreshHandler) {
-        if (!isRefreshing) {
-          return executeRefresh(originalRequest);
-        }
-        return queueRefresh(originalRequest, error);
-      }
-      authFailureHandler?.();
+    if (originalRequest && shouldAttemptTokenRefresh(error.response?.status, originalRequest)) {
+      const refreshPromise = handle401Refresh(originalRequest, error);
+      if (refreshPromise) return refreshPromise;
     }
 
     return Promise.reject(mapAxiosError(error));
@@ -244,6 +304,19 @@ export function mapAxiosError(
 }
 
 /**
+ * Unwraps standard API envelopes { success: true, data: T } while preserving raw structures if not wrapped.
+ */
+export function unwrapEnvelope<T>(body: unknown): T {
+  if (body && typeof body === 'object' && 'success' in body && 'data' in body) {
+    const env = body as ApiResponseEnvelope<T>;
+    if (env.success) {
+      return env.data;
+    }
+  }
+  return body as T;
+}
+
+/**
  * Custom Orval mutator function.
  * Attaches auth, headers, maps errors, and unwraps backend response envelopes.
  */
@@ -256,17 +329,28 @@ export const customInstance = async <T>(
       ...config,
       ...options,
     });
-
-    const body = response.data;
-    // Unwrap { success: true, data: T, meta?: ... }
-    if (body && typeof body === 'object' && body.success === true && 'data' in body) {
-      return body.data as T;
-    }
-
-    return body as T;
+    return unwrapEnvelope<T>(response.data);
   } catch (error) {
     throw mapAxiosError(error);
   }
+};
+
+/**
+ * Centralized HTTP helper for direct REST CRUD requests.
+ * Uses the configured apiClient and handles base URL, authentication, and error mapping uniformly.
+ */
+export const http = {
+  get: <T = unknown>(url: string, config?: AxiosRequestConfig): Promise<T> =>
+    customInstance<T>({ method: 'GET', url, ...config }),
+  post: <T = unknown>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<T> =>
+    customInstance<T>({ method: 'POST', url, data, ...config }),
+  put: <T = unknown>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<T> =>
+    customInstance<T>({ method: 'PUT', url, data, ...config }),
+  patch: <T = unknown>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<T> =>
+    customInstance<T>({ method: 'PATCH', url, data, ...config }),
+  delete: <T = unknown>(url: string, config?: AxiosRequestConfig): Promise<T> =>
+    customInstance<T>({ method: 'DELETE', url, ...config }),
+  request: <T = unknown>(config: AxiosRequestConfig): Promise<T> => customInstance<T>(config),
 };
 
 export default customInstance;
