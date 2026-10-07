@@ -1,8 +1,8 @@
 import { formatMoney, formatDate } from '@exzaestate/shared';
 import { PERMISSIONS } from '@exzaestate/shared';
 import { usePermission } from '@exzaestate/app-core';
-import { DataTable, type ColumnDef, StatusBadge, Button } from '@exzaestate/ui';
-import { Receipt, Check, RotateCcw } from 'lucide-react';
+import { DataTable, type ColumnDef, StatusBadge, Button, EmptyState } from '@exzaestate/ui';
+import { Receipt, Check, RotateCcw, CreditCard } from 'lucide-react';
 import type { PaymentItem } from '../../schemas/collection.schema.js';
 
 export interface PaymentDataTableProps {
@@ -11,6 +11,7 @@ export interface PaymentDataTableProps {
   onViewReceipt?: (payment: PaymentItem) => void;
   onPostPayment?: (payment: PaymentItem) => void;
   onReversePayment?: (payment: PaymentItem) => void;
+  className?: string;
 }
 
 export function PaymentDataTable({
@@ -19,6 +20,7 @@ export function PaymentDataTable({
   onViewReceipt,
   onPostPayment,
   onReversePayment,
+  className,
 }: PaymentDataTableProps) {
   const { hasPermission: canPost } = usePermission(PERMISSIONS.PAYMENT_POST);
   const { hasPermission: canReverse } = usePermission(PERMISSIONS.PAYMENT_REVERSE);
@@ -29,7 +31,7 @@ export function PaymentDataTable({
       header: 'Receipt #',
       render: (row) => (
         <div className="flex flex-col">
-          <span className="font-semibold text-text">{row.receiptNumber || 'DRAFT'}</span>
+          <span className="font-semibold text-text font-mono">{row.receiptNumber || 'DRAFT'}</span>
           {row.bookingCode && (
             <span className="text-caption text-text-muted">{row.bookingCode}</span>
           )}
@@ -97,7 +99,7 @@ export function PaymentDataTable({
       align: 'right',
       render: (row) => (
         <div className="flex items-center justify-end gap-1.5">
-          {/* Post action is ONLY visible if user has PERMISSIONS.PAYMENT_POST (Accountant, not Executive) */}
+          {/* Post action is ONLY visible if user has PERMISSIONS.PAYMENT_POST */}
           {row.status === 'DRAFT' && canPost && onPostPayment && (
             <Button
               variant="secondary"
@@ -149,8 +151,14 @@ export function PaymentDataTable({
       data={payments}
       keyExtractor={(row) => row.id}
       isLoading={isLoading}
+      className={className || 'border-none shadow-none'}
       emptyState={
-        <div className="py-12 text-center text-text-muted">No collection records found.</div>
+        <EmptyState
+          icon={<CreditCard className="w-6 h-6" />}
+          title="No Payment Records Found"
+          description="No collection records match your criteria. Record installment collections to issue receipts."
+          dashedBorder
+        />
       }
     />
   );

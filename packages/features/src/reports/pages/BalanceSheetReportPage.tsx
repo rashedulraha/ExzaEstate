@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { ArrowLeft, CheckCircle2, AlertTriangle } from 'lucide-react';
 import { formatMoney } from '@exzaestate/shared';
-import { Button } from '@exzaestate/ui';
+import { Button, Breadcrumbs } from '@exzaestate/ui';
 import {
   useReportsControllerGetBalanceSheet,
   useReportsControllerExportBalanceSheet,
@@ -14,7 +14,7 @@ import { ReportStateWrapper } from '../components/ReportStateWrapper.js';
 function BalanceSheetEquationBadge({ isBalanced }: { isBalanced: boolean }) {
   if (isBalanced) {
     return (
-      <div className="px-3 py-1.5 rounded-full flex items-center gap-2 text-small font-semibold bg-success/12 text-success border border-success/30">
+      <div className="px-3 py-1 rounded-full flex items-center gap-2 text-caption font-semibold bg-success/12 text-success border border-success/30">
         <CheckCircle2 className="w-4 h-4" />
         <span>Balanced Equation</span>
       </div>
@@ -22,7 +22,7 @@ function BalanceSheetEquationBadge({ isBalanced }: { isBalanced: boolean }) {
   }
 
   return (
-    <div className="px-3 py-1.5 rounded-full flex items-center gap-2 text-small font-semibold bg-danger/12 text-danger border border-danger/30">
+    <div className="px-3 py-1 rounded-full flex items-center gap-2 text-caption font-semibold bg-danger/12 text-danger border border-danger/30">
       <AlertTriangle className="w-4 h-4" />
       <span>Imbalance Detected</span>
     </div>
@@ -60,30 +60,43 @@ export function BalanceSheetReportPage() {
   const isBalanced = Boolean(report?.isBalanced);
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between border-b border-border pb-4">
-        <div className="flex items-center gap-3">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => navigate('/reports')}
-            leftIcon={<ArrowLeft className="w-4 h-4" />}
-          >
-            Reports
-          </Button>
+    <div className="container-page space-y-6">
+      {/* Tier 1: Breadcrumbs & Header */}
+      <div>
+        <Breadcrumbs
+          items={[
+            { label: 'Overview', href: '/dashboard', onClick: () => navigate('/dashboard') },
+            { label: 'Reports', href: '/reports', onClick: () => navigate('/reports') },
+            { label: 'Balance Sheet' },
+          ]}
+        />
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mt-1.5 border-b border-border pb-4">
           <div>
-            <h1 className="text-heading-2 text-text font-semibold">Balance Sheet</h1>
-            <p className="text-caption text-text-muted">
+            <div className="flex items-center gap-3">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => navigate('/reports')}
+                leftIcon={<ArrowLeft className="w-4 h-4" />}
+                className="cursor-pointer"
+              >
+                Back
+              </Button>
+              <h1 className="text-h1 font-bold text-text">Balance Sheet</h1>
+              <span className="text-caption font-mono font-semibold px-2.5 py-0.5 rounded-full bg-surface-sunken text-text-2 border border-border">
+                FIN-02 · Statement of Financial Position
+              </span>
+            </div>
+            <p className="text-small text-text-muted mt-1">
               Statement of Financial Position: Assets = Liabilities + Equity
             </p>
           </div>
-        </div>
 
-        {report && <BalanceSheetEquationBadge isBalanced={isBalanced} />}
+          {report && <BalanceSheetEquationBadge isBalanced={isBalanced} />}
+        </div>
       </div>
 
-      {/* Filters */}
+      {/* Tier 2: Filter Toolbar */}
       <ReportFiltersBar
         mode="asOf"
         asOfDate={asOfDate}
@@ -94,7 +107,7 @@ export function BalanceSheetReportPage() {
         onOpenExport={() => setIsExportOpen(true)}
       />
 
-      {/* Content */}
+      {/* Tier 3: Content Cards */}
       <ReportStateWrapper
         isLoading={query.isLoading}
         isError={query.isError}
@@ -106,7 +119,7 @@ export function BalanceSheetReportPage() {
         {report && (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Left Column: Assets */}
-            <div className="card-workspace p-6 space-y-4">
+            <div className="rounded-card border border-border bg-surface shadow-xs p-6 space-y-4">
               <div className="border-b border-border pb-3 flex items-center justify-between">
                 <h3 className="text-body font-bold text-text uppercase tracking-wide">Assets</h3>
                 <span className="text-caption text-text-muted">Current & Non-Current</span>
@@ -121,15 +134,15 @@ export function BalanceSheetReportPage() {
                   {report.assets.currentAssets.map((a) => (
                     <div
                       key={a.accountId}
-                      className="py-2 flex items-center justify-between text-small"
+                      className="py-2.5 flex items-center justify-between text-small hover:bg-surface-sunken/30 px-1 rounded transition-colors"
                     >
                       <div>
                         <span className="font-mono text-caption text-text-muted mr-2">
                           {a.accountCode}
                         </span>
-                        <span className="text-text">{a.accountName}</span>
+                        <span className="text-text font-medium">{a.accountName}</span>
                       </div>
-                      <span className="font-mono tabular-nums font-medium text-text">
+                      <span className="font-mono tabular-nums font-semibold text-text">
                         {formatMoney(BigInt(a.balancePaisa))}
                       </span>
                     </div>
@@ -147,15 +160,15 @@ export function BalanceSheetReportPage() {
                     {report.assets.nonCurrentAssets.map((a) => (
                       <div
                         key={a.accountId}
-                        className="py-2 flex items-center justify-between text-small"
+                        className="py-2.5 flex items-center justify-between text-small hover:bg-surface-sunken/30 px-1 rounded transition-colors"
                       >
                         <div>
                           <span className="font-mono text-caption text-text-muted mr-2">
                             {a.accountCode}
                           </span>
-                          <span className="text-text">{a.accountName}</span>
+                          <span className="text-text font-medium">{a.accountName}</span>
                         </div>
-                        <span className="font-mono tabular-nums font-medium text-text">
+                        <span className="font-mono tabular-nums font-semibold text-text">
                           {formatMoney(BigInt(a.balancePaisa))}
                         </span>
                       </div>
@@ -169,14 +182,14 @@ export function BalanceSheetReportPage() {
                 <span className="text-text uppercase text-caption tracking-wider">
                   Total Assets
                 </span>
-                <span className="font-mono tabular-nums text-body text-text">
+                <span className="font-mono tabular-nums text-heading-3 text-text">
                   {formatMoney(BigInt(report.assets.totalAssetsPaisa))}
                 </span>
               </div>
             </div>
 
             {/* Right Column: Liabilities & Equity */}
-            <div className="card-workspace p-6 space-y-4">
+            <div className="rounded-card border border-border bg-surface shadow-xs p-6 space-y-4">
               <div className="border-b border-border pb-3 flex items-center justify-between">
                 <h3 className="text-body font-bold text-text uppercase tracking-wide">
                   Liabilities & Equity
@@ -193,15 +206,15 @@ export function BalanceSheetReportPage() {
                   {report.liabilities.currentLiabilities.map((l) => (
                     <div
                       key={l.accountId}
-                      className="py-2 flex items-center justify-between text-small"
+                      className="py-2.5 flex items-center justify-between text-small hover:bg-surface-sunken/30 px-1 rounded transition-colors"
                     >
                       <div>
                         <span className="font-mono text-caption text-text-muted mr-2">
                           {l.accountCode}
                         </span>
-                        <span className="text-text">{l.accountName}</span>
+                        <span className="text-text font-medium">{l.accountName}</span>
                       </div>
-                      <span className="font-mono tabular-nums font-medium text-text">
+                      <span className="font-mono tabular-nums font-semibold text-text">
                         {formatMoney(BigInt(l.balancePaisa))}
                       </span>
                     </div>
@@ -218,15 +231,15 @@ export function BalanceSheetReportPage() {
                   {report.equity.items.map((eq) => (
                     <div
                       key={eq.accountId}
-                      className="py-2 flex items-center justify-between text-small"
+                      className="py-2.5 flex items-center justify-between text-small hover:bg-surface-sunken/30 px-1 rounded transition-colors"
                     >
                       <div>
                         <span className="font-mono text-caption text-text-muted mr-2">
                           {eq.accountCode}
                         </span>
-                        <span className="text-text">{eq.accountName}</span>
+                        <span className="text-text font-medium">{eq.accountName}</span>
                       </div>
-                      <span className="font-mono tabular-nums font-medium text-text">
+                      <span className="font-mono tabular-nums font-semibold text-text">
                         {formatMoney(BigInt(eq.balancePaisa))}
                       </span>
                     </div>
@@ -239,7 +252,7 @@ export function BalanceSheetReportPage() {
                 <span className="text-text uppercase text-caption tracking-wider">
                   Total Liabilities & Equity
                 </span>
-                <span className="font-mono tabular-nums text-body text-text">
+                <span className="font-mono tabular-nums text-heading-3 text-text">
                   {formatMoney(BigInt(report.totalLiabilitiesAndEquityPaisa))}
                 </span>
               </div>

@@ -1,5 +1,5 @@
 import { Download, RefreshCw, Calendar, Filter } from 'lucide-react';
-import { Button, Select, Input, type SelectOption } from '@exzaestate/ui';
+import { Button, Select, Input, type SelectOption, StickyToolbar } from '@exzaestate/ui';
 
 export interface ReportFiltersBarProps {
   startDate?: string;
@@ -43,36 +43,39 @@ function DateFilterControls({
   if (mode === 'asOf') {
     return (
       <div className="flex items-center gap-2 text-small">
-        <span className="text-text-muted font-medium flex items-center gap-1">
-          <Calendar className="w-4 h-4" /> As of:
+        <span className="text-text-muted font-medium flex items-center gap-1.5 shrink-0">
+          <Calendar className="w-4 h-4 text-text-muted" /> As of:
         </span>
         <Input
+          id="report-as-of-date"
           type="date"
           value={asOfDate}
           onChange={(e) => onAsOfDateChange && onAsOfDateChange(e.target.value)}
-          className="text-small py-1"
+          className="w-40"
         />
       </div>
     );
   }
 
   return (
-    <div className="flex items-center gap-2 text-small">
-      <span className="text-text-muted font-medium flex items-center gap-1">
-        <Calendar className="w-4 h-4" /> Period:
+    <div className="flex items-center gap-2 text-small flex-wrap sm:flex-nowrap">
+      <span className="text-text-muted font-medium flex items-center gap-1.5 shrink-0">
+        <Calendar className="w-4 h-4 text-text-muted" /> Period:
       </span>
       <Input
+        id="report-start-date"
         type="date"
         value={startDate}
         onChange={(e) => onStartDateChange && onStartDateChange(e.target.value)}
-        className="text-small py-1"
+        className="w-38"
       />
-      <span className="text-text-muted">to</span>
+      <span className="text-text-muted font-medium text-caption">to</span>
       <Input
+        id="report-end-date"
         type="date"
         value={endDate}
         onChange={(e) => onEndDateChange && onEndDateChange(e.target.value)}
-        className="text-small py-1"
+        className="w-38"
       />
     </div>
   );
@@ -86,7 +89,7 @@ function FilterBarActions({
   onOpenExport?: () => void;
 }) {
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-2 shrink-0">
       {onRefresh && (
         <Button
           variant="secondary"
@@ -126,36 +129,40 @@ export function ReportFiltersBar({
   showProjectFilter = true,
 }: ReportFiltersBarProps) {
   return (
-    <div className="card-workspace p-3 flex flex-wrap items-center justify-between gap-3">
-      {/* Left: Filter Controls */}
-      <div className="flex flex-wrap items-center gap-3">
-        <DateFilterControls
-          mode={mode}
-          asOfDate={asOfDate}
-          startDate={startDate}
-          endDate={endDate}
-          onAsOfDateChange={onAsOfDateChange}
-          onStartDateChange={onStartDateChange}
-          onEndDateChange={onEndDateChange}
-        />
+    <StickyToolbar>
+      <div className="shadow-xs rounded-card border border-border bg-surface p-4 flex flex-wrap items-center justify-between gap-3">
+        {/* Left: Filter Controls */}
+        <div className="flex flex-wrap items-center gap-3">
+          <DateFilterControls
+            mode={mode}
+            asOfDate={asOfDate}
+            startDate={startDate}
+            endDate={endDate}
+            onAsOfDateChange={onAsOfDateChange}
+            onStartDateChange={onStartDateChange}
+            onEndDateChange={onEndDateChange}
+          />
 
-        {showProjectFilter && (
-          <div className="flex items-center gap-1.5 text-small">
-            <span className="text-text-muted font-medium flex items-center gap-1">
-              <Filter className="w-4 h-4" /> Project:
-            </span>
-            <Select
-              options={PROJECT_OPTIONS}
-              value={projectId}
-              onChange={(val) => onProjectIdChange && onProjectIdChange(val)}
-              className="text-small min-w-[160px]"
-            />
-          </div>
-        )}
+          {showProjectFilter && (
+            <div className="flex items-center gap-2 text-small">
+              <span className="text-text-muted font-medium flex items-center gap-1.5 shrink-0">
+                <Filter className="w-4 h-4 text-text-muted" /> Project:
+              </span>
+              <div className="min-w-[170px]">
+                <Select
+                  id="report-project-filter"
+                  options={PROJECT_OPTIONS}
+                  value={projectId}
+                  onChange={(val) => onProjectIdChange && onProjectIdChange(val)}
+                />
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Right: Actions */}
+        <FilterBarActions onRefresh={onRefresh} onOpenExport={onOpenExport} />
       </div>
-
-      {/* Right: Actions */}
-      <FilterBarActions onRefresh={onRefresh} onOpenExport={onOpenExport} />
-    </div>
+    </StickyToolbar>
   );
 }

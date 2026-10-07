@@ -69,7 +69,7 @@ export function OpeningBalancesStep({
   };
 
   return (
-    <div className="rounded-card border border-border bg-surface-elevated p-6 space-y-6">
+    <div className="rounded-card border border-border bg-surface p-6 space-y-6">
       <div>
         <h3 className="text-h3 font-semibold text-text">Step 1: Balance Sheet Opening Balances</h3>
         <p className="text-body-sm text-text-muted mt-0.5">

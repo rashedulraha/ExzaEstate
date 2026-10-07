@@ -25,27 +25,29 @@ interface InventorySummary {
 function SalesMetricCard({ summary }: { summary?: SalesSummary }) {
   const rawPaisa = summary?.totalSalesPaisa;
   const paisa = rawPaisa ? BigInt(rawPaisa) : 0n;
-  const formatted = paisa > 0n ? formatMoney(paisa, { showDecimals: false }) : '৳0';
-  const fullFormatted = paisa > 0n ? formatMoney(paisa) : '৳0';
+  const formatted = formatMoney(paisa, { showDecimals: false });
+  const fullFormatted = formatMoney(paisa);
   const count = summary?.totalSalesCount ?? 0;
 
   return (
-    <div className="bg-surface border border-border rounded-lg p-4 shadow-xs">
+    <div className="card-stat">
       <div className="flex items-center justify-between">
-        <span className="text-caption font-medium text-text-muted uppercase tracking-wider">
+        <span className="text-caption font-semibold uppercase tracking-wider text-text-muted">
           Gross Sales Bookings
         </span>
-        <span className="inline-block w-2 h-2 rounded-full bg-primary" />
+        <span className="text-caption font-medium px-2 py-0.5 rounded-full bg-primary/10 text-primary">
+          Sales
+        </span>
       </div>
       <div
-        className="mt-2 text-xl lg:text-2xl font-bold font-sans tracking-tight text-text tabular-nums leading-tight truncate"
+        className="mt-1.5 text-hero-num font-bold text-text tabular-nums truncate"
         title={fullFormatted}
       >
         {formatted}
       </div>
-      <div className="mt-2 text-caption text-text-muted flex items-center justify-between">
+      <div className="mt-1 text-caption text-text-muted flex items-center justify-between">
         <span>Confirmed Allotments</span>
-        <span className="font-sans font-semibold text-text">{count} units</span>
+        <span className="font-semibold text-text tabular-nums">{count} units</span>
       </div>
     </div>
   );
@@ -54,27 +56,29 @@ function SalesMetricCard({ summary }: { summary?: SalesSummary }) {
 function CollectionMetricCard({ summary }: { summary?: CollectionSummary }) {
   const rawPaisa = summary?.totalCollectionPaisa;
   const paisa = rawPaisa ? BigInt(rawPaisa) : 0n;
-  const formatted = paisa > 0n ? formatMoney(paisa, { showDecimals: false }) : '৳0';
-  const fullFormatted = paisa > 0n ? formatMoney(paisa) : '৳0';
+  const formatted = formatMoney(paisa, { showDecimals: false });
+  const fullFormatted = formatMoney(paisa);
   const count = summary?.totalCollectionCount ?? 0;
 
   return (
-    <div className="bg-surface border border-border rounded-lg p-4 shadow-xs">
+    <div className="card-stat">
       <div className="flex items-center justify-between">
-        <span className="text-caption font-medium text-text-muted uppercase tracking-wider">
+        <span className="text-caption font-semibold uppercase tracking-wider text-text-muted">
           Realized Collections
         </span>
-        <span className="inline-block w-2 h-2 rounded-full bg-success" />
+        <span className="text-caption font-medium px-2 py-0.5 rounded-full bg-success/12 text-success">
+          Collections
+        </span>
       </div>
       <div
-        className="mt-2 text-xl lg:text-2xl font-bold font-sans tracking-tight text-text tabular-nums leading-tight truncate"
+        className="mt-1.5 text-hero-num font-bold text-success tabular-nums truncate"
         title={fullFormatted}
       >
         {formatted}
       </div>
-      <div className="mt-2 text-caption text-text-muted flex items-center justify-between">
+      <div className="mt-1 text-caption text-text-muted flex items-center justify-between">
         <span>Cleared Receipts</span>
-        <span className="font-sans font-semibold text-text">{count} receipts</span>
+        <span className="font-semibold text-text tabular-nums">{count} receipts</span>
       </div>
     </div>
   );
@@ -83,26 +87,28 @@ function CollectionMetricCard({ summary }: { summary?: CollectionSummary }) {
 function InventoryValueCard({ summary }: { summary?: InventorySummary }) {
   const rawPaisa = summary?.totalInventoryValuePaisa;
   const paisa = rawPaisa ? BigInt(rawPaisa) : 0n;
-  const formatted = paisa > 0n ? formatMoney(paisa, { showDecimals: false }) : '৳0';
-  const fullFormatted = paisa > 0n ? formatMoney(paisa) : '৳0';
+  const formatted = formatMoney(paisa, { showDecimals: false });
+  const fullFormatted = formatMoney(paisa);
 
   return (
-    <div className="bg-surface border border-border rounded-lg p-4 shadow-xs">
+    <div className="card-stat">
       <div className="flex items-center justify-between">
-        <span className="text-caption font-medium text-text-muted uppercase tracking-wider">
+        <span className="text-caption font-semibold uppercase tracking-wider text-text-muted">
           Portfolio Inventory Value
         </span>
-        <span className="inline-block w-2 h-2 rounded-full bg-info" />
+        <span className="text-caption font-medium px-2 py-0.5 rounded-full bg-info/10 text-info">
+          Valuation
+        </span>
       </div>
       <div
-        className="mt-2 text-xl lg:text-2xl font-bold font-sans tracking-tight text-text tabular-nums leading-tight truncate"
+        className="mt-1.5 text-hero-num font-bold text-text tabular-nums truncate"
         title={fullFormatted}
       >
         {formatted}
       </div>
-      <div className="mt-2 text-caption text-text-muted flex items-center justify-between">
-        <span>Active Valuation</span>
-        <span className="font-sans font-semibold text-text">Live Valuation</span>
+      <div className="mt-1 text-caption text-text-muted flex items-center justify-between">
+        <span>Active Portfolio</span>
+        <span className="font-semibold text-text">Live Valuation</span>
       </div>
     </div>
   );
@@ -114,19 +120,21 @@ function InventoryUnitsCard({ summary }: { summary?: InventorySummary }) {
   const rate = total > 0 ? `${Math.round((sold / total) * 100)}%` : '0%';
 
   return (
-    <div className="bg-surface border border-border rounded-lg p-4 shadow-xs">
+    <div className="card-stat">
       <div className="flex items-center justify-between">
-        <span className="text-caption font-medium text-text-muted uppercase tracking-wider">
+        <span className="text-caption font-semibold uppercase tracking-wider text-text-muted">
           Units Allotted / Sold
         </span>
-        <span className="inline-block w-2 h-2 rounded-full bg-special" />
+        <span className="text-caption font-medium px-2 py-0.5 rounded-full bg-special/12 text-special">
+          Inventory
+        </span>
       </div>
-      <div className="mt-2 text-xl lg:text-2xl font-bold font-sans tracking-tight text-text tabular-nums leading-tight truncate">
-        {sold} <span className="text-base font-normal text-text-muted">/ {total}</span>
+      <div className="mt-1.5 text-hero-num font-bold text-text tabular-nums truncate">
+        {sold} <span className="text-body font-normal text-text-muted">/ {total}</span>
       </div>
-      <div className="mt-2 text-caption text-text-muted flex items-center justify-between">
+      <div className="mt-1 text-caption text-text-muted flex items-center justify-between">
         <span>Absorption Rate</span>
-        <span className="font-sans font-semibold text-text">{rate}</span>
+        <span className="font-semibold text-text tabular-nums">{rate}</span>
       </div>
     </div>
   );
@@ -144,7 +152,7 @@ export function ReportsMetricsBar() {
   return (
     <div
       data-testid="reports-metrics-bar"
-      className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5"
+      className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3"
     >
       <SalesMetricCard summary={salesData?.summary} />
       <CollectionMetricCard summary={collectionData?.summary} />

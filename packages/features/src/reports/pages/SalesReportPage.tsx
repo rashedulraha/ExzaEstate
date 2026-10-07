@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { ArrowLeft } from 'lucide-react';
 import { formatMoney } from '@exzaestate/shared';
-import { Button, DataTable, type ColumnDef } from '@exzaestate/ui';
+import { Button, DataTable, Breadcrumbs, type ColumnDef } from '@exzaestate/ui';
 import { useReportsControllerGetSalesReport } from '@exzaestate/api-client';
 import { ReportFiltersBar } from '../components/ReportFiltersBar.js';
 import { ExportReportModal } from '../components/ExportReportModal.js';
@@ -72,7 +72,9 @@ export function SalesReportPage() {
       key: 'confirmedAt',
       header: 'Confirmed Date',
       render: (r: SalesRow) => (
-        <span className="text-text-muted">{r.confirmedAt ? r.confirmedAt.split('T')[0] : '-'}</span>
+        <span className="text-text-muted font-mono">
+          {r.confirmedAt ? r.confirmedAt.split('T')[0] : '-'}
+        </span>
       ),
     },
     {
@@ -95,7 +97,7 @@ export function SalesReportPage() {
       header: 'Total Paid',
       align: 'right',
       render: (r: SalesRow) => (
-        <span className="font-mono tabular-nums font-medium text-success">
+        <span className="font-mono tabular-nums font-semibold text-success">
           {formatMoney(BigInt(r.totalPaidPaisa))}
         </span>
       ),
@@ -110,45 +112,58 @@ export function SalesReportPage() {
   };
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between border-b border-border pb-4">
-        <div className="flex items-center gap-3">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => navigate('/reports')}
-            leftIcon={<ArrowLeft className="w-4 h-4" />}
-          >
-            Reports
-          </Button>
+    <div className="container-page space-y-6">
+      {/* Tier 1: Breadcrumbs & Header */}
+      <div>
+        <Breadcrumbs
+          items={[
+            { label: 'Overview', href: '/dashboard', onClick: () => navigate('/dashboard') },
+            { label: 'Reports', href: '/reports', onClick: () => navigate('/reports') },
+            { label: 'Sales & Booking Register' },
+          ]}
+        />
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mt-1.5 border-b border-border pb-4">
           <div>
-            <h1 className="text-heading-2 text-text font-semibold">Sales & Booking Register</h1>
-            <p className="text-caption text-text-muted">
+            <div className="flex items-center gap-3">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => navigate('/reports')}
+                leftIcon={<ArrowLeft className="w-4 h-4" />}
+                className="cursor-pointer"
+              >
+                Back
+              </Button>
+              <h1 className="text-h1 font-bold text-text">Sales & Booking Register</h1>
+              <span className="text-caption font-mono font-semibold px-2.5 py-0.5 rounded-full bg-surface-sunken text-text-2 border border-border">
+                SAL-01 · Allotment Contracts
+              </span>
+            </div>
+            <p className="text-small text-text-muted mt-1">
               Confirmed sales, allotment contracts, and revenue booking register (AT-15 verified)
             </p>
           </div>
-        </div>
 
-        {report && (
-          <div className="flex items-center gap-3 text-small">
-            <div className="px-3 py-1.5 rounded bg-surface-sunken border border-border">
-              Total Sales:{' '}
-              <strong className="font-mono tabular-nums text-text">
-                {report.summary.totalSalesFormatted}
-              </strong>
+          {report && (
+            <div className="flex items-center gap-2 text-small">
+              <div className="px-3 py-1 rounded-full bg-surface-sunken border border-border text-caption">
+                Total Sales:{' '}
+                <strong className="font-mono tabular-nums text-text font-bold">
+                  {report.summary.totalSalesFormatted}
+                </strong>
+              </div>
+              <div className="px-3 py-1 rounded-full bg-surface-sunken border border-border text-caption">
+                Count:{' '}
+                <strong className="font-mono tabular-nums text-text font-bold">
+                  {report.summary.totalSalesCount}
+                </strong>
+              </div>
             </div>
-            <div className="px-3 py-1.5 rounded bg-surface-sunken border border-border">
-              Count:{' '}
-              <strong className="font-mono tabular-nums text-text">
-                {report.summary.totalSalesCount}
-              </strong>
-            </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
 
-      {/* Filters */}
+      {/* Tier 2: Filter Toolbar */}
       <ReportFiltersBar
         mode="range"
         startDate={startDate}
@@ -161,7 +176,7 @@ export function SalesReportPage() {
         onOpenExport={() => setIsExportOpen(true)}
       />
 
-      {/* Content */}
+      {/* Tier 3: Content Workspace Card */}
       <ReportStateWrapper
         isLoading={query.isLoading}
         isError={query.isError}
@@ -171,7 +186,7 @@ export function SalesReportPage() {
         hasData={Boolean(report)}
       >
         {report && (
-          <div className="card-workspace overflow-hidden">
+          <div className="rounded-card border border-border bg-surface shadow-xs overflow-hidden">
             <DataTable data={report.rows} columns={columns} keyExtractor={(r) => r.bookingId} />
           </div>
         )}

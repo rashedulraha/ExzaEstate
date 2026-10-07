@@ -1,3 +1,5 @@
+import { FileQuestion } from 'lucide-react';
+import { EmptyState } from '@exzaestate/ui';
 import type { ReportItem } from '../reports.types.js';
 import { ReportCard } from './ReportCard.js';
 import { ReportsTableView } from './ReportsTableView.js';
@@ -21,11 +23,12 @@ export function ReportsDirectoryView({
 }: ReportsDirectoryViewProps) {
   if (reports.length === 0) {
     return (
-      <div className="bg-surface border border-border rounded-lg p-12 text-center">
-        <p className="text-body font-medium text-text">No reports match your filters</p>
-        <p className="text-small text-text-muted mt-1">
-          Try adjusting your search query or selecting a different category.
-        </p>
+      <div className="p-8">
+        <EmptyState
+          title="No reports match your filters"
+          description="Try adjusting your search query or selecting a different category."
+          icon={<FileQuestion className="w-8 h-8 text-text-muted" />}
+        />
       </div>
     );
   }
@@ -43,7 +46,7 @@ export function ReportsDirectoryView({
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       {reports.map((report) => (
         <ReportCard
           key={report.id}

@@ -75,40 +75,40 @@ export function ExportReportModal({
               <button
                 type="button"
                 onClick={() => setFormat('PDF')}
-                className={`p-3 rounded border flex flex-col items-center gap-1.5 transition-all cursor-pointer ${
+                className={`p-3 rounded-button border flex flex-col items-center gap-1.5 transition-all cursor-pointer ${
                   format === 'PDF'
-                    ? 'border-primary bg-primary/5 text-primary-fg font-semibold'
-                    : 'border-border bg-surface text-text-muted hover:border-border-strong'
+                    ? 'border-primary bg-primary/10 text-primary font-semibold shadow-xs ring-1 ring-primary/30'
+                    : 'border-border bg-surface text-text-muted hover:border-primary/40'
                 }`}
               >
                 <FileText className="w-5 h-5 text-danger" />
-                <span className="text-caption">PDF Document</span>
+                <span className="text-caption font-medium">PDF Document</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => setFormat('EXCEL')}
-                className={`p-3 rounded border flex flex-col items-center gap-1.5 transition-all cursor-pointer ${
+                className={`p-3 rounded-button border flex flex-col items-center gap-1.5 transition-all cursor-pointer ${
                   format === 'EXCEL'
-                    ? 'border-primary bg-primary/5 text-primary-fg font-semibold'
-                    : 'border-border bg-surface text-text-muted hover:border-border-strong'
+                    ? 'border-primary bg-primary/10 text-primary font-semibold shadow-xs ring-1 ring-primary/30'
+                    : 'border-border bg-surface text-text-muted hover:border-primary/40'
                 }`}
               >
                 <FileSpreadsheet className="w-5 h-5 text-success" />
-                <span className="text-caption">Excel (.xlsx)</span>
+                <span className="text-caption font-medium">Excel (.xlsx)</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => setFormat('CSV')}
-                className={`p-3 rounded border flex flex-col items-center gap-1.5 transition-all cursor-pointer ${
+                className={`p-3 rounded-button border flex flex-col items-center gap-1.5 transition-all cursor-pointer ${
                   format === 'CSV'
-                    ? 'border-primary bg-primary/5 text-primary-fg font-semibold'
-                    : 'border-border bg-surface text-text-muted hover:border-border-strong'
+                    ? 'border-primary bg-primary/10 text-primary font-semibold shadow-xs ring-1 ring-primary/30'
+                    : 'border-border bg-surface text-text-muted hover:border-primary/40'
                 }`}
               >
                 <Download className="w-5 h-5 text-info" />
-                <span className="text-caption">Raw CSV</span>
+                <span className="text-caption font-medium">Raw CSV</span>
               </button>
             </div>
           </div>

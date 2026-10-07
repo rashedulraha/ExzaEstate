@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { ArrowLeft } from 'lucide-react';
 import { formatMoney } from '@exzaestate/shared';
-import { Button, DataTable, StatusBadge, type ColumnDef } from '@exzaestate/ui';
+import { Button, DataTable, StatusBadge, Breadcrumbs, type ColumnDef } from '@exzaestate/ui';
 import { useReportsControllerGetInventoryReport } from '@exzaestate/api-client';
 import { ReportFiltersBar } from '../components/ReportFiltersBar.js';
 import { ExportReportModal } from '../components/ExportReportModal.js';
@@ -99,46 +99,59 @@ export function InventoryReportPage() {
   };
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between border-b border-border pb-4">
-        <div className="flex items-center gap-3">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => navigate('/reports')}
-            leftIcon={<ArrowLeft className="w-4 h-4" />}
-          >
-            Reports
-          </Button>
+    <div className="container-page space-y-6">
+      {/* Tier 1: Breadcrumbs & Header */}
+      <div>
+        <Breadcrumbs
+          items={[
+            { label: 'Overview', href: '/dashboard', onClick: () => navigate('/dashboard') },
+            { label: 'Reports', href: '/reports', onClick: () => navigate('/reports') },
+            { label: 'Property Inventory Status' },
+          ]}
+        />
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mt-1.5 border-b border-border pb-4">
           <div>
-            <h1 className="text-heading-2 text-text font-semibold">Property Inventory Status</h1>
-            <p className="text-caption text-text-muted">
+            <div className="flex items-center gap-3">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => navigate('/reports')}
+                leftIcon={<ArrowLeft className="w-4 h-4" />}
+                className="cursor-pointer"
+              >
+                Back
+              </Button>
+              <h1 className="text-h1 font-bold text-text">Property Inventory Status</h1>
+              <span className="text-caption font-mono font-semibold px-2.5 py-0.5 rounded-full bg-surface-sunken text-text-2 border border-border">
+                INV-01 · Stock & Allocation
+              </span>
+            </div>
+            <p className="text-small text-text-muted mt-1">
               Live unit breakdown by availability, hold, reservation, and booking states (AT-15
               verified)
             </p>
           </div>
-        </div>
 
-        {report && (
-          <div className="flex items-center gap-3 text-small">
-            <div className="px-3 py-1.5 rounded bg-surface-sunken border border-border">
-              Total Valuation:{' '}
-              <strong className="font-mono tabular-nums text-text">
-                {report.summary.totalValueFormatted}
-              </strong>
+          {report && (
+            <div className="flex items-center gap-2 text-small">
+              <div className="px-3 py-1 rounded-full bg-surface-sunken border border-border text-caption">
+                Total Valuation:{' '}
+                <strong className="font-mono tabular-nums text-text font-bold">
+                  {report.summary.totalValueFormatted}
+                </strong>
+              </div>
+              <div className="px-3 py-1 rounded-full bg-success/10 border border-success/30 text-success text-caption">
+                Available:{' '}
+                <strong className="font-mono tabular-nums font-bold">
+                  {report.summary.availableUnits} units ({report.summary.availableValueFormatted})
+                </strong>
+              </div>
             </div>
-            <div className="px-3 py-1.5 rounded bg-success/10 border border-success/30 text-success">
-              Available:{' '}
-              <strong className="font-mono tabular-nums">
-                {report.summary.availableUnits} units ({report.summary.availableValueFormatted})
-              </strong>
-            </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
 
-      {/* Filters */}
+      {/* Tier 2: Filter Toolbar */}
       <ReportFiltersBar
         mode="asOf"
         projectId={projectId}
@@ -147,40 +160,40 @@ export function InventoryReportPage() {
         onOpenExport={() => setIsExportOpen(true)}
       />
 
-      {/* Summary Chips */}
+      {/* KPI Units Strip */}
       {report && (
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-          <div className="card-workspace p-3 text-center">
+          <div className="rounded-card border border-border bg-surface p-4 text-center shadow-xs">
             <div className="text-caption text-text-muted font-medium">Total Units</div>
             <div className="text-heading-3 font-semibold font-mono tabular-nums text-text mt-1">
               {report.summary.totalUnits}
             </div>
           </div>
-          <div className="card-workspace p-3 text-center bg-success/5 border-success/20">
+          <div className="rounded-card border border-success/20 bg-success/5 p-4 text-center shadow-xs">
             <div className="text-caption text-success font-medium">Available</div>
             <div className="text-heading-3 font-semibold font-mono tabular-nums text-success mt-1">
               {report.summary.availableUnits}
             </div>
           </div>
-          <div className="card-workspace p-3 text-center bg-primary/5 border-primary/20">
+          <div className="rounded-card border border-primary/20 bg-primary/5 p-4 text-center shadow-xs">
             <div className="text-caption text-primary font-medium">Booked</div>
             <div className="text-heading-3 font-semibold font-mono tabular-nums text-primary mt-1">
               {report.summary.bookedUnits}
             </div>
           </div>
-          <div className="card-workspace p-3 text-center bg-accent/10 border-accent/30">
+          <div className="rounded-card border border-accent/30 bg-accent/10 p-4 text-center shadow-xs">
             <div className="text-caption text-accent-text font-medium">Reserved</div>
             <div className="text-heading-3 font-semibold font-mono tabular-nums text-accent-text mt-1">
               {report.summary.reservedUnits}
             </div>
           </div>
-          <div className="card-workspace p-3 text-center bg-info/5 border-info/20">
+          <div className="rounded-card border border-info/20 bg-info/5 p-4 text-center shadow-xs">
             <div className="text-caption text-info font-medium">Sold</div>
             <div className="text-heading-3 font-semibold font-mono tabular-nums text-info mt-1">
               {report.summary.soldUnits}
             </div>
           </div>
-          <div className="card-workspace p-3 text-center bg-danger/5 border-danger/20">
+          <div className="rounded-card border border-danger/20 bg-danger/5 p-4 text-center shadow-xs">
             <div className="text-caption text-danger font-medium">Blocked / Hold</div>
             <div className="text-heading-3 font-semibold font-mono tabular-nums text-danger mt-1">
               {report.summary.blockedUnits}
@@ -189,7 +202,7 @@ export function InventoryReportPage() {
         </div>
       )}
 
-      {/* Content */}
+      {/* Tier 3: Content Workspace Card */}
       <ReportStateWrapper
         isLoading={query.isLoading}
         isError={query.isError}
@@ -199,7 +212,7 @@ export function InventoryReportPage() {
         hasData={Boolean(report)}
       >
         {report && (
-          <div className="card-workspace overflow-hidden">
+          <div className="rounded-card border border-border bg-surface shadow-xs overflow-hidden">
             <DataTable data={report.rows} columns={columns} keyExtractor={(r) => r.propertyId} />
           </div>
         )}

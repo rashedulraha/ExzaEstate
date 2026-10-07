@@ -1,4 +1,5 @@
-import { Star, Download, ArrowRight } from 'lucide-react';
+import { Star, Download, ArrowRight, FileText } from 'lucide-react';
+import { EmptyState } from '@exzaestate/ui';
 import type { ReportItem } from '../reports.types.js';
 
 export interface ReportsTableViewProps {
@@ -7,6 +8,7 @@ export interface ReportsTableViewProps {
   onTogglePin: (reportId: string) => void;
   onOpenReport: (report: ReportItem) => void;
   onQuickExport: (report: ReportItem) => void;
+  className?: string;
 }
 
 export function ReportsTableView({
@@ -15,23 +17,26 @@ export function ReportsTableView({
   onTogglePin,
   onOpenReport,
   onQuickExport,
+  className,
 }: ReportsTableViewProps) {
   if (reports.length === 0) {
     return (
-      <div className="bg-surface border border-border rounded-lg p-12 text-center">
-        <p className="text-body font-medium text-text">No reports match your filters</p>
-        <p className="text-small text-text-muted mt-1">
-          Try adjusting your search query or selecting a different category.
-        </p>
+      <div className="p-8">
+        <EmptyState
+          icon={<FileText className="w-6 h-6" />}
+          title="No Reports Match Your Filters"
+          description="Try adjusting your search query or selecting a different category."
+          dashedBorder
+        />
       </div>
     );
   }
 
   return (
-    <div className="bg-surface border border-border rounded-lg overflow-hidden shadow-xs">
+    <div className={`overflow-hidden ${className || 'bg-surface'}`}>
       <div className="overflow-x-auto">
         <table className="w-full text-left text-small">
-          <thead className="bg-surface-sunken text-text-muted border-b border-border text-caption font-semibold">
+          <thead className="bg-surface-sunken/80 text-text-muted border-b border-border text-th font-semibold">
             <tr>
               <th className="w-10 px-3 py-3 text-center">Pin</th>
               <th className="w-24 px-4 py-3 font-mono">Code</th>
@@ -46,14 +51,14 @@ export function ReportsTableView({
             {reports.map((r) => {
               const isPinned = pinnedReportIds.includes(r.id);
               return (
-                <tr key={r.id} className="hover:bg-surface-sunken/40 transition-colors group">
+                <tr key={r.id} className="hover:bg-surface-sunken/50 transition-colors group">
                   {/* Pin Column */}
                   <td className="px-3 py-3 text-center">
                     <button
                       type="button"
                       onClick={() => onTogglePin(r.id)}
                       aria-label={isPinned ? 'Unpin report' : 'Pin report'}
-                      className={`p-1 rounded transition-colors ${
+                      className={`p-1 rounded-button transition-colors cursor-pointer ${
                         isPinned ? 'text-primary' : 'text-text-muted/40 hover:text-text-muted'
                       }`}
                     >
@@ -62,16 +67,14 @@ export function ReportsTableView({
                   </td>
 
                   {/* Code */}
-                  <td className="px-4 py-3 font-mono text-caption font-semibold text-text">
-                    {r.code}
-                  </td>
+                  <td className="px-4 py-3 font-mono text-caption font-bold text-text">{r.code}</td>
 
                   {/* Title & Description */}
                   <td className="px-4 py-3">
                     <button
                       type="button"
                       onClick={() => onOpenReport(r)}
-                      className="font-medium text-text hover:text-primary transition-colors text-left font-sans block"
+                      className="font-medium text-text hover:text-primary transition-colors text-left font-sans block cursor-pointer"
                     >
                       {r.title}
                     </button>
@@ -87,7 +90,7 @@ export function ReportsTableView({
 
                   {/* Frequency */}
                   <td className="px-4 py-3">
-                    <span className="text-caption px-2 py-0.5 rounded bg-surface-sunken text-text-muted border border-border">
+                    <span className="text-caption px-2 py-0.5 rounded-full bg-surface-sunken text-text-muted border border-border">
                       {r.frequency.replace('_', ' ')}
                     </span>
                   </td>
@@ -103,7 +106,7 @@ export function ReportsTableView({
                       <button
                         type="button"
                         onClick={() => onQuickExport(r)}
-                        className="inline-flex items-center gap-1 px-2 py-1 text-caption font-medium text-text-muted hover:text-text hover:bg-surface-sunken rounded border border-border transition-colors"
+                        className="inline-flex items-center gap-1 px-2.5 py-1 text-caption font-medium text-text-muted hover:text-text hover:bg-surface-sunken rounded-button border border-border transition-colors cursor-pointer"
                       >
                         <Download className="w-3 h-3" />
                         <span>Export</span>
@@ -111,7 +114,7 @@ export function ReportsTableView({
                       <button
                         type="button"
                         onClick={() => onOpenReport(r)}
-                        className="inline-flex items-center gap-1 px-2.5 py-1 text-caption font-semibold text-primary hover:text-primary-deep transition-colors"
+                        className="inline-flex items-center gap-1 px-2.5 py-1 text-caption font-semibold text-primary hover:text-primary-deep transition-colors cursor-pointer"
                       >
                         <span>View</span>
                         <ArrowRight className="w-3 h-3" />

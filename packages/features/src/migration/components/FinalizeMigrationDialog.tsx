@@ -41,13 +41,13 @@ export function FinalizeMigrationDialog({
           <FormField
             label="Approved Adjustment Justification"
             id="adjustment-reason"
-            helperText="Required when net reconciliation discrepancy is not ৳0.00"
+            helperText="Required when net reconciliation discrepancy is not BDT 0.00"
           >
             <Input
               id="adjustment-reason"
               value={adjustmentReason}
               onChange={(e) => setAdjustmentReason(e.target.value)}
-              placeholder="e.g. Board approved ৳500 rounding discrepancy write-off"
+              placeholder="e.g. Board approved BDT 500 rounding discrepancy write-off"
               required
             />
           </FormField>

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { ArrowLeft } from 'lucide-react';
 import { formatMoney } from '@exzaestate/shared';
-import { Button, DataTable, type ColumnDef } from '@exzaestate/ui';
+import { Button, DataTable, Breadcrumbs, type ColumnDef } from '@exzaestate/ui';
 import { useReportsControllerGetCollectionReport } from '@exzaestate/api-client';
 import { ReportFiltersBar } from '../components/ReportFiltersBar.js';
 import { ExportReportModal } from '../components/ExportReportModal.js';
@@ -68,7 +68,7 @@ export function CollectionReportPage() {
       key: 'paymentMethod',
       header: 'Method',
       render: (r: CollectionRow) => (
-        <span className="px-2 py-0.5 rounded text-caption bg-surface-sunken font-medium uppercase text-text">
+        <span className="px-2 py-0.5 rounded text-caption bg-surface-sunken font-medium uppercase text-text border border-border">
           {r.paymentMethod}
         </span>
       ),
@@ -77,7 +77,9 @@ export function CollectionReportPage() {
       key: 'postedAt',
       header: 'Posted Date',
       render: (r: CollectionRow) => (
-        <span className="text-text-muted">{r.postedAt ? r.postedAt.split('T')[0] : '-'}</span>
+        <span className="text-text-muted font-mono">
+          {r.postedAt ? r.postedAt.split('T')[0] : '-'}
+        </span>
       ),
     },
     {
@@ -100,47 +102,58 @@ export function CollectionReportPage() {
   };
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between border-b border-border pb-4">
-        <div className="flex items-center gap-3">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => navigate('/reports')}
-            leftIcon={<ArrowLeft className="w-4 h-4" />}
-          >
-            Reports
-          </Button>
+    <div className="container-page space-y-6">
+      {/* Tier 1: Breadcrumbs & Header */}
+      <div>
+        <Breadcrumbs
+          items={[
+            { label: 'Overview', href: '/dashboard', onClick: () => navigate('/dashboard') },
+            { label: 'Reports', href: '/reports', onClick: () => navigate('/reports') },
+            { label: 'Collection & Realization' },
+          ]}
+        />
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mt-1.5 border-b border-border pb-4">
           <div>
-            <h1 className="text-heading-2 text-text font-semibold">
-              Collection & Realization Report
-            </h1>
-            <p className="text-caption text-text-muted">
+            <div className="flex items-center gap-3">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => navigate('/reports')}
+                leftIcon={<ArrowLeft className="w-4 h-4" />}
+                className="cursor-pointer"
+              >
+                Back
+              </Button>
+              <h1 className="text-h1 font-bold text-text">Collection & Realization Report</h1>
+              <span className="text-caption font-mono font-semibold px-2.5 py-0.5 rounded-full bg-surface-sunken text-text-2 border border-border">
+                COL-01 · Collections & AR
+              </span>
+            </div>
+            <p className="text-small text-text-muted mt-1">
               Cleared installment collections and customer receipts (AT-15 verified)
             </p>
           </div>
-        </div>
 
-        {report && (
-          <div className="flex items-center gap-3 text-small">
-            <div className="px-3 py-1.5 rounded bg-surface-sunken border border-border">
-              Total Realized:{' '}
-              <strong className="font-mono tabular-nums text-success">
-                {report.summary.totalCollectionFormatted}
-              </strong>
+          {report && (
+            <div className="flex items-center gap-2 text-small">
+              <div className="px-3 py-1 rounded-full bg-surface-sunken border border-border text-caption">
+                Total Realized:{' '}
+                <strong className="font-mono tabular-nums text-success font-bold">
+                  {report.summary.totalCollectionFormatted}
+                </strong>
+              </div>
+              <div className="px-3 py-1 rounded-full bg-surface-sunken border border-border text-caption">
+                Receipts Count:{' '}
+                <strong className="font-mono tabular-nums text-text font-bold">
+                  {report.summary.totalCollectionCount}
+                </strong>
+              </div>
             </div>
-            <div className="px-3 py-1.5 rounded bg-surface-sunken border border-border">
-              Receipts Count:{' '}
-              <strong className="font-mono tabular-nums text-text">
-                {report.summary.totalCollectionCount}
-              </strong>
-            </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
 
-      {/* Filters */}
+      {/* Tier 2: Filter Toolbar */}
       <ReportFiltersBar
         mode="range"
         startDate={startDate}
@@ -153,7 +166,7 @@ export function CollectionReportPage() {
         onOpenExport={() => setIsExportOpen(true)}
       />
 
-      {/* Content */}
+      {/* Tier 3: Content Workspace Card */}
       <ReportStateWrapper
         isLoading={query.isLoading}
         isError={query.isError}
@@ -163,7 +176,7 @@ export function CollectionReportPage() {
         hasData={Boolean(report)}
       >
         {report && (
-          <div className="card-workspace overflow-hidden">
+          <div className="rounded-card border border-border bg-surface shadow-xs overflow-hidden">
             <DataTable data={report.rows} columns={columns} keyExtractor={(r) => r.paymentId} />
           </div>
         )}

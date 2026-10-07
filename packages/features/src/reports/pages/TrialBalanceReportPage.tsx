@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { ArrowLeft, CheckCircle2, AlertTriangle } from 'lucide-react';
 import { formatMoney } from '@exzaestate/shared';
-import { Button } from '@exzaestate/ui';
+import { Button, Breadcrumbs } from '@exzaestate/ui';
 import {
   useReportsControllerGetTrialBalance,
   useReportsControllerExportTrialBalance,
@@ -14,7 +14,7 @@ import { ReportStateWrapper } from '../components/ReportStateWrapper.js';
 function TrialBalanceStatusBadge({ isBalanced }: { isBalanced: boolean }) {
   if (isBalanced) {
     return (
-      <div className="px-3 py-1.5 rounded-full flex items-center gap-2 text-small font-semibold bg-success/12 text-success border border-success/30">
+      <div className="px-3 py-1 rounded-full flex items-center gap-2 text-caption font-semibold bg-success/12 text-success border border-success/30">
         <CheckCircle2 className="w-4 h-4" />
         <span>Ledger in Perfect Balance</span>
       </div>
@@ -22,7 +22,7 @@ function TrialBalanceStatusBadge({ isBalanced }: { isBalanced: boolean }) {
   }
 
   return (
-    <div className="px-3 py-1.5 rounded-full flex items-center gap-2 text-small font-semibold bg-danger/12 text-danger border border-danger/30">
+    <div className="px-3 py-1 rounded-full flex items-center gap-2 text-caption font-semibold bg-danger/12 text-danger border border-danger/30">
       <AlertTriangle className="w-4 h-4" />
       <span>Out of Balance</span>
     </div>
@@ -60,31 +60,44 @@ export function TrialBalanceReportPage() {
   const isBalanced = Boolean(report?.isBalanced);
 
   return (
-    <div className="space-y-6">
-      {/* Top Navigation & Title */}
-      <div className="flex items-center justify-between border-b border-border pb-4">
-        <div className="flex items-center gap-3">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => navigate('/reports')}
-            leftIcon={<ArrowLeft className="w-4 h-4" />}
-          >
-            Reports
-          </Button>
+    <div className="container-page space-y-6">
+      {/* Tier 1: Breadcrumbs & Header */}
+      <div>
+        <Breadcrumbs
+          items={[
+            { label: 'Overview', href: '/dashboard', onClick: () => navigate('/dashboard') },
+            { label: 'Reports', href: '/reports', onClick: () => navigate('/reports') },
+            { label: 'Trial Balance' },
+          ]}
+        />
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mt-1.5 border-b border-border pb-4">
           <div>
-            <h1 className="text-heading-2 text-text font-semibold">Trial Balance</h1>
-            <p className="text-caption text-text-muted">
+            <div className="flex items-center gap-3">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => navigate('/reports')}
+                leftIcon={<ArrowLeft className="w-4 h-4" />}
+                className="cursor-pointer"
+              >
+                Back
+              </Button>
+              <h1 className="text-h1 font-bold text-text">Trial Balance</h1>
+              <span className="text-caption font-mono font-semibold px-2.5 py-0.5 rounded-full bg-surface-sunken text-text-2 border border-border">
+                FIN-01 · Statutory
+              </span>
+            </div>
+            <p className="text-small text-text-muted mt-1">
               Double-entry audit verification: Total Debits equal Total Credits (RULE-DOUBLE-ENTRY)
             </p>
           </div>
-        </div>
 
-        {/* Balance Status Indicator */}
-        {report && <TrialBalanceStatusBadge isBalanced={isBalanced} />}
+          {/* Balance Status Indicator */}
+          {report && <TrialBalanceStatusBadge isBalanced={isBalanced} />}
+        </div>
       </div>
 
-      {/* Filter Bar */}
+      {/* Tier 2: Filter Toolbar */}
       <ReportFiltersBar
         mode="asOf"
         asOfDate={asOfDate}
@@ -95,7 +108,7 @@ export function TrialBalanceReportPage() {
         onOpenExport={() => setIsExportOpen(true)}
       />
 
-      {/* Report Content */}
+      {/* Tier 3: Report Content Workspace Card */}
       <ReportStateWrapper
         isLoading={query.isLoading}
         isError={query.isError}
@@ -105,35 +118,38 @@ export function TrialBalanceReportPage() {
         hasData={Boolean(report)}
       >
         {report && (
-          <div className="card-workspace p-6 space-y-6">
+          <div className="rounded-card border border-border bg-surface shadow-xs p-6 space-y-6">
             {/* Header Strip */}
             <div className="flex items-center justify-between text-caption text-text-muted border-b border-border pb-3">
               <span>
                 Period:{' '}
-                <strong className="text-text">
+                <strong className="text-text font-mono">
                   {report.startDate} to {report.endDate}
                 </strong>
               </span>
               <span>
-                Currency: <strong className="text-text">BDT (৳)</strong>
+                Currency: <strong className="text-text">BDT</strong>
               </span>
             </div>
 
             {/* Table */}
-            <div className="border border-border rounded overflow-hidden">
+            <div className="border border-border rounded-card overflow-hidden">
               <table className="w-full text-left text-small">
-                <thead className="bg-surface-sunken text-text-muted border-b border-border text-caption">
+                <thead className="bg-surface-sunken text-text-muted border-b border-border text-th uppercase tracking-wider">
                   <tr>
-                    <th className="px-4 py-2.5 font-medium">Account Code</th>
-                    <th className="px-4 py-2.5 font-medium">Account Name</th>
-                    <th className="px-4 py-2.5 font-medium">Type</th>
-                    <th className="px-4 py-2.5 text-right font-medium">Debit Balance</th>
-                    <th className="px-4 py-2.5 text-right font-medium">Credit Balance</th>
+                    <th className="px-4 py-3 font-medium">Account Code</th>
+                    <th className="px-4 py-3 font-medium">Account Name</th>
+                    <th className="px-4 py-3 font-medium">Type</th>
+                    <th className="px-4 py-3 text-right font-medium">Debit Balance</th>
+                    <th className="px-4 py-3 text-right font-medium">Credit Balance</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border/60">
                   {report.rows.map((row) => (
-                    <tr key={row.accountId} className="hover:bg-surface-sunken/40">
+                    <tr
+                      key={row.accountId}
+                      className="hover:bg-surface-sunken/40 transition-colors"
+                    >
                       <td className="px-4 py-2.5 font-mono text-caption font-semibold text-text">
                         {row.accountCode}
                       </td>

@@ -127,10 +127,10 @@ export function QuickGenerateModal({ isOpen, onClose, report, onExport }: QuickG
                   key={f}
                   type="button"
                   onClick={() => setFormat(f)}
-                  className={`p-3 rounded-md border flex flex-col items-center justify-center gap-1 transition-colors ${
+                  className={`p-3 rounded-button border flex flex-col items-center justify-center gap-1 transition-all cursor-pointer ${
                     format === f
-                      ? 'border-primary bg-primary/8 text-primary font-semibold shadow-xs'
-                      : 'border-border bg-surface text-text-muted hover:border-border-strong hover:text-text'
+                      ? 'border-primary bg-primary/10 text-primary font-semibold shadow-xs ring-1 ring-primary/30'
+                      : 'border-border bg-surface text-text-muted hover:border-primary/40 hover:text-text'
                   }`}
                 >
                   <span className="font-mono text-body font-bold">{f}</span>

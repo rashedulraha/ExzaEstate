@@ -1,11 +1,21 @@
+import { useState, useMemo } from 'react';
+import { useNavigate } from 'react-router';
 import { formatMoney } from '@exzaestate/shared';
-import { DataTable, type ColumnDef, Input } from '@exzaestate/ui';
-import { ShieldCheck, AlertCircle, Calendar } from 'lucide-react';
+import {
+  DataTable,
+  type ColumnDef,
+  Input,
+  Breadcrumbs,
+  EmptyState,
+  StickyToolbar,
+} from '@exzaestate/ui';
+import { Search, Users } from 'lucide-react';
 import { useAgingDashboard } from '../hooks/useAgingDashboard.js';
 import { AgingStrip } from '../components/aging/AgingStrip.js';
 import type { CustomerAgingRow } from '../schemas/collection.schema.js';
 
 export function AgingDashboardPage() {
+  const navigate = useNavigate();
   const {
     asOfDate,
     setAsOfDate,
@@ -17,6 +27,17 @@ export function AgingDashboardPage() {
     isLoading,
   } = useAgingDashboard();
 
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const filteredCustomerRows = useMemo(() => {
+    if (!searchQuery.trim()) return customerRows;
+    const query = searchQuery.toLowerCase().trim();
+    return customerRows.filter(
+      (r) =>
+        r.customerName.toLowerCase().includes(query) || r.customerId.toLowerCase().includes(query),
+    );
+  }, [customerRows, searchQuery]);
+
   const columns: ColumnDef<CustomerAgingRow>[] = [
     {
       key: 'customerName',
@@ -24,7 +45,7 @@ export function AgingDashboardPage() {
       render: (row) => (
         <div className="flex flex-col">
           <span className="font-semibold text-text">{row.customerName}</span>
-          <span className="text-caption text-text-muted">{row.customerId}</span>
+          <span className="text-caption text-text-muted font-mono">{row.customerId}</span>
         </div>
       ),
     },
@@ -79,7 +100,7 @@ export function AgingDashboardPage() {
       align: 'right',
       isMoney: true,
       render: (row) => (
-        <span className="text-danger font-semibold tabular-nums">
+        <span className="text-danger font-bold tabular-nums">
           {formatMoney(row.days90PlusPaisa || '0')}
         </span>
       ),
@@ -98,55 +119,63 @@ export function AgingDashboardPage() {
   ];
 
   return (
-    <div className="space-y-6" data-testid="aging-dashboard-page">
-      {/* Header */}
-      <div className="flex items-center justify-between">
+    <div className="container-page space-y-6" data-testid="aging-dashboard-page">
+      {/* Tier 1: Page Shell & Clean Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-h1 font-bold text-text">Receivables Aging Dashboard</h1>
+          <Breadcrumbs
+            items={[
+              { label: 'Overview', href: '/dashboard', onClick: () => navigate('/dashboard') },
+              { label: 'Finance & Accounts' },
+              { label: 'AR Aging Analysis' },
+            ]}
+          />
+          <div className="flex items-center gap-3 mt-1.5">
+            <h1 className="text-h1 font-bold text-text">AR Aging Analysis</h1>
+            {isReconciled ? (
+              <span className="px-2.5 py-0.5 rounded-full text-caption font-semibold text-success bg-success/12 border border-success/20">
+                AR Reconciled
+              </span>
+            ) : (
+              <span className="px-2.5 py-0.5 rounded-full text-caption font-semibold text-warning bg-warning/12 border border-warning/20">
+                AR Sync Pending
+              </span>
+            )}
+          </div>
           <p className="text-small text-text-muted mt-1">
-            Aging analysis across 1–7, 8–30, 31–60, 61–90, and 90+ day buckets per design.md §7.2.
+            Delinquency aging distribution across 1–7, 8–30, 31–60, 61–90, and 90+ day buckets per
+            double-entry schedule.
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 p-1.5 rounded-card border border-border bg-surface text-small">
-            <Calendar className="w-4 h-4 text-text-muted ml-1" />
-            <span className="text-text-muted">As Of:</span>
-            <Input
-              id="asOfDateInput"
-              type="date"
-              value={asOfDate}
-              onChange={(e) => setAsOfDate(e.target.value)}
-              className="py-1 px-2 text-small border-0 bg-transparent"
-            />
-          </div>
-
-          {isReconciled ? (
-            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-caption font-medium text-success bg-success/12 border border-success/20">
-              <ShieldCheck className="w-4 h-4" />
-              <span>AR Reconciled</span>
-            </div>
-          ) : (
-            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-caption font-medium text-warning bg-warning/12 border border-warning/20">
-              <AlertCircle className="w-4 h-4" />
-              <span>AR Sync Pending</span>
-            </div>
-          )}
+        {/* Date Filter Control */}
+        <div className="flex items-center gap-2 px-3 py-1.5 rounded-button border border-border bg-surface shadow-xs">
+          <span className="text-caption font-semibold uppercase tracking-wider text-text-muted">
+            As Of Date:
+          </span>
+          <Input
+            id="asOfDateInput"
+            type="date"
+            value={asOfDate}
+            onChange={(e) => setAsOfDate(e.target.value)}
+            className="py-1 px-2 text-small border border-border rounded-button bg-surface-sunken"
+          />
         </div>
       </div>
 
-      {/* Signature Aging Strip with 5 Tints and KPI Breakdown */}
-      <div className="p-6 rounded-card border border-border bg-surface space-y-4">
-        <div className="flex items-center justify-between">
-          <div className="space-y-0.5">
-            <h3 className="text-h3 font-bold text-text">Aging Distribution Strip</h3>
-            <p className="text-caption text-text-muted">
-              5 sequential primary tints direct-labelled with overdue amounts and installment
-              counts.
+      {/* Tier 2: Aging Distribution Strip Card */}
+      <div className="p-5 rounded-card border border-border bg-surface shadow-xs space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div>
+            <h2 className="text-h2 font-bold text-text">Aging Distribution Overview</h2>
+            <p className="text-caption text-text-muted mt-0.5">
+              5 sequential delinquency buckets with installment count and share distribution.
             </p>
           </div>
-          <div className="text-right">
-            <span className="text-caption text-text-muted block">Total Outstanding AR</span>
+          <div className="sm:text-right">
+            <span className="text-caption font-semibold uppercase tracking-wider text-text-muted block">
+              Total Outstanding AR
+            </span>
             <span className="text-h2 font-extrabold text-text tabular-nums">
               {totalReceivableFormatted || formatMoney(totalReceivablePaisa)}
             </span>
@@ -156,26 +185,58 @@ export function AgingDashboardPage() {
         <AgingStrip buckets={buckets} totalReceivablePaisa={totalReceivablePaisa} />
       </div>
 
-      {/* Customer Breakdown Table */}
-      <div className="space-y-3">
-        <h3 className="text-h3 font-bold text-text">Customer Receivables Aging Ledger</h3>
+      {/* Tier 3: Sticky Customer Receivables Ledger Toolbar */}
+      <StickyToolbar>
+        <div className="p-4 rounded-card border border-border bg-surface shadow-xs flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <h3 className="text-h3 font-bold text-text">Customer Receivables Ledger</h3>
+            <span className="text-caption font-semibold px-2 py-0.5 rounded-full bg-surface-sunken text-text-2 border border-border">
+              {filteredCustomerRows.length}{' '}
+              {filteredCustomerRows.length === 1 ? 'Customer' : 'Customers'}
+            </span>
+          </div>
+
+          <div className="relative w-full md:w-72">
+            <Search className="w-4 h-4 text-text-muted absolute left-3 top-1/2 -translate-y-1/2" />
+            <Input
+              id="customerSearch"
+              placeholder="Search by customer name or ID..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-9"
+            />
+          </div>
+        </div>
+      </StickyToolbar>
+
+      {/* Tier 4: Data Table Card */}
+      <div className="rounded-card border border-border bg-surface shadow-xs">
+        {/* Data Table */}
         <DataTable
           columns={columns}
-          data={customerRows}
+          data={filteredCustomerRows}
           keyExtractor={(row) => row.customerId}
           isLoading={isLoading}
+          className="border-none shadow-none"
           totalsRow={
-            <div className="flex items-center justify-between px-4 py-3 font-bold text-text border-t-2 border-b border-border bg-surface-sunken/40">
+            <div className="flex items-center justify-between px-4 py-3 font-bold text-text border-t-2 border-b border-border bg-surface-sunken">
               <span>Total Across All Buckets:</span>
-              <span className="text-h4 tabular-nums">
+              <span className="text-h3 tabular-nums font-extrabold">
                 {totalReceivableFormatted || formatMoney(totalReceivablePaisa)}
               </span>
             </div>
           }
           emptyState={
-            <div className="py-12 text-center text-text-muted">
-              No outstanding receivables recorded as of this date.
-            </div>
+            <EmptyState
+              icon={<Users className="w-6 h-6" />}
+              title="No Receivables Recorded"
+              description={
+                searchQuery
+                  ? 'No customers match your search criteria.'
+                  : 'No outstanding client receivables recorded as of this date.'
+              }
+              dashedBorder
+            />
           }
         />
       </div>

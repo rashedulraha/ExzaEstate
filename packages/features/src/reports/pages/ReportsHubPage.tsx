@@ -1,5 +1,6 @@
 import { useState, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router';
+import { Breadcrumbs } from '@exzaestate/ui';
 import { REPORTS_CATALOG } from '../reports.catalog.js';
 import type {
   ReportCategory,
@@ -154,34 +155,53 @@ export function ReportsHubPage() {
   };
 
   return (
-    <div className="space-y-7 pb-10" data-testid="reports-hub-page">
-      {/* Page Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border pb-4">
-        <div>
-          <h1 className="text-heading-2 text-text font-semibold">Reports & Statutory Statements</h1>
-          <p className="text-caption text-text-muted mt-0.5">
-            Backend-generated audit-ready financial statements, sales registries, and operational
-            reports
-          </p>
-        </div>
-        <div className="flex items-center gap-2">
-          <span className="text-caption font-mono px-2.5 py-1 rounded bg-surface border border-border text-text font-medium shadow-xs">
-            NBR Statutory Mode · FY 2026–27
-          </span>
+    <div className="container-page space-y-6 pb-10" data-testid="reports-hub-page">
+      {/* Tier 1: Breadcrumbs & Executive Header */}
+      <div>
+        <Breadcrumbs
+          items={[
+            { label: 'Overview', href: '/dashboard', onClick: () => navigate('/dashboard') },
+            { label: 'Reports', href: '/reports', onClick: () => navigate('/reports') },
+            { label: 'Reports Hub' },
+          ]}
+        />
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mt-1.5 border-b border-border pb-4">
+          <div>
+            <div className="flex items-center gap-3">
+              <h1 className="text-h1 font-bold text-text">Reports & Statutory Statements</h1>
+              <span className="text-caption font-mono font-semibold px-2.5 py-0.5 rounded-full bg-surface-sunken text-text-2 border border-border">
+                NBR Statutory Mode · FY 2026–27
+              </span>
+              <span className="text-caption font-mono font-semibold px-2.5 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20">
+                {filteredReports.length} Reports
+              </span>
+            </div>
+            <p className="text-small text-text-muted mt-1">
+              Backend-generated audit-ready financial statements, sales registries, and operational
+              reports
+            </p>
+          </div>
         </div>
       </div>
 
-      {/* 1. Executive Metrics Bar */}
+      {/* Tier 2: Executive Metrics Bar */}
       <ReportsMetricsBar />
 
-      {/* 2. Pinned Favorites Ribbon */}
+      {/* Pinned Favorites Ribbon */}
       {selectedCategory === 'ALL' && searchQuery === '' && pinnedReports.length > 0 && (
-        <div className="space-y-3">
+        <div className="rounded-card border border-border bg-surface p-5 shadow-xs space-y-3.5">
           <div className="flex items-center justify-between">
-            <h2 className="text-body font-semibold text-text">Pinned Priority Reports</h2>
-            <span className="text-caption text-text-muted">Quick access to daily workflows</span>
+            <div>
+              <h2 className="text-body font-semibold text-text">Pinned Priority Reports</h2>
+              <p className="text-caption text-text-muted">
+                Quick access to daily financial & operational workflows
+              </p>
+            </div>
+            <span className="text-caption font-mono text-text-muted px-2.5 py-0.5 rounded-full bg-surface-sunken border border-border">
+              {pinnedReports.length} Pinned
+            </span>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
             {pinnedReports.map((report) => (
               <ReportCard
                 key={`pinned-${report.id}`}
@@ -196,7 +216,7 @@ export function ReportsHubPage() {
         </div>
       )}
 
-      {/* 3. Filter and Search Controls */}
+      {/* Tier 3: Sticky Catalog Filters */}
       <ReportsFilterBar
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
@@ -211,29 +231,19 @@ export function ReportsHubPage() {
         onOpenRecentExports={() => setIsRecentExportsOpen(true)}
       />
 
-      {/* 4. Reports Directory View (Grid vs Table) */}
-      <ReportsDirectoryView
-        viewMode={viewMode}
-        reports={filteredReports}
-        pinnedIds={pinnedIds}
-        onTogglePin={togglePin}
-        onOpenReport={handleOpenReport}
-        onQuickExport={(r) => setActiveModalReport(r)}
-      />
-
-      {/* 5. Automated Closing Schedule Banner */}
-      <div className="bg-surface border border-border rounded-lg p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-caption text-text-muted">
-        <div>
-          <span className="font-semibold text-text">Automated Reporting Engine: </span>
-          <span>
-            Monthly financial statements (Trial Balance, P&L, AR Aging) are automatically generated
-            on the 1st of every calendar month at 00:00 UTC.
-          </span>
-        </div>
-        <span className="font-mono text-text font-medium shrink-0">BullMQ Active</span>
+      {/* Tier 4: Reports Directory View Card */}
+      <div className="rounded-card border border-border bg-surface shadow-xs">
+        <ReportsDirectoryView
+          viewMode={viewMode}
+          reports={filteredReports}
+          pinnedIds={pinnedIds}
+          onTogglePin={togglePin}
+          onOpenReport={handleOpenReport}
+          onQuickExport={(r) => setActiveModalReport(r)}
+        />
       </div>
 
-      {/* 6. Quick Export Modal */}
+      {/* Quick Export Modal */}
       <QuickGenerateModal
         isOpen={Boolean(activeModalReport)}
         onClose={() => setActiveModalReport(null)}
@@ -241,7 +251,7 @@ export function ReportsHubPage() {
         onExport={handleExportSubmit}
       />
 
-      {/* 7. Recent Exports Slide-Over Drawer */}
+      {/* Recent Exports Slide-Over Drawer */}
       <RecentExportsDrawer
         isOpen={isRecentExportsOpen}
         onClose={() => setIsRecentExportsOpen(false)}

@@ -211,7 +211,7 @@ export function PaymentEntryModal({
     >
       <div className="space-y-4">
         <div className="grid grid-cols-2 gap-4">
-          <FormField id="amountTaka" label="Amount (BDT ৳)" required error={errors.amount}>
+          <FormField id="amountTaka" label="Amount (BDT)" required error={errors.amount}>
             <Input
               id="amountTaka"
               placeholder="e.g. 5,00,000"

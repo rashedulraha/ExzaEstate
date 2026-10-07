@@ -23,7 +23,7 @@ export function MigrationBatchHeader({
 
   if (!batch) {
     return (
-      <div className="rounded-card border border-border bg-surface-elevated p-6 space-y-4">
+      <div className="rounded-card border border-border bg-surface p-6 space-y-4">
         <div>
           <h3 className="text-h3 font-semibold text-text">Initialize Go-Live Migration Batch</h3>
           <p className="text-body-sm text-text-muted mt-0.5">
@@ -69,7 +69,7 @@ export function MigrationBatchHeader({
   const isFinalized = Boolean(batch.finalizedAt);
 
   return (
-    <div className="rounded-card border border-border bg-surface-elevated p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div className="rounded-card border border-border bg-surface p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
       <div>
         <div className="flex items-center space-x-3">
           <h3 className="text-h3 font-bold text-text">{batch.batchNumber}</h3>

@@ -17,12 +17,12 @@ export function ReportCard({
   onQuickExport,
 }: ReportCardProps) {
   return (
-    <div className="bg-surface border border-border rounded-lg p-5 shadow-xs hover:border-border-strong transition-all flex flex-col justify-between group">
+    <div className="bg-surface border border-border rounded-card p-5 shadow-xs hover:border-primary/40 transition-all flex flex-col justify-between group">
       <div>
         {/* Top Meta Bar */}
         <div className="flex items-center justify-between gap-2 mb-3">
           <div className="flex items-center gap-2">
-            <span className="font-mono text-caption font-semibold px-2 py-0.5 rounded bg-surface-sunken text-text border border-border">
+            <span className="font-mono text-caption font-bold px-2 py-0.5 rounded-full bg-surface-sunken text-text border border-border">
               {report.code}
             </span>
             <span className="text-caption font-medium text-text-muted">
@@ -38,7 +38,7 @@ export function ReportCard({
               onTogglePin(report.id);
             }}
             aria-label={isPinned ? 'Unpin report' : 'Pin report to top'}
-            className={`p-1.5 rounded transition-colors ${
+            className={`p-1.5 rounded-button transition-colors ${
               isPinned
                 ? 'text-primary hover:text-primary-deep'
                 : 'text-text-muted/40 hover:text-text-muted'
@@ -70,7 +70,7 @@ export function ReportCard({
         {/* Tags & Formats */}
         <div className="mt-4 flex flex-wrap items-center gap-1.5">
           <span
-            className={`text-caption px-2 py-0.5 rounded font-medium ${
+            className={`text-caption px-2.5 py-0.5 rounded-full font-medium ${
               report.statutoryLevel === 'P0'
                 ? 'bg-primary/10 text-primary border border-primary/20'
                 : 'bg-surface-sunken text-text-muted border border-border'
@@ -78,7 +78,7 @@ export function ReportCard({
           >
             {report.tag}
           </span>
-          <span className="text-caption px-2 py-0.5 rounded bg-surface-sunken text-text-muted border border-border font-mono">
+          <span className="text-caption px-2 py-0.5 rounded-full bg-surface-sunken text-text-muted border border-border font-mono">
             {report.formats.join(' · ')}
           </span>
         </div>
@@ -89,7 +89,7 @@ export function ReportCard({
         <button
           type="button"
           onClick={() => onQuickExport(report)}
-          className="inline-flex items-center gap-1.5 px-2.5 py-1.5 text-caption font-medium text-text-muted hover:text-text hover:bg-surface-sunken rounded border border-border transition-colors"
+          className="inline-flex items-center gap-1.5 px-2.5 py-1.5 text-caption font-medium text-text-muted hover:text-text hover:bg-surface-sunken rounded-button border border-border transition-colors cursor-pointer"
         >
           <Download className="w-3.5 h-3.5" />
           <span>Export</span>
@@ -98,7 +98,7 @@ export function ReportCard({
         <button
           type="button"
           onClick={() => onOpenReport(report)}
-          className="inline-flex items-center gap-1 text-caption font-semibold text-primary hover:text-primary-deep transition-colors"
+          className="inline-flex items-center gap-1 text-caption font-semibold text-primary hover:text-primary-deep transition-colors cursor-pointer"
         >
           <span>View Report</span>
           <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />

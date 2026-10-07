@@ -112,7 +112,7 @@ export function ReconciliationGateCard({
 }: ReconciliationGateCardProps) {
   if (!reconciliation) {
     return (
-      <div className="rounded-card border border-border bg-surface-elevated p-6 text-center text-text-muted">
+      <div className="rounded-card border border-border bg-surface p-6 text-center text-text-muted">
         Reconciliation data not available yet. Post opening balance and record bookings first.
       </div>
     );
@@ -130,7 +130,7 @@ export function ReconciliationGateCard({
     formatMoney(BigInt(reconciliation.differencePaisa || '0'));
 
   return (
-    <div className="rounded-card border border-border bg-surface-elevated p-6 space-y-6">
+    <div className="rounded-card border border-border bg-surface p-6 space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center space-x-3">
@@ -139,7 +139,7 @@ export function ReconciliationGateCard({
           </div>
           <p className="text-body-sm text-text-muted mt-0.5">
             Total legacy booking receivables must match the opening Accounts Receivable (1200)
-            balance with zero difference (৳0.00).
+            balance with zero difference (BDT 0.00).
           </p>
         </div>
 

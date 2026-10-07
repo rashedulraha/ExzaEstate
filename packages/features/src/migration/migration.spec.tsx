@@ -8,11 +8,11 @@ const mockReconciliationSuccess: ReconciliationGateResult = {
   batchId: 'batch-001',
   canFinalize: true,
   totalOpeningArPaisa: '500000000',
-  totalOpeningArFormatted: '৳50,00,000.00',
+  totalOpeningArFormatted: 'BDT 50,00,000.00',
   totalLegacyOutstandingPaisa: '500000000',
-  totalLegacyOutstandingFormatted: '৳50,00,000.00',
+  totalLegacyOutstandingFormatted: 'BDT 50,00,000.00',
   differencePaisa: '0',
-  differenceFormatted: '৳0.00',
+  differenceFormatted: 'BDT 0.00',
   customerDifferences: [
     {
       customerId: 'cust-1',
@@ -29,11 +29,11 @@ const mockReconciliationFailure: ReconciliationGateResult = {
   batchId: 'batch-002',
   canFinalize: false,
   totalOpeningArPaisa: '500000000',
-  totalOpeningArFormatted: '৳50,00,000.00',
+  totalOpeningArFormatted: 'BDT 50,00,000.00',
   totalLegacyOutstandingPaisa: '480000000',
-  totalLegacyOutstandingFormatted: '৳48,00,000.00',
+  totalLegacyOutstandingFormatted: 'BDT 48,00,000.00',
   differencePaisa: '20000000',
-  differenceFormatted: '৳2,00,000.00',
+  differenceFormatted: 'BDT 2,00,000.00',
   customerDifferences: [
     {
       customerId: 'cust-2',
@@ -83,6 +83,7 @@ vi.mock('@exzaestate/api-client', () => ({
 }));
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { MemoryRouter } from 'react-router';
 
 function renderWithClient(ui: React.ReactElement) {
   const queryClient = new QueryClient({
@@ -91,7 +92,11 @@ function renderWithClient(ui: React.ReactElement) {
       mutations: { retry: false },
     },
   });
-  return render(<QueryClientProvider client={queryClient}>{ui}</QueryClientProvider>);
+  return render(
+    <QueryClientProvider client={queryClient}>
+      <MemoryRouter>{ui}</MemoryRouter>
+    </QueryClientProvider>,
+  );
 }
 
 describe('Go-Live Migration Wizard (FLOW-03 & AT-29)', () => {
@@ -123,7 +128,7 @@ describe('Go-Live Migration Wizard (FLOW-03 & AT-29)', () => {
   });
 
   describe('ReconciliationGateCard (AT-29)', () => {
-    it('renders confirmed status and allows finalization when perfectly reconciled (৳0.00 difference)', () => {
+    it('renders confirmed status and allows finalization when perfectly reconciled (BDT 0.00 difference)', () => {
       const onFinalize = vi.fn();
       render(
         <ReconciliationGateCard
@@ -136,8 +141,8 @@ describe('Go-Live Migration Wizard (FLOW-03 & AT-29)', () => {
 
       expect(screen.getByText('Step 4: Reconciliation Gate (AT-29)')).toBeDefined();
       expect(screen.getByText('CONFIRMED')).toBeDefined();
-      expect(screen.getAllByText('৳50,00,000.00')[0]).toBeDefined();
-      expect(screen.getAllByText('৳0.00')[0]).toBeDefined();
+      expect(screen.getAllByText('BDT 50,00,000.00')[0]).toBeDefined();
+      expect(screen.getAllByText('BDT 0.00')[0]).toBeDefined();
       expect(screen.getByText('Tanvir Hossain')).toBeDefined();
 
       const finalizeBtn = screen.getByRole('button', { name: /Finalize Migration/i });
@@ -158,7 +163,7 @@ describe('Go-Live Migration Wizard (FLOW-03 & AT-29)', () => {
       );
 
       expect(screen.getByText('REJECTED')).toBeDefined();
-      expect(screen.getAllByText('৳2,00,000.00')[0]).toBeDefined();
+      expect(screen.getAllByText('BDT 2,00,000.00')[0]).toBeDefined();
       expect(screen.getByText('Anisul Huq')).toBeDefined();
 
       const finalizeBtn = screen.getByRole('button', { name: /Finalize Migration/i });
