@@ -1,3 +1,4 @@
+import { Receipt, CreditCard, Clock, Landmark } from 'lucide-react';
 import { formatMoney } from '@exzaestate/shared';
 import { KpiSparklineCard } from '@exzaestate/ui';
 
@@ -31,7 +32,7 @@ type DashboardSummaryData = NonNullable<ExecutiveKpiStripProps['summary']>;
 
 function KpiSkeleton() {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-5">
       {[1, 2, 3, 4].map((i) => (
         <div key={i} className="card-workspace h-28 animate-skeleton-breathe bg-surface-sunken">
           <div className="flex h-full flex-col justify-center gap-2.5 px-4">
@@ -73,6 +74,11 @@ function SalesCard({ summary }: { summary: DashboardSummaryData }) {
       sparklineData={sparkline}
       indicatorColor="primary"
       showTableToggle={false}
+      icon={
+        <div className="w-5 h-5 rounded flex items-center justify-center bg-primary/10 text-primary border border-primary/20 shrink-0">
+          <Receipt className="w-3 h-3" />
+        </div>
+      }
       trend={{
         percentage: leadRate,
         direction: leadRate > 0 ? 'up' : 'neutral',
@@ -109,6 +115,11 @@ function CollectionCard({ summary }: { summary: DashboardSummaryData }) {
       sparklineData={sparkline}
       indicatorColor="success"
       showTableToggle={false}
+      icon={
+        <div className="w-5 h-5 rounded flex items-center justify-center bg-success/10 text-success border border-success/20 shrink-0">
+          <CreditCard className="w-3 h-3" />
+        </div>
+      }
       trend={{
         percentage: effRate,
         direction: effRate > 0 ? 'up' : 'neutral',
@@ -149,6 +160,11 @@ function ReceivablesCard({ summary }: { summary: DashboardSummaryData }) {
       sparklineData={sparkline}
       indicatorColor="warning"
       showTableToggle={false}
+      icon={
+        <div className="w-5 h-5 rounded flex items-center justify-center bg-warning/10 text-warning border border-warning/20 shrink-0">
+          <Clock className="w-3 h-3" />
+        </div>
+      }
       trend={{
         percentage: overdueCount,
         direction: overdueCount > 0 ? 'down' : 'neutral',
@@ -175,6 +191,11 @@ function LiquidityCard({ summary }: { summary: DashboardSummaryData }) {
       sparklineData={sparkline}
       indicatorColor="info"
       showTableToggle={false}
+      icon={
+        <div className="w-5 h-5 rounded flex items-center justify-center bg-info/10 text-info border border-info/20 shrink-0">
+          <Landmark className="w-3 h-3" />
+        </div>
+      }
       trend={{
         percentage: 0,
         direction: 'neutral',
@@ -193,7 +214,7 @@ export function ExecutiveKpiStrip({ summary, isLoading }: ExecutiveKpiStripProps
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-5">
       <SalesCard summary={summary} />
       <CollectionCard summary={summary} />
       <ReceivablesCard summary={summary} />

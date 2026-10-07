@@ -51,9 +51,18 @@ export interface SalespersonPerformanceDto {
 }
 
 export function useDashboard(params?: DashboardControllerGetSummaryParams) {
-  const summaryQuery = useDashboardControllerGetSummary(params);
+  const summaryQuery = useDashboardControllerGetSummary(params, {
+    query: {
+      placeholderData: (prev) => prev,
+    },
+  });
   const salesPerformanceQuery = useDashboardControllerGetSalesPerformance(
     params as DashboardControllerGetSalesPerformanceParams,
+    {
+      query: {
+        placeholderData: (prev) => prev,
+      },
+    },
   );
 
   return {

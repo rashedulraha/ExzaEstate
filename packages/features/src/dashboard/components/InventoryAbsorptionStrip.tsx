@@ -101,51 +101,51 @@ function calculateInventoryStats(
 
 function ValuationMetricsGrid({ stats }: { stats: ComputedInventoryStats }) {
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-3 p-3.5 rounded-button bg-surface-sunken/60 border border-border/80">
-      <div>
-        <span className="text-caption font-medium uppercase tracking-wider text-text-muted">
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-3.5">
+      <div className="p-3.5 rounded-button bg-surface-sunken/50 border border-border/70 hover:border-border transition-colors">
+        <span className="text-caption font-semibold uppercase tracking-wider text-text-muted block">
           Total Asset Valuation
         </span>
-        <div className="text-h2 font-semibold tabular-nums text-text mt-0.5">
+        <div className="text-h2 font-bold tabular-nums text-text mt-1">
           {formatMoney(stats.totalValuePaisa)}
         </div>
-        <span className="text-caption text-text-muted tabular-nums">
+        <span className="text-[12px] text-text-muted tabular-nums block mt-0.5">
           {stats.totalUnits} units in master plan
         </span>
       </div>
 
-      <div>
-        <span className="text-caption font-medium uppercase tracking-wider text-text-muted">
+      <div className="p-3.5 rounded-button bg-surface-sunken/50 border border-border/70 hover:border-border transition-colors">
+        <span className="text-caption font-semibold uppercase tracking-wider text-text-muted block">
           Available Stock Value
         </span>
-        <div className="text-h2 font-semibold tabular-nums text-text mt-0.5">
+        <div className="text-h2 font-bold tabular-nums text-success mt-1">
           {formatMoney(stats.availableValuePaisa)}
         </div>
-        <span className="text-caption text-text-muted tabular-nums">
+        <span className="text-[12px] text-text-muted tabular-nums block mt-0.5">
           {stats.availableUnits} units ready for sale
         </span>
       </div>
 
-      <div>
-        <span className="text-caption font-medium uppercase tracking-wider text-text-muted">
+      <div className="p-3.5 rounded-button bg-surface-sunken/50 border border-border/70 hover:border-border transition-colors">
+        <span className="text-caption font-semibold uppercase tracking-wider text-text-muted block">
           Locked Revenue
         </span>
-        <div className="text-h2 font-semibold tabular-nums text-text mt-0.5">
+        <div className="text-h2 font-bold tabular-nums text-text mt-1">
           {formatMoney(stats.lockedRevenuePaisa)}
         </div>
-        <span className="text-caption text-text-muted tabular-nums">
+        <span className="text-[12px] text-text-muted tabular-nums block mt-0.5">
           {stats.soldUnits + stats.bookedUnits} sold or booked
         </span>
       </div>
 
-      <div>
-        <span className="text-caption font-medium uppercase tracking-wider text-text-muted">
+      <div className="p-3.5 rounded-button bg-surface-sunken/50 border border-border/70 hover:border-border transition-colors">
+        <span className="text-caption font-semibold uppercase tracking-wider text-text-muted block">
           Pipeline In-Discussion
         </span>
-        <div className="text-h2 font-semibold tabular-nums text-text mt-0.5">
+        <div className="text-h2 font-bold tabular-nums text-warning mt-1">
           {formatMoney(stats.pipelineRevenuePaisa)}
         </div>
-        <span className="text-caption text-text-muted tabular-nums">
+        <span className="text-[12px] text-text-muted tabular-nums block mt-0.5">
           {stats.reservedUnits} reserved plots
         </span>
       </div>
@@ -172,12 +172,15 @@ function AbsorptionLegend({ stats }: { stats: ComputedInventoryStats }) {
       {legendItems.map((item) => (
         <div
           key={item.label}
-          className="flex items-center gap-2 px-2.5 py-1.5 rounded-button bg-surface border border-border/60"
+          className="flex items-center gap-2.5 px-3 py-2 rounded-button bg-surface/90 border border-border/70 hover:border-border shadow-2xs transition-all"
         >
-          <span className={`w-2 h-2 rounded-full ${item.color} shrink-0`} aria-hidden="true" />
+          <span
+            className={`w-2.5 h-2.5 rounded-full ${item.color} shrink-0 ring-2 ring-surface`}
+            aria-hidden="true"
+          />
           <div className="flex flex-col min-w-0">
             <span className="text-caption text-text-muted font-medium">{item.label}</span>
-            <span className="text-small font-semibold tabular-nums text-text">
+            <span className="text-small font-bold tabular-nums text-text">
               {item.count}{' '}
               <span className="text-caption font-normal text-text-muted">({item.pct}%)</span>
             </span>
@@ -212,7 +215,7 @@ function InventoryStripView({ inventory, onNavigate }: InventoryStripViewProps) 
         <button
           type="button"
           onClick={() => onNavigate('/properties')}
-          className="inline-flex items-center px-3 py-1.5 rounded-button text-small font-medium text-text bg-surface hover:bg-surface-sunken border border-border transition-colors cursor-pointer active:scale-[0.98] self-start sm:self-auto shrink-0 shadow-xs"
+          className="inline-flex items-center px-3 py-1.5 rounded-button text-small font-medium text-text bg-surface hover:bg-surface-sunken border border-border transition-colors cursor-pointer active:scale-[0.98] self-start sm:self-auto shrink-0"
         >
           Plot Plan View
         </button>

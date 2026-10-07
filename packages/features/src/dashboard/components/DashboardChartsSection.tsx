@@ -148,7 +148,7 @@ function SalesLeaderboardTable({
         </span>
       </div>
 
-      <div className="border border-border rounded-button overflow-hidden shadow-xs">
+      <div className="border border-border rounded-button overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-small">
             <thead className="bg-surface-sunken text-text-muted border-b border-border text-caption">

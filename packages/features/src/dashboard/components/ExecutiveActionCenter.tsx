@@ -1,4 +1,5 @@
 import { useNavigate, useInRouterContext } from 'react-router';
+import { CheckCircle2, ArrowRight } from 'lucide-react';
 import { formatMoney } from '@exzaestate/shared';
 
 export interface ExecutiveActionCenterProps {
@@ -32,7 +33,7 @@ function buildActionItems(props: ActionCenterViewProps): ActionItem[] {
     items.push({
       id: 'overdue-recovery',
       tag: 'Critical Recovery',
-      tagColor: 'bg-danger/12 text-danger border-danger/20',
+      tagColor: 'bg-danger/10 text-danger border-danger/25',
       title: `${overdueCount} Overdue Installments (${formatMoney(overduePaisa)})`,
       description: 'Accounts exceeding scheduled due date; requires recovery officer follow-up.',
       actionLabel: 'Open Collections',
@@ -44,7 +45,7 @@ function buildActionItems(props: ActionCenterViewProps): ActionItem[] {
     items.push({
       id: 'ap-maturity',
       tag: 'Payables Due',
-      tagColor: 'bg-warning/12 text-warning border-warning/20',
+      tagColor: 'bg-warning/10 text-warning border-warning/25',
       title: `Outstanding Payables (${formatMoney(apPaisa)})`,
       description: 'Vendor bills and contractor claims verified; awaiting authorization.',
       actionLabel: 'Operations AP',
@@ -64,16 +65,16 @@ function ActionCenterView(props: ActionCenterViewProps) {
       {/* Header */}
       <div className="flex items-center justify-between gap-3 pb-1 border-b border-border/80">
         <div>
-          <h3 className="text-body font-semibold text-text">Executive Action Center</h3>
+          <h3 className="text-body font-bold text-text">Executive Action Center</h3>
           <p className="text-caption text-text-muted">
             High-priority operations requiring management intervention
           </p>
         </div>
         <span
-          className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-caption font-medium tabular-nums border ${
+          className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-caption font-semibold tabular-nums border ${
             hasItems
-              ? 'bg-danger/12 text-danger border-danger/20 font-semibold'
-              : 'bg-surface-sunken text-text-muted border-border'
+              ? 'bg-danger/10 text-danger border-danger/25'
+              : 'bg-success/10 text-success border-success/25'
           }`}
         >
           {hasItems ? `${actionItems.length} Pending` : 'All Clear'}
@@ -86,13 +87,13 @@ function ActionCenterView(props: ActionCenterViewProps) {
           {actionItems.map((item) => (
             <div
               key={item.id}
-              className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 rounded-button bg-surface-sunken/40 hover:bg-surface-sunken transition-colors border border-border/60"
+              className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 rounded-button bg-surface-sunken/40 hover:bg-surface-sunken/70 transition-all border border-border/70 hover:border-border"
             >
               <div className="space-y-1 min-w-0">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <span className="text-small font-semibold text-text">{item.title}</span>
+                  <span className="text-small font-bold text-text">{item.title}</span>
                   <span
-                    className={`inline-flex px-1.5 py-0.2 rounded-full text-caption font-medium border ${item.tagColor}`}
+                    className={`inline-flex px-2 py-0.5 rounded-full text-caption font-medium border ${item.tagColor}`}
                   >
                     {item.tag}
                   </span>
@@ -103,18 +104,20 @@ function ActionCenterView(props: ActionCenterViewProps) {
               <button
                 type="button"
                 onClick={item.onAction}
-                className="inline-flex items-center gap-1.5 text-small font-medium text-text hover:text-primary transition-colors self-end sm:self-center shrink-0 cursor-pointer active:scale-[0.96] px-3 py-1.5 rounded-button bg-surface border border-border hover:border-primary/40 shadow-xs"
+                className="inline-flex items-center gap-1.5 text-small font-semibold text-text hover:text-primary transition-all self-end sm:self-center shrink-0 cursor-pointer active:scale-[0.96] px-3 py-1.5 rounded-button bg-surface border border-border hover:border-primary/40"
               >
                 <span>{item.actionLabel}</span>
+                <ArrowRight className="w-3.5 h-3.5" />
               </button>
             </div>
           ))}
         </div>
       ) : (
-        <div className="flex flex-col items-center justify-center p-8 text-center space-y-1.5 rounded-button bg-surface-sunken/30 border border-border/60 my-auto">
-          <h4 className="text-body font-semibold text-text">
-            All Operational Workflows Up To Date
-          </h4>
+        <div className="flex flex-col items-center justify-center p-8 text-center space-y-2 rounded-card bg-surface-sunken/30 border border-border/60 my-auto">
+          <div className="w-10 h-10 rounded-full bg-success/10 border border-success/25 flex items-center justify-center text-success mb-1">
+            <CheckCircle2 className="w-5 h-5" />
+          </div>
+          <h4 className="text-body font-bold text-text">All Operational Workflows Up To Date</h4>
           <p className="text-caption text-text-muted max-w-sm">
             No overdue installments or past-due vendor payables requiring urgent executive action.
           </p>
