@@ -35,7 +35,7 @@ function BreadcrumbItemContent({
     );
   }
 
-  if (item.onClick || item.href) {
+  if (item.onClick) {
     return (
       <button
         type="button"
@@ -46,6 +46,19 @@ function BreadcrumbItemContent({
       >
         {item.label}
       </button>
+    );
+  }
+
+  if (item.href) {
+    return (
+      <a
+        href={item.href}
+        className={`cursor-pointer transition-colors truncate focus:outline-none ${
+          isDark ? 'text-white/60 hover:text-white' : 'text-text-muted hover:text-text'
+        }`}
+      >
+        {item.label}
+      </a>
     );
   }
 

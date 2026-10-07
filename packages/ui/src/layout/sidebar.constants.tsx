@@ -27,24 +27,42 @@ export interface SidebarNavItem {
 export interface SidebarNavGroup {
   id: string;
   title: string;
+  step?: string;
+  badge?: string | number;
   items: SidebarNavItem[];
 }
 
 export const defaultSidebarGroups: SidebarNavGroup[] = [
   {
     id: 'overview',
-    title: 'Overview',
+    title: 'Executive Cockpit',
     items: [
       {
         id: 'dashboard',
         label: 'Dashboard',
         icon: <LayoutDashboard className="w-4 h-4 shrink-0" aria-hidden="true" />,
       },
+      {
+        id: 'reports',
+        label: 'Reports Hub',
+        icon: <BarChart3 className="w-4 h-4 shrink-0" aria-hidden="true" />,
+      },
+    ],
+  },
+  {
+    id: 'property',
+    title: 'Property Assets',
+    items: [
+      {
+        id: 'properties',
+        label: 'Inventory & Plots',
+        icon: <Building2 className="w-4 h-4 shrink-0" aria-hidden="true" />,
+      },
     ],
   },
   {
     id: 'crm',
-    title: 'CRM & Sales',
+    title: 'Sales Pipeline',
     items: [
       {
         id: 'leads',
@@ -57,30 +75,19 @@ export const defaultSidebarGroups: SidebarNavGroup[] = [
         icon: <UserCheck className="w-4 h-4 shrink-0" aria-hidden="true" />,
       },
       {
-        id: 'bookings',
-        label: 'Bookings & Sales',
-        icon: <Receipt className="w-4 h-4 shrink-0" aria-hidden="true" />,
-      },
-      {
         id: 'quotations',
         label: 'Quotations & Pricing',
         icon: <FileText className="w-4 h-4 shrink-0" aria-hidden="true" />,
       },
       {
+        id: 'bookings',
+        label: 'Bookings & Sales',
+        icon: <Receipt className="w-4 h-4 shrink-0" aria-hidden="true" />,
+      },
+      {
         id: 'approvals',
         label: 'Approvals Matrix',
         icon: <ShieldCheck className="w-4 h-4 shrink-0" aria-hidden="true" />,
-      },
-    ],
-  },
-  {
-    id: 'property',
-    title: 'Property',
-    items: [
-      {
-        id: 'properties',
-        label: 'Inventory & Plots',
-        icon: <Building2 className="w-4 h-4 shrink-0" aria-hidden="true" />,
       },
     ],
   },
@@ -103,32 +110,10 @@ export const defaultSidebarGroups: SidebarNavGroup[] = [
         label: 'Chart of Accounts',
         icon: <FileSpreadsheet className="w-4 h-4 shrink-0" aria-hidden="true" />,
       },
-    ],
-  },
-  {
-    id: 'operations',
-    title: 'Operations & AP',
-    items: [
       {
         id: 'operations',
         label: 'Expenses & Bills',
         icon: <Briefcase className="w-4 h-4 shrink-0" aria-hidden="true" />,
-      },
-    ],
-  },
-  {
-    id: 'reports',
-    title: 'Reports & Audit',
-    items: [
-      {
-        id: 'reports',
-        label: 'Reports Hub',
-        icon: <BarChart3 className="w-4 h-4 shrink-0" aria-hidden="true" />,
-      },
-      {
-        id: 'audit',
-        label: 'Security & Audit Logs',
-        icon: <ShieldCheck className="w-4 h-4 shrink-0" aria-hidden="true" />,
       },
     ],
   },
@@ -150,6 +135,11 @@ export const defaultSidebarGroups: SidebarNavGroup[] = [
         id: 'license',
         label: 'Licensing & Activation',
         icon: <KeyRound className="w-4 h-4 shrink-0" aria-hidden="true" />,
+      },
+      {
+        id: 'audit',
+        label: 'Security & Audit Logs',
+        icon: <ShieldCheck className="w-4 h-4 shrink-0" aria-hidden="true" />,
       },
     ],
   },

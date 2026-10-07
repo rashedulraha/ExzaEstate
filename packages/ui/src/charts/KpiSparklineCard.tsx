@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import { scaleLinear } from 'd3-scale';
 import { line, curveLinear } from 'd3-shape';
 import { Table, Eye } from 'lucide-react';
@@ -15,6 +15,7 @@ export interface KpiSparklineCardProps extends ChartBaseProps {
     label?: string;
   };
   indicatorColor?: 'primary' | 'success' | 'warning' | 'danger' | 'info';
+  icon?: ReactNode;
 }
 
 function getTrendColor(direction: string): string {
@@ -90,12 +91,14 @@ function SparklineTableView({ sparklineData }: { sparklineData: SparklinePoint[]
 
 function KpiCardHeader({
   label,
+  icon,
   showTableToggle,
   hasSparkline,
   isTableView,
   onToggleTableView,
 }: {
   label: string;
+  icon?: ReactNode;
   showTableToggle: boolean;
   hasSparkline: boolean;
   isTableView: boolean;
@@ -103,9 +106,12 @@ function KpiCardHeader({
 }) {
   return (
     <div className="flex items-center justify-between gap-2 mb-2">
-      <span className="text-caption font-semibold tracking-wide uppercase text-text-muted">
-        {label}
-      </span>
+      <div className="flex items-center gap-2 min-w-0">
+        {icon && <span className="shrink-0">{icon}</span>}
+        <span className="text-caption font-semibold tracking-wide uppercase text-text-muted truncate">
+          {label}
+        </span>
+      </div>
       {showTableToggle && hasSparkline && (
         <button
           type="button"
@@ -189,6 +195,7 @@ export function KpiSparklineCard({
   className = '',
   ariaLabel,
   showTableToggle = true,
+  icon,
 }: KpiSparklineCardProps) {
   const [isTableView, setIsTableView] = useState(false);
 
@@ -216,6 +223,7 @@ export function KpiSparklineCard({
     >
       <KpiCardHeader
         label={label}
+        icon={icon}
         showTableToggle={showTableToggle}
         hasSparkline={sparklineData.length > 0}
         isTableView={isTableView}

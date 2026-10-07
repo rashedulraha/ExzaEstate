@@ -83,7 +83,7 @@ function AppShellEdgeSensor({
     <div
       role="region"
       aria-label="Sidebar peek edge sensor"
-      className="fixed left-0 top-0 w-3.5 h-full z-40 cursor-e-resize bg-transparent hover:bg-white/5 transition-colors"
+      className="fixed left-0 top-0 w-3.5 h-full z-40 cursor-e-resize bg-transparent hover:bg-sidebar-hover transition-colors"
       onMouseEnter={onMouseEnter}
       title="Hover to peek sidebar"
     />
@@ -160,11 +160,9 @@ export function AppShell(props: AppShellProps) {
           {...props.headerProps}
         />
 
-        {/* Curved Workspace Canvas: Stationary & Fixed on Scroll */}
-        <div className="flex-1 min-h-0 bg-bg rounded-tl-2xl sm:rounded-tl-[24px] border-t border-l border-white/10 sm:border-sidebar-border shadow-xs overflow-hidden flex flex-col">
-          <main className="flex-1 min-h-0 overflow-y-auto container-page p-4 sm:p-6 lg:p-8 space-y-6">
-            {props.children}
-          </main>
+        {/* Curved Workspace Canvas: Restored Signature Rounded Corner with Clean Single Border */}
+        <div className="flex-1 min-h-0 bg-bg rounded-tl-2xl sm:rounded-tl-[24px] border-t border-l border-sidebar-border overflow-hidden flex flex-col">
+          <main className="flex-1 min-h-0 overflow-y-auto">{props.children}</main>
         </div>
       </div>
 

@@ -53,7 +53,7 @@ export function Dialog({
   return (
     <div
       role="presentation"
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/45"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-xs transition-opacity"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
@@ -64,10 +64,10 @@ export function Dialog({
         aria-modal="true"
         aria-labelledby="dialog-title"
         aria-describedby={description ? 'dialog-description' : undefined}
-        className={`w-full bg-surface-elevated border border-border rounded-modal shadow-lg overflow-hidden flex flex-col max-h-[90vh] ${sizeClasses[size]}`}
+        className={`w-full bg-surface border border-border rounded-modal shadow-2xl overflow-hidden flex flex-col max-h-[90vh] ${sizeClasses[size]}`}
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-border">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-border bg-surface">
           <div>
             <h2 id="dialog-title" className="text-h2 text-text font-semibold">
               {title}
@@ -87,11 +87,11 @@ export function Dialog({
         </div>
 
         {/* Content Body */}
-        <div className="p-6 overflow-y-auto space-y-4">{children}</div>
+        <div className="p-6 overflow-y-auto space-y-4 flex-1">{children}</div>
 
         {/* Footer Actions */}
         {footer && (
-          <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-border bg-surface-sunken/30">
+          <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-border bg-surface">
             {footer}
           </div>
         )}

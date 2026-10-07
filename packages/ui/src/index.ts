@@ -39,6 +39,7 @@ export * from './layout/useSidebarResize.js';
 export * from './layout/Header.js';
 export * from './layout/CommandPalette.js';
 export * from './layout/AppShell.js';
+export * from './layout/StickyToolbar.js';
 
 // State Primitives (The Six Required States)
 export * from './states/LoadingState.js';

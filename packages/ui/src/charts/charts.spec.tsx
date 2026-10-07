@@ -20,7 +20,7 @@ describe('Custom SVG Charts (design.md §7.2)', () => {
     render(
       <KpiSparklineCard
         label="Total Sales"
-        value="৳50,00,000"
+        value="BDT 50,00,000"
         subvalue="12 bookings"
         sparklineData={sparkData}
         trend={{ percentage: 12.5, direction: 'up', label: 'vs last month' }}
@@ -28,7 +28,7 @@ describe('Custom SVG Charts (design.md §7.2)', () => {
     );
 
     expect(screen.getByText('Total Sales')).toBeDefined();
-    expect(screen.getByText('৳50,00,000')).toBeDefined();
+    expect(screen.getByText('BDT 50,00,000')).toBeDefined();
     expect(screen.getByText('+12.5%')).toBeDefined();
 
     // Toggle table view

@@ -17,13 +17,14 @@ function resolveInputClasses(
   customClass: string,
 ): string {
   const heightClass = inputSize === 'lg' ? 'h-10' : 'h-9';
+  const textClass = inputSize === 'lg' ? 'text-body' : 'text-small';
   const borderClass = isError
-    ? 'border-danger focus-visible:ring-danger'
-    : 'border-border-input focus-visible:ring-focus';
+    ? 'border-danger focus-visible:border-danger focus-visible:ring-1 focus-visible:ring-danger/25'
+    : 'border-border-input hover:border-border-strong focus-visible:border-primary focus-visible:ring-1 focus-visible:ring-primary/25';
   const padLeft = hasPrefix ? 'pl-9' : 'pl-3';
   const padRight = hasSuffix ? 'pr-9' : 'pr-3';
 
-  return `w-full bg-surface text-text rounded-button border text-body transition-colors outline-none focus-visible:ring-2 focus-visible:ring-offset-0 disabled:bg-surface-sunken disabled:cursor-not-allowed ${heightClass} ${borderClass} ${padLeft} ${padRight} ${customClass}`.trim();
+  return `w-full bg-surface text-text rounded-button border ${textClass} transition-all duration-150 outline-none disabled:bg-surface-sunken disabled:cursor-not-allowed ${heightClass} ${borderClass} ${padLeft} ${padRight} ${customClass}`.trim();
 }
 
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(

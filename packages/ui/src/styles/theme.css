@@ -27,6 +27,12 @@
   --font-sans: 'Inter', 'Noto Sans Bengali', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-mono: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
 
+  /* ── Weight Normalization (Eliminate heavy bold; sleek editorial normal & medium) ── */
+  --font-weight-bold: 500;
+  --font-weight-extrabold: 500;
+  --font-weight-black: 500;
+  --font-weight-semibold: 500;
+
   /* ── Meridian Unified Type Scale Tokens ──────────────────────────────────── */
   --font-size-hero-num: 32px;
   --font-size-display: 28px;
@@ -95,28 +101,28 @@
   --color-accent-hover: #e04d0b;
 
   /* ── Surfaces (soft cool neutrals, light default) ───────────────────────── */
-  --color-bg: #f5f5f7;
+  --color-bg: #f8fafc;
   --color-surface: #ffffff;
   --color-surface-elevated: #ffffff;
-  --color-surface-sunken: #ebebf0;
-  --color-surface-muted: #ebebf0;
+  --color-surface-sunken: #f1f5f9;
+  --color-surface-muted: #f1f5f9;
   --color-surface-dark: #17160f;
 
   /* ── Text ───────────────────────────────────────────────────────────────── */
-  --color-text: #1d1d1f;
-  --color-text-2: #424245;
-  --color-text-muted: #68686d;
-  --color-text-disabled: #aeaeb2;
-  --color-text-primary: #1d1d1f;
-  --color-text-secondary: #424245;
+  --color-text: #0f172a;
+  --color-text-2: #334155;
+  --color-text-muted: #64748b;
+  --color-text-disabled: #94a3b8;
+  --color-text-primary: #0f172a;
+  --color-text-secondary: #334155;
   --color-text-inverse: #ffffff;
   --color-text-inverse-muted: rgba(255, 255, 255, 0.7);
 
   /* ── Borders (fine, hairline, crisp) ────────────────────────────────────── */
-  --color-border: #e5e5ea;
-  --color-border-subtle: rgba(0, 0, 0, 0.035);
-  --color-border-strong: rgba(0, 0, 0, 0.08);
-  --color-border-input: #86868b;
+  --color-border: #e2e8f0;
+  --color-border-subtle: #f1f5f9;
+  --color-border-strong: #cbd5e1;
+  --color-border-input: #cbd5e1;
 
   /* ── Semantic status ────────────────────────────────────────────────────── */
   --color-success: #197444;
@@ -126,13 +132,13 @@
   --color-special: #7a39e8;
   --color-void: #5f6572;
 
-  /* ── Sidebar / app shell (Obsidian #17160F + Saffron #F26522 Highlights) ── */
-  --color-sidebar: #17160f;
-  --color-sidebar-fg: #ffffff;
-  --color-sidebar-muted: rgba(255, 255, 255, 0.65);
-  --color-sidebar-hover: rgba(255, 255, 255, 0.05);
-  --color-sidebar-active: rgba(242, 101, 34, 0.18);
-  --color-sidebar-border: rgba(255, 255, 255, 0.08);
+  /* ── Sidebar / app shell (Light: Clean Luminous Slate, Dark: Obsidian Charcoal) ── */
+  --color-sidebar: #ffffff;
+  --color-sidebar-fg: #0f172a;
+  --color-sidebar-muted: #64748b;
+  --color-sidebar-hover: #f1f5f9;
+  --color-sidebar-active: rgba(242, 101, 34, 0.1);
+  --color-sidebar-border: #e2e8f0;
 
   /* ── Chart palette (dashboards) ─────────────────────────────────────────── */
   --color-chart-1: #f26522;
@@ -165,12 +171,12 @@
   --height-control-md: 36px;
   --height-control-lg: 40px;
 
-  /* ── Elevation ──────────────────────────────────────────────────────────── */
-  --shadow-xs: 0 1px 1px rgba(0, 0, 0, 0.03);
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04), 0 1px 1px rgba(0, 0, 0, 0.02);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.03);
-  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.09), 0 2px 6px rgba(0, 0, 0, 0.04);
-  --shadow-brand: 0 4px 14px rgba(26, 26, 46, 0.15);
+  /* ── Elevation (Flat Architectural Precision - Shadows Disabled per user direction) ── */
+  --shadow-xs: none;
+  --shadow-sm: none;
+  --shadow-md: none;
+  --shadow-lg: none;
+  --shadow-brand: none;
 
   /* ── Motion ─────────────────────────────────────────────────────────────── */
   --ease-smooth: cubic-bezier(0.2, 0, 0, 1);
@@ -205,10 +211,10 @@
   --color-text-secondary: #b8b8bd;
 
   /* Thinner, finer hairline borders */
-  --color-border: rgba(255, 255, 255, 0.065);
-  --color-border-subtle: rgba(255, 255, 255, 0.03);
-  --color-border-strong: rgba(255, 255, 255, 0.1);
-  --color-border-input: #7c7c80;
+  --color-border: rgba(255, 255, 255, 0.08);
+  --color-border-subtle: rgba(255, 255, 255, 0.04);
+  --color-border-strong: rgba(255, 255, 255, 0.14);
+  --color-border-input: rgba(255, 255, 255, 0.12);
 
   --color-primary: #f26522;
   --color-primary-light: #f5834b;
@@ -249,11 +255,11 @@
   --color-chart-5: #ae94fa;
   --color-chart-6: #fbbf24;
 
-  --shadow-xs: 0 1px 1px rgba(0, 0, 0, 0.35);
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.45);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5);
-  --shadow-lg: 0 12px 28px rgba(0, 0, 0, 0.6);
-  --shadow-brand: 0 4px 16px rgba(242, 101, 34, 0.25);
+  --shadow-xs: none;
+  --shadow-sm: none;
+  --shadow-md: none;
+  --shadow-lg: none;
+  --shadow-brand: none;
 }
 
 /* ── Dark mode: follow the OS unless the user forced light ────────────────── */
@@ -277,10 +283,10 @@
     --color-text-secondary: #b8b8bd;
 
     /* Thinner, finer hairline borders */
-    --color-border: rgba(255, 255, 255, 0.065);
-    --color-border-subtle: rgba(255, 255, 255, 0.03);
-    --color-border-strong: rgba(255, 255, 255, 0.1);
-    --color-border-input: #7c7c80;
+    --color-border: rgba(255, 255, 255, 0.08);
+    --color-border-subtle: rgba(255, 255, 255, 0.04);
+    --color-border-strong: rgba(255, 255, 255, 0.14);
+    --color-border-input: rgba(255, 255, 255, 0.12);
 
     --color-primary: #f26522;
     --color-primary-light: #f5834b;
@@ -321,12 +327,167 @@
     --color-chart-5: #ae94fa;
     --color-chart-6: #fbbf24;
 
-    --shadow-xs: 0 1px 1px rgba(0, 0, 0, 0.35);
-    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.45);
-    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5);
-    --shadow-lg: 0 12px 28px rgba(0, 0, 0, 0.6);
-    --shadow-brand: 0 4px 16px rgba(242, 101, 34, 0.25);
+    --shadow-xs: none;
+    --shadow-sm: none;
+    --shadow-md: none;
+    --shadow-lg: none;
+    --shadow-brand: none;
   }
+}
+
+/* =============================================================================
+   Enterprise Color Palettes (Single Source of Truth)
+   5 Industry-Standard Curated Color Schemes:
+   1. meridian (Default) - Saffron Orange & Obsidian Charcoal
+   2. emerald - Nordic Property & Forest Green
+   3. sapphire - Institutional Finance & Royal Blue
+   4. amethyst - Ultra-Luxury Real Estate & Royal Violet
+   5. terracotta - Architectural Masonry, Sandstone & Warm Bronze
+   ============================================================================= */
+
+/* ── Emerald Estate (Nordic Eco-Property) ─────────────────────────────────── */
+:root[data-palette='emerald'] {
+  --color-primary: #059669;
+  --color-primary-light: #10b981;
+  --color-primary-deep: #047857;
+  --color-primary-fg: #059669;
+  --color-action: #059669;
+  --color-action-hover: #047857;
+  --color-action-active: #065f46;
+  --color-accent: #059669;
+  --color-accent-text: #047857;
+  --color-accent-subtle: #d1fae5;
+  --color-focus: #059669;
+  --color-sidebar-active: rgba(16, 185, 129, 0.16);
+  --gradient-brand: linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%);
+  --shadow-brand: none;
+}
+:root[data-palette='emerald'].dark,
+:root[data-palette='emerald'][data-theme='dark'],
+[data-theme='dark'][data-palette='emerald'] {
+  --color-primary: #10b981;
+  --color-primary-light: #34d399;
+  --color-primary-deep: #059669;
+  --color-primary-fg: #10b981;
+  --color-action: #10b981;
+  --color-action-hover: #34d399;
+  --color-action-active: #059669;
+  --color-accent: #10b981;
+  --color-accent-text: #34d399;
+  --color-accent-subtle: rgba(16, 185, 129, 0.18);
+  --color-focus: #10b981;
+  --color-sidebar-active: rgba(16, 185, 129, 0.2);
+  --gradient-brand: linear-gradient(135deg, #34d399 0%, #10b981 50%, #059669 100%);
+  --shadow-brand: none;
+}
+
+/* ── Sapphire Horizon (Institutional Finance & Global ERP) ────────────────── */
+:root[data-palette='sapphire'] {
+  --color-primary: #2563eb;
+  --color-primary-light: #3b82f6;
+  --color-primary-deep: #1d4ed8;
+  --color-primary-fg: #2563eb;
+  --color-action: #2563eb;
+  --color-action-hover: #1d4ed8;
+  --color-action-active: #1e40af;
+  --color-accent: #2563eb;
+  --color-accent-text: #1d4ed8;
+  --color-accent-subtle: #dbeafe;
+  --color-focus: #2563eb;
+  --color-sidebar-active: rgba(37, 99, 235, 0.16);
+  --gradient-brand: linear-gradient(135deg, #3b82f6 0%, #2563eb 50%, #1d4ed8 100%);
+  --shadow-brand: none;
+}
+:root[data-palette='sapphire'].dark,
+:root[data-palette='sapphire'][data-theme='dark'],
+[data-theme='dark'][data-palette='sapphire'] {
+  --color-primary: #3b82f6;
+  --color-primary-light: #60a5fa;
+  --color-primary-deep: #2563eb;
+  --color-primary-fg: #3b82f6;
+  --color-action: #3b82f6;
+  --color-action-hover: #60a5fa;
+  --color-action-active: #2563eb;
+  --color-accent: #3b82f6;
+  --color-accent-text: #60a5fa;
+  --color-accent-subtle: rgba(59, 130, 246, 0.18);
+  --color-focus: #3b82f6;
+  --color-sidebar-active: rgba(59, 130, 246, 0.2);
+  --gradient-brand: linear-gradient(135deg, #60a5fa 0%, #3b82f6 50%, #1d4ed8 100%);
+  --shadow-brand: none;
+}
+
+/* ── Royal Amethyst (Luxury Real Estate & High-Net-Worth) ─────────────────── */
+:root[data-palette='amethyst'] {
+  --color-primary: #7c3aed;
+  --color-primary-light: #8b5cf6;
+  --color-primary-deep: #6d28d9;
+  --color-primary-fg: #7c3aed;
+  --color-action: #7c3aed;
+  --color-action-hover: #6d28d9;
+  --color-action-active: #5b21b6;
+  --color-accent: #7c3aed;
+  --color-accent-text: #6d28d9;
+  --color-accent-subtle: #ede9fe;
+  --color-focus: #7c3aed;
+  --color-sidebar-active: rgba(124, 58, 237, 0.16);
+  --gradient-brand: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 50%, #6d28d9 100%);
+  --shadow-brand: none;
+}
+:root[data-palette='amethyst'].dark,
+:root[data-palette='amethyst'][data-theme='dark'],
+[data-theme='dark'][data-palette='amethyst'] {
+  --color-primary: #8b5cf6;
+  --color-primary-light: #a78bfa;
+  --color-primary-deep: #7c3aed;
+  --color-primary-fg: #8b5cf6;
+  --color-action: #8b5cf6;
+  --color-action-hover: #a78bfa;
+  --color-action-active: #7c3aed;
+  --color-accent: #8b5cf6;
+  --color-accent-text: #a78bfa;
+  --color-accent-subtle: rgba(139, 92, 246, 0.18);
+  --color-focus: #8b5cf6;
+  --color-sidebar-active: rgba(139, 92, 246, 0.2);
+  --gradient-brand: linear-gradient(135deg, #a78bfa 0%, #8b5cf6 50%, #6d28d9 100%);
+  --shadow-brand: none;
+}
+
+/* ── Warm Terracotta (Architectural Sandstone & Masonry) ──────────────────── */
+:root[data-palette='terracotta'] {
+  --color-primary: #d97706;
+  --color-primary-light: #f59e0b;
+  --color-primary-deep: #b45309;
+  --color-primary-fg: #d97706;
+  --color-action: #d97706;
+  --color-action-hover: #b45309;
+  --color-action-active: #92400e;
+  --color-accent: #d97706;
+  --color-accent-text: #b45309;
+  --color-accent-subtle: #fef3c7;
+  --color-focus: #d97706;
+  --color-sidebar-active: rgba(217, 119, 6, 0.16);
+  --gradient-brand: linear-gradient(135deg, #f59e0b 0%, #d97706 50%, #b45309 100%);
+  --shadow-brand: none;
+}
+:root[data-palette='terracotta'].dark,
+:root[data-palette='terracotta'][data-theme='dark'],
+[data-theme='dark'][data-palette='terracotta'] {
+  --color-primary: #f59e0b;
+  --color-primary-light: #fbbf24;
+  --color-primary-deep: #d97706;
+  --color-primary-fg: #f59e0b;
+  --color-action: #f59e0b;
+  --color-action-hover: #fbbf24;
+  --color-action-active: #d97706;
+  --color-accent: #f59e0b;
+  --color-accent-text: #fbbf24;
+  --color-accent-subtle: rgba(245, 158, 11, 0.18);
+  --color-focus: #f59e0b;
+  --color-sidebar-active: rgba(245, 158, 11, 0.2);
+  --gradient-brand: linear-gradient(135deg, #fbbf24 0%, #f59e0b 50%, #b45309 100%);
+  --shadow-brand: none;
+}
 }
 
 /* ── Base ─────────────────────────────────────────────────────────────────── */
@@ -355,10 +516,16 @@
     font-feature-settings: 'cv11' 1, 'ss01' 1;
   }
 
+  *,
+  ::before,
+  ::after {
+    border-color: var(--color-border);
+  }
+
   /* Semantic Heading Scale (Descending & Balanced, better-typography) */
   h1 {
     font-size: 22px;
-    font-weight: 600;
+    font-weight: 500;
     line-height: 1.2;
     letter-spacing: -0.015em;
     text-wrap: balance;
@@ -367,7 +534,7 @@
 
   h2 {
     font-size: 17px;
-    font-weight: 600;
+    font-weight: 500;
     line-height: 1.3;
     letter-spacing: -0.01em;
     text-wrap: balance;
@@ -376,7 +543,7 @@
 
   h3 {
     font-size: 14px;
-    font-weight: 600;
+    font-weight: 500;
     line-height: 1.4;
     letter-spacing: 0;
     text-wrap: balance;
@@ -385,7 +552,7 @@
 
   h4 {
     font-size: 12px;
-    font-weight: 600;
+    font-weight: 500;
     line-height: 1.4;
     letter-spacing: 0.01em;
     text-wrap: balance;
@@ -394,7 +561,7 @@
 
   h5 {
     font-size: 11px;
-    font-weight: 600;
+    font-weight: 500;
     line-height: 1.3;
     letter-spacing: 0.01em;
     text-wrap: balance;
@@ -403,7 +570,7 @@
 
   h6 {
     font-size: 11px;
-    font-weight: 600;
+    font-weight: 500;
     line-height: 1.3;
     letter-spacing: 0.05em;
     text-transform: uppercase;
@@ -464,14 +631,14 @@
   /* Hero numbers and display */
   .text-hero-num {
     font-size: 32px;
-    font-weight: 600;
+    font-weight: 500;
     line-height: 1;
     letter-spacing: -0.02em;
     font-variant-numeric: tabular-nums slashed-zero;
   }
   .text-display {
     font-size: 28px;
-    font-weight: 600;
+    font-weight: 500;
     line-height: 1.15;
     letter-spacing: -0.02em;
     text-wrap: balance;
@@ -480,41 +647,41 @@
   /* Headings */
   .text-h1 {
     font-size: 22px;
-    font-weight: 600;
+    font-weight: 500;
     line-height: 1.2;
     letter-spacing: -0.015em;
     text-wrap: balance;
   }
   .text-h2 {
     font-size: 17px;
-    font-weight: 600;
+    font-weight: 500;
     line-height: 1.3;
     letter-spacing: -0.01em;
     text-wrap: balance;
   }
   .text-h3 {
     font-size: 14px;
-    font-weight: 600;
+    font-weight: 500;
     line-height: 1.4;
     letter-spacing: 0;
     text-wrap: balance;
   }
   .text-h4 {
     font-size: 12px;
-    font-weight: 600;
+    font-weight: 500;
     line-height: 1.4;
     letter-spacing: 0.01em;
     text-wrap: balance;
   }
   .text-h5 {
     font-size: 11px;
-    font-weight: 600;
+    font-weight: 500;
     line-height: 1.3;
     letter-spacing: 0.01em;
   }
   .text-h6 {
     font-size: 11px;
-    font-weight: 600;
+    font-weight: 500;
     line-height: 1.3;
     letter-spacing: 0.05em;
     text-transform: uppercase;
@@ -577,7 +744,7 @@
   }
   .text-th {
     font-size: 12px;
-    font-weight: 600;
+    font-weight: 500;
     line-height: 1.3;
     letter-spacing: 0.04em;
     text-transform: uppercase;
@@ -620,27 +787,50 @@
     }
   }
 
-  /* Cards */
+  /* Cards (Flat Architectural Border Aesthetic - Shadows Disabled per user direction) */
   .card-surface {
     background-color: var(--color-surface);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-card);
     padding: 1.25rem;
-    box-shadow: var(--shadow-sm);
+    box-shadow: none;
+    transition: border-color 0.15s ease;
+  }
+  .card-surface:hover {
+    border-color: var(--color-border-strong);
   }
   .card-workspace {
     background-color: var(--color-surface);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-card);
     overflow: hidden;
-    box-shadow: var(--shadow-sm);
+    box-shadow: none;
+    transition: border-color 0.15s ease;
+  }
+  .card-workspace:hover {
+    border-color: var(--color-border-strong);
   }
   .card-stat {
     background-color: var(--color-surface);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-card);
     padding: 1rem;
-    box-shadow: var(--shadow-sm);
+    box-shadow: none;
+    transition: border-color 0.15s ease;
+  }
+  .card-stat:hover {
+    border-color: var(--color-border-strong);
+  }
+
+  /* Strict Zero Shadow Enforcement */
+  .shadow-xs,
+  .shadow-sm,
+  .shadow-md,
+  .shadow-lg,
+  .shadow-xl,
+  .shadow-2xl,
+  .shadow-brand {
+    box-shadow: none !important;
   }
 
   /* Badges: tint is derived from the text colour, so light and dark mode both work */
@@ -746,4 +936,34 @@
 .sidebar-scroll::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.3);
 }
+
+/* ── Universal Sleek Board & Horizontal Scrollbar ─────────────────────────── */
+.board-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border-strong) var(--color-surface-sunken);
+}
+.board-scroll::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.board-scroll::-webkit-scrollbar-track {
+  background: var(--color-surface-sunken);
+  border-radius: 9999px;
+}
+.board-scroll::-webkit-scrollbar-thumb {
+  background: var(--color-border-strong);
+  border-radius: 9999px;
+}
+.board-scroll::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-muted);
+}
+
+/* ── Global Typography Elegance: Eliminate harsh bold weights ─────────────── */
+b,
+strong,
+.font-bold,
+.font-semibold {
+  font-weight: 500;
+}
+
 

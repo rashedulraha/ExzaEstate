@@ -50,10 +50,10 @@ function SelectOptionsList<T extends string>({
   return (
     <div
       role="listbox"
-      className="absolute z-50 mt-1 w-full bg-surface-elevated border border-border-strong rounded-button shadow-md py-1 max-h-60 overflow-auto focus:outline-none"
+      className="absolute z-50 mt-1 w-full bg-surface border border-border rounded-button shadow-lg py-1 max-h-60 overflow-auto focus:outline-none"
     >
       {showSearch && (
-        <div className="p-2 border-b border-border sticky top-0 bg-surface-elevated">
+        <div className="p-2 border-b border-border sticky top-0 bg-surface">
           <div className="relative flex items-center">
             <Search className="absolute left-2.5 w-3.5 h-3.5 text-text-muted" aria-hidden="true" />
             <input
@@ -83,7 +83,7 @@ function SelectOptionsList<T extends string>({
                 if (opt.disabled) return;
                 onSelect(opt.value);
               }}
-              className={`flex items-center justify-between px-3 py-2 text-body cursor-pointer transition-colors ${itemClass}`}
+              className={`flex items-center justify-between px-3 py-2 text-small cursor-pointer transition-colors ${itemClass}`}
             >
               <span className="truncate">{opt.label}</span>
               {isSelected && <Check className="w-4 h-4 text-primary shrink-0" aria-hidden="true" />}
@@ -119,6 +119,7 @@ function SelectTrigger({
   isError,
 }: SelectTriggerProps) {
   const heightClass = inputSize === 'lg' ? 'h-10' : 'h-9';
+  const textClass = inputSize === 'lg' ? 'text-body' : 'text-small';
   const borderClass = isError
     ? 'border-danger focus-visible:ring-danger'
     : 'border-border-input focus-visible:ring-focus';
@@ -132,7 +133,7 @@ function SelectTrigger({
       aria-expanded={isOpen}
       aria-describedby={describedBy}
       onClick={onClick}
-      className={`w-full flex items-center justify-between px-3 bg-surface text-text rounded-button border text-body text-left outline-none transition-colors focus-visible:ring-2 focus-visible:ring-offset-0 disabled:bg-surface-sunken disabled:cursor-not-allowed ${heightClass} ${borderClass}`}
+      className={`w-full flex items-center justify-between px-3 bg-surface text-text rounded-button border ${textClass} text-left outline-none transition-colors focus-visible:ring-2 focus-visible:ring-offset-0 disabled:bg-surface-sunken disabled:cursor-not-allowed ${heightClass} ${borderClass}`}
     >
       <span className={selectedLabel ? 'text-text' : 'text-text-muted truncate'}>
         {selectedLabel ?? placeholder}

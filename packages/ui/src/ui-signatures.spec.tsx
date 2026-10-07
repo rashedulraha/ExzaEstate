@@ -18,21 +18,21 @@ describe('Signature Component: PlanView', () => {
         code: 'P01',
         status: 'AVAILABLE' as const,
         sizeSqFt: 1440,
-        priceFormatted: '৳50,00,000',
+        priceFormatted: 'BDT 50,00,000',
       },
       {
         id: '2',
         code: 'P02',
         status: 'BOOKED' as const,
         sizeSqFt: 2160,
-        priceFormatted: '৳75,00,000',
+        priceFormatted: 'BDT 75,00,000',
       },
       {
         id: '3',
         code: 'P03',
         status: 'SOLD' as const,
         sizeSqFt: 2880,
-        priceFormatted: '৳1,00,00,000',
+        priceFormatted: 'BDT 1,00,00,000',
       },
     ];
 
@@ -104,8 +104,8 @@ describe('Signature Component: PaymentTerrace', () => {
     expect(screen.getByText('Today')).toBeDefined();
 
     expect(screen.getByText('Collection Ledger Summary')).toBeDefined();
-    expect(screen.getByText('৳25,00,000.00')).toBeDefined();
-    expect(screen.getAllByText('৳12,50,000.00').length).toBe(2);
+    expect(screen.getByText('BDT 25,00,000.00')).toBeDefined();
+    expect(screen.getAllByText('BDT 12,50,000.00').length).toBe(2);
 
     fireEvent.click(screen.getByText('Down Payment'));
     expect(handleSelect).toHaveBeenCalledWith(
@@ -129,7 +129,7 @@ describe('Signature Component: BalanceBeam & PostingSeal', () => {
     expect(screen.getByText(/Balanced: Total Debits equal Total Credits/i)).toBeDefined();
 
     rerender(<BalanceBeam debitPaisa="60000000" creditPaisa="40000000" lineCount={2} />);
-    expect(screen.getByText(/Debit is ৳2,00,000.00 more than credit/i)).toBeDefined();
+    expect(screen.getByText(/Debit is BDT 2,00,000.00 more than credit/i)).toBeDefined();
   });
 
   it('renders PostingSeal with seal details and reversal action', () => {

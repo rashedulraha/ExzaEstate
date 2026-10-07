@@ -81,7 +81,7 @@ export function CommandPalette({ isOpen, onClose, items }: CommandPaletteProps) 
   return (
     <div
       role="presentation"
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-all duration-200 animate-in fade-in"
+      className="fixed inset-0 z-50 flex items-start justify-center pt-[12vh] sm:pt-[14vh] p-4 bg-black/60 backdrop-blur-sm transition-all duration-200 animate-in fade-in"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
@@ -90,7 +90,7 @@ export function CommandPalette({ isOpen, onClose, items }: CommandPaletteProps) 
         role="dialog"
         aria-modal="true"
         aria-label="Command Palette"
-        className="w-full max-w-xl bg-surface-elevated border border-border-strong rounded-2xl shadow-2xl overflow-hidden flex flex-col transform transition-all duration-200 ease-out animate-in fade-in zoom-in-95"
+        className="w-full max-w-xl bg-surface-elevated border border-border-strong rounded-2xl shadow-2xl overflow-hidden flex flex-col transform transition-all duration-150 ease-out animate-in fade-in zoom-in-95"
       >
         {/* Search Input Bar */}
         <div className="flex items-center px-4 py-3.5 border-b border-border gap-3">
@@ -112,9 +112,9 @@ export function CommandPalette({ isOpen, onClose, items }: CommandPaletteProps) 
         </div>
 
         {/* Results List */}
-        <div className="max-h-80 overflow-y-auto p-2 space-y-3">
+        <div className="min-h-[260px] max-h-80 overflow-y-auto p-2 space-y-3 sidebar-scroll flex flex-col">
           {filteredItems.length === 0 ? (
-            <div className="py-8 text-center text-small text-text-muted">
+            <div className="flex-1 flex items-center justify-center py-8 text-center text-small text-text-muted">
               No commands or records found
             </div>
           ) : (

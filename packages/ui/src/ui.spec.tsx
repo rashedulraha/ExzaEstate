@@ -174,8 +174,8 @@ describe('Primitives', () => {
       { key: 'amount', header: 'Price', isMoney: true },
     ];
     const data: TestRow[] = [
-      { id: '1', code: 'P01', amount: '৳5,00,000.00' },
-      { id: '2', code: 'P02', amount: '৳7,50,000.00' },
+      { id: '1', code: 'P01', amount: 'BDT 5,00,000.00' },
+      { id: '2', code: 'P02', amount: 'BDT 7,50,000.00' },
     ];
 
     render(
@@ -183,7 +183,7 @@ describe('Primitives', () => {
     );
 
     expect(screen.getByText('P01')).toBeDefined();
-    expect(screen.getByText('৳5,00,000.00')).toBeDefined();
+    expect(screen.getByText('BDT 5,00,000.00')).toBeDefined();
   });
 
   it('renders StatusBadge resolving family, icon, and display label per design.md §2.5', () => {
@@ -242,9 +242,14 @@ describe('Layout & State Primitives', () => {
     expect(screen.getByText('Plot B1-P01')).toBeDefined();
   });
 
-  it('renders Sidebar with active navigation item', () => {
+  it('renders Sidebar with active navigation item and clean group titles', () => {
     render(<Sidebar currentRouteId="properties" />);
     expect(screen.getByText('Inventory & Plots')).toBeDefined();
+    expect(screen.getByText('Executive Cockpit')).toBeDefined();
+    expect(screen.getByText('Property Assets')).toBeDefined();
+    expect(screen.getByText('Sales Pipeline')).toBeDefined();
+    expect(screen.getByText('Finance & Treasury')).toBeDefined();
+    expect(screen.getByText('System & Admin')).toBeDefined();
   });
 
   it('renders Header with branch and fiscal year badges', () => {

@@ -1,4 +1,5 @@
-import { ChevronDown, PanelLeftClose, Plus, Search, Pin, HelpCircle } from 'lucide-react';
+import { ChevronDown, PanelLeftClose, Search, Pin, HelpCircle } from 'lucide-react';
+import { cleanEnglishText } from '@exzaestate/shared';
 import { ExzaLogoIcon } from '../components/brand/ExzaLogo.js';
 
 export function SidebarHeaderControls({
@@ -15,7 +16,7 @@ export function SidebarHeaderControls({
       <button
         type="button"
         onClick={onPin}
-        className="p-1 rounded hover:bg-white/10 hover:text-white cursor-pointer transition-colors"
+        className="p-1 rounded-button hover:bg-sidebar-hover text-sidebar-muted hover:text-sidebar-fg cursor-pointer transition-colors"
         title="Pin sidebar open"
         aria-label="Pin sidebar"
       >
@@ -29,7 +30,7 @@ export function SidebarHeaderControls({
       <button
         type="button"
         onClick={onToggleCollapse}
-        className="p-1 rounded hover:bg-white/10 hover:text-white cursor-pointer transition-colors"
+        className="p-1 rounded-button hover:bg-sidebar-hover text-sidebar-muted hover:text-sidebar-fg cursor-pointer transition-colors"
         title="Collapse sidebar ["
         aria-label="Collapse sidebar"
       >
@@ -54,25 +55,35 @@ export function SidebarHeader({
   isPeek?: boolean;
   onPin?: () => void;
 }) {
+  const cleanName = cleanEnglishText(companyName, 'ExzaEstate Development Ltd.');
+
   return (
-    <div className="h-12 px-3 flex items-center justify-between shrink-0">
-      <div className="flex items-center gap-2 min-w-0 pr-1">
-        <div className="w-6 h-6 rounded bg-primary/20 flex items-center justify-center shrink-0">
+    <div className="h-14 px-3 flex items-center justify-between shrink-0 min-w-0">
+      <div
+        className="flex items-center gap-2 min-w-0 flex-1 pr-1.5 cursor-default select-none"
+        title={cleanName}
+      >
+        <div className="w-6 h-6 rounded-button bg-primary/15 flex items-center justify-center shrink-0">
           <ExzaLogoIcon size={16} variant="primary" />
         </div>
-        <span className="text-[13px] font-medium text-white truncate flex items-center gap-1">
-          {companyName}
-          <ChevronDown className="w-3 h-3 text-white/40 shrink-0" />
-        </span>
+        <div className="flex items-center gap-1 min-w-0 flex-1 overflow-hidden" title={cleanName}>
+          <span
+            className="text-[13px] font-semibold text-sidebar-fg truncate block"
+            title={cleanName}
+          >
+            {cleanName}
+          </span>
+          <ChevronDown className="w-3 h-3 text-sidebar-muted/60 shrink-0" aria-hidden="true" />
+        </div>
       </div>
 
-      <div className="flex items-center gap-0.5 shrink-0 text-white/50">
+      <div className="flex items-center gap-0.5 shrink-0 text-sidebar-muted">
         <button
           type="button"
           onClick={onQuickAction}
-          className="p-1 rounded hover:bg-white/10 hover:text-white cursor-pointer transition-colors"
-          title="Search / Quick Action (⌘K)"
-          aria-label="Quick Action"
+          className="p-1 rounded-button hover:bg-sidebar-hover hover:text-sidebar-fg cursor-pointer transition-colors"
+          title="Search records, actions, vouchers (Ctrl+K)"
+          aria-label="Search records, actions, vouchers"
         >
           <Search className="w-3.5 h-3.5" />
         </button>
@@ -84,11 +95,11 @@ export function SidebarHeader({
 
 export function SidebarFooter() {
   return (
-    <div className="h-10 px-3 flex items-center justify-between text-caption text-white/40 shrink-0">
+    <div className="h-10 px-3 flex items-center justify-between text-caption text-sidebar-muted shrink-0 border-t border-sidebar-border/50">
       <div className="flex items-center gap-2">
         <button
           type="button"
-          className="p-1 rounded hover:bg-white/10 hover:text-white transition-colors cursor-pointer"
+          className="p-1 rounded-button hover:bg-sidebar-hover hover:text-sidebar-fg transition-colors cursor-pointer"
           title="Help & Documentation"
           aria-label="Help"
         >
@@ -99,28 +110,32 @@ export function SidebarFooter() {
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-success opacity-75" />
             <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-success" />
           </span>
-          <span className="text-[11px] text-white/60">Live Sync</span>
+          <span className="text-[11px] text-sidebar-muted font-medium">Live Sync</span>
         </div>
       </div>
-      <span className="font-mono text-[10px] text-white/30">v2.4.0</span>
+      <span className="font-mono text-[10px] text-sidebar-muted/60">v2.4.0</span>
     </div>
   );
 }
 
 export function SidebarQuickAction({ onQuickAction }: { onQuickAction?: () => void }) {
   return (
-    <div className="px-2 pt-1 pb-1">
+    <div className="px-2 pt-2 pb-1">
       <button
         type="button"
         onClick={onQuickAction}
-        className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-md bg-white/5 hover:bg-white/10 text-white/75 hover:text-white border border-white/5 hover:border-white/10 text-caption font-medium transition-colors cursor-pointer"
+        className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-button bg-sidebar-hover hover:bg-sidebar-active text-sidebar-fg border border-sidebar-border text-caption font-medium transition-colors cursor-pointer group"
+        title="Search records, actions, vouchers (Ctrl+K)"
+        aria-label="Search records, actions, vouchers"
       >
-        <span className="flex items-center gap-2">
-          <Plus className="w-3.5 h-3.5 text-white/70" />
-          <span>New Transaction</span>
+        <span className="flex items-center gap-2 min-w-0 pr-1">
+          <Search className="w-3.5 h-3.5 text-primary shrink-0 group-hover:scale-105 transition-transform" />
+          <span className="truncate text-sidebar-muted group-hover:text-sidebar-fg transition-colors">
+            Search records, actions, vouchers...
+          </span>
         </span>
-        <kbd className="bg-white/10 px-1.5 py-0.2 rounded text-[10px] font-mono text-white/60">
-          ⌘K
+        <kbd className="bg-surface-sunken border border-sidebar-border px-1.5 py-0.5 rounded-button text-[10px] font-mono text-sidebar-muted shrink-0 ml-1">
+          Ctrl+K
         </kbd>
       </button>
     </div>

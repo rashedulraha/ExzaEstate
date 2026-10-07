@@ -59,15 +59,15 @@ export function Drawer({
         role="dialog"
         aria-modal="true"
         aria-labelledby="drawer-title"
-        className={`w-full bg-surface-elevated border-l border-border shadow-lg flex flex-col h-full animate-in slide-in-from-right duration-160 ${sizeClasses[size]}`}
+        className={`w-full bg-surface border-l border-border shadow-2xl flex flex-col h-full animate-in slide-in-from-right duration-160 ${sizeClasses[size]}`}
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-border">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-border bg-surface shrink-0">
           <div>
-            <h2 id="drawer-title" className="text-h2 text-text font-semibold">
+            <h2 id="drawer-title" className="text-h2 text-text font-semibold tracking-tight">
               {title}
             </h2>
-            {subtitle && <p className="text-small text-text-muted mt-0.5">{subtitle}</p>}
+            {subtitle && <p className="text-small text-text-muted mt-0.5 font-mono">{subtitle}</p>}
           </div>
           <IconButton
             icon={<X className="w-4 h-4" />}
@@ -78,7 +78,7 @@ export function Drawer({
         </div>
 
         {/* Content Body */}
-        <div className="p-6 overflow-y-auto flex-1 space-y-6">{children}</div>
+        <div className="p-6 overflow-y-auto flex-1 space-y-6 bg-surface">{children}</div>
 
         {/* Footer Actions */}
         {footer && (
