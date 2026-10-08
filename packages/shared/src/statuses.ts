@@ -248,3 +248,38 @@ export const ACCOUNT_PARTY_TYPES = {
 } as const;
 
 export type AccountPartyType = (typeof ACCOUNT_PARTY_TYPES)[keyof typeof ACCOUNT_PARTY_TYPES];
+
+// Procurement Statuses (PRD MOD-VENDOR P2)
+export const PURCHASE_REQUEST_STATUSES = {
+  DRAFT: 'DRAFT',
+  PENDING_APPROVAL: 'PENDING_APPROVAL',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED',
+  CONVERTED_TO_PO: 'CONVERTED_TO_PO',
+  CANCELLED: 'CANCELLED',
+} as const;
+
+export type PurchaseRequestStatus =
+  (typeof PURCHASE_REQUEST_STATUSES)[keyof typeof PURCHASE_REQUEST_STATUSES];
+
+export const PURCHASE_ORDER_STATUSES = {
+  DRAFT: 'DRAFT',
+  ORDERED: 'ORDERED',
+  PARTIALLY_RECEIVED: 'PARTIALLY_RECEIVED',
+  RECEIVED: 'RECEIVED',
+  CLOSED: 'CLOSED',
+  CANCELLED: 'CANCELLED',
+} as const;
+
+export type PurchaseOrderStatus =
+  (typeof PURCHASE_ORDER_STATUSES)[keyof typeof PURCHASE_ORDER_STATUSES];
+
+export const GOODS_RECEIPT_STATUSES = {
+  DRAFT: 'DRAFT',
+  RECEIVED: 'RECEIVED',
+  REJECTED: 'REJECTED',
+  CANCELLED: 'CANCELLED',
+} as const;
+
+export type GoodsReceiptStatus =
+  (typeof GOODS_RECEIPT_STATUSES)[keyof typeof GOODS_RECEIPT_STATUSES];

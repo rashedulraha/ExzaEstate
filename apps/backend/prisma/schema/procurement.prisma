@@ -30,6 +30,8 @@ model Vendor {
 
   bills             VendorBill[]
   payments          VendorPayment[]
+  purchaseOrders    PurchaseOrder[]
+  goodsReceipts     GoodsReceipt[]
 
   @@unique([companyId, vendorNumber])
   @@index([companyId])
@@ -43,6 +45,8 @@ model VendorBill {
   billNumber          String                    @map("bill_number") @db.VarChar(64)
   vendorId            String                    @map("vendor_id") @db.Uuid
   projectId           String?                   @map("project_id") @db.Uuid
+  poId                String?                   @map("po_id") @db.Uuid
+  grnId               String?                   @map("grn_id") @db.Uuid
   billDate            DateTime                  @default(now()) @map("bill_date") @db.Date
   dueDate             DateTime?                 @map("due_date") @db.Date
 
@@ -61,6 +65,8 @@ model VendorBill {
   deletedAt           DateTime?                 @map("deleted_at") @db.Timestamptz
 
   vendor              Vendor                    @relation(fields: [vendorId], references: [id])
+  purchaseOrder       PurchaseOrder?            @relation(fields: [poId], references: [id])
+  goodsReceipt        GoodsReceipt?             @relation(fields: [grnId], references: [id])
   lines               VendorBillLine[]
   allocations         VendorPaymentAllocation[]
 
@@ -69,6 +75,8 @@ model VendorBill {
   @@index([companyId, status])
   @@index([companyId, vendorId])
   @@index([companyId, projectId])
+  @@index([companyId, poId])
+  @@index([companyId, grnId])
   @@map("vendor_bills")
 }
 
@@ -133,3 +141,178 @@ model VendorPaymentAllocation {
   @@index([companyId, billId])
   @@map("vendor_payment_allocations")
 }
+
+// -------------------------------------------------------------
+// P2 Procurement Models (PR → PO → GRN) - PRD MOD-VENDOR (P2)
+// -------------------------------------------------------------
+
+model PurchaseRequest {
+  id                  String                @id @default(uuid(7)) @db.Uuid
+  companyId           String                @map("company_id") @db.Uuid
+  prNumber            String                @map("pr_number") @db.VarChar(64)
+  title               String                @db.VarChar(255)
+  projectId           String?               @map("project_id") @db.Uuid
+  department          String?               @db.VarChar(64)
+  requestedById       String                @map("requested_by_id") @db.Uuid
+  requestedByName     String?               @map("requested_by_name") @db.VarChar(255)
+  requiredDate        DateTime?             @map("required_date") @db.Date
+  priority            String                @default("MEDIUM") @db.VarChar(32) // LOW, MEDIUM, HIGH, URGENT
+  status              String                @default("DRAFT") @db.VarChar(32) // DRAFT, PENDING_APPROVAL, APPROVED, REJECTED, CONVERTED_TO_PO, CANCELLED
+  totalEstimatedPaisa BigInt                @default(0) @map("total_estimated_paisa") @db.BigInt
+
+  approvedById        String?               @map("approved_by_id") @db.Uuid
+  approvedAt          DateTime?             @map("approved_at") @db.Timestamptz
+  rejectionReason     String?               @map("rejection_reason") @db.Text
+  notes               String?               @db.Text
+
+  createdAt           DateTime              @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt           DateTime              @updatedAt @map("updated_at") @db.Timestamptz
+  deletedAt           DateTime?             @map("deleted_at") @db.Timestamptz
+
+  lines               PurchaseRequestLine[]
+  purchaseOrders      PurchaseOrder[]
+
+  @@unique([companyId, prNumber])
+  @@index([companyId])
+  @@index([companyId, status])
+  @@index([companyId, projectId])
+  @@map("purchase_requests")
+}
+
+model PurchaseRequestLine {
+  id                     String              @id @default(uuid(7)) @db.Uuid
+  companyId              String              @map("company_id") @db.Uuid
+  prId                   String              @map("pr_id") @db.Uuid
+  itemDescription        String              @map("item_description") @db.VarChar(255)
+  category               String              @default("GENERAL") @db.VarChar(64)
+  quantity               Decimal             @db.Decimal(14, 2)
+  unit                   String              @default("PCS") @db.VarChar(32)
+  estimatedUnitPricePaisa BigInt             @default(0) @map("estimated_unit_price_paisa") @db.BigInt
+  estimatedAmountPaisa   BigInt              @map("estimated_amount_paisa") @db.BigInt
+  notes                  String?             @db.Text
+
+  purchaseRequest        PurchaseRequest     @relation(fields: [prId], references: [id], onDelete: Cascade)
+  purchaseOrderLines     PurchaseOrderLine[]
+
+  @@index([companyId])
+  @@index([companyId, prId])
+  @@map("purchase_request_lines")
+}
+
+model PurchaseOrder {
+  id                 String              @id @default(uuid(7)) @db.Uuid
+  companyId          String              @map("company_id") @db.Uuid
+  poNumber           String              @map("po_number") @db.VarChar(64)
+  prId               String?             @map("pr_id") @db.Uuid
+  vendorId           String              @map("vendor_id") @db.Uuid
+  projectId          String?             @map("project_id") @db.Uuid
+  orderDate          DateTime            @default(now()) @map("order_date") @db.Date
+  expectedDeliveryDate DateTime?         @map("expected_delivery_date") @db.Date
+  deliveryAddress    String?             @map("delivery_address") @db.Text
+  status             String              @default("DRAFT") @db.VarChar(32) // DRAFT, ORDERED, PARTIALLY_RECEIVED, RECEIVED, CLOSED, CANCELLED
+  totalAmountPaisa   BigInt              @map("total_amount_paisa") @db.BigInt
+  receivedAmountPaisa BigInt             @default(0) @map("received_amount_paisa") @db.BigInt
+  billedAmountPaisa  BigInt              @default(0) @map("billed_amount_paisa") @db.BigInt
+  notes              String?             @db.Text
+  termsAndConditions String?             @map("terms_and_conditions") @db.Text
+
+  createdAt          DateTime            @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt          DateTime            @updatedAt @map("updated_at") @db.Timestamptz
+  deletedAt          DateTime?           @map("deleted_at") @db.Timestamptz
+
+  vendor             Vendor              @relation(fields: [vendorId], references: [id])
+  purchaseRequest    PurchaseRequest?    @relation(fields: [prId], references: [id])
+  lines              PurchaseOrderLine[]
+  goodsReceipts      GoodsReceipt[]
+  bills              VendorBill[]
+
+  @@unique([companyId, poNumber])
+  @@index([companyId])
+  @@index([companyId, status])
+  @@index([companyId, vendorId])
+  @@index([companyId, projectId])
+  @@index([companyId, prId])
+  @@map("purchase_orders")
+}
+
+model PurchaseOrderLine {
+  id                String             @id @default(uuid(7)) @db.Uuid
+  companyId         String             @map("company_id") @db.Uuid
+  poId              String             @map("po_id") @db.Uuid
+  prLineId          String?            @map("pr_line_id") @db.Uuid
+  itemDescription   String             @map("item_description") @db.VarChar(255)
+  category          String             @default("GENERAL") @db.VarChar(64)
+  quantity          Decimal            @db.Decimal(14, 2)
+  receivedQuantity  Decimal            @default(0) @map("received_quantity") @db.Decimal(14, 2)
+  billedQuantity    Decimal            @default(0) @map("billed_quantity") @db.Decimal(14, 2)
+  unit              String             @default("PCS") @db.VarChar(32)
+  unitPricePaisa    BigInt             @map("unit_price_paisa") @db.BigInt
+  totalAmountPaisa  BigInt             @map("total_amount_paisa") @db.BigInt
+  notes             String?            @db.Text
+
+  purchaseOrder     PurchaseOrder      @relation(fields: [poId], references: [id], onDelete: Cascade)
+  purchaseRequestLine PurchaseRequestLine? @relation(fields: [prLineId], references: [id])
+  goodsReceiptLines GoodsReceiptLine[]
+
+  @@index([companyId])
+  @@index([companyId, poId])
+  @@index([companyId, prLineId])
+  @@map("purchase_order_lines")
+}
+
+model GoodsReceipt {
+  id               String             @id @default(uuid(7)) @db.Uuid
+  companyId        String             @map("company_id") @db.Uuid
+  grnNumber        String             @map("grn_number") @db.VarChar(64)
+  poId             String             @map("po_id") @db.Uuid
+  vendorId         String             @map("vendor_id") @db.Uuid
+  projectId        String?            @map("project_id") @db.Uuid
+  receiptDate      DateTime           @default(now()) @map("receipt_date") @db.Date
+  challanNumber    String?            @map("challan_number") @db.VarChar(128)
+  status           String             @default("RECEIVED") @db.VarChar(32) // DRAFT, RECEIVED, REJECTED, CANCELLED
+  receivedById     String             @map("received_by_id") @db.Uuid
+  receivedByName   String?            @map("received_by_name") @db.VarChar(255)
+  totalAmountPaisa BigInt             @default(0) @map("total_amount_paisa") @db.BigInt
+  notes            String?            @db.Text
+
+  createdAt        DateTime           @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt        DateTime           @updatedAt @map("updated_at") @db.Timestamptz
+  deletedAt        DateTime?          @map("deleted_at") @db.Timestamptz
+
+  purchaseOrder    PurchaseOrder      @relation(fields: [poId], references: [id])
+  vendor           Vendor             @relation(fields: [vendorId], references: [id])
+  lines            GoodsReceiptLine[]
+  bills            VendorBill[]
+
+  @@unique([companyId, grnNumber])
+  @@index([companyId])
+  @@index([companyId, poId])
+  @@index([companyId, vendorId])
+  @@index([companyId, status])
+  @@map("goods_receipts")
+}
+
+model GoodsReceiptLine {
+  id               String            @id @default(uuid(7)) @db.Uuid
+  companyId        String            @map("company_id") @db.Uuid
+  grnId            String            @map("grn_id") @db.Uuid
+  poLineId         String?           @map("po_line_id") @db.Uuid
+  itemDescription  String            @map("item_description") @db.VarChar(255)
+  receivedQuantity Decimal           @map("received_quantity") @db.Decimal(14, 2)
+  acceptedQuantity Decimal           @map("accepted_quantity") @db.Decimal(14, 2)
+  rejectedQuantity Decimal           @default(0) @map("rejected_quantity") @db.Decimal(14, 2)
+  unit             String            @default("PCS") @db.VarChar(32)
+  unitPricePaisa   BigInt            @map("unit_price_paisa") @db.BigInt
+  totalAmountPaisa BigInt            @map("total_amount_paisa") @db.BigInt
+  rejectionReason  String?           @map("rejection_reason") @db.Text
+  notes            String?           @db.Text
+
+  goodsReceipt     GoodsReceipt      @relation(fields: [grnId], references: [id], onDelete: Cascade)
+  purchaseOrderLine PurchaseOrderLine? @relation(fields: [poLineId], references: [id])
+
+  @@index([companyId])
+  @@index([companyId, grnId])
+  @@index([companyId, poLineId])
+  @@map("goods_receipt_lines")
+}
+
