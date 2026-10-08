@@ -13,9 +13,9 @@
 
 ## Current Status
 
-- **Active Phase:** Part C (Task C1 Complete, ready for C2)
-- **Next Task to Execute:** Part C: `C2 Responsive Layouts & Mobile Card Views`
-- **Tasks complete:** 84 / 88 (P2 cards excluded; Part A 100% Complete, Part B 100% Complete, C1 Complete)
+- **Active Phase:** Part C (Task C2 Complete, ready for C3)
+- **Next Task to Execute:** Part C: `C3 Web Deployment, CDN & Security Headers`
+- **Tasks complete:** 85 / 88 (P2 cards excluded; Part A 100% Complete, Part B 100% Complete, C1 Complete, C2 Complete)
 - **Blockers:** None
 - **Owner action items before/while coding:**
   - Copy the new `task.md` (v6) into `agent/task.md`.
@@ -174,7 +174,7 @@ Tick a box only after the verification rules above are met. Dependencies are def
 ### Part C — Web Client
 
 - [x] `C1` Web SPA Shell, Platform Adapters & Cookie-Refresh Auth
-- [ ] `C2` Responsive Layouts & Mobile Card Views
+- [x] `C2` Responsive Layouts & Mobile Card Views
 - [ ] `C3` Web Deployment, CDN & Security Headers
 - [ ] `C4` Playwright Critical Flows: Web ⇄ Desktop Parity
 - [ ] `C5` Pre-Launch Security & Release Gate
@@ -2188,3 +2188,38 @@ Tick a box only after the verification rules above are met. Dependencies are def
      - `pnpm lint`, `pnpm typecheck`, `pnpm build`: 100% green with zero errors.
 3. Verification:
    - Staged, committed, pushed to `origin main`, and verified all GitHub Actions CI jobs passed.
+
+### [2026-10-08] C2 Responsive Layouts & Mobile Card Views
+
+1. Task ID & status: C2 [x]
+2. Files created / modified:
+   - `packages/ui/src/styles/theme.css`
+   - `packages/ui/src/layout/useIsMobile.ts`
+   - `packages/ui/src/layout/BottomNav.tsx`
+   - `packages/ui/src/layout/Header.tsx`
+   - `packages/ui/src/layout/AppShell.tsx`
+   - `packages/ui/src/components/table/table.types.ts`
+   - `packages/ui/src/components/table/DataTableCards.tsx`
+   - `packages/ui/src/components/table/DataTableParts.tsx`
+   - `packages/ui/src/components/table/DataTable.tsx`
+   - `packages/ui/src/components/skeleton/Skeleton.tsx`
+   - `packages/ui/src/components/drawer/Drawer.tsx`
+   - `packages/ui/src/components/dialog/Dialog.tsx`
+   - `packages/ui/src/index.ts`
+   - `packages/ui/src/ui.spec.tsx`
+   - `packages/ui/src/responsive.spec.tsx`
+   - `apps/web/src/responsive.spec.tsx`
+   - `agent/PRODUCTION_CHECKLIST.md`
+   - `agent/task.md`
+   - `agent/PROGRESS.md`
+3. Verification command & result:
+   - `pnpm oxlint`: 0 warnings, 0 errors in UI packages (0 errors overall).
+   - `pnpm depcruise --config packages/config/.dependency-cruiser.cjs apps packages`: 0 boundary violations.
+   - `node packages/config/check-cycles.mjs`: Zero circular dependencies.
+   - `pnpm --filter @exzaestate/ui test`: 7/7 test suites passed, 47/47 tests green.
+   - `pnpm --filter @exzaestate/web test`: 2/2 test suites passed, 11/11 tests green.
+   - `pnpm --filter @exzaestate/ui typecheck && pnpm --filter @exzaestate/web typecheck`: 0 errors.
+   - `pnpm --filter @exzaestate/web build`: Built successfully in 641ms.
+   - `pnpm check:all`: 40/40 Acceptance Tests passed, all 9 gates green.
+4. Open questions: None.
+5. Next task ID: C3 (Web Deployment, CDN & Production Security Headers)

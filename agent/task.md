@@ -1234,7 +1234,7 @@ These are applied as defaults in `architecture.md` v4 but are still **"Needs sig
 
 #### C2 — Responsive Layouts & Mobile Card Views
 
-- **Status:** [ ] · **Size:** L (4 steps) · **Depends:** C1
+- **Status:** [x] · **Size:** L (4 steps) · **Depends:** C1
 - **Reads:** `design.md` §9; `prd.md` §15 (Part C).
 - **Touches:** `packages/ui/**`, `packages/features/**` (responsive variants only), `apps/web/**`.
 - **Steps:** **S1** breakpoints/tokens. **S2** `DataTable` → card view on small screens. **S3** responsive shell, drawers and wizards. **S4** visual-regression baseline on 3 viewports. Verify: `{web} test:visual`.
