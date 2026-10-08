@@ -11,16 +11,11 @@ export class SystemPrisma implements OnModuleInit, OnModuleDestroy {
   private readonly client: PrismaClient;
 
   constructor(configService: ConfigService) {
-    const rawUrl =
-      configService.systemDatabaseUrl ||
-      process.env.SYSTEM_DATABASE_URL ||
-      (!configService.isProduction
-        ? 'postgresql://exza_system:exza_system_secret@localhost:5432/exzaestate?schema=public'
-        : undefined);
+    const rawUrl = configService.systemDatabaseUrl || process.env.SYSTEM_DATABASE_URL;
 
     if (!rawUrl) {
       throw new Error(
-        'SYSTEM_DATABASE_URL is not configured. In production, SYSTEM_DATABASE_URL must be provided via environment variables.',
+        'SYSTEM_DATABASE_URL is not configured. SYSTEM_DATABASE_URL must be provided via environment variables or .env file.',
       );
     }
 
