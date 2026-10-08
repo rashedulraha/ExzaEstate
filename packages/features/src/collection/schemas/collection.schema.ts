@@ -143,6 +143,7 @@ export interface PaymentItem {
   customerName: string;
   propertyCode?: string;
   amountPaisa: string;
+  amountFormatted?: string;
   paymentMethod: PaymentMethodEnum;
   paymentDate: string;
   status: PaymentStatusEnum;
@@ -151,6 +152,7 @@ export interface PaymentItem {
   chequeBank?: string;
   chequeStatus?: ChequeStatusEnum;
   mobileTrxId?: string;
+  paymentNumber?: string;
   previousDuePaisa?: string;
   currentDuePaisa?: string;
   collectedBy?: string;
