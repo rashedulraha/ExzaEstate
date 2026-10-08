@@ -8,7 +8,10 @@ const baseEnvSchema = z.object({
   // Database configuration (PostgreSQL 18 + RLS)
   DATABASE_URL: z.string().min(1, 'DATABASE_URL is required'),
   MIGRATOR_DATABASE_URL: z.string().min(1).optional(),
-  SYSTEM_DATABASE_URL: z.string().min(1).optional(),
+  SYSTEM_DATABASE_URL: z
+    .string()
+    .min(1)
+    .default('postgresql://exza_system:exza_system_secret@localhost:5432/exzaestate?schema=public'),
 
   // Redis configuration (BullMQ + Cache; required in cloud mode)
   REDIS_URL: z.string().optional(),

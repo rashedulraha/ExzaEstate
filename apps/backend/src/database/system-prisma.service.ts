@@ -14,7 +14,9 @@ export class SystemPrisma implements OnModuleInit, OnModuleDestroy {
     const rawUrl =
       configService.systemDatabaseUrl ||
       process.env.SYSTEM_DATABASE_URL ||
-      (!configService.isProduction ? configService.databaseUrl : undefined);
+      (!configService.isProduction
+        ? 'postgresql://exza_system:exza_system_secret@localhost:5432/exzaestate?schema=public'
+        : undefined);
 
     if (!rawUrl) {
       throw new Error(

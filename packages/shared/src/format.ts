@@ -55,7 +55,7 @@ export function formatMoney(
   paisa: bigint | number | string,
   options: FormatMoneyOptions = {},
 ): string {
-  const { showCurrency = true, showDecimals = true, currencySymbol = 'BDT ' } = options;
+  const { showCurrency = true, showDecimals = true, currencySymbol = '৳' } = options;
   const bigPaisa = parseToBigIntPaisa(paisa);
 
   const isNegative = bigPaisa < 0n;

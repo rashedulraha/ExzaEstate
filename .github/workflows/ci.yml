@@ -149,6 +149,13 @@ jobs:
           docker cp docker/postgres-init/01-init-roles.sql ${{ job.services.postgres.id }}:/01-init-roles.sql
           docker exec ${{ job.services.postgres.id }} psql -U exza_admin -d exzaestate -f /01-init-roles.sql
 
+      - name: Start MinIO storage service
+        run: |
+          docker run -d --name minio -p 9000:9000 \
+            -e MINIO_ROOT_USER=minioadmin \
+            -e MINIO_ROOT_PASSWORD=minioadmin \
+            minio/minio:latest server /data
+
       - name: Apply Prisma migrations
         run: pnpm --filter @exzaestate/backend exec prisma migrate deploy
         env:

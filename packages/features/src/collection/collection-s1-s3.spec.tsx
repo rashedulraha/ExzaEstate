@@ -135,9 +135,9 @@ describe('Collection Module B4: S1 to S3', () => {
 
       // Ledger summary row
       expect(screen.getByTestId('terrace-totals-row')).toBeDefined();
-      expect(screen.getByText('BDT 20,00,000.00')).toBeDefined(); // Total scheduled (20 lakh)
-      expect(screen.getByText('BDT 12,00,000.00')).toBeDefined(); // Total collected (12 lakh)
-      expect(screen.getByText('BDT 8,00,000.00')).toBeDefined(); // Balance due (8 lakh)
+      expect(screen.getByText('৳20,00,000.00')).toBeDefined(); // Total scheduled (20 lakh)
+      expect(screen.getByText('৳12,00,000.00')).toBeDefined(); // Total collected (12 lakh)
+      expect(screen.getByText('৳8,00,000.00')).toBeDefined(); // Balance due (8 lakh)
     });
   });
 

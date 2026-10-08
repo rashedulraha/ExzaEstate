@@ -168,7 +168,7 @@ describe('Sales Feature Module (B3)', () => {
 
     expect(screen.getByText('QT-2026-0001')).toBeDefined();
     expect(screen.getByText('Rahim Khan')).toBeDefined();
-    expect(screen.getByText('BDT 51,00,000.00')).toBeDefined();
+    expect(screen.getByText('৳51,00,000.00')).toBeDefined();
 
     const pdfBtn = screen.getAllByRole('button', { name: /pdf/i })[0];
     if (pdfBtn) {
@@ -188,7 +188,7 @@ describe('Sales Feature Module (B3)', () => {
 
     expect(screen.getByText('Quotation QT-2026-0001')).toBeDefined();
     expect(screen.getByText('EXZA ESTATE ERP')).toBeDefined();
-    expect(screen.getByText('BDT 51,00,000.00')).toBeDefined();
+    expect(screen.getByText('৳51,00,000.00')).toBeDefined();
   });
 
   it('renders BookingDataTable with reservation timer and deposit paid', () => {
@@ -199,8 +199,8 @@ describe('Sales Feature Module (B3)', () => {
 
     expect(screen.getByText('BK-2026-0010')).toBeDefined();
     expect(screen.getByText('Rahim Khan')).toBeDefined();
-    expect(screen.getByText('BDT 51,00,000.00')).toBeDefined();
-    expect(screen.getByText('BDT 5,00,000.00')).toBeDefined();
+    expect(screen.getByText('৳51,00,000.00')).toBeDefined();
+    expect(screen.getByText('৳5,00,000.00')).toBeDefined();
   });
 
   it('renders BookingReservationTimer for REQUESTED status and hides for confirmed', () => {

@@ -63,7 +63,7 @@ describe('Approvals Module', () => {
 
     expect(screen.getByText('Discount Request for Plot-4A')).toBeDefined();
     expect(screen.getByText('Site Boundary Wall Construction')).toBeDefined();
-    expect(screen.getByText('BDT 5,00,000.00')).toBeDefined();
+    expect(screen.getByText('৳5,00,000.00')).toBeDefined();
     expect(screen.getByText('Tier 1 of 2')).toBeDefined();
   });
 
