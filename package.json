@@ -16,6 +16,7 @@
     "format:check": "prettier --check .",
     "typecheck": "turbo run typecheck",
     "test": "turbo run test",
+    "test:e2e": "node ./apps/web/node_modules/vitest/vitest.mjs run --config e2e/vitest.config.mjs",
     "start:dev": "node --env-file=.env --import ./scripts/swc-register.mjs apps/backend/src/main.ts",
     "start:local": "node --env-file=.env --import ./scripts/swc-register.mjs apps/backend/src/main.local.ts",
     "db:generate": "pnpm --filter @exzaestate/backend exec prisma generate",
