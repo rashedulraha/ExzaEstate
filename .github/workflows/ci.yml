@@ -154,7 +154,7 @@ jobs:
           docker run -d --name minio -p 9000:9000 \
             -e MINIO_ROOT_USER=minioadmin \
             -e MINIO_ROOT_PASSWORD=minioadmin \
-            minio/minio:latest server /data
+            cgr.dev/chainguard/minio server /tmp/minio-data
 
       - name: Apply Prisma migrations
         run: pnpm --filter @exzaestate/backend exec prisma migrate deploy
