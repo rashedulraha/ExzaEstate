@@ -36,6 +36,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Generate Prisma Client
+        run: pnpm db:generate
+
       - name: Code format check (Prettier)
         run: pnpm format:check
 
@@ -65,6 +68,9 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+
+      - name: Generate Prisma Client
+        run: pnpm db:generate
 
       - name: Verify API client contract generation and zero drift
         run: pnpm gen:api && git diff --exit-code packages/api-client/openapi.json packages/api-client/src/generated
@@ -172,6 +178,9 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+
+      - name: Generate Prisma Client
+        run: pnpm db:generate
 
       - name: Build monorepo packages
         run: pnpm build
