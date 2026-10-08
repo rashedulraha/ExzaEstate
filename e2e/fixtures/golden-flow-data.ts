@@ -59,7 +59,7 @@ export const GOLDEN_LEAD: LeadItem = {
   budgetMinPaisa: '400000000',
   budgetMaxPaisa: '500000000', // BDT 50,00,000.00
   notes: '5 Katha corner plot facing south-east',
-  assignedTo: { id: 'exec-1', fullName: 'Sales Executive' },
+  assignedTo: { id: 'exec-1', fullName: 'Sales Executive', email: 'sales.exec@example.com' },
   createdAt: '2026-10-01T10:00:00.000Z',
   updatedAt: '2026-10-01T10:00:00.000Z',
 };

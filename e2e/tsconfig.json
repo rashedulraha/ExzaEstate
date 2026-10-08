@@ -1,10 +1,27 @@
 {
   "extends": "../packages/config/tsconfig.base.json",
   "compilerOptions": {
+    "declaration": false,
+    "declarationMap": false,
+    "noEmit": true,
     "module": "ESNext",
     "moduleResolution": "bundler",
     "jsx": "react-jsx",
-    "lib": ["ES2023", "DOM", "DOM.Iterable"]
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "paths": {
+      "react": ["../packages/features/node_modules/@types/react"],
+      "react/jsx-runtime": ["../packages/features/node_modules/@types/react/jsx-runtime"],
+      "react-dom": ["../packages/features/node_modules/@types/react-dom"],
+      "@testing-library/react": ["../packages/features/node_modules/@testing-library/react"],
+      "react-router": ["../packages/features/node_modules/react-router/dist/production/index.d.ts"],
+      "@tanstack/react-query": ["../packages/features/node_modules/@tanstack/react-query"],
+      "vitest": ["../apps/web/node_modules/vitest"],
+      "@exzaestate/api-client": ["../packages/api-client/src"],
+      "@exzaestate/app-core": ["../packages/app-core/src"],
+      "@exzaestate/features": ["../packages/features/src"],
+      "@exzaestate/shared": ["../packages/shared/src"],
+      "@exzaestate/ui": ["../packages/ui/src"]
+    }
   },
   "include": ["**/*"]
 }

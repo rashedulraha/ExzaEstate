@@ -8,10 +8,12 @@ import {
   defaultPlatformAdapters,
   InMemorySecureStorage,
   type PlatformAdapters,
+  type SaveDialogOptions,
+  type OpenDialogOptions,
 } from '@exzaestate/app-core';
 import { ToastProvider, ThemeProvider } from '@exzaestate/ui';
 import { PERMISSIONS } from '@exzaestate/shared';
-import * as apiClient from '@exzaestate/api-client';
+import { apiClient } from '@exzaestate/api-client';
 import {
   GOLDEN_LEAD,
   GOLDEN_CUSTOMER,
@@ -305,7 +307,7 @@ export function setupGoldenFlowApiAdapter(): void {
     };
   };
 
-  Object.assign(apiClient.apiClient.defaults, { adapter: adapterFn });
+  Object.assign(apiClient.defaults, { adapter: adapterFn });
 }
 
 export function createClientAdapters(mode: 'web' | 'desktop'): {
@@ -325,14 +327,11 @@ export function createClientAdapters(mode: 'web' | 'desktop'): {
         clientVersion: '0.1.0',
       },
       fileDialog: {
-        async saveFile(options) {
-          return {
-            filePath: `/downloads/${options.defaultPath ?? 'document.pdf'}`,
-            canceled: false,
-          };
+        async save(options?: SaveDialogOptions) {
+          return `/downloads/${options?.defaultPath ?? 'document.pdf'}`;
         },
-        async openFile() {
-          return { filePaths: [], canceled: true };
+        async open(_options?: OpenDialogOptions) {
+          return null;
         },
       },
     };
@@ -350,11 +349,11 @@ export function createClientAdapters(mode: 'web' | 'desktop'): {
       clientVersion: '0.1.0',
     },
     fileDialog: {
-      async saveFile(options) {
-        return { filePath: `blob:${options.defaultPath ?? 'document.pdf'}`, canceled: false };
+      async save(options?: SaveDialogOptions) {
+        return `blob:${options?.defaultPath ?? 'document.pdf'}`;
       },
-      async openFile() {
-        return { filePaths: [], canceled: true };
+      async open(_options?: OpenDialogOptions) {
+        return null;
       },
     },
   };
