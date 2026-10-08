@@ -50,7 +50,7 @@ All core architectural decisions are locked. **Do not substitute, replace, or de
 | **Server State**       | TanStack Query v5                            | Only via `@exzaestate/api-client`                                    |
 | **Client UI State**    | Zustand                                      | Per-app ephemeral UI state only; never mirrors server data           |
 | **Date & Timezone**    | `date-fns` v4 + `@date-fns/tz`               | Store UTC (`timestamptz`); display in `Asia/Dhaka`                   |
-| **Money Handling**     | Integer **paisa** stored as `BigInt`         | Transported as string; formatted via `formatMoney` (`৳5,00,000`)     |
+| **Money Handling**     | Integer **paisa** stored as `BigInt`         | Transported as string; formatted via `formatMoney` (`BDT 5,00,000`)  |
 | **Lint & Format**      | `oxlint` + Prettier                          | Module boundaries via `dependency-cruiser`, cycles via `madge`       |
 | **Testing**            | Vitest (unit/integration) + Playwright (e2e) | Tests co-located with implementation                                 |
 
@@ -64,7 +64,7 @@ All core architectural decisions are locked. **Do not substitute, replace, or de
 4. **Financial Immutability:** Posted journals, payments, receipts, and ledger rows are **append-only**. They can never be updated or deleted in code or database triggers. Corrections are made strictly via reversal entries (`RULE-IMMUTABLE`).
 5. **Double-Entry Balance:** Every journal entry must enforce `debit === credit` before persistence (`RULE-DOUBLE-ENTRY`).
 6. **No Mock Data in UI:** React components and pages must **never** hardcode mock data arrays (`const mockData = [...]`). The UI strictly consumes generated TanStack Query hooks. For development and visual testing, use real database seed data via `pnpm db:seed:demo` (`ARCH-SEED`).
-7. **Bangladeshi Localization:** All currency displays must use `formatMoney` from `packages/shared` with lakh/crore grouping (`৳5,00,000` / `৳1,50,00,000`). Dates are displayed in `Asia/Dhaka` timezone. Primary font is **Inter** (`@fontsource/inter`).
+7. **Bangladeshi Localization:** All currency displays must use `formatMoney` from `packages/shared` with lakh/crore grouping and **`BDT `** prefix (`BDT 5,00,000` / `BDT 1,50,00,000`). Never use the `৳` symbol. Dates are displayed in `Asia/Dhaka` timezone. Primary font is **Inter** (`@fontsource/inter`).
 8. **Layering & Repository Rule:** There is **NO repository layer**. Controllers handle HTTP validation and DTOs; Services own business logic and query `TenantPrisma` directly.
 9. **One-Task Execution Discipline:** Agents execute strictly **one** task at a time from `task.md`. Log completion in `agent/PROGRESS.md` before stopping.
 

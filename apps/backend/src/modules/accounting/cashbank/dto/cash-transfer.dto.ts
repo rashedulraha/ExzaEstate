@@ -12,7 +12,7 @@ export class CreateCashTransferDto {
   @IsNotEmpty()
   destinationBankAccountId!: string;
 
-  @ApiProperty({ example: '50000000', description: 'Transfer amount in paisa (৳5,00,000)' })
+  @ApiProperty({ example: '50000000', description: 'Transfer amount in paisa (BDT 5,00,000)' })
   @IsString()
   @IsNotEmpty()
   amountPaisa!: string;

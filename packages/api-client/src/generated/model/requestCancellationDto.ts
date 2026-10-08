@@ -12,7 +12,7 @@ export interface RequestCancellationDto {
   reason: string;
   /** Deduction rate percentage (e.g. 10%) */
   deductionRatePct?: number;
-  /** Override deduction in paisa (৳1,00,000) */
+  /** Override deduction in paisa (BDT 1,00,000) */
   deductionPaisa?: string;
   propertyStatus?: RequestCancellationDtoPropertyStatus;
 }

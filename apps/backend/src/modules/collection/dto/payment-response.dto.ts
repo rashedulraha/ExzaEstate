@@ -25,7 +25,7 @@ export class PaymentResponseDto {
   @ApiProperty({ description: 'Payment amount in integer paisa as string' })
   amountPaisa!: string;
 
-  @ApiProperty({ description: 'Formatted amount in BDT (e.g. ৳5,00,000)' })
+  @ApiProperty({ description: 'Formatted amount in BDT (e.g. BDT 5,00,000)' })
   formattedAmount!: string;
 
   @ApiProperty()

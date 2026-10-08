@@ -93,7 +93,7 @@ export class CsvMigrationService {
       errors.push({
         rowNumber: 0,
         code: 'UNBALANCED_JOURNAL',
-        message: `RULE-DOUBLE-ENTRY: Total debits (৳${totalDebit}) must equal total credits (৳${totalCredit})`,
+        message: `RULE-DOUBLE-ENTRY: Total debits (BDT ${totalDebit}) must equal total credits (BDT ${totalCredit})`,
       });
     }
 

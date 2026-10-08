@@ -22,7 +22,7 @@ export class CreateJournalLineDto {
   accountId!: string;
 
   @ApiPropertyOptional({
-    description: 'Debit amount in integer paisa (e.g. "50000000" for ৳5,00,000)',
+    description: 'Debit amount in integer paisa (e.g. "50000000" for BDT 5,00,000)',
     example: '50000000',
     default: '0',
   })
@@ -31,7 +31,7 @@ export class CreateJournalLineDto {
   debitPaisa?: string;
 
   @ApiPropertyOptional({
-    description: 'Credit amount in integer paisa (e.g. "50000000" for ৳5,00,000)',
+    description: 'Credit amount in integer paisa (e.g. "50000000" for BDT 5,00,000)',
     example: '0',
     default: '0',
   })

@@ -52,7 +52,7 @@ export class CustomMilestoneDto {
 
 export class PreviewScheduleDto {
   @ApiProperty({
-    description: 'Total net property price in integer paisa (e.g. ৳50,00,000 = 500000000)',
+    description: 'Total net property price in integer paisa (e.g. BDT 50,00,000 = 500000000)',
     example: '500000000',
   })
   @IsNumberString()

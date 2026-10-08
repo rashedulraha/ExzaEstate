@@ -11,22 +11,22 @@ import { t } from './i18n/t.js';
 
 describe('Formatters & Localisation (S3)', () => {
   describe('formatMoney (AT-19)', () => {
-    it('satisfies acceptance test AT-19: formatMoney(50000000n) returns ৳5,00,000.00', () => {
-      expect(formatMoney(50000000n)).toBe('৳5,00,000.00');
+    it('satisfies acceptance test AT-19: formatMoney(50000000n) returns BDT 5,00,000.00', () => {
+      expect(formatMoney(50000000n)).toBe('BDT 5,00,000.00');
     });
 
     it('formats large crore amounts with Bangladeshi grouping', () => {
-      expect(formatMoney(15000000000n)).toBe('৳15,00,00,000.00');
+      expect(formatMoney(15000000000n)).toBe('BDT 15,00,00,000.00');
     });
 
     it('formats small amounts and fractional paisa', () => {
-      expect(formatMoney(1234567n)).toBe('৳12,345.67');
-      expect(formatMoney(50n)).toBe('৳0.50');
-      expect(formatMoney(0n)).toBe('৳0.00');
+      expect(formatMoney(1234567n)).toBe('BDT 12,345.67');
+      expect(formatMoney(50n)).toBe('BDT 0.50');
+      expect(formatMoney(0n)).toBe('BDT 0.00');
     });
 
     it('formats negative amounts with leading minus', () => {
-      expect(formatMoney(-50000000n)).toBe('-৳5,00,000.00');
+      expect(formatMoney(-50000000n)).toBe('-BDT 5,00,000.00');
     });
 
     it('supports hiding currency symbol', () => {
@@ -34,12 +34,12 @@ describe('Formatters & Localisation (S3)', () => {
     });
 
     it('supports omitting decimals when showDecimals is false', () => {
-      expect(formatMoney(50000000n, { showDecimals: false })).toBe('৳5,00,000');
-      expect(formatMoney(322730000000n, { showDecimals: false })).toBe('৳3,22,73,00,000');
+      expect(formatMoney(50000000n, { showDecimals: false })).toBe('BDT 5,00,000');
+      expect(formatMoney(322730000000n, { showDecimals: false })).toBe('BDT 3,22,73,00,000');
     });
 
     it('supports custom currency symbol override', () => {
-      expect(formatMoney(50000000n, { currencySymbol: 'BDT ' })).toBe('BDT 5,00,000.00');
+      expect(formatMoney(50000000n, { currencySymbol: '$' })).toBe('$5,00,000.00');
     });
   });
 

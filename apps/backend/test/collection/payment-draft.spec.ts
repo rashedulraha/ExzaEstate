@@ -43,7 +43,7 @@ describe('A5.2 — Payment Entity & Draft Booking Payments', () => {
     expect(res.body.data.isDraft).toBe(true);
     expect(res.body.data.paymentNumber).toMatch(/^PAY-\d{4}-\d{5}$/);
     expect(res.body.data.amountPaisa).toBe('50000000');
-    expect(res.body.data.formattedAmount).toBe('৳5,00,000.00');
+    expect(res.body.data.formattedAmount).toBe('BDT 5,00,000.00');
     expect(res.body.data.bookingId).toBe(ctx.testBookingId);
     expect(res.body.data.customerId).toBe(ctx.testCustomerId);
 

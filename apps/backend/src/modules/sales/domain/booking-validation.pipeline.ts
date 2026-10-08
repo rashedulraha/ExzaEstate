@@ -87,7 +87,7 @@ function validatePricingMath(input: BookingValidationPipelineInput): void {
   if (input.pricing.netPricePaisa !== expectedNet) {
     throw new BadRequestException({
       code: ERROR_CODES.VALIDATION_ERROR,
-      message: `Pricing mismatch: net price (৳${Number(input.pricing.netPricePaisa) / 100}) does not equal base price − discount (৳${Number(expectedNet) / 100}).`,
+      message: `Pricing mismatch: net price (BDT ${Number(input.pricing.netPricePaisa) / 100}) does not equal base price − discount (BDT ${Number(expectedNet) / 100}).`,
     });
   }
 }

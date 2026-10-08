@@ -59,7 +59,7 @@ export class AccountBalanceResponseDto {
 
   @ApiProperty({
     description: 'Formatted balance in Bangladeshi notation',
-    example: '৳5,00,000.00',
+    example: 'BDT 5,00,000.00',
   })
   formattedBalance!: string;
 }

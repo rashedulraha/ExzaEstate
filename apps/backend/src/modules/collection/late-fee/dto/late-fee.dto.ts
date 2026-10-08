@@ -36,7 +36,7 @@ export class LateFeeResponseDto {
   @ApiProperty({ example: '1000000' })
   amountPaisa!: string;
 
-  @ApiProperty({ example: '৳10,000.00' })
+  @ApiProperty({ example: 'BDT 10,000.00' })
   amountFormatted!: string;
 
   @ApiProperty()

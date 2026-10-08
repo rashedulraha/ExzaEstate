@@ -10,7 +10,7 @@ import type { PreviewScheduleDtoFrequency } from './previewScheduleDtoFrequency'
 import type { CustomMilestoneDto } from './customMilestoneDto';
 
 export interface PreviewScheduleDto {
-  /** Total net property price in integer paisa (e.g. ৳50,00,000 = 500000000) */
+  /** Total net property price in integer paisa (e.g. BDT 50,00,000 = 500000000) */
   netPricePaisa: string;
   /** Booking amount in paisa. If omitted, defaults to minBookingPct % of netPricePaisa */
   bookingAmountPaisa?: string;

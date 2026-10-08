@@ -80,7 +80,7 @@ export class RefundResponseDto {
   @ApiProperty({ example: '90000000' })
   amountPaisa!: string;
 
-  @ApiProperty({ example: '৳9,00,000.00' })
+  @ApiProperty({ example: 'BDT 9,00,000.00' })
   amountFormatted!: string;
 
   @ApiProperty({ example: 'Requested' })

@@ -10,7 +10,7 @@
 export interface CreateCashTransferDto {
   sourceBankAccountId: string;
   destinationBankAccountId: string;
-  /** Transfer amount in paisa (৳5,00,000) */
+  /** Transfer amount in paisa (BDT 5,00,000) */
   amountPaisa: string;
   transferDate: string;
   referenceNumber?: string;

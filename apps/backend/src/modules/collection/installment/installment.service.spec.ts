@@ -131,6 +131,6 @@ describe('InstallmentService (A7.1)', () => {
     expect(res.timingState).toBe('Upcoming');
     expect(res.statusLabel).toBe('Partially Paid · Upcoming');
     expect(res.remainingAmountPaisa).toBe('20000000');
-    expect(res.remainingAmountFormatted).toBe('৳2,00,000.00');
+    expect(res.remainingAmountFormatted).toBe('BDT 2,00,000.00');
   });
 });

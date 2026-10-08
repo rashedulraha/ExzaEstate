@@ -28,7 +28,7 @@ export class WaiverResponseDto {
   @ApiProperty({ example: '10000000' })
   amountPaisa!: string;
 
-  @ApiProperty({ example: '৳1,00,000.00' })
+  @ApiProperty({ example: 'BDT 1,00,000.00' })
   amountFormatted!: string;
 
   @ApiProperty({ example: 'Approved' })

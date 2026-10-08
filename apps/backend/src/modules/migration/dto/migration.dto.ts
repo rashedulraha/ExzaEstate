@@ -154,19 +154,19 @@ export class ReconciliationGateResponseDto {
   @ApiProperty({ example: '300000000' })
   totalOpeningArPaisa!: string;
 
-  @ApiProperty({ example: '৳30,00,000.00' })
+  @ApiProperty({ example: 'BDT 30,00,000.00' })
   totalOpeningArFormatted!: string;
 
   @ApiProperty({ example: '300000000' })
   totalLegacyOutstandingPaisa!: string;
 
-  @ApiProperty({ example: '৳30,00,000.00' })
+  @ApiProperty({ example: 'BDT 30,00,000.00' })
   totalLegacyOutstandingFormatted!: string;
 
   @ApiProperty({ example: '0' })
   differencePaisa!: string;
 
-  @ApiProperty({ example: '৳0.00' })
+  @ApiProperty({ example: 'BDT 0.00' })
   differenceFormatted!: string;
 
   @ApiProperty({ example: true })
@@ -178,8 +178,8 @@ export class ReconciliationGateResponseDto {
 
 export class FinalizeMigrationBatchDto {
   @ApiPropertyOptional({
-    example: 'CEO approved ৳500 rounding difference write-off',
-    description: 'Mandatory if difference is not ৳0.00',
+    example: 'CEO approved BDT 500 rounding difference write-off',
+    description: 'Mandatory if difference is not BDT 0.00',
   })
   @IsOptional()
   @IsString()

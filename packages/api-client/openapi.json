@@ -11776,7 +11776,7 @@
           "formattedBalance": {
             "type": "string",
             "description": "Formatted balance in Bangladeshi notation",
-            "example": "৳5,00,000.00"
+            "example": "BDT 5,00,000.00"
           }
         },
         "required": ["accountId", "code", "name", "type", "balancePaisa", "formattedBalance"]
@@ -12212,13 +12212,13 @@
           },
           "debitPaisa": {
             "type": "string",
-            "description": "Debit amount in integer paisa (e.g. \"50000000\" for ৳5,00,000)",
+            "description": "Debit amount in integer paisa (e.g. \"50000000\" for BDT 5,00,000)",
             "example": "50000000",
             "default": "0"
           },
           "creditPaisa": {
             "type": "string",
-            "description": "Credit amount in integer paisa (e.g. \"50000000\" for ৳5,00,000)",
+            "description": "Credit amount in integer paisa (e.g. \"50000000\" for BDT 5,00,000)",
             "example": "0",
             "default": "0"
           },
@@ -12848,7 +12848,7 @@
           "amountPaisa": {
             "type": "string",
             "example": "50000000",
-            "description": "Transfer amount in paisa (৳5,00,000)"
+            "description": "Transfer amount in paisa (BDT 5,00,000)"
           },
           "transferDate": {
             "type": "string",
@@ -13175,7 +13175,7 @@
           },
           "amountFormatted": {
             "type": "string",
-            "example": "৳3,00,000.00"
+            "example": "BDT 3,00,000.00"
           },
           "paidAmountPaisa": {
             "type": "string",
@@ -13184,7 +13184,7 @@
           },
           "paidAmountFormatted": {
             "type": "string",
-            "example": "৳1,00,000.00"
+            "example": "BDT 1,00,000.00"
           },
           "remainingAmountPaisa": {
             "type": "string",
@@ -13193,7 +13193,7 @@
           },
           "remainingAmountFormatted": {
             "type": "string",
-            "example": "৳2,00,000.00"
+            "example": "BDT 2,00,000.00"
           },
           "waivedAmountPaisa": {
             "type": "string",
@@ -13290,7 +13290,7 @@
           },
           "totalScheduledFormatted": {
             "type": "string",
-            "example": "৳72,00,000.00"
+            "example": "BDT 72,00,000.00"
           },
           "totalPaidPaisa": {
             "type": "string",
@@ -13298,7 +13298,7 @@
           },
           "totalPaidFormatted": {
             "type": "string",
-            "example": "৳1,00,000.00"
+            "example": "BDT 1,00,000.00"
           },
           "totalRemainingPaisa": {
             "type": "string",
@@ -13306,7 +13306,7 @@
           },
           "totalRemainingFormatted": {
             "type": "string",
-            "example": "৳71,00,000.00"
+            "example": "BDT 71,00,000.00"
           },
           "items": {
             "type": "array",
@@ -16309,7 +16309,7 @@
         "properties": {
           "netPricePaisa": {
             "type": "string",
-            "description": "Total net property price in integer paisa (e.g. ৳50,00,000 = 500000000)",
+            "description": "Total net property price in integer paisa (e.g. BDT 50,00,000 = 500000000)",
             "example": "500000000"
           },
           "bookingAmountPaisa": {
@@ -16949,7 +16949,7 @@
           "deductionPaisa": {
             "type": "string",
             "example": "10000000",
-            "description": "Override deduction in paisa (৳1,00,000)"
+            "description": "Override deduction in paisa (BDT 1,00,000)"
           },
           "propertyStatus": {
             "type": "string",
@@ -17165,8 +17165,8 @@
         "properties": {
           "approvedAdjustmentReason": {
             "type": "string",
-            "example": "CEO approved ৳500 rounding difference write-off",
-            "description": "Mandatory if difference is not ৳0.00"
+            "example": "CEO approved BDT 500 rounding difference write-off",
+            "description": "Mandatory if difference is not BDT 0.00"
           }
         }
       },

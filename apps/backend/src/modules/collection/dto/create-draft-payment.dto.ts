@@ -54,7 +54,7 @@ export class CreateDraftPaymentDto {
   @IsUUID()
   projectId?: string;
 
-  @ApiProperty({ description: 'Payment amount in integer paisa (e.g. 50000000 = ৳5,00,000)' })
+  @ApiProperty({ description: 'Payment amount in integer paisa (e.g. 50000000 = BDT 5,00,000)' })
   @IsNotEmpty()
   @IsNumberString({ no_symbols: true })
   amountPaisa!: string;

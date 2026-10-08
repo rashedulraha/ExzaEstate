@@ -36,8 +36,8 @@ const mockTbRow = (
   closingCreditPaisa: '0',
   netDebitPaisa: '0',
   netCreditPaisa: '0',
-  netDebitFormatted: '৳0',
-  netCreditFormatted: '৳0',
+  netDebitFormatted: 'BDT 0',
+  netCreditFormatted: 'BDT 0',
   ...overrides,
 });
 

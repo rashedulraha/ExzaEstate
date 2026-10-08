@@ -28,19 +28,19 @@ export class InstallmentResponseDto {
   @ApiProperty({ example: '30000000', description: 'BigInt paisa as string' })
   amountPaisa!: string;
 
-  @ApiProperty({ example: '৳3,00,000.00' })
+  @ApiProperty({ example: 'BDT 3,00,000.00' })
   amountFormatted!: string;
 
   @ApiProperty({ example: '10000000', description: 'BigInt paisa as string' })
   paidAmountPaisa!: string;
 
-  @ApiProperty({ example: '৳1,00,000.00' })
+  @ApiProperty({ example: 'BDT 1,00,000.00' })
   paidAmountFormatted!: string;
 
   @ApiProperty({ example: '20000000', description: 'BigInt paisa as string' })
   remainingAmountPaisa!: string;
 
-  @ApiProperty({ example: '৳2,00,000.00' })
+  @ApiProperty({ example: 'BDT 2,00,000.00' })
   remainingAmountFormatted!: string;
 
   @ApiProperty({ example: '0', description: 'BigInt paisa as string' })
@@ -97,19 +97,19 @@ export class InstallmentScheduleSummaryDto {
   @ApiProperty({ example: '720000000', description: 'BigInt paisa as string' })
   totalScheduledPaisa!: string;
 
-  @ApiProperty({ example: '৳72,00,000.00' })
+  @ApiProperty({ example: 'BDT 72,00,000.00' })
   totalScheduledFormatted!: string;
 
   @ApiProperty({ example: '10000000' })
   totalPaidPaisa!: string;
 
-  @ApiProperty({ example: '৳1,00,000.00' })
+  @ApiProperty({ example: 'BDT 1,00,000.00' })
   totalPaidFormatted!: string;
 
   @ApiProperty({ example: '710000000' })
   totalRemainingPaisa!: string;
 
-  @ApiProperty({ example: '৳71,00,000.00' })
+  @ApiProperty({ example: 'BDT 71,00,000.00' })
   totalRemainingFormatted!: string;
 
   @ApiProperty({ type: [InstallmentResponseDto] })

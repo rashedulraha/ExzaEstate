@@ -15,7 +15,7 @@ export class RequestCancellationDto {
 
   @ApiPropertyOptional({
     example: '10000000',
-    description: 'Override deduction in paisa (৳1,00,000)',
+    description: 'Override deduction in paisa (BDT 1,00,000)',
   })
   @IsOptional()
   @IsString()
@@ -49,13 +49,13 @@ export class CancellationPreviewDto {
   @ApiProperty({ example: '90000000' })
   refundPaisa!: string;
 
-  @ApiProperty({ example: '৳10,00,000.00' })
+  @ApiProperty({ example: 'BDT 10,00,000.00' })
   formattedPaidAmount!: string;
 
-  @ApiProperty({ example: '৳1,00,000.00' })
+  @ApiProperty({ example: 'BDT 1,00,000.00' })
   formattedDeduction!: string;
 
-  @ApiProperty({ example: '৳9,00,000.00' })
+  @ApiProperty({ example: 'BDT 9,00,000.00' })
   formattedRefund!: string;
 }
 

@@ -148,7 +148,7 @@ describe('Sales Quotations & Branded PDF Generation (Task A4.3)', () => {
       expect(data.totalAdditionalChargesPaisa).toBe('115000000');
       expect(data.totalVatPaisa).toBe('750000');
       expect(data.grandTotalPaisa).toBe('1365750000');
-      expect(data.grandTotalFormatted).toBe('৳1,36,57,500.00');
+      expect(data.grandTotalFormatted).toBe('BDT 1,36,57,500.00');
 
       // Schedule snapshots:
       expect(data.chargesSnapshot).toHaveLength(2);

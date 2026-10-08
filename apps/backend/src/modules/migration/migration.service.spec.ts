@@ -164,7 +164,7 @@ describe('MigrationService (AT-29 & Phase A7.9)', () => {
     expect(gate.totalOpeningArPaisa).toBe('300000000');
     expect(gate.totalLegacyOutstandingPaisa).toBe('250000000');
     expect(gate.differencePaisa).toBe('50000000');
-    expect(gate.differenceFormatted).toBe('৳5,00,000.00');
+    expect(gate.differenceFormatted).toBe('BDT 5,00,000.00');
 
     expect(gate.customerDifferences).toHaveLength(1);
     expect(gate.customerDifferences[0]?.customerId).toBe('cust-1');

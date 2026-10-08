@@ -40,13 +40,13 @@ export class StatementLineDto {
   @ApiProperty({ example: '500000000' })
   runningBalancePaisa!: string;
 
-  @ApiProperty({ example: '৳50,00,000.00' })
+  @ApiProperty({ example: 'BDT 50,00,000.00' })
   formattedDebit!: string;
 
-  @ApiProperty({ example: '৳0.00' })
+  @ApiProperty({ example: 'BDT 0.00' })
   formattedCredit!: string;
 
-  @ApiProperty({ example: '৳50,00,000.00' })
+  @ApiProperty({ example: 'BDT 50,00,000.00' })
   formattedRunningBalance!: string;
 }
 
@@ -81,19 +81,19 @@ export class CustomerStatementResponseDto {
   @ApiProperty({ example: '0' })
   customerAdvancePaisa!: string;
 
-  @ApiProperty({ example: '৳0.00' })
+  @ApiProperty({ example: 'BDT 0.00' })
   formattedOpeningBalance!: string;
 
-  @ApiProperty({ example: '৳50,00,000.00' })
+  @ApiProperty({ example: 'BDT 50,00,000.00' })
   formattedTotalDebits!: string;
 
-  @ApiProperty({ example: '৳5,00,000.00' })
+  @ApiProperty({ example: 'BDT 5,00,000.00' })
   formattedTotalCredits!: string;
 
-  @ApiProperty({ example: '৳45,00,000.00' })
+  @ApiProperty({ example: 'BDT 45,00,000.00' })
   formattedClosingOutstanding!: string;
 
-  @ApiProperty({ example: '৳0.00' })
+  @ApiProperty({ example: 'BDT 0.00' })
   formattedCustomerAdvance!: string;
 
   @ApiProperty({ type: [StatementLineDto] })
@@ -107,19 +107,19 @@ export class ArReconciliationResponseDto {
   @ApiProperty({ example: '450000000' })
   statementOutstandingPaisa!: string;
 
-  @ApiProperty({ example: '৳45,00,000.00' })
+  @ApiProperty({ example: 'BDT 45,00,000.00' })
   statementOutstandingFormatted!: string;
 
   @ApiProperty({ example: '450000000' })
   arLedgerBalancePaisa!: string;
 
-  @ApiProperty({ example: '৳45,00,000.00' })
+  @ApiProperty({ example: 'BDT 45,00,000.00' })
   arLedgerBalanceFormatted!: string;
 
   @ApiProperty({ example: '450000000' })
   arAgingTotalPaisa!: string;
 
-  @ApiProperty({ example: '৳45,00,000.00' })
+  @ApiProperty({ example: 'BDT 45,00,000.00' })
   arAgingTotalFormatted!: string;
 
   @ApiProperty({ example: '0' })

@@ -99,7 +99,8 @@ export function ExpenseListPage() {
             <h1 className="text-h1 font-semibold text-text">Office & Project Expenses</h1>
           </div>
           <p className="mt-1 text-caption text-text-muted">
-            Track expenses, bills, and manager approvals (GM up to ৳5,00,000 / MD above ৳5,00,000).
+            Track expenses, bills, and manager approvals (GM up to BDT 5,00,000 / MD above BDT
+            5,00,000).
           </p>
         </div>
 

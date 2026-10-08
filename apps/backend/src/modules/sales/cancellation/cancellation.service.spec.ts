@@ -236,6 +236,6 @@ describe('CancellationService & Refund (AT-08 & Phase A7.6)', () => {
     expect(preview.deductionRatePct).toBe(15);
     expect(preview.deductionPaisa).toBe('15000000');
     expect(preview.refundPaisa).toBe('85000000');
-    expect(preview.formattedRefund).toBe('৳8,50,000.00');
+    expect(preview.formattedRefund).toBe('BDT 8,50,000.00');
   });
 });

@@ -8,6 +8,6 @@
  */
 
 export interface FinalizeMigrationBatchDto {
-  /** Mandatory if difference is not ৳0.00 */
+  /** Mandatory if difference is not BDT 0.00 */
   approvedAdjustmentReason?: string;
 }

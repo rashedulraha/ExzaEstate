@@ -110,7 +110,7 @@ describe('AgingService & OverdueCalculation (AT-28 & Phase A7.8)', () => {
 
     // Total receivable
     expect(report.totalReceivablePaisa).toBe('300000000');
-    expect(report.totalReceivableFormatted).toBe('৳30,00,000.00');
+    expect(report.totalReceivableFormatted).toBe('BDT 30,00,000.00');
     expect(report.reconciledWithArLedger).toBe(true);
 
     // Buckets

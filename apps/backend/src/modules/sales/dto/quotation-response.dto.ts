@@ -84,19 +84,19 @@ export class QuotationResponseDto {
   @ApiProperty({ description: 'Base property price in paisa' })
   basePricePaisa!: string;
 
-  @ApiProperty({ description: 'Formatted base property price in ৳ (lakh/crore)' })
+  @ApiProperty({ description: 'Formatted base property price in BDT (lakh/crore)' })
   basePriceFormatted!: string;
 
   @ApiProperty({ description: 'Premium amount in paisa' })
   premiumAmountPaisa!: string;
 
-  @ApiProperty({ description: 'Formatted premium amount in ৳' })
+  @ApiProperty({ description: 'Formatted premium amount in BDT' })
   premiumAmountFormatted!: string;
 
   @ApiProperty({ description: 'Discount amount in paisa' })
   discountAmountPaisa!: string;
 
-  @ApiProperty({ description: 'Formatted discount amount in ৳' })
+  @ApiProperty({ description: 'Formatted discount amount in BDT' })
   discountAmountFormatted!: string;
 
   @ApiProperty({ description: 'Discount percentage on base + premium' })
@@ -105,26 +105,26 @@ export class QuotationResponseDto {
   @ApiProperty({ description: 'Net property price in paisa (base + premium - discount)' })
   netPricePaisa!: string;
 
-  @ApiProperty({ description: 'Formatted net property price in ৳' })
+  @ApiProperty({ description: 'Formatted net property price in BDT' })
   netPriceFormatted!: string;
 
   // Charges & VAT totals
   @ApiProperty({ description: 'Total charges included in net price in paisa' })
   totalIncludedChargesPaisa!: string;
 
-  @ApiProperty({ description: 'Formatted total included charges in ৳' })
+  @ApiProperty({ description: 'Formatted total included charges in BDT' })
   totalIncludedChargesFormatted!: string;
 
   @ApiProperty({ description: 'Total additional charges in paisa' })
   totalAdditionalChargesPaisa!: string;
 
-  @ApiProperty({ description: 'Formatted total additional charges in ৳' })
+  @ApiProperty({ description: 'Formatted total additional charges in BDT' })
   totalAdditionalChargesFormatted!: string;
 
   @ApiProperty({ description: 'Total VAT amount in paisa' })
   totalVatPaisa!: string;
 
-  @ApiProperty({ description: 'Formatted total VAT in ৳' })
+  @ApiProperty({ description: 'Formatted total VAT in BDT' })
   totalVatFormatted!: string;
 
   @ApiProperty({
@@ -132,7 +132,7 @@ export class QuotationResponseDto {
   })
   grandTotalPaisa!: string;
 
-  @ApiProperty({ description: 'Formatted grand total in ৳ (lakh/crore)' })
+  @ApiProperty({ description: 'Formatted grand total in BDT (lakh/crore)' })
   grandTotalFormatted!: string;
 
   // Snapshots

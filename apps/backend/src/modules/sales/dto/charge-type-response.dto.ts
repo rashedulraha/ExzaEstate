@@ -22,7 +22,10 @@ export class ChargeTypeResponseDto {
   @ApiPropertyOptional({ description: 'Default amount in paisa', example: '15000000' })
   defaultAmountPaisa?: string | null;
 
-  @ApiPropertyOptional({ description: 'Formatted default amount in BDT', example: '৳1,50,000.00' })
+  @ApiPropertyOptional({
+    description: 'Formatted default amount in BDT',
+    example: 'BDT 1,50,000.00',
+  })
   defaultAmountFormatted?: string | null;
 
   @ApiPropertyOptional({ description: 'Default percentage rate', example: 8.0 })

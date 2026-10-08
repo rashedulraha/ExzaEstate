@@ -141,7 +141,7 @@ export function BankTransferModal({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <FormField
             id="transferAmount"
-            label="Transfer Amount (BDT ৳)"
+            label="Transfer Amount (BDT)"
             required
             error={errors.amount}
           >

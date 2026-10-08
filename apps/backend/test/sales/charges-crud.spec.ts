@@ -94,7 +94,7 @@ describe('Sales Charge Types & Calculation Engine (Task A4.2)', () => {
       const data = res.body.data;
 
       expect(data.netPricePaisa).toBe('1000000000');
-      expect(data.netPriceFormatted).toBe('৳1,00,00,000.00');
+      expect(data.netPriceFormatted).toBe('BDT 1,00,00,000.00');
 
       // Utility item:
       const utilityItem = data.items.find(
@@ -102,12 +102,12 @@ describe('Sales Charge Types & Calculation Engine (Task A4.2)', () => {
       );
       expect(utilityItem).toBeDefined();
       expect(utilityItem.baseAmountPaisa).toBe('15000000');
-      expect(utilityItem.baseAmountFormatted).toBe('৳1,50,000.00');
+      expect(utilityItem.baseAmountFormatted).toBe('BDT 1,50,000.00');
       expect(utilityItem.vatRatePct).toBe(5);
       expect(utilityItem.vatAmountPaisa).toBe('750000');
-      expect(utilityItem.vatAmountFormatted).toBe('৳7,500.00');
+      expect(utilityItem.vatAmountFormatted).toBe('BDT 7,500.00');
       expect(utilityItem.totalAmountPaisa).toBe('15750000');
-      expect(utilityItem.totalAmountFormatted).toBe('৳1,57,500.00');
+      expect(utilityItem.totalAmountFormatted).toBe('BDT 1,57,500.00');
 
       // Registration item:
       const regItem = data.items.find(
@@ -115,7 +115,7 @@ describe('Sales Charge Types & Calculation Engine (Task A4.2)', () => {
       );
       expect(regItem).toBeDefined();
       expect(regItem.baseAmountPaisa).toBe('80000000'); // 8% of 1,000,000,000
-      expect(regItem.baseAmountFormatted).toBe('৳8,00,000.00');
+      expect(regItem.baseAmountFormatted).toBe('BDT 8,00,000.00');
       expect(regItem.vatAmountPaisa).toBe('0');
       expect(regItem.totalAmountPaisa).toBe('80000000');
 
@@ -134,7 +134,7 @@ describe('Sales Charge Types & Calculation Engine (Task A4.2)', () => {
 
       // grandTotal = netPrice (1,000,000,000) + additional (95,000,000) + vat (750,000) = 1,095,750,000
       expect(data.grandTotalPaisa).toBe('1095750000');
-      expect(data.grandTotalFormatted).toBe('৳1,09,57,500.00');
+      expect(data.grandTotalFormatted).toBe('BDT 1,09,57,500.00');
     });
 
     it('rejects calculation when chargeTypeId does not exist', async () => {
@@ -177,7 +177,7 @@ describe('Sales Charge Types & Calculation Engine (Task A4.2)', () => {
       expect(res.body.data.code).toBe('PARKING_BASEMENT');
       expect(res.body.data.name).toBe('Basement Parking Space');
       expect(res.body.data.defaultAmountPaisa).toBe('60000000');
-      expect(res.body.data.defaultAmountFormatted).toBe('৳6,00,000.00');
+      expect(res.body.data.defaultAmountFormatted).toBe('BDT 6,00,000.00');
       expect(res.body.data.payableStage).toBe('AT_BOOKING');
 
       createdChargeTypeId = res.body.data.id;
@@ -251,7 +251,7 @@ describe('Sales Charge Types & Calculation Engine (Task A4.2)', () => {
       expect(res.body.success).toBe(true);
       expect(res.body.data.name).toBe('Premium Basement Parking Bay');
       expect(res.body.data.defaultAmountPaisa).toBe('75000000');
-      expect(res.body.data.defaultAmountFormatted).toBe('৳7,50,000.00');
+      expect(res.body.data.defaultAmountFormatted).toBe('BDT 7,50,000.00');
       expect(res.body.data.vatRatePct).toBe(2.5);
     });
 

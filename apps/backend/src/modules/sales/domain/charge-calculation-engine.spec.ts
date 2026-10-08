@@ -97,7 +97,7 @@ describe('Charge Calculation Engine (Domain Core)', () => {
       ]);
 
       expect(res.netPricePaisa).toBe(100_000_000n);
-      expect(res.netPriceFormatted).toBe('৳10,00,000.00');
+      expect(res.netPriceFormatted).toBe('BDT 10,00,000.00');
 
       // Included charge = 1% of 100M = 1,000,000n
       expect(res.totalIncludedChargesPaisa).toBe(1_000_000n);
@@ -108,9 +108,9 @@ describe('Charge Calculation Engine (Domain Core)', () => {
       // VAT = 5% of 5,000,000n = 250,000n
       expect(res.totalVatPaisa).toBe(250_000n);
 
-      // Grand total = 100M + 15M + 250k = 115,250,000n (৳11,52,500.00)
+      // Grand total = 100M + 15M + 250k = 115,250,000n (BDT 11,52,500.00)
       expect(res.grandTotalPaisa).toBe(115_250_000n);
-      expect(res.grandTotalFormatted).toBe('৳11,52,500.00');
+      expect(res.grandTotalFormatted).toBe('BDT 11,52,500.00');
 
       // Line items detail
       expect(res.items).toHaveLength(3);

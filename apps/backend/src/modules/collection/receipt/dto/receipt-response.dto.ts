@@ -28,7 +28,7 @@ export class ReceiptResponseDto {
   @ApiProperty({ example: '50000000', description: 'BigInt paisa as string' })
   amountPaisa!: string;
 
-  @ApiProperty({ example: '৳5,00,000.00' })
+  @ApiProperty({ example: 'BDT 5,00,000.00' })
   amountFormatted!: string;
 
   @ApiProperty({ example: 'Five Lakh Taka Only' })
@@ -37,13 +37,13 @@ export class ReceiptResponseDto {
   @ApiProperty({ example: '500000000' })
   previousDuePaisa!: string;
 
-  @ApiProperty({ example: '৳50,00,000.00' })
+  @ApiProperty({ example: 'BDT 50,00,000.00' })
   previousDueFormatted!: string;
 
   @ApiProperty({ example: '450000000' })
   currentDuePaisa!: string;
 
-  @ApiProperty({ example: '৳45,00,000.00' })
+  @ApiProperty({ example: 'BDT 45,00,000.00' })
   currentDueFormatted!: string;
 
   @ApiProperty({ example: 'BANK_TRANSFER' })

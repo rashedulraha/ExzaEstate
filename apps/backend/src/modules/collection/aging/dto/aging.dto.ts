@@ -18,7 +18,7 @@ export class AgingBucketSummaryDto {
   @ApiProperty({ example: '50000000' })
   amountPaisa!: string;
 
-  @ApiProperty({ example: '৳5,00,000.00' })
+  @ApiProperty({ example: 'BDT 5,00,000.00' })
   amountFormatted!: string;
 
   @ApiProperty({ example: 4 })
@@ -53,7 +53,7 @@ export class CustomerAgingSummaryDto {
   @ApiProperty({ example: '170000000' })
   totalPaisa!: string;
 
-  @ApiProperty({ example: '৳17,00,000.00' })
+  @ApiProperty({ example: 'BDT 17,00,000.00' })
   formattedTotal!: string;
 }
 
@@ -64,7 +64,7 @@ export class AgingReportResponseDto {
   @ApiProperty({ example: '500000000' })
   totalReceivablePaisa!: string;
 
-  @ApiProperty({ example: '৳50,00,000.00' })
+  @ApiProperty({ example: 'BDT 50,00,000.00' })
   totalReceivableFormatted!: string;
 
   @ApiProperty({ type: [AgingBucketSummaryDto] })

@@ -78,7 +78,7 @@ describe('A7.1 — Installment Schedule Persistence & Timing State', () => {
     expect(inst.timingState).toBe(INSTALLMENT_TIMING_STATES.UPCOMING);
     expect(inst.statusLabel).toBe('Partially Paid · Upcoming');
     expect(inst.remainingAmountPaisa).toBe('20000000');
-    expect(inst.remainingAmountFormatted).toBe('৳2,00,000.00');
+    expect(inst.remainingAmountFormatted).toBe('BDT 2,00,000.00');
   });
 
   it('derives Overdue and exact overdue days when reference date is past due date', async () => {

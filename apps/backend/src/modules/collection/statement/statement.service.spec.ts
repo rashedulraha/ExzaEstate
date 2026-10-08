@@ -115,7 +115,7 @@ describe('StatementService (AT-14 & Phase A7.5)', () => {
     expect(result.totalCreditsPaisa).toBe('100000000');
     expect(result.closingOutstandingPaisa).toBe('400000000');
     expect(result.customerAdvancePaisa).toBe('5000000');
-    expect(result.formattedClosingOutstanding).toBe('৳40,00,000.00');
+    expect(result.formattedClosingOutstanding).toBe('BDT 40,00,000.00');
     expect(result.lines).toHaveLength(2);
     expect(result.lines[0]?.runningBalancePaisa).toBe('500000000');
     expect(result.lines[1]?.runningBalancePaisa).toBe('400000000');
@@ -151,15 +151,15 @@ describe('StatementService (AT-14 & Phase A7.5)', () => {
     expect(reconciliation.customerId).toBe(customerId);
     // Statement outstanding
     expect(reconciliation.statementOutstandingPaisa).toBe('400000000');
-    expect(reconciliation.statementOutstandingFormatted).toBe('৳40,00,000.00');
+    expect(reconciliation.statementOutstandingFormatted).toBe('BDT 40,00,000.00');
 
     // AR ledger balance
     expect(reconciliation.arLedgerBalancePaisa).toBe('400000000');
-    expect(reconciliation.arLedgerBalanceFormatted).toBe('৳40,00,000.00');
+    expect(reconciliation.arLedgerBalanceFormatted).toBe('BDT 40,00,000.00');
 
     // AR aging total
     expect(reconciliation.arAgingTotalPaisa).toBe('400000000');
-    expect(reconciliation.arAgingTotalFormatted).toBe('৳40,00,000.00');
+    expect(reconciliation.arAgingTotalFormatted).toBe('BDT 40,00,000.00');
 
     // Exactly 0.00 difference and reconciled
     expect(reconciliation.differencePaisa).toBe('0');

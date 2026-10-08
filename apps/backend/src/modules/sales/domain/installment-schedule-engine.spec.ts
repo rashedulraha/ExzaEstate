@@ -31,9 +31,9 @@ describe('Installment Schedule Engine (Domain Core)', () => {
       expect(sum).toBe(netPricePaisa);
       expect(schedule.totalScheduledPaisa).toBe(netPricePaisa);
 
-      expect(schedule.items[0]?.amountFormatted).toBe('৳33,333.34');
-      expect(schedule.items[1]?.amountFormatted).toBe('৳33,333.33');
-      expect(schedule.items[2]?.amountFormatted).toBe('৳33,333.33');
+      expect(schedule.items[0]?.amountFormatted).toBe('BDT 33,333.34');
+      expect(schedule.items[1]?.amountFormatted).toBe('BDT 33,333.33');
+      expect(schedule.items[2]?.amountFormatted).toBe('BDT 33,333.33');
     });
   });
 

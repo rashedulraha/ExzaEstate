@@ -10,9 +10,9 @@
 export interface CreateJournalLineDto {
   /** Target account UUID */
   accountId: string;
-  /** Debit amount in integer paisa (e.g. "50000000" for ৳5,00,000) */
+  /** Debit amount in integer paisa (e.g. "50000000" for BDT 5,00,000) */
   debitPaisa?: string;
-  /** Credit amount in integer paisa (e.g. "50000000" for ৳5,00,000) */
+  /** Credit amount in integer paisa (e.g. "50000000" for BDT 5,00,000) */
   creditPaisa?: string;
   /** Line narration / description */
   description?: string;

@@ -124,8 +124,8 @@ describe('Operations Module (B6) - S2: Vendors, Bills & Accounts Payable (AP)', 
       fireEvent.change(tdsInput, { target: { value: '25000' } }); // BDT 25,00,000 TDS
     }
 
-    // Verify net payable update: ৳5,00,000 - ৳25,000 = ৳4,75,000
-    expect(screen.getByText(/Net Payable:\s*৳4,75,000/)).toBeDefined();
+    // Verify net payable update: BDT 5,00,000 - BDT 25,000 = BDT 4,75,000
+    expect(screen.getByText(/Net Payable:\s*BDT\s*4,75,000/)).toBeDefined();
 
     const saveBtn = screen.getByText('Save Vendor Bill');
     fireEvent.submit(saveBtn.closest('form')!);

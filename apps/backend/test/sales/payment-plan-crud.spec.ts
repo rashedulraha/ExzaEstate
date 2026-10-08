@@ -38,17 +38,17 @@ describe('Sales Payment Plans & Installment Engine (Task A4.1)', () => {
       expect(res.body.success).toBe(true);
       const data = res.body.data;
       expect(data.netPricePaisa).toBe('10000000');
-      expect(data.netPriceFormatted).toBe('৳1,00,000.00');
+      expect(data.netPriceFormatted).toBe('BDT 1,00,000.00');
       expect(data.totalScheduledPaisa).toBe('10000000');
       expect(data.installmentCount).toBe(3);
 
       expect(data.items).toHaveLength(3);
       expect(data.items[0].amountPaisa).toBe('3333334');
-      expect(data.items[0].amountFormatted).toBe('৳33,333.34');
+      expect(data.items[0].amountFormatted).toBe('BDT 33,333.34');
       expect(data.items[1].amountPaisa).toBe('3333333');
-      expect(data.items[1].amountFormatted).toBe('৳33,333.33');
+      expect(data.items[1].amountFormatted).toBe('BDT 33,333.33');
       expect(data.items[2].amountPaisa).toBe('3333333');
-      expect(data.items[2].amountFormatted).toBe('৳33,333.33');
+      expect(data.items[2].amountFormatted).toBe('BDT 33,333.33');
 
       const sum = data.items.reduce(
         (acc: bigint, it: { amountPaisa: string }) => acc + BigInt(it.amountPaisa),

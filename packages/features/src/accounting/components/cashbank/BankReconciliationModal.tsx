@@ -103,7 +103,7 @@ export function BankReconciliationModal({
 
           <FormField
             id="statementBalanceTaka"
-            label="Statement Balance (BDT ৳)"
+            label="Statement Balance (BDT)"
             required
             error={errors.balance}
           >

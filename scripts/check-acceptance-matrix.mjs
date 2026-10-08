@@ -81,7 +81,7 @@ export const ACCEPTANCE_TESTS = [
     id: 'AT-19',
     pri: 'P0',
     milestone: 'A-M1',
-    title: 'Lakh/crore currency formatting (৳5,00,000)',
+    title: 'Lakh/crore currency formatting (BDT 5,00,000)',
   },
   {
     id: 'AT-20',

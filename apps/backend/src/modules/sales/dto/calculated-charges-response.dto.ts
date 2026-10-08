@@ -13,7 +13,7 @@ export class CalculatedChargeItemResponseDto {
   @ApiProperty({ description: 'Base charge amount in paisa', example: '15000000' })
   baseAmountPaisa!: string;
 
-  @ApiProperty({ description: 'Base charge amount formatted in BDT', example: '৳1,50,000.00' })
+  @ApiProperty({ description: 'Base charge amount formatted in BDT', example: 'BDT 1,50,000.00' })
   baseAmountFormatted!: string;
 
   @ApiProperty({ description: 'Applicable VAT rate percentage', example: 5.0 })
@@ -22,13 +22,13 @@ export class CalculatedChargeItemResponseDto {
   @ApiProperty({ description: 'Calculated VAT amount in paisa', example: '750000' })
   vatAmountPaisa!: string;
 
-  @ApiProperty({ description: 'VAT amount formatted in BDT', example: '৳7,500.00' })
+  @ApiProperty({ description: 'VAT amount formatted in BDT', example: 'BDT 7,500.00' })
   vatAmountFormatted!: string;
 
   @ApiProperty({ description: 'Total charge amount in paisa (base + VAT)', example: '15750000' })
   totalAmountPaisa!: string;
 
-  @ApiProperty({ description: 'Total charge amount formatted in BDT', example: '৳1,57,500.00' })
+  @ApiProperty({ description: 'Total charge amount formatted in BDT', example: 'BDT 1,57,500.00' })
   totalAmountFormatted!: string;
 
   @ApiProperty({
@@ -45,13 +45,13 @@ export class ChargeCalculationSummaryResponseDto {
   @ApiProperty({ description: 'Net property price in paisa', example: '500000000' })
   netPricePaisa!: string;
 
-  @ApiProperty({ description: 'Net property price formatted in BDT', example: '৳50,00,000.00' })
+  @ApiProperty({ description: 'Net property price formatted in BDT', example: 'BDT 50,00,000.00' })
   netPriceFormatted!: string;
 
   @ApiProperty({ description: 'Total charges included in the net price in paisa', example: '0' })
   totalIncludedChargesPaisa!: string;
 
-  @ApiProperty({ description: 'Total included charges formatted in BDT', example: '৳0.00' })
+  @ApiProperty({ description: 'Total included charges formatted in BDT', example: 'BDT 0.00' })
   totalIncludedChargesFormatted!: string;
 
   @ApiProperty({
@@ -62,14 +62,14 @@ export class ChargeCalculationSummaryResponseDto {
 
   @ApiProperty({
     description: 'Total additional charges formatted in BDT',
-    example: '৳1,50,000.00',
+    example: 'BDT 1,50,000.00',
   })
   totalAdditionalChargesFormatted!: string;
 
   @ApiProperty({ description: 'Total VAT on charges in paisa', example: '750000' })
   totalVatPaisa!: string;
 
-  @ApiProperty({ description: 'Total VAT formatted in BDT', example: '৳7,500.00' })
+  @ApiProperty({ description: 'Total VAT formatted in BDT', example: 'BDT 7,500.00' })
   totalVatFormatted!: string;
 
   @ApiProperty({
@@ -78,7 +78,7 @@ export class ChargeCalculationSummaryResponseDto {
   })
   grandTotalPaisa!: string;
 
-  @ApiProperty({ description: 'Grand total formatted in BDT', example: '৳51,57,500.00' })
+  @ApiProperty({ description: 'Grand total formatted in BDT', example: 'BDT 51,57,500.00' })
   grandTotalFormatted!: string;
 
   @ApiProperty({ description: 'Itemised charges details', type: [CalculatedChargeItemResponseDto] })

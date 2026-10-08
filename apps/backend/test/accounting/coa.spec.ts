@@ -177,7 +177,7 @@ describe('A6.1 — Chart of Accounts & Account Balances', () => {
     expect(balRes.body.data.accountId).toBe(firstAcc.id);
     expect(balRes.body.data.code).toBe(firstAcc.code);
     expect(balRes.body.data.balancePaisa).toBe('0');
-    expect(balRes.body.data.formattedBalance).toBe('৳0.00');
+    expect(balRes.body.data.formattedBalance).toBe('BDT 0.00');
   });
 
   it('supports filtering accounts by type and search keyword', async () => {
