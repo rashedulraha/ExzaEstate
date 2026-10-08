@@ -13,9 +13,9 @@
 
 ## Current Status
 
-- **Active Phase:** Part C (Task C2 Complete, ready for C3)
-- **Next Task to Execute:** Part C: `C3 Web Deployment, CDN & Security Headers`
-- **Tasks complete:** 85 / 88 (P2 cards excluded; Part A 100% Complete, Part B 100% Complete, C1 Complete, C2 Complete)
+- **Active Phase:** Part C (Task C3 Complete, ready for C4)
+- **Next Task to Execute:** Part C: `C4 Playwright Critical Flows: Web ⇄ Desktop Parity`
+- **Tasks complete:** 86 / 88 (P2 cards excluded; Part A 100% Complete, Part B 100% Complete, C1, C2, C3 Complete)
 - **Blockers:** None
 - **Owner action items before/while coding:**
   - Copy the new `task.md` (v6) into `agent/task.md`.
@@ -175,7 +175,7 @@ Tick a box only after the verification rules above are met. Dependencies are def
 
 - [x] `C1` Web SPA Shell, Platform Adapters & Cookie-Refresh Auth
 - [x] `C2` Responsive Layouts & Mobile Card Views
-- [ ] `C3` Web Deployment, CDN & Security Headers
+- [x] `C3` Web Deployment, CDN & Security Headers
 - [ ] `C4` Playwright Critical Flows: Web ⇄ Desktop Parity
 - [ ] `C5` Pre-Launch Security & Release Gate
 
@@ -2260,3 +2260,31 @@ Tick a box only after the verification rules above are met. Dependencies are def
    - `pnpm check:all`: All 9 architectural gates green, 40/40 acceptance tests passed.
 4. Open questions: None.
 5. Next task ID: C3 (Web Deployment, CDN & Production Security Headers)
+
+### [2026-10-08] Task C3: Web Deployment, CDN & Security Headers
+
+1. Task ID & status: `C3` done
+2. Files created/modified:
+   - `apps/web/deploy/nginx.conf`
+   - `apps/web/deploy/security-headers.conf`
+   - `apps/web/deploy/_headers`
+   - `apps/web/deploy/_redirects`
+   - `apps/web/deploy/Dockerfile`
+   - `apps/web/public/_headers`
+   - `apps/web/public/_redirects`
+   - `.github/workflows/deploy-web.yml`
+   - `scripts/check-web-security-headers.mjs`
+   - `scripts/check-all.mjs`
+   - `apps/web/src/security-headers.spec.ts`
+   - `agent/PRODUCTION_CHECKLIST.md`
+   - `agent/task.md`
+   - `agent/PROGRESS.md`
+3. Verification command & result:
+   - `node scripts/check-web-security-headers.mjs`: All Web deployment security headers, CSP, caching rules, and self-hosted asset rules pass (100%).
+   - `pnpm --filter @exzaestate/web test`: 3 test files, 20/20 tests green.
+   - `pnpm --filter @exzaestate/web typecheck`: Clean (0 errors).
+   - `pnpm --filter @exzaestate/web build`: Clean production build in 634ms, self-hosted woff/woff2 fonts and hashed bundles, static headers and redirects copied to dist/.
+   - `pnpm oxlint apps/web`: 0 errors, 0 warnings.
+   - `pnpm check:all`: All 10 architectural quality gates green (including Web Security Headers & Deployment Check), 40/40 acceptance tests passed.
+4. Open questions: None.
+5. Next task ID: C4 (Playwright Critical Flows: Web ⇄ Desktop Parity)

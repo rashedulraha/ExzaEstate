@@ -1242,7 +1242,7 @@ These are applied as defaults in `architecture.md` v4 but are still **"Needs sig
 
 #### C3 — Web Deployment, CDN & Security Headers
 
-- **Status:** [ ] · **Size:** M (3 steps) · **Depends:** C1, A0.11
+- **Status:** [x] · **Size:** M (3 steps) · **Depends:** C1, A0.11
 - **Reads:** `architecture.md` §12.7, §17; `security.md` §10, §15, §16.
 - **Touches:** `.github/workflows/deploy-web.yml`, `apps/web/deploy/**`.
 - **Steps:** **S1** static host + SPA fallback behind CDN/WAF. **S2** headers at the host: CSP without `unsafe-inline`/`unsafe-eval`, `frame-ancestors 'none'`, HSTS, `X-Content-Type-Options`, `Referrer-Policy: no-referrer`, minimal `Permissions-Policy`. **S3** same-site API domain + CORS allow-list. Verify: header-scan script in CI.

@@ -11,7 +11,7 @@
 ## 📋 Production Readiness Checklist (Core v1.0)
 
 - [x] **Task 1 (C2): Responsive Layouts & Mobile Card Views**
-- [ ] **Task 2 (C3): Web Deployment, CDN & Production Security Headers**
+- [x] **Task 2 (C3): Web Deployment, CDN & Production Security Headers**
 - [ ] **Task 3 (C4): Playwright Critical Flows (Web ⇄ Desktop Parity E2E)**
 - [ ] **Task 4 (C5): Pre-Launch Security & Release Gate (Final Sign-off)**
 
