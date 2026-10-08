@@ -28,7 +28,10 @@ export function isUserSuperAdmin(companyId?: string, permissions?: string[]): bo
 }
 
 export function getRoleSpecificRedirect(isSuperAdmin: boolean, pathname: string): string | null {
-  if (isSuperAdmin && pathname === '/dashboard') return '/system/dashboard';
+  if (isSuperAdmin && (pathname === '/dashboard' || pathname === '/system'))
+    return '/system/dashboard';
+  if (isSuperAdmin && pathname === '/audit') return '/system/audit';
+  if (isSuperAdmin && pathname === '/profile') return '/system/profile';
   if (!isSuperAdmin && pathname.startsWith('/system')) return '/dashboard';
   return null;
 }
@@ -64,9 +67,9 @@ export function buildHeaderProps(
       userName: user?.fullName || 'Super Administrator',
       companyName: 'Platform Administration',
       userEmail: user?.email,
-      branchName: 'Platform Realm',
+      branchName: 'Global Administration',
       fiscalYear: 'System v2.4.0',
-      searchPlaceholder: 'Search tenant companies, platform commands...',
+      searchPlaceholder: 'Search companies, actions, licenses...',
       onOpenCommandPalette: actions.onSearch,
       onNotificationsClick: actions.onNotif,
       onProfileClick: actions.onProfile,
@@ -79,7 +82,7 @@ export function buildHeaderProps(
     userEmail: user?.email,
     branchName: 'Head Office',
     fiscalYear: 'FY 2026–27 (Q3)',
-    searchPlaceholder: 'Search records, actions, vouchers...',
+    searchPlaceholder: 'Search properties, customers, bookings...',
     onOpenCommandPalette: actions.onSearch,
     onNotificationsClick: actions.onNotif,
     onProfileClick: actions.onProfile,

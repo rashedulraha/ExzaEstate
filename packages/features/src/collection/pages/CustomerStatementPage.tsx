@@ -39,10 +39,9 @@ export function CustomerStatementPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-h1 font-bold text-text">Customer Statement of Account</h1>
+          <h1 className="text-h1 font-bold text-text">Customer Account Statement</h1>
           <p className="text-small text-text-muted mt-1">
-            Running ledger of customer sales, installment invoices, collections, and AR balance
-            reconciliation.
+            Complete history of customer bookings, installment payments, and outstanding balances.
           </p>
         </div>
 
@@ -51,14 +50,14 @@ export function CustomerStatementPage() {
             <Search className="w-4 h-4 text-text-muted absolute left-3 top-1/2 -translate-y-1/2" />
             <Input
               id="statementCustomerId"
-              placeholder="Enter Customer ID or Account #..."
+              placeholder="Enter customer ID or name..."
               value={customerIdInput}
               onChange={(e) => setCustomerIdInput(e.target.value)}
               className="pl-9"
             />
           </div>
           <Button type="submit" variant="secondary">
-            Lookup
+            Search
           </Button>
         </form>
       </div>

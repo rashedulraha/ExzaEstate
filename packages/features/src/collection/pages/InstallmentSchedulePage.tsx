@@ -35,9 +35,9 @@ export function InstallmentSchedulePage() {
       {/* Page Title & Search Bar */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-h1 font-bold text-text">Installment Schedule & Collection Health</h1>
+          <h1 className="text-h1 font-bold text-text">Customer Installment Schedule</h1>
           <p className="text-small text-text-muted mt-1">
-            Visualise payment progress, timing health, and upcoming milestones via Payment Terrace.
+            Track installment due dates, payments made, and remaining balance for each booking.
           </p>
         </div>
 
@@ -46,14 +46,14 @@ export function InstallmentSchedulePage() {
             <Search className="w-4 h-4 text-text-muted absolute left-3 top-1/2 -translate-y-1/2" />
             <Input
               id="bookingIdInput"
-              placeholder="Search by Booking ID / Code..."
+              placeholder="Enter booking ID or code (e.g. BK-0010)..."
               value={bookingIdInput}
               onChange={(e) => setBookingIdInput(e.target.value)}
               className="pl-9"
             />
           </div>
           <Button type="submit" variant="secondary">
-            Lookup
+            Search
           </Button>
         </form>
       </div>
@@ -62,9 +62,9 @@ export function InstallmentSchedulePage() {
       <div className="p-6 rounded-card border border-border bg-surface space-y-4">
         <div className="flex items-center justify-between">
           <div className="space-y-0.5">
-            <h3 className="text-h3 font-bold text-text">Payment Terrace</h3>
+            <h3 className="text-h3 font-bold text-text">Installment Progress Chart</h3>
             <p className="text-caption text-text-muted">
-              Height reflects installment amount. Bottom-up fill indicates collected amount.
+              Visual bars showing total installment amounts and payment completion.
             </p>
           </div>
           {activeBookingId && (
@@ -80,14 +80,14 @@ export function InstallmentSchedulePage() {
           <div className="py-12 text-center text-text-muted border border-dashed border-border rounded-card">
             {activeBookingId
               ? 'No installment blocks found for this booking.'
-              : 'Enter a Booking ID above to render the customer payment terrace.'}
+              : 'Enter a Booking ID above to view the installment schedule chart.'}
           </div>
         )}
       </div>
 
       {/* Installment Data Table */}
       <div className="space-y-3">
-        <h3 className="text-h3 font-bold text-text">Schedule Ledger</h3>
+        <h3 className="text-h3 font-bold text-text">Installment Breakdown List</h3>
         <InstallmentDataTable
           installments={installments}
           isLoading={isLoading}

@@ -50,8 +50,8 @@ export function OnboardTenantModal({
         reset();
         onClose();
       }}
-      title="Onboard New Company Tenant"
-      description="Provision a multi-tenant PostgreSQL workspace, initial head office branch, and Managing Director invitation."
+      title="Register New Company"
+      description="Add a new business to ExzaEstate, set up their primary office branch, and create their administrator account."
       size="lg"
     >
       <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-5">
@@ -64,9 +64,7 @@ export function OnboardTenantModal({
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="block text-label text-text font-medium mb-1">
-                Company Legal Name *
-              </label>
+              <label className="block text-label text-text font-medium mb-1">Company Name *</label>
               <input
                 type="text"
                 placeholder="e.g. Shanta Holdings Ltd."
@@ -80,7 +78,7 @@ export function OnboardTenantModal({
 
             <div>
               <label className="block text-label text-text font-medium mb-1">
-                Company Unique Code *
+                Company Short Code *
               </label>
               <input
                 type="text"
@@ -97,7 +95,7 @@ export function OnboardTenantModal({
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label className="block text-label text-text font-medium mb-1">
-                Initial Branch Name
+                Primary Office Branch
               </label>
               <input
                 type="text"
@@ -107,7 +105,9 @@ export function OnboardTenantModal({
               />
             </div>
             <div>
-              <label className="block text-label text-text font-medium mb-1">Timezone</label>
+              <label className="block text-label text-text font-medium mb-1">
+                Timezone / Region
+              </label>
               <input
                 type="text"
                 placeholder="Asia/Dhaka"
@@ -118,11 +118,11 @@ export function OnboardTenantModal({
           </div>
         </div>
 
-        {/* Section 2: Managing Director (Tenant Admin) */}
+        {/* Section 2: Managing Director (Company Admin) */}
         <div className="space-y-3 pt-2">
           <h3 className="text-caption font-semibold text-text-muted flex items-center gap-1.5 border-b border-border pb-1.5">
             <User className="w-3.5 h-3.5 text-primary" />
-            Managing Director (Tenant Super User)
+            Company Administrator / Managing Director Account
           </h3>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -164,7 +164,7 @@ export function OnboardTenantModal({
             <div>
               <label className="block text-label text-text font-medium mb-1 flex items-center gap-1">
                 <Lock className="w-3 h-3 text-text-muted" />
-                Temporary Password *
+                Initial Password *
               </label>
               <input
                 type="text"
@@ -209,7 +209,7 @@ export function OnboardTenantModal({
           </Button>
 
           <Button type="submit" variant="primary" isLoading={isSubmitting}>
-            Provision Company Workspace
+            Register &amp; Create Company
           </Button>
         </div>
       </form>

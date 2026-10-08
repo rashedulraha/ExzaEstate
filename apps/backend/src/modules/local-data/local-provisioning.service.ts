@@ -28,6 +28,21 @@ export interface LocalProvisioningResult {
   };
 }
 
+function assertRequiredString(value: string | undefined, message: string): string {
+  const trimmed = value?.trim();
+  if (!trimmed) {
+    throw new BadRequestException(message);
+  }
+  return trimmed;
+}
+
+function assertPassword(password: string | undefined): string {
+  if (!password || password.length < 8) {
+    throw new BadRequestException('Administrator password is required (minimum 8 characters)');
+  }
+  return password;
+}
+
 @Injectable()
 export class LocalProvisioningService {
   private readonly logger = new Logger(LocalProvisioningService.name);
@@ -192,39 +207,35 @@ export class LocalProvisioningService {
     );
   }
 
-  private validateRequiredStrings(
-    records: Array<{ value?: string; message: string; minLength?: number }>,
-  ) {
-    for (const { value, message, minLength = 1 } of records) {
-      if (!value || value.trim().length < minLength) {
-        throw new BadRequestException(message);
-      }
-    }
-  }
-
   private resolveProvisioningConfig(input?: LocalProvisioningDto) {
     if (!input) {
       throw new BadRequestException('Local provisioning input is required');
     }
-    this.validateRequiredStrings([
-      { value: input.companyCode, message: 'Company code is required for provisioning' },
-      { value: input.companyName, message: 'Legal company name is required for provisioning' },
-      { value: input.adminEmail, message: 'Administrator email is required for provisioning' },
-      { value: input.adminName, message: 'Administrator full name is required for provisioning' },
-      {
-        value: input.adminPassword,
-        message: 'Administrator password is required (minimum 8 characters)',
-        minLength: 8,
-      },
-    ]);
+    const companyCode = assertRequiredString(
+      input.companyCode,
+      'Company code is required for provisioning',
+    );
+    const companyName = assertRequiredString(
+      input.companyName,
+      'Legal company name is required for provisioning',
+    );
+    const email = assertRequiredString(
+      input.adminEmail,
+      'Administrator email is required for provisioning',
+    );
+    const fullName = assertRequiredString(
+      input.adminName,
+      'Administrator full name is required for provisioning',
+    );
+    const rawPassword = assertPassword(input.adminPassword);
 
     return {
-      companyCode: input.companyCode.trim().toUpperCase(),
-      companyName: input.companyName.trim(),
-      email: input.adminEmail.trim().toLowerCase(),
-      fullName: input.adminName.trim(),
+      companyCode: companyCode.toUpperCase(),
+      companyName,
+      email: email.toLowerCase(),
+      fullName,
       timezone: input.timezone?.trim() || 'Asia/Dhaka',
-      rawPassword: input.adminPassword,
+      rawPassword,
       licenseKey: this.resolveLicenseKey(input),
       machineId: input.machineId ? input.machineId.trim() : null,
     };

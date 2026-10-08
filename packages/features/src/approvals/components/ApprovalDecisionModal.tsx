@@ -13,9 +13,9 @@ interface ApprovalDecisionModalProps {
 }
 
 function getDecisionTitle(decision: 'APPROVE' | 'REJECT' | 'OVERRIDE'): string {
-  if (decision === 'APPROVE') return 'Authorize Request';
+  if (decision === 'APPROVE') return 'Approve Request';
   if (decision === 'REJECT') return 'Reject Request';
-  return 'Executive Joint Override';
+  return 'Executive Override';
 }
 
 function getDecisionButtonVariant(
@@ -27,8 +27,8 @@ function getDecisionButtonVariant(
 
 function getDecisionPlaceholder(decision: 'APPROVE' | 'REJECT' | 'OVERRIDE'): string {
   if (decision === 'REJECT') return 'Explain why this request is rejected...';
-  if (decision === 'OVERRIDE') return 'State board / executive mandate for override...';
-  return 'Optional approval notes or conditions...';
+  if (decision === 'OVERRIDE') return 'State management reason for override...';
+  return 'Optional approval notes or comments...';
 }
 
 function validateDecision(
@@ -37,7 +37,7 @@ function validateDecision(
   reason: string,
 ): string | null {
   if (decision === 'APPROVE' && isSelf) {
-    return 'Maker-checker policy: You cannot approve your own request.';
+    return 'Self-approval not allowed: You cannot approve your own request.';
   }
   const isReasonMandatory = decision === 'REJECT' || decision === 'OVERRIDE';
   if (isReasonMandatory && reason.trim().length < 5) {
@@ -73,25 +73,25 @@ function DecisionForm({
     <form onSubmit={onSubmit} className="space-y-4">
       {decision === 'APPROVE' && isSelf && (
         <div className="p-3 rounded-card bg-danger/12 border border-danger/20 text-danger text-small">
-          <strong>Maker-Checker Policy Violation (AT-24):</strong> You cannot approve a request you
-          initiated. Please escalate to a peer or supervisor.
+          <strong>Self-Approval Not Allowed:</strong> You cannot approve a request you initiated
+          yourself. Another authorized manager must approve it.
         </div>
       )}
 
       <div className="p-3 bg-surface-sunken rounded-card border border-border text-small space-y-1">
         <div className="flex justify-between">
-          <span className="text-text-muted">Entity:</span>
+          <span className="text-text-muted">Item Type:</span>
           <span className="font-medium text-text">{approval.entityType}</span>
         </div>
         <div className="flex justify-between">
-          <span className="text-text-muted">Approval Tier:</span>
+          <span className="text-text-muted">Approval Step:</span>
           <span className="font-medium text-text">
-            Level {approval.currentTier} of {approval.maxTier}
+            Step {approval.currentTier} of {approval.maxTier}
           </span>
         </div>
         {approval.percentage !== undefined && approval.percentage !== null && (
           <div className="flex justify-between">
-            <span className="text-text-muted">Requested Percentage:</span>
+            <span className="text-text-muted">Discount Requested:</span>
             <span className="font-semibold text-accent">{approval.percentage}%</span>
           </div>
         )}
@@ -100,7 +100,9 @@ function DecisionForm({
       <FormField
         id="decision-reason"
         label={
-          isReasonMandatory ? 'Business Justification (Mandatory)' : 'Approver Notes / Comments'
+          isReasonMandatory
+            ? 'Reason / Explanation (Required)'
+            : 'Approval Notes / Comments (Optional)'
         }
         required={isReasonMandatory}
         error={error ?? undefined}

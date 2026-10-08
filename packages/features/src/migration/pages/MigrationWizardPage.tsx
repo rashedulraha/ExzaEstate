@@ -188,12 +188,12 @@ export function MigrationWizardPage() {
           <div className="flex items-center gap-3 mt-1.5">
             <h1 className="text-h1 font-bold text-text">Go-Live Data Migration Wizard</h1>
             <span className="text-caption font-semibold px-2.5 py-0.5 rounded-full bg-surface-sunken text-primary border border-primary/20">
-              {activeBatch ? activeBatch.batchNumber : 'Pre-Cutover Draft'}
+              {activeBatch ? activeBatch.batchNumber : 'Draft Batch'}
             </span>
           </div>
           <p className="text-body text-text-muted mt-1">
-            Enterprise legacy data import, cut-over opening balances, and AT-29 reconciliation gate
-            (FLOW-03).
+            Import previous customer records, opening balances, and ensure figures balance before
+            go-live.
           </p>
         </div>
       </div>

@@ -32,11 +32,11 @@ function buildActionItems(props: ActionCenterViewProps): ActionItem[] {
   if (overdueCount > 0 || overduePaisa > 0n) {
     items.push({
       id: 'overdue-recovery',
-      tag: 'Critical Recovery',
+      tag: 'Overdue Dues',
       tagColor: 'bg-danger/10 text-danger border-danger/25',
       title: `${overdueCount} Overdue Installments (${formatMoney(overduePaisa)})`,
-      description: 'Accounts exceeding scheduled due date; requires recovery officer follow-up.',
-      actionLabel: 'Open Collections',
+      description: 'Installments past scheduled due date; contact customer for payment.',
+      actionLabel: 'View Collections',
       onAction: () => props.onNavigate('/collection/receipts'),
     });
   }
@@ -44,11 +44,11 @@ function buildActionItems(props: ActionCenterViewProps): ActionItem[] {
   if (apPaisa > 0n) {
     items.push({
       id: 'ap-maturity',
-      tag: 'Payables Due',
+      tag: 'Bills Due',
       tagColor: 'bg-warning/10 text-warning border-warning/25',
-      title: `Outstanding Payables (${formatMoney(apPaisa)})`,
-      description: 'Vendor bills and contractor claims verified; awaiting authorization.',
-      actionLabel: 'Operations AP',
+      title: `Unpaid Bills & Claims (${formatMoney(apPaisa)})`,
+      description: 'Vendor bills and contractor claims verified; ready for approval & payment.',
+      actionLabel: 'View Expenses',
       onAction: () => props.onNavigate('/operations/expenses'),
     });
   }
@@ -65,9 +65,9 @@ function ActionCenterView(props: ActionCenterViewProps) {
       {/* Header */}
       <div className="flex items-center justify-between gap-3 pb-1 border-b border-border/80">
         <div>
-          <h3 className="text-body font-bold text-text">Executive Action Center</h3>
+          <h3 className="text-body font-bold text-text">Action Items & Alerts</h3>
           <p className="text-caption text-text-muted">
-            High-priority operations requiring management intervention
+            Important items needing your attention and follow up
           </p>
         </div>
         <span
@@ -117,9 +117,9 @@ function ActionCenterView(props: ActionCenterViewProps) {
           <div className="w-10 h-10 rounded-full bg-success/10 border border-success/25 flex items-center justify-center text-success mb-1">
             <CheckCircle2 className="w-5 h-5" />
           </div>
-          <h4 className="text-body font-bold text-text">All Operational Workflows Up To Date</h4>
+          <h4 className="text-body font-bold text-text">Everything Is Up to Date</h4>
           <p className="text-caption text-text-muted max-w-sm">
-            No overdue installments or past-due vendor payables requiring urgent executive action.
+            No overdue customer installments or pending vendor bills right now.
           </p>
         </div>
       )}

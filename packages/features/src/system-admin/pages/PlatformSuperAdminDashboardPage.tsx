@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useToast, LoadingState, ErrorState } from '@exzaestate/ui';
 import { useSystemAdmin } from '../hooks/useSystemAdmin.js';
 import { ClusterTelemetryConsole } from '../components/ClusterTelemetryConsole.js';
+import { PlatformFastNavCards } from '../components/PlatformFastNavCards.js';
 import { OnboardTenantModal } from '../components/OnboardTenantModal.js';
 import { LicenseGeneratorModal } from '../components/LicenseGeneratorModal.js';
 import { TenantDetailModal } from '../components/TenantDetailModal.js';
@@ -48,8 +49,8 @@ export function PlatformSuperAdminDashboardPage() {
   const handleRefreshAll = async () => {
     await Promise.all([refetchTenants(), refetchHealth(), refetchLicenses(), refetchAuditLogs()]);
     showToast({
-      title: 'Telemetry Refreshed',
-      description: 'Platform health, tenants, licenses, and audit trail synchronized.',
+      title: 'System Data Refreshed',
+      description: 'Companies, licenses, and server status successfully updated.',
       family: 'info',
     });
   };
@@ -58,15 +59,15 @@ export function PlatformSuperAdminDashboardPage() {
     try {
       const res = await onboardTenant(data);
       showToast({
-        title: 'Company Provisioned',
-        description: `Tenant ${data.name} (${res.companyCode}) successfully created.`,
+        title: 'Company Registered Successfully',
+        description: `Company ${data.name} (${res.companyCode}) is now ready.`,
         family: 'success',
       });
       setIsOnboardOpen(false);
     } catch (err) {
       showToast({
-        title: 'Provisioning Failed',
-        description: err instanceof Error ? err.message : 'Unable to onboard tenant company.',
+        title: 'Registration Failed',
+        description: err instanceof Error ? err.message : 'Unable to register company.',
         family: 'danger',
       });
     }
@@ -76,15 +77,15 @@ export function PlatformSuperAdminDashboardPage() {
     try {
       const res = await generateLicense(data);
       showToast({
-        title: 'License Issued',
-        description: 'Cryptographically signed Ed25519 license persisted.',
+        title: 'Software License Created',
+        description: 'New software license issued and active.',
         family: 'success',
       });
       return res;
     } catch (err) {
       showToast({
         title: 'Generation Failed',
-        description: err instanceof Error ? err.message : 'Could not sign license.',
+        description: err instanceof Error ? err.message : 'Could not generate license.',
         family: 'danger',
       });
       throw err;
@@ -166,7 +167,7 @@ export function PlatformSuperAdminDashboardPage() {
   const suspendedTenantsCount = tenants.filter((t) => t.status === 'SUSPENDED').length;
 
   return (
-    <div className="space-y-6">
+    <div className="container-page space-y-6">
       <PlatformDashboardHeader
         isLoading={isLoadingHealth || isLoadingTenants}
         onRefreshAll={() => void handleRefreshAll()}
@@ -185,6 +186,15 @@ export function PlatformSuperAdminDashboardPage() {
         suspendedTenantsCount={suspendedTenantsCount}
         totalTenantsCount={tenants.length}
         totalLicensesCount={licenses.length}
+      />
+
+      <PlatformFastNavCards
+        totalTenants={tenants.length}
+        activeTenantsCount={activeTenantsCount}
+        suspendedTenantsCount={suspendedTenantsCount}
+        totalLicenses={licenses.length}
+        health={health}
+        totalAuditLogs={auditLogs.length}
       />
 
       <PlatformDashboardTabs

@@ -96,10 +96,10 @@ export function ExpenseListPage() {
         <div>
           <div className="flex items-center gap-2">
             <Receipt className="h-6 w-6 text-primary" />
-            <h1 className="text-h1 font-semibold text-text">Operational Expenses & Vouchers</h1>
+            <h1 className="text-h1 font-semibold text-text">Office & Project Expenses</h1>
           </div>
           <p className="mt-1 text-caption text-text-muted">
-            Threshold-driven approval governance (GM ≤ BDT 5,00,000 / MD &gt; BDT 5,00,000)
+            Track expenses, bills, and manager approvals (GM up to ৳5,00,000 / MD above ৳5,00,000).
           </p>
         </div>
 

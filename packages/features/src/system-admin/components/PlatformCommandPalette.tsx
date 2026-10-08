@@ -1,9 +1,10 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { useNavigate } from 'react-router';
-import { Search, X, Building2, KeyRound, Activity, ShieldCheck, Moon } from 'lucide-react';
+import { Search, X } from 'lucide-react';
 import { useSystemAdmin } from '../hooks/useSystemAdmin.js';
 import type { TenantItem } from '../schemas/system-admin.schema.js';
 import { PlatformPaletteResults, type PlatformActionItem } from './PlatformPaletteResults.js';
+import { createPlatformActions } from './PlatformPaletteActions.js';
 
 export interface PlatformCommandPaletteProps {
   isOpen: boolean;
@@ -17,7 +18,7 @@ export type PlatformFilterScope = 'all' | 'tenants' | 'actions' | 'licenses';
 
 const SCOPES: { id: PlatformFilterScope; label: string }[] = [
   { id: 'all', label: 'All' },
-  { id: 'tenants', label: 'Tenants' },
+  { id: 'tenants', label: 'Companies' },
   { id: 'actions', label: 'Actions' },
   { id: 'licenses', label: 'Licenses' },
 ];
@@ -39,63 +40,13 @@ export function PlatformCommandPalette({
 
   // Platform Actions definition
   const actions: PlatformActionItem[] = useMemo(
-    () => [
-      {
-        id: 'action-onboard',
-        title: 'Onboard New Company Tenant',
-        description: 'Provision a new client tenant workspace with database schema',
-        icon: Building2,
-        badge: 'Provision',
-        run: () => {
-          onOpenOnboardModal?.();
-          onClose();
-        },
-      },
-      {
-        id: 'action-license',
-        title: 'Generate Ed25519 Cryptographic License',
-        description: 'Issue offline or hardware-bound cryptographically signed license',
-        icon: KeyRound,
-        badge: 'Licensing',
-        run: () => {
-          onOpenLicenseModal?.();
-          onClose();
-        },
-      },
-      {
-        id: 'action-telemetry',
-        title: 'Cluster Health & Node Telemetry',
-        description: 'Inspect PostgreSQL 18 RLS, memory usage, and BullMQ worker queue',
-        icon: Activity,
-        badge: 'Health',
-        run: () => {
-          navigate('/system/dashboard');
-          onClose();
-        },
-      },
-      {
-        id: 'action-tenants',
-        title: 'Browse All Enterprise Tenants',
-        description: 'View full client company registry, status, and branch assignments',
-        icon: ShieldCheck,
-        badge: 'Directory',
-        run: () => {
-          navigate('/system/dashboard');
-          onClose();
-        },
-      },
-      {
-        id: 'action-theme',
-        title: 'Toggle Application Visual Theme',
-        description: 'Switch between light daylight mode and dark obsidian mode',
-        icon: Moon,
-        badge: 'Appearance',
-        run: () => {
-          document.documentElement.classList.toggle('dark');
-          onClose();
-        },
-      },
-    ],
+    () =>
+      createPlatformActions({
+        navigate,
+        onClose,
+        onOpenOnboardModal,
+        onOpenLicenseModal,
+      }),
     [navigate, onClose, onOpenOnboardModal, onOpenLicenseModal],
   );
 
@@ -152,7 +103,7 @@ export function PlatformCommandPalette({
       setSearchTerm('');
       setSelectedIndex(0);
       setActiveScope('all');
-      setTimeout(() => inputRef.current?.focus(), 50);
+      setTimeout(() => inputRef.current?.focus(), 60);
     }
   }, [isOpen]);
 
@@ -175,7 +126,7 @@ export function PlatformCommandPalette({
     }
     current -= filteredTenants.length;
     if (current < filteredLicenses.length) {
-      navigate('/system/dashboard');
+      navigate('/system/licenses');
       onClose();
     }
   };
@@ -204,7 +155,7 @@ export function PlatformCommandPalette({
   return (
     <div
       role="presentation"
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-start justify-center pt-[12vh] sm:pt-[14vh] p-4 bg-black/60 backdrop-blur-sm transition-all duration-200 animate-in fade-in"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
@@ -212,8 +163,8 @@ export function PlatformCommandPalette({
       <div
         role="dialog"
         aria-modal="true"
-        aria-label="Platform Admin Command Center"
-        className="w-full max-w-2xl bg-surface-elevated border border-border-strong rounded-card shadow-2xl overflow-hidden flex flex-col"
+        aria-label="Platform Quick Action Center"
+        className="w-full max-w-2xl bg-surface-elevated border border-border-strong rounded-2xl shadow-2xl overflow-hidden flex flex-col transform transition-all duration-150 ease-out animate-in fade-in zoom-in-95"
         onKeyDown={handleKeyDown}
       >
         {/* Search Input Bar */}
@@ -227,25 +178,31 @@ export function PlatformCommandPalette({
               setSearchTerm(e.target.value);
               setSelectedIndex(0);
             }}
-            placeholder="Search tenant companies, platform commands, license keys..."
+            placeholder="Search companies, quick actions, license keys..."
             className="flex-1 bg-transparent border-none outline-hidden text-body text-text placeholder:text-text-muted"
           />
           {searchTerm && (
             <button
               type="button"
-              onClick={() => setSearchTerm('')}
-              className="p-1 rounded text-text-muted hover:text-text cursor-pointer"
+              onClick={() => {
+                setSearchTerm('');
+                setSelectedIndex(0);
+                inputRef.current?.focus();
+              }}
+              className="p-1 rounded text-text-muted hover:text-text hover:bg-surface-sunken cursor-pointer transition-colors"
+              title="Clear search"
+              aria-label="Clear search"
             >
-              <X className="w-4 h-4" />
+              <X className="w-3.5 h-3.5" />
             </button>
           )}
-          <kbd className="text-caption bg-surface-sunken px-2 py-0.5 rounded border border-border font-mono text-text-muted">
+          <kbd className="hidden sm:inline-block text-caption bg-surface-sunken px-2 py-0.5 rounded border border-border font-mono text-text-muted">
             ESC
           </kbd>
         </div>
 
         {/* Scope Tabs */}
-        <div className="flex items-center gap-1.5 px-4 py-2 border-b border-border bg-surface-sunken/40 text-caption">
+        <div className="flex items-center gap-1.5 px-4 py-2 border-b border-border bg-surface-sunken/40 overflow-x-auto text-caption">
           {SCOPES.map((scope) => (
             <button
               key={scope.id}
@@ -254,9 +211,9 @@ export function PlatformCommandPalette({
                 setActiveScope(scope.id);
                 setSelectedIndex(0);
               }}
-              className={`px-2.5 py-1 rounded-button text-caption font-medium transition cursor-pointer ${
+              className={`px-2.5 py-1 rounded-full text-caption font-medium transition-all cursor-pointer ${
                 activeScope === scope.id
-                  ? 'bg-action text-on-action'
+                  ? 'bg-primary text-white shadow-xs'
                   : 'text-text-muted hover:text-text hover:bg-surface-sunken'
               }`}
             >
@@ -268,33 +225,40 @@ export function PlatformCommandPalette({
           </span>
         </div>
 
-        {/* Items List */}
-        <PlatformPaletteResults
-          filteredActions={filteredActions}
-          filteredTenants={filteredTenants}
-          filteredLicenses={filteredLicenses}
-          totalItems={totalItems}
-          selectedIndex={selectedIndex}
-          onSelectIndex={handleSelectIndex}
-          onHoverIndex={setSelectedIndex}
-        />
+        {/* Items List with Stable Min-Height (Prevents layout jump) */}
+        <div className="min-h-[320px] max-h-[460px] overflow-y-auto p-2 sidebar-scroll flex flex-col transition-[height] duration-150">
+          <PlatformPaletteResults
+            searchTerm={searchTerm}
+            filteredActions={filteredActions}
+            filteredTenants={filteredTenants}
+            filteredLicenses={filteredLicenses}
+            totalItems={totalItems}
+            selectedIndex={selectedIndex}
+            onSelectIndex={handleSelectIndex}
+            onHoverIndex={setSelectedIndex}
+          />
+        </div>
 
         {/* Footer */}
-        <div className="px-4 py-2 bg-surface-sunken border-t border-border flex items-center justify-between text-caption text-text-muted">
-          <span>
-            <kbd className="bg-surface px-1.5 py-0.5 rounded border border-border text-[11px]">
-              ↑
-            </kbd>{' '}
-            <kbd className="bg-surface px-1.5 py-0.5 rounded border border-border text-[11px]">
-              ↓
-            </kbd>{' '}
-            to navigate ·{' '}
-            <kbd className="bg-surface px-1.5 py-0.5 rounded border border-border text-[11px]">
-              Enter
-            </kbd>{' '}
-            to execute
-          </span>
-          <span className="font-medium text-primary">Super Admin Scope</span>
+        <div className="px-4 py-2.5 bg-surface-sunken border-t border-border flex items-center justify-between text-caption text-text-muted">
+          <div className="flex items-center gap-3">
+            <span>
+              <kbd className="font-mono bg-surface px-1.5 py-0.5 rounded border border-border text-[11px]">
+                ↑
+              </kbd>{' '}
+              <kbd className="font-mono bg-surface px-1.5 py-0.5 rounded border border-border text-[11px]">
+                ↓
+              </kbd>{' '}
+              to navigate
+            </span>
+            <span>
+              <kbd className="font-mono bg-surface px-1.5 py-0.5 rounded border border-border text-[11px]">
+                Enter
+              </kbd>{' '}
+              to execute
+            </span>
+          </div>
+          <span className="text-[11px] text-text-muted/60">Super Admin Portal</span>
         </div>
       </div>
     </div>

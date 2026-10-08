@@ -80,16 +80,16 @@ export function ApprovalDetailDrawer({
             </div>
           </div>
           <div className="text-right">
-            <div className="text-caption text-text-muted">Workflow Tier</div>
+            <div className="text-caption text-text-muted">Approval Step</div>
             <div className="text-small font-semibold text-text mt-1">
-              Tier {approval.currentTier} of {approval.maxTier}
+              Step {approval.currentTier} of {approval.maxTier}
             </div>
           </div>
         </div>
 
         {approval.amountPaisa && (
           <div className="card-stat">
-            <div className="text-caption text-text-muted">Financial Impact</div>
+            <div className="text-caption text-text-muted">Total Amount</div>
             <div className="text-h2 font-bold text-text mt-1">
               {formatMoney(approval.amountPaisa)}
             </div>
@@ -98,26 +98,26 @@ export function ApprovalDetailDrawer({
 
         {approval.percentage !== undefined && approval.percentage !== null && (
           <div className="card-stat">
-            <div className="text-caption text-text-muted">Requested Percentage</div>
+            <div className="text-caption text-text-muted">Discount Percentage</div>
             <div className="text-h2 font-bold text-accent mt-1">{approval.percentage}%</div>
           </div>
         )}
 
         <div className="space-y-3">
           <h4 className="text-h5 font-semibold text-text-muted uppercase tracking-wider">
-            Audit Attributes
+            Request Details
           </h4>
           <div className="divide-y divide-border-subtle text-small">
             <div className="py-2.5 flex justify-between">
-              <span className="text-text-2">Entity UUID</span>
+              <span className="text-text-2">Reference ID</span>
               <span className="font-mono text-caption text-text">{approval.entityId}</span>
             </div>
             <div className="py-2.5 flex justify-between">
-              <span className="text-text-2">Submitted On</span>
+              <span className="text-text-2">Submitted Date</span>
               <span className="text-text">{formatDate(approval.createdAt, 'Asia/Dhaka')}</span>
             </div>
             <div className="py-2.5 flex justify-between">
-              <span className="text-text-2">Last Modified</span>
+              <span className="text-text-2">Last Updated</span>
               <span className="text-text">{formatDate(approval.updatedAt, 'Asia/Dhaka')}</span>
             </div>
           </div>
@@ -126,7 +126,7 @@ export function ApprovalDetailDrawer({
         {approval.reason && (
           <div className="p-4 rounded-card bg-surface-sunken border border-border space-y-1">
             <div className="text-h5 font-semibold text-text-muted uppercase tracking-wider">
-              Reason / Justification
+              Reason / Explanation
             </div>
             <div className="text-small text-text-2">{approval.reason}</div>
           </div>

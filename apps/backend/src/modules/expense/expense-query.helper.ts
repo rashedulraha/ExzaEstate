@@ -78,7 +78,7 @@ interface RawVoucherItem {
   description: string;
   status: string;
   expenseDate: Date | null;
-  paymentMethod: string;
+  paymentMethod: string | null;
   paidLater: boolean;
   bankAccountId: string | null;
   bankAccountCode: string | null;

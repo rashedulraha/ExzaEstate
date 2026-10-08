@@ -28,7 +28,7 @@ function PlatformStatusCard({ health, isLoading }: SystemHealthCardGridProps) {
   return (
     <div className="rounded-card border border-border bg-surface p-4 shadow-xs transition hover:shadow-sm">
       <div className="flex items-center justify-between">
-        <span className="text-caption font-medium text-text-muted">Platform Status</span>
+        <span className="text-caption font-medium text-text-muted">Server Status</span>
         <span className="p-1.5 rounded-button bg-surface-sunken text-primary">
           <Activity className="w-4 h-4" />
         </span>
@@ -56,13 +56,13 @@ function PlatformStatusCard({ health, isLoading }: SystemHealthCardGridProps) {
                 }`}
               />
             </span>
-            {isHealthy ? 'Healthy · Active' : 'Degraded'}
+            {isHealthy ? 'Operational · Running' : 'Needs Attention'}
           </span>
         )}
       </div>
       <div className="mt-2 text-caption text-text-muted flex items-center gap-1.5">
         <Clock className="w-3.5 h-3.5" />
-        <span>Uptime:</span>
+        <span>Continuous Run Time:</span>
         <span className="font-medium text-text tabular-nums">{uptimeStr}</span>
       </div>
     </div>
@@ -75,7 +75,7 @@ function MemoryFootprintCard({ health, isLoading }: SystemHealthCardGridProps) {
   return (
     <div className="rounded-card border border-border bg-surface p-4 shadow-xs transition hover:shadow-sm">
       <div className="flex items-center justify-between">
-        <span className="text-caption font-medium text-text-muted">Node.js Memory</span>
+        <span className="text-caption font-medium text-text-muted">Server Memory Usage</span>
         <span className="p-1.5 rounded-button bg-surface-sunken text-primary">
           <Server className="w-4 h-4" />
         </span>
@@ -93,7 +93,7 @@ function MemoryFootprintCard({ health, isLoading }: SystemHealthCardGridProps) {
         )}
       </div>
       <div className="mt-2 text-caption text-text-muted flex items-center justify-between">
-        <span>RSS Allocation:</span>
+        <span>Total System Memory:</span>
         <span className="font-medium text-text tabular-nums">{rssStr}</span>
       </div>
     </div>
@@ -109,7 +109,7 @@ function QueueDispatcherCard({ health, isLoading }: SystemHealthCardGridProps) {
   return (
     <div className="rounded-card border border-border bg-surface p-4 shadow-xs transition hover:shadow-sm">
       <div className="flex items-center justify-between">
-        <span className="text-caption font-medium text-text-muted">Queue & Dispatcher</span>
+        <span className="text-caption font-medium text-text-muted">Background Tasks & Sync</span>
         <span className="p-1.5 rounded-button bg-surface-sunken text-primary">
           <Activity className="w-4 h-4" />
         </span>
@@ -120,12 +120,12 @@ function QueueDispatcherCard({ health, isLoading }: SystemHealthCardGridProps) {
         ) : (
           <div className="text-h2 font-semibold text-text tabular-nums">
             {inFlight}
-            <span className="text-caption font-normal text-text-muted ml-1.5">in flight</span>
+            <span className="text-caption font-normal text-text-muted ml-1.5">processing</span>
           </div>
         )}
       </div>
       <div className="mt-2 text-caption text-text-muted flex items-center justify-between">
-        <span>Completed / Failed:</span>
+        <span>Done / Failed:</span>
         <span className="font-medium text-text tabular-nums">{queueStats}</span>
       </div>
     </div>
@@ -138,7 +138,7 @@ function DatabaseStatusCard({ health, isLoading }: SystemHealthCardGridProps) {
   return (
     <div className="rounded-card border border-border bg-surface p-4 shadow-xs transition hover:shadow-sm">
       <div className="flex items-center justify-between">
-        <span className="text-caption font-medium text-text-muted">PostgreSQL 18 DB</span>
+        <span className="text-caption font-medium text-text-muted">Database & Storage</span>
         <span className="p-1.5 rounded-button bg-surface-sunken text-primary">
           <Database className="w-4 h-4" />
         </span>
@@ -149,12 +149,12 @@ function DatabaseStatusCard({ health, isLoading }: SystemHealthCardGridProps) {
         ) : (
           <span className="inline-flex items-center gap-1.5 text-caption font-semibold text-success">
             <span className="h-2 w-2 rounded-full bg-success" />
-            Connected · RLS Active
+            Connected · Protected
           </span>
         )}
       </div>
       <div className="mt-2 text-caption text-text-muted flex items-center justify-between">
-        <span>Backup Engine:</span>
+        <span>Automated Backup:</span>
         <span className="font-medium text-text">{backupText}</span>
       </div>
     </div>

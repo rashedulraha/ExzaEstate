@@ -15,7 +15,7 @@ export function ApprovalKpiStrip({ kpis }: ApprovalKpiStripProps): ReactElement 
       <div className="card-stat">
         <div className="flex items-center justify-between">
           <span className="text-caption font-semibold uppercase tracking-wider text-text-muted">
-            Pending Verification
+            Pending Review
           </span>
           <span className="text-caption font-medium px-2 py-0.5 rounded-full bg-warning/12 text-warning">
             Action Req.
@@ -25,57 +25,57 @@ export function ApprovalKpiStrip({ kpis }: ApprovalKpiStripProps): ReactElement 
           {kpis.pendingCount}
         </span>
         <span className="text-caption text-text-muted mt-1 block">
-          Awaiting maker-checker decision
+          Awaiting management approval
         </span>
       </div>
 
       <div className="card-stat">
         <div className="flex items-center justify-between">
           <span className="text-caption font-semibold uppercase tracking-wider text-text-muted">
-            Discount Exceptions
+            Discount Requests
           </span>
           <span className="text-caption font-medium px-2 py-0.5 rounded-full bg-primary/10 text-primary">
-            Quotation
+            Discounts
           </span>
         </div>
         <span className="text-hero-num font-bold text-primary mt-1.5 block tabular-nums">
           {kpis.discountCount}
         </span>
-        <span className="text-caption text-text-muted mt-1 block">Price exception requests</span>
+        <span className="text-caption text-text-muted mt-1 block">
+          Special price discount requests
+        </span>
       </div>
 
       <div className="card-stat">
         <div className="flex items-center justify-between">
           <span className="text-caption font-semibold uppercase tracking-wider text-text-muted">
-            Expense Approvals
+            Expense Requests
           </span>
           <span className="text-caption font-medium px-2 py-0.5 rounded-full bg-info/10 text-info">
-            Payables
+            Expenses
           </span>
         </div>
         <span className="text-hero-num font-bold text-text mt-1.5 block tabular-nums">
           {kpis.expenseCount}
         </span>
         <span className="text-caption text-text-muted mt-1 block">
-          Vendor & operational vouchers
+          Office & project expense bills
         </span>
       </div>
 
       <div className="card-stat">
         <div className="flex items-center justify-between">
           <span className="text-caption font-semibold uppercase tracking-wider text-text-muted">
-            Approved Requests
+            Approved Items
           </span>
           <span className="text-caption font-medium px-2 py-0.5 rounded-full bg-success/12 text-success">
-            Cleared
+            Approved
           </span>
         </div>
         <span className="text-hero-num font-bold text-success mt-1.5 block tabular-nums">
           {kpis.approvedCount}
         </span>
-        <span className="text-caption text-text-muted mt-1 block">
-          Fully authorized in this cycle
-        </span>
+        <span className="text-caption text-text-muted mt-1 block">Approved in current cycle</span>
       </div>
     </div>
   );

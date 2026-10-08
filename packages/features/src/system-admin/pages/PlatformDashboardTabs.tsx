@@ -1,3 +1,4 @@
+import { Building2, KeyRound, ShieldCheck } from 'lucide-react';
 import type {
   TenantItem,
   PlatformLicenseItem,
@@ -40,41 +41,71 @@ export function PlatformDashboardTabs({
 }: PlatformDashboardTabsProps) {
   return (
     <div className="space-y-4">
-      <div className="flex items-center gap-2 border-b border-border pb-2 text-small font-medium">
+      <div className="flex items-center gap-1.5 p-1 rounded-card bg-surface-sunken/60 border border-border w-fit text-small font-medium">
         <button
           type="button"
           onClick={() => onChangeTab('tenants')}
-          className={`px-3 py-1.5 rounded-button transition cursor-pointer ${
+          className={`flex items-center gap-2 px-3.5 py-1.5 rounded-button transition cursor-pointer ${
             activeTab === 'tenants'
-              ? 'bg-action text-on-action shadow-xs'
-              : 'text-text-muted hover:text-text hover:bg-surface-sunken'
+              ? 'bg-action text-on-action shadow-xs font-semibold'
+              : 'text-text-muted hover:text-text hover:bg-surface'
           }`}
         >
-          Tenants Directory ({tenants.length})
+          <Building2 className="w-4 h-4" />
+          <span>Company Directory</span>
+          <span
+            className={`px-1.5 py-0.2 rounded-full text-caption font-mono ${
+              activeTab === 'tenants'
+                ? 'bg-on-action/20 text-on-action'
+                : 'bg-surface text-text-muted'
+            }`}
+          >
+            {tenants.length}
+          </span>
         </button>
 
         <button
           type="button"
           onClick={() => onChangeTab('licenses')}
-          className={`px-3 py-1.5 rounded-button transition cursor-pointer ${
+          className={`flex items-center gap-2 px-3.5 py-1.5 rounded-button transition cursor-pointer ${
             activeTab === 'licenses'
-              ? 'bg-action text-on-action shadow-xs'
-              : 'text-text-muted hover:text-text hover:bg-surface-sunken'
+              ? 'bg-action text-on-action shadow-xs font-semibold'
+              : 'text-text-muted hover:text-text hover:bg-surface'
           }`}
         >
-          Cryptographic Licenses ({licenses.length})
+          <KeyRound className="w-4 h-4" />
+          <span>Software Licenses</span>
+          <span
+            className={`px-1.5 py-0.2 rounded-full text-caption font-mono ${
+              activeTab === 'licenses'
+                ? 'bg-on-action/20 text-on-action'
+                : 'bg-surface text-text-muted'
+            }`}
+          >
+            {licenses.length}
+          </span>
         </button>
 
         <button
           type="button"
           onClick={() => onChangeTab('audit')}
-          className={`px-3 py-1.5 rounded-button transition cursor-pointer ${
+          className={`flex items-center gap-2 px-3.5 py-1.5 rounded-button transition cursor-pointer ${
             activeTab === 'audit'
-              ? 'bg-action text-on-action shadow-xs'
-              : 'text-text-muted hover:text-text hover:bg-surface-sunken'
+              ? 'bg-action text-on-action shadow-xs font-semibold'
+              : 'text-text-muted hover:text-text hover:bg-surface'
           }`}
         >
-          Platform Audit Trail ({auditLogs.length})
+          <ShieldCheck className="w-4 h-4" />
+          <span>Activity & Audit Log</span>
+          <span
+            className={`px-1.5 py-0.2 rounded-full text-caption font-mono ${
+              activeTab === 'audit'
+                ? 'bg-on-action/20 text-on-action'
+                : 'bg-surface text-text-muted'
+            }`}
+          >
+            {auditLogs.length}
+          </span>
         </button>
       </div>
 

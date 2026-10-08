@@ -48,7 +48,7 @@ export function TenantDetailModal({
         onClose();
       }}
       title={tenant.name}
-      description={`Tenant Workspace ID: ${tenant.id}`}
+      description={`Company ID: ${tenant.id}`}
       size="md"
     >
       <div className="space-y-4">
@@ -87,7 +87,7 @@ export function TenantDetailModal({
           <div className="p-3 rounded-button bg-surface border border-border">
             <span className="text-caption text-text-muted flex items-center gap-1 mb-1">
               <Calendar className="w-3.5 h-3.5" />
-              Onboarded On
+              Registration Date
             </span>
             <span className="font-medium text-text tabular-nums">{createdDate}</span>
           </div>
@@ -98,7 +98,7 @@ export function TenantDetailModal({
           <div>
             <h4 className="text-caption font-semibold text-text-muted mb-2 flex items-center gap-1">
               <MapPin className="w-3.5 h-3.5 text-primary" />
-              Provisioned Branches ({tenant.branches.length})
+              Office Branches ({tenant.branches.length})
             </h4>
             <div className="space-y-1.5">
               {tenant.branches.map((b) => (
@@ -155,11 +155,11 @@ function SuspendConfirmCard({
     <div className="space-y-3 rounded-card border border-danger/30 bg-danger/5 p-3.5">
       <h5 className="text-caption font-semibold text-danger flex items-center gap-1">
         <ShieldAlert className="w-4 h-4" />
-        Specify Suspension Reason
+        Reason for Suspension
       </h5>
       <input
         type="text"
-        placeholder="e.g. Non-payment of subscription invoice / License expired"
+        placeholder="e.g. Account renewal pending / Requested by client"
         value={reason}
         onChange={(e) => onChangeReason(e.target.value)}
         className="w-full rounded-button border border-border-input bg-surface px-3 py-1.5 text-small text-text focus:border-danger focus:outline-none"
@@ -175,7 +175,7 @@ function SuspendConfirmCard({
           isLoading={isMutating}
           onClick={onConfirm}
         >
-          Confirm Suspend
+          Confirm Suspension
         </Button>
       </div>
     </div>
@@ -197,8 +197,8 @@ function TenantStatusActions({
     <div className="flex items-center justify-between">
       <div className="text-caption text-text-muted">
         {isActive
-          ? 'Suspending blocks all employee login and tenant API calls.'
-          : 'Reactivating restores employee access.'}
+          ? 'Suspending pauses all employee logins. Company data remains safe.'
+          : 'Reactivating restores employee access immediately.'}
       </div>
 
       {isActive ? (

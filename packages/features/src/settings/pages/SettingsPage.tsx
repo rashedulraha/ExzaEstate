@@ -54,7 +54,7 @@ export function SettingsPage() {
     return (
       <ErrorState
         title="Failed to Load Settings"
-        message="Unable to retrieve tenant configuration. Please check permissions."
+        message="Unable to load company settings. Please refresh or check your connection."
         onRetry={() => refetch()}
       />
     );
@@ -80,8 +80,7 @@ export function SettingsPage() {
             </span>
           </div>
           <p className="text-body text-text-muted mt-1">
-            Enterprise system configurations, statutory accounting defaults, and document numbering
-            series.
+            Manage company preferences, financial calendar, sales rules, and document numbering.
           </p>
         </div>
       </div>

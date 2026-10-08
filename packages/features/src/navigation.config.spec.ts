@@ -14,8 +14,8 @@ describe('navigation.config', () => {
     const [g0, g1, g2, g3, g4] = groups;
     if (!g0 || !g1 || !g2 || !g3 || !g4) throw new Error('Missing groups');
 
-    // Group 01: Core Executive Cockpit
-    expect(g0.title).toBe('Executive Cockpit');
+    // Group 01: Core Overview & Reports
+    expect(g0.title).toBe('Overview & Reports');
     expect(g0.items.map((i) => i.id)).toEqual(['dashboard', 'reports']);
 
     // Group 02: Property Assets & Inventory
@@ -78,10 +78,10 @@ describe('navigation.config', () => {
     const adminGroups = createSystemAdminSidebarNavGroups(navigate);
 
     expect(adminGroups.map((g) => g.title)).toEqual([
-      'Platform Control',
-      'Tenants & Licensing',
-      'Infrastructure & Health',
-      'My Profile & Account',
+      'Platform Overview',
+      'Companies & Licenses',
+      'System & Server Health',
+      'Admin Account',
     ]);
   });
 });

@@ -96,8 +96,8 @@ export function BookingListPage(): ReactElement {
           />
           <div className="flex items-center gap-3 mt-1.5">
             <h1 className="text-h1 font-semibold text-text">Bookings & Sales</h1>
-            <span className="text-caption font-semibold px-2 py-0.5 rounded-full bg-surface-sunken text-text-2 border border-border">
-              {kpis.totalCount} Allotments
+            <span className="text-caption font-semibold px-2.5 py-0.5 rounded-full bg-surface-sunken text-text-2 border border-border">
+              {kpis.totalCount} Bookings
             </span>
           </div>
         </div>
@@ -114,13 +114,13 @@ export function BookingListPage(): ReactElement {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         <div className="card-stat">
           <span className="text-caption font-semibold uppercase tracking-wider text-text-muted block">
-            Total Allotments
+            Total Bookings
           </span>
           <span className="text-hero-num font-bold text-text mt-1.5 block">{kpis.totalCount}</span>
         </div>
         <div className="card-stat">
           <span className="text-caption font-semibold uppercase tracking-wider text-text-muted block">
-            72h Hold Reservations
+            Reserved Units (Hold)
           </span>
           <span className="text-hero-num font-bold text-warning mt-1.5 block">
             {kpis.requestedCount}
@@ -128,7 +128,7 @@ export function BookingListPage(): ReactElement {
         </div>
         <div className="card-stat">
           <span className="text-caption font-semibold uppercase tracking-wider text-text-muted block">
-            Pending Verification
+            Awaiting Verification
           </span>
           <span className="text-hero-num font-bold text-accent mt-1.5 block">
             {kpis.pendingApprovalCount}
@@ -136,7 +136,7 @@ export function BookingListPage(): ReactElement {
         </div>
         <div className="card-stat">
           <span className="text-caption font-semibold uppercase tracking-wider text-text-muted block">
-            Confirmed Allotments
+            Confirmed Bookings
           </span>
           <span className="text-hero-num font-bold text-success mt-1.5 block">
             {kpis.confirmedCount}
@@ -153,7 +153,7 @@ export function BookingListPage(): ReactElement {
               <Input
                 id="booking-search"
                 inputSize="md"
-                placeholder="Search bookings by booking #, allottee name, or unit..."
+                placeholder="Search bookings by booking number, customer name, or unit..."
                 value={filters.search}
                 onChange={(e) => setFilters((prev) => ({ ...prev, search: e.target.value }))}
                 className="pl-9 text-small"

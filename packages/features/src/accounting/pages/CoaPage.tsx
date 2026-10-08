@@ -123,7 +123,7 @@ export function CoaPage() {
             </span>
           </div>
           <p className="text-small text-text-muted mt-1">
-            General ledger hierarchy, account groups, and automated double-entry posting rules.
+            Manage your accounting structure, account heads, and financial categories.
           </p>
         </div>
 
@@ -152,7 +152,7 @@ export function CoaPage() {
             {stats.total}
           </span>
           <span className="text-caption text-text-muted mt-1 block">
-            {stats.terminals} terminal posting accounts
+            {stats.terminals} posting accounts
           </span>
         </div>
 
@@ -169,14 +169,14 @@ export function CoaPage() {
             {stats.groups}
           </span>
           <span className="text-caption text-text-muted mt-1 block">
-            Header categories & summary groups
+            Main categories & head groups
           </span>
         </div>
 
         <div className="card-stat">
           <div className="flex items-center justify-between">
             <span className="text-caption font-semibold uppercase tracking-wider text-text-muted">
-              Asset Holdings
+              Total Assets
             </span>
             <span className="text-caption font-medium px-2 py-0.5 rounded-full bg-info/10 text-info">
               Assets
@@ -186,14 +186,14 @@ export function CoaPage() {
             {formatMoney(stats.assetsPaisa.toString())}
           </span>
           <span className="text-caption text-text-muted mt-1 block">
-            Aggregated bank, cash & property assets
+            Cash, bank balances, and company assets
           </span>
         </div>
 
         <div className="card-stat">
           <div className="flex items-center justify-between">
             <span className="text-caption font-semibold uppercase tracking-wider text-text-muted">
-              Liabilities & Payables
+              Total Liabilities
             </span>
             <span className="text-caption font-medium px-2 py-0.5 rounded-full bg-warning/10 text-warning">
               Liabilities
@@ -203,7 +203,7 @@ export function CoaPage() {
             {formatMoney(stats.liabilitiesPaisa.toString())}
           </span>
           <span className="text-caption text-text-muted mt-1 block">
-            Supplier payables & customer advances
+            Vendor bills, dues, and advances
           </span>
         </div>
       </div>

@@ -48,7 +48,7 @@ function formatFloorDisplay(
   }
   const code = floor.code ?? '';
   const match = /^FL-(\d+)$/i.exec(code);
-  if (match) {
+  if (match && match[1]) {
     const num = parseInt(match[1], 10);
     return `${num}${getOrdinalSuffix(num)} Floor`;
   }

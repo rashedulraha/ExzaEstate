@@ -65,7 +65,7 @@ export function PaymentListPage() {
             </span>
           </div>
           <p className="text-small text-text-muted mt-1">
-            Record, track, and immutably post client installment payments and money receipts.
+            Record and view customer installment payments, money receipts, and cheques.
           </p>
         </div>
 
@@ -89,21 +89,21 @@ export function PaymentListPage() {
               Total Collected
             </span>
             <span className="text-caption font-medium px-2 py-0.5 rounded-full bg-success/12 text-success">
-              Posted
+              Received
             </span>
           </div>
           <span className="text-hero-num font-bold text-success mt-1.5 block tabular-nums">
             {formatMoney(kpis.totalCollectedPaisa)}
           </span>
           <span className="text-caption text-text-muted mt-1 block">
-            Aggregated immutable collections
+            Total confirmed collections received
           </span>
         </div>
 
         <div className="card-stat">
           <div className="flex items-center justify-between">
             <span className="text-caption font-semibold uppercase tracking-wider text-text-muted">
-              Draft / Unposted
+              Pending Confirmation
             </span>
             <span className="text-caption font-medium px-2 py-0.5 rounded-full bg-warning/12 text-warning">
               Pending
@@ -113,17 +113,17 @@ export function PaymentListPage() {
             {formatMoney(kpis.totalDraftPaisa)}
           </span>
           <span className="text-caption text-text-muted mt-1 block">
-            Awaiting accountant posting
+            Draft payments awaiting review
           </span>
         </div>
 
         <div className="card-stat">
           <div className="flex items-center justify-between">
             <span className="text-caption font-semibold uppercase tracking-wider text-text-muted">
-              Posted Receipts
+              Confirmed Receipts
             </span>
             <span className="text-caption font-medium px-2 py-0.5 rounded-full bg-surface-sunken text-text-muted">
-              Vouchers
+              Receipts
             </span>
           </div>
           <span className="text-hero-num font-bold text-text mt-1.5 block tabular-nums">
@@ -144,7 +144,7 @@ export function PaymentListPage() {
           <span className="text-hero-num font-bold text-text mt-1.5 block tabular-nums">
             {kpis.countChequePending}
           </span>
-          <span className="text-caption text-text-muted mt-1 block">In banking clearing cycle</span>
+          <span className="text-caption text-text-muted mt-1 block">Cheques in bank clearing</span>
         </div>
       </div>
 

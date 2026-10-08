@@ -177,8 +177,8 @@ export function ReportsHubPage() {
               </span>
             </div>
             <p className="text-small text-text-muted mt-1">
-              Backend-generated audit-ready financial statements, sales registries, and operational
-              reports
+              Financial statements, sales registers, and operational reports with export to Excel
+              and PDF.
             </p>
           </div>
         </div>
@@ -192,9 +192,9 @@ export function ReportsHubPage() {
         <div className="rounded-card border border-border bg-surface p-5 shadow-xs space-y-3.5">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-body font-semibold text-text">Pinned Priority Reports</h2>
+              <h2 className="text-body font-semibold text-text">Favorite Reports</h2>
               <p className="text-caption text-text-muted">
-                Quick access to daily financial & operational workflows
+                Quick access to frequently viewed financial & operational reports
               </p>
             </div>
             <span className="text-caption font-mono text-text-muted px-2.5 py-0.5 rounded-full bg-surface-sunken border border-border">

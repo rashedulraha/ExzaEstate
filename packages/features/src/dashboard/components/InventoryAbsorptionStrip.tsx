@@ -104,19 +104,19 @@ function ValuationMetricsGrid({ stats }: { stats: ComputedInventoryStats }) {
     <div className="grid grid-cols-2 md:grid-cols-4 gap-3.5">
       <div className="p-3.5 rounded-button bg-surface-sunken/50 border border-border/70 hover:border-border transition-colors">
         <span className="text-caption font-semibold uppercase tracking-wider text-text-muted block">
-          Total Asset Valuation
+          Total Property Value
         </span>
         <div className="text-h2 font-bold tabular-nums text-text mt-1">
           {formatMoney(stats.totalValuePaisa)}
         </div>
         <span className="text-[12px] text-text-muted tabular-nums block mt-0.5">
-          {stats.totalUnits} units in master plan
+          {stats.totalUnits} total units in projects
         </span>
       </div>
 
       <div className="p-3.5 rounded-button bg-surface-sunken/50 border border-border/70 hover:border-border transition-colors">
         <span className="text-caption font-semibold uppercase tracking-wider text-text-muted block">
-          Available Stock Value
+          Available for Sale Value
         </span>
         <div className="text-h2 font-bold tabular-nums text-success mt-1">
           {formatMoney(stats.availableValuePaisa)}
@@ -128,7 +128,7 @@ function ValuationMetricsGrid({ stats }: { stats: ComputedInventoryStats }) {
 
       <div className="p-3.5 rounded-button bg-surface-sunken/50 border border-border/70 hover:border-border transition-colors">
         <span className="text-caption font-semibold uppercase tracking-wider text-text-muted block">
-          Locked Revenue
+          Booked & Sold Value
         </span>
         <div className="text-h2 font-bold tabular-nums text-text mt-1">
           {formatMoney(stats.lockedRevenuePaisa)}
@@ -140,13 +140,13 @@ function ValuationMetricsGrid({ stats }: { stats: ComputedInventoryStats }) {
 
       <div className="p-3.5 rounded-button bg-surface-sunken/50 border border-border/70 hover:border-border transition-colors">
         <span className="text-caption font-semibold uppercase tracking-wider text-text-muted block">
-          Pipeline In-Discussion
+          Reserved Units Value
         </span>
         <div className="text-h2 font-bold tabular-nums text-warning mt-1">
           {formatMoney(stats.pipelineRevenuePaisa)}
         </div>
         <span className="text-[12px] text-text-muted tabular-nums block mt-0.5">
-          {stats.reservedUnits} reserved plots
+          {stats.reservedUnits} reserved plots / units
         </span>
       </div>
     </div>
@@ -200,15 +200,14 @@ function InventoryStripView({ inventory, onNavigate }: InventoryStripViewProps) 
         <div>
           <div className="flex items-center gap-2.5">
             <h2 className="text-h2 font-semibold text-text tracking-tight">
-              Property Portfolio & Inventory Absorption
+              Property Inventory & Sales Status
             </h2>
             <span className="inline-flex items-center px-2 py-0.5 rounded-full text-caption font-medium bg-surface-sunken text-text border border-border tabular-nums">
-              {stats.absorptionRate}% Absorbed
+              {stats.absorptionRate}% Sold or Booked
             </span>
           </div>
           <p className="text-small text-text-muted mt-0.5">
-            Live unit distribution and asset valuation across residential and commercial
-            developments
+            Live unit availability, bookings, and sales breakdown across all housing projects
           </p>
         </div>
 
@@ -217,7 +216,7 @@ function InventoryStripView({ inventory, onNavigate }: InventoryStripViewProps) 
           onClick={() => onNavigate('/properties')}
           className="inline-flex items-center px-3 py-1.5 rounded-button text-small font-medium text-text bg-surface hover:bg-surface-sunken border border-border transition-colors cursor-pointer active:scale-[0.98] self-start sm:self-auto shrink-0"
         >
-          Plot Plan View
+          View Property Grid
         </button>
       </div>
 

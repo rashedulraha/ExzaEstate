@@ -7,6 +7,8 @@ export interface ChecklistItem {
   details?: Record<string, unknown>;
 }
 
+export type SetupChecklistItem = ChecklistItem;
+
 export interface SetupChecklistResult {
   items: ChecklistItem[];
   totalCount: number;

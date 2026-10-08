@@ -102,7 +102,7 @@ export function QuotationListPage(): ReactElement {
               <Input
                 id="quotation-search"
                 inputSize="md"
-                placeholder="Search quotations by quote #, client name, or unit..."
+                placeholder="Search quotations by quotation number, customer name, or unit..."
                 value={filters.search}
                 onChange={(e) => setFilters((prev) => ({ ...prev, search: e.target.value }))}
                 className="pl-9 text-small"

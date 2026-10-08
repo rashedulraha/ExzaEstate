@@ -33,7 +33,7 @@ function SalesMetricCard({ summary }: { summary?: SalesSummary }) {
     <div className="card-stat">
       <div className="flex items-center justify-between">
         <span className="text-caption font-semibold uppercase tracking-wider text-text-muted">
-          Gross Sales Bookings
+          Total Sales Bookings
         </span>
         <span className="text-caption font-medium px-2 py-0.5 rounded-full bg-primary/10 text-primary">
           Sales
@@ -46,7 +46,7 @@ function SalesMetricCard({ summary }: { summary?: SalesSummary }) {
         {formatted}
       </div>
       <div className="mt-1 text-caption text-text-muted flex items-center justify-between">
-        <span>Confirmed Allotments</span>
+        <span>Confirmed Bookings</span>
         <span className="font-semibold text-text tabular-nums">{count} units</span>
       </div>
     </div>
@@ -64,7 +64,7 @@ function CollectionMetricCard({ summary }: { summary?: CollectionSummary }) {
     <div className="card-stat">
       <div className="flex items-center justify-between">
         <span className="text-caption font-semibold uppercase tracking-wider text-text-muted">
-          Realized Collections
+          Total Collections
         </span>
         <span className="text-caption font-medium px-2 py-0.5 rounded-full bg-success/12 text-success">
           Collections
@@ -77,7 +77,7 @@ function CollectionMetricCard({ summary }: { summary?: CollectionSummary }) {
         {formatted}
       </div>
       <div className="mt-1 text-caption text-text-muted flex items-center justify-between">
-        <span>Cleared Receipts</span>
+        <span>Confirmed Receipts</span>
         <span className="font-semibold text-text tabular-nums">{count} receipts</span>
       </div>
     </div>
@@ -94,7 +94,7 @@ function InventoryValueCard({ summary }: { summary?: InventorySummary }) {
     <div className="card-stat">
       <div className="flex items-center justify-between">
         <span className="text-caption font-semibold uppercase tracking-wider text-text-muted">
-          Portfolio Inventory Value
+          Total Property Value
         </span>
         <span className="text-caption font-medium px-2 py-0.5 rounded-full bg-info/10 text-info">
           Valuation
@@ -107,8 +107,8 @@ function InventoryValueCard({ summary }: { summary?: InventorySummary }) {
         {formatted}
       </div>
       <div className="mt-1 text-caption text-text-muted flex items-center justify-between">
-        <span>Active Portfolio</span>
-        <span className="font-semibold text-text">Live Valuation</span>
+        <span>Portfolio Valuation</span>
+        <span className="font-semibold text-text">Total Units</span>
       </div>
     </div>
   );
@@ -123,7 +123,7 @@ function InventoryUnitsCard({ summary }: { summary?: InventorySummary }) {
     <div className="card-stat">
       <div className="flex items-center justify-between">
         <span className="text-caption font-semibold uppercase tracking-wider text-text-muted">
-          Units Allotted / Sold
+          Units Sold / Booked
         </span>
         <span className="text-caption font-medium px-2 py-0.5 rounded-full bg-special/12 text-special">
           Inventory
@@ -133,7 +133,7 @@ function InventoryUnitsCard({ summary }: { summary?: InventorySummary }) {
         {sold} <span className="text-body font-normal text-text-muted">/ {total}</span>
       </div>
       <div className="mt-1 text-caption text-text-muted flex items-center justify-between">
-        <span>Absorption Rate</span>
+        <span>Sales Progress</span>
         <span className="font-semibold text-text tabular-nums">{rate}</span>
       </div>
     </div>

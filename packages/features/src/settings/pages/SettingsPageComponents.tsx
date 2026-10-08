@@ -1,5 +1,5 @@
 import { Hash, Calendar, Layers, Clock } from 'lucide-react';
-import type { TenantSettingsMap, NumberingPattern } from '../types.js';
+import type { NumberingPatternItem, NumberingPatternFormData } from '../schemas/settings.schema.js';
 import type { SettingsTabId } from '../components/SettingsNavTabs.js';
 import { GeneralPolicySettings } from '../components/GeneralPolicySettings.js';
 import { SalesPolicySettings } from '../components/SalesPolicySettings.js';
@@ -22,8 +22,8 @@ const MONTH_NAMES = [
   'December',
 ] as const;
 
-export function getFiscalMonthName(monthStr?: string): string {
-  const m = Number(monthStr) || 7;
+export function getFiscalMonthName(monthVal?: unknown): string {
+  const m = Number(monthVal) || 7;
   return MONTH_NAMES[m - 1] ?? 'July';
 }
 
@@ -34,7 +34,7 @@ export function SettingsKpiCards({
 }: {
   patternsCount: number;
   fiscalMonthName: string;
-  nightlyJobTime?: string;
+  nightlyJobTime?: unknown;
 }) {
   return (
     <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
@@ -82,7 +82,7 @@ export function SettingsKpiCards({
           <Clock className="w-4 h-4 text-text-muted" />
         </div>
         <span className="text-hero-num font-bold text-text-2 mt-1.5 block tabular-nums">
-          {nightlyJobTime || '00:30'} BST
+          {typeof nightlyJobTime === 'string' && nightlyJobTime ? nightlyJobTime : '00:30'} BST
         </span>
       </div>
     </div>
@@ -91,11 +91,11 @@ export function SettingsKpiCards({
 
 export interface SettingsTabContentProps {
   activeTab: SettingsTabId;
-  settings: TenantSettingsMap;
-  updateBatchSettings: (items: { key: string; value: unknown }[]) => Promise<void>;
+  settings: Record<string, unknown>;
+  updateBatchSettings: (items: { key: string; value: unknown }[]) => Promise<unknown>;
   isUpdating: boolean;
-  patterns: NumberingPattern[];
-  updatePattern: (pattern: NumberingPattern) => Promise<void>;
+  patterns: NumberingPatternItem[];
+  updatePattern: (documentType: string, data: NumberingPatternFormData) => Promise<unknown>;
   isUpdatingPattern: boolean;
 }
 

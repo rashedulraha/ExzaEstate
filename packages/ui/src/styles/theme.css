@@ -166,7 +166,7 @@
   --radius-none: 0px;
 
   /* ── Layout ─────────────────────────────────────────────────────────────── */
-  --width-container: 1600px;
+  --width-container: 1400px;
   --height-control-sm: 32px;
   --height-control-md: 36px;
   --height-control-lg: 40px;
@@ -236,7 +236,7 @@
 
   --color-success: #34d399;
   --color-warning: #fbbf24;
-  --color-danger: #f97f7f;
+  --color-danger: #dc2626;
   --color-info: #63a7fa;
   --color-special: #ae94fa;
   --color-void: #9ea5b1;
@@ -308,7 +308,7 @@
 
     --color-success: #34d399;
     --color-warning: #fbbf24;
-    --color-danger: #f97f7f;
+    --color-danger: #dc2626;
     --color-info: #63a7fa;
     --color-special: #ae94fa;
     --color-void: #9ea5b1;
@@ -498,7 +498,9 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
-    font-feature-settings: 'cv11' 1, 'ss01' 1;
+    font-feature-settings:
+      'cv11' 1,
+      'ss01' 1;
     letter-spacing: -0.005em;
   }
 
@@ -512,7 +514,9 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
-    font-feature-settings: 'cv11' 1, 'ss01' 1;
+    font-feature-settings:
+      'cv11' 1,
+      'ss01' 1;
   }
 
   *,
@@ -964,5 +968,3 @@ strong,
 .font-semibold {
   font-weight: 500;
 }
-
-

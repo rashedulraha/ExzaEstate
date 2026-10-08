@@ -29,7 +29,7 @@ export function ApprovalDataTable({
   const columns: ColumnDef<ApprovalItem>[] = [
     {
       key: 'title',
-      header: 'Request / Subject',
+      header: 'Request Title',
       render: (row) => (
         <div>
           <button
@@ -73,7 +73,7 @@ export function ApprovalDataTable({
     },
     {
       key: 'tier',
-      header: 'Tier Progress',
+      header: 'Approval Tier',
       render: (row) => (
         <div className="text-small font-medium text-text tabular-nums">
           Tier {row.currentTier} of {row.maxTier}
@@ -101,7 +101,7 @@ export function ApprovalDataTable({
               variant="primary"
               size="sm"
               disabled={Boolean(isSelf)}
-              title={isSelf ? 'Maker cannot approve own request (AT-24)' : undefined}
+              title={isSelf ? 'Cannot approve own request' : undefined}
               onClick={() => onOpenDecision(row, 'APPROVE')}
             >
               Approve
@@ -125,7 +125,7 @@ export function ApprovalDataTable({
       emptyState={
         <EmptyState
           icon={<CheckCheck className="w-6 h-6" />}
-          title="Inbox is clear"
+          title="No Pending Approvals"
           description="There are no pending approval requests matching your criteria."
           dashedBorder
         />

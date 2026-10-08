@@ -132,19 +132,19 @@ export function ExecutivePortfolioHero({ summary, onNavigate }: ExecutivePortfol
             <div className="flex items-center gap-2.5 flex-wrap">
               <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-primary/10 text-primary border border-primary/20">
                 <Building2 className="w-3.5 h-3.5" />
-                Master Portfolio Overview
+                Portfolio Summary
               </span>
               <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-surface-sunken text-text-muted border border-border">
                 <ShieldCheck className="w-3 h-3 text-success" />
-                Statutory Audit Verified
+                Accounts Verified
               </span>
             </div>
             <h2 className="text-h2 sm:text-h1 font-bold text-text tracking-tight">
-              Institutional Asset Valuation & Velocity
+              Total Portfolio Value & Sales Summary
             </h2>
             <p className="text-small text-text-muted">
-              Live consolidated positions across all land sectors, residential towers, and
-              commercial holdings.
+              Live summary across all housing projects, residential plots, apartments, and
+              commercial units.
             </p>
           </div>
 
@@ -155,7 +155,7 @@ export function ExecutivePortfolioHero({ summary, onNavigate }: ExecutivePortfol
               className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-button text-small font-medium text-text bg-surface hover:bg-surface-sunken border border-border transition-all cursor-pointer active:scale-[0.98]"
             >
               <Layers className="w-3.5 h-3.5 text-text-muted" />
-              <span>Inventory Registry</span>
+              <span>View Properties</span>
               <ArrowUpRight className="w-3.5 h-3.5 text-text-muted" />
             </button>
             <button
@@ -164,7 +164,7 @@ export function ExecutivePortfolioHero({ summary, onNavigate }: ExecutivePortfol
               className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-button text-small font-medium text-text bg-surface hover:bg-surface-sunken border border-border transition-all cursor-pointer active:scale-[0.98]"
             >
               <TrendingUp className="w-3.5 h-3.5 text-primary" />
-              <span>Full Statements</span>
+              <span>Financial Reports</span>
             </button>
           </div>
         </div>
@@ -172,34 +172,34 @@ export function ExecutivePortfolioHero({ summary, onNavigate }: ExecutivePortfol
         {/* 4 Spotlight Metric Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 lg:gap-4">
           <HeroMetricCard
-            label="Gross Portfolio Valuation"
+            label="Total Property Value"
             value={formatMoney(stats.totalValPaisa)}
-            subtext={`${stats.total} total units in registered master plan`}
-            badge="Asset Value"
+            subtext={`${stats.total} total units across all projects`}
+            badge="Total Value"
             badgeType="primary"
           />
 
           <HeroMetricCard
-            label="Commercial Absorption"
+            label="Sales Progress"
             value={`${stats.absorptionPct}%`}
             subtext={`${stats.activeCount} units booked or confirmed sold`}
-            badge="Absorption"
+            badge="Sold / Booked"
             badgeType="primary"
           />
 
           <HeroMetricCard
-            label="Realized Inflow"
+            label="Collections Received"
             value={formatMoney(totalCollection)}
-            subtext={`${efficiency}% statutory collection efficiency`}
-            badge="Cleared Cash"
+            subtext={`${efficiency}% collection efficiency`}
+            badge="Received"
             badgeType="success"
           />
 
           <HeroMetricCard
-            label="Treasury & Liquidity"
+            label="Cash & Bank Balance"
             value={formatMoney(cashBank)}
-            subtext="Consolidated cash & scheduled bank balances"
-            badge="Treasury"
+            subtext="Available in company bank accounts & cash"
+            badge="Available Funds"
             badgeType="success"
           />
         </div>

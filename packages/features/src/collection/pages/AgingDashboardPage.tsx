@@ -127,24 +127,24 @@ export function AgingDashboardPage() {
             items={[
               { label: 'Overview', href: '/dashboard', onClick: () => navigate('/dashboard') },
               { label: 'Finance & Accounts' },
-              { label: 'AR Aging Analysis' },
+              { label: 'Due & Overdue Collections' },
             ]}
           />
           <div className="flex items-center gap-3 mt-1.5">
-            <h1 className="text-h1 font-bold text-text">AR Aging Analysis</h1>
+            <h1 className="text-h1 font-bold text-text">Due & Overdue Collections</h1>
             {isReconciled ? (
               <span className="px-2.5 py-0.5 rounded-full text-caption font-semibold text-success bg-success/12 border border-success/20">
-                AR Reconciled
+                Accounts Reconciled
               </span>
             ) : (
               <span className="px-2.5 py-0.5 rounded-full text-caption font-semibold text-warning bg-warning/12 border border-warning/20">
-                AR Sync Pending
+                Sync In Progress
               </span>
             )}
           </div>
           <p className="text-small text-text-muted mt-1">
-            Delinquency aging distribution across 1–7, 8–30, 31–60, 61–90, and 90+ day buckets per
-            double-entry schedule.
+            Track customer dues and overdue installments by age periods (1–7, 8–30, 31–60, 61–90,
+            and 90+ days).
           </p>
         </div>
 
@@ -167,14 +167,14 @@ export function AgingDashboardPage() {
       <div className="p-5 rounded-card border border-border bg-surface shadow-xs space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div>
-            <h2 className="text-h2 font-bold text-text">Aging Distribution Overview</h2>
+            <h2 className="text-h2 font-bold text-text">Overdue Periods Overview</h2>
             <p className="text-caption text-text-muted mt-0.5">
-              5 sequential delinquency buckets with installment count and share distribution.
+              Breakdown of overdue installments grouped by days past due date.
             </p>
           </div>
           <div className="sm:text-right">
             <span className="text-caption font-semibold uppercase tracking-wider text-text-muted block">
-              Total Outstanding AR
+              Total Customer Due
             </span>
             <span className="text-h2 font-extrabold text-text tabular-nums">
               {totalReceivableFormatted || formatMoney(totalReceivablePaisa)}
@@ -189,7 +189,7 @@ export function AgingDashboardPage() {
       <StickyToolbar>
         <div className="p-4 rounded-card border border-border bg-surface shadow-xs flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
           <div className="flex items-center gap-3">
-            <h3 className="text-h3 font-bold text-text">Customer Receivables Ledger</h3>
+            <h3 className="text-h3 font-bold text-text">Customer Dues & Overdue List</h3>
             <span className="text-caption font-semibold px-2 py-0.5 rounded-full bg-surface-sunken text-text-2 border border-border">
               {filteredCustomerRows.length}{' '}
               {filteredCustomerRows.length === 1 ? 'Customer' : 'Customers'}
@@ -229,11 +229,11 @@ export function AgingDashboardPage() {
           emptyState={
             <EmptyState
               icon={<Users className="w-6 h-6" />}
-              title="No Receivables Recorded"
+              title="No Customer Dues Found"
               description={
                 searchQuery
                   ? 'No customers match your search criteria.'
-                  : 'No outstanding client receivables recorded as of this date.'
+                  : 'No outstanding customer dues recorded as of this date.'
               }
               dashedBorder
             />

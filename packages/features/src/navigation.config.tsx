@@ -18,9 +18,17 @@ import {
   ShieldCheck,
   Clock,
   User,
+  KeyRound,
 } from 'lucide-react';
 
 export const ROUTE_PREFIX_MAP: Array<[string, string]> = [
+  ['/system/dashboard', 'system-dashboard'],
+  ['/system/audit', 'system-audit'],
+  ['/system/tenants', 'system-tenants'],
+  ['/system/licenses', 'system-licenses'],
+  ['/system/health', 'system-health'],
+  ['/system/profile', 'system-profile'],
+  ['/system', 'system-dashboard'],
   ['/properties', 'properties'],
   ['/customers', 'customers'],
   ['/crm', 'leads'],
@@ -40,7 +48,6 @@ export const ROUTE_PREFIX_MAP: Array<[string, string]> = [
   ['/roles', 'users'],
   ['/setup', 'setup'],
   ['/migration', 'migration'],
-  ['/system', 'system-dashboard'],
 ];
 
 export function resolveCurrentRouteId(path: string): string {
@@ -54,55 +61,61 @@ export function createSystemAdminSidebarNavGroups(
   return [
     {
       id: 'platform-overview',
-      title: 'Platform Control',
+      title: 'Platform Overview',
       items: [
         {
           id: 'system-dashboard',
-          label: 'Platform Cockpit',
+          label: 'Overview Dashboard',
           icon: <LayoutDashboard className="w-4 h-4 shrink-0" aria-hidden="true" />,
           onClick: () => navigate('/system/dashboard'),
         },
         {
-          id: 'audit',
-          label: 'Platform Audit Trail',
+          id: 'system-audit',
+          label: 'Activity & Audit Log',
           icon: <ShieldCheck className="w-4 h-4 shrink-0" aria-hidden="true" />,
-          onClick: () => navigate('/audit'),
+          onClick: () => navigate('/system/audit'),
         },
       ],
     },
     {
       id: 'tenants',
-      title: 'Tenants & Licensing',
+      title: 'Companies & Licenses',
       items: [
         {
           id: 'system-tenants',
-          label: 'Tenants Directory',
+          label: 'Company Directory',
           icon: <Building2 className="w-4 h-4 shrink-0" aria-hidden="true" />,
-          onClick: () => navigate('/system/dashboard'),
+          onClick: () => navigate('/system/tenants'),
+        },
+        {
+          id: 'system-licenses',
+          label: 'Software Licenses',
+          icon: <KeyRound className="w-4 h-4 shrink-0" aria-hidden="true" />,
+          onClick: () => navigate('/system/licenses'),
         },
       ],
     },
     {
       id: 'infrastructure',
-      title: 'Infrastructure & Health',
+      title: 'System & Server Health',
       items: [
         {
           id: 'system-health',
-          label: 'Telemetry & Clusters',
+          label: 'System Status & Performance',
           icon: <BarChart3 className="w-4 h-4 shrink-0" aria-hidden="true" />,
-          onClick: () => navigate('/system/dashboard'),
+          onClick: () => navigate('/system/health'),
         },
       ],
     },
     {
       id: 'account',
-      title: 'My Profile & Account',
+      title: 'Admin Account',
       items: [
         {
-          id: 'profile',
-          label: 'My Profile & Account',
+          id: 'system-profile',
+          label: 'Profile & Settings',
           icon: <User className="w-4 h-4 shrink-0" aria-hidden="true" />,
-          onClick: () => navigate('/profile'),
+          onClick: () => navigate('/system/profile'),
         },
       ],
     },
@@ -113,11 +126,11 @@ export function createSidebarNavGroups(navigate: (path: string) => void): Sideba
   return [
     {
       id: 'overview',
-      title: 'Executive Cockpit',
+      title: 'Overview & Reports',
       items: [
         {
           id: 'dashboard',
-          label: 'Executive Cockpit',
+          label: 'Overview Dashboard',
           icon: <LayoutDashboard className="w-4 h-4 shrink-0" aria-hidden="true" />,
           onClick: () => navigate('/dashboard'),
         },
@@ -153,7 +166,7 @@ export function createSidebarNavGroups(navigate: (path: string) => void): Sideba
         },
         {
           id: 'customers',
-          label: 'Customers Directory',
+          label: 'Customer Directory',
           icon: <Contact className="w-4 h-4 shrink-0" aria-hidden="true" />,
           onClick: () => navigate('/customers'),
         },
@@ -171,7 +184,7 @@ export function createSidebarNavGroups(navigate: (path: string) => void): Sideba
         },
         {
           id: 'approvals',
-          label: 'Approvals Matrix',
+          label: 'Pending Approvals',
           icon: <CheckCheck className="w-4 h-4 shrink-0" aria-hidden="true" />,
           onClick: () => navigate('/approvals'),
         },
@@ -189,7 +202,7 @@ export function createSidebarNavGroups(navigate: (path: string) => void): Sideba
         },
         {
           id: 'aging',
-          label: 'AR Aging Analysis',
+          label: 'Due & Overdue Collections',
           icon: <Clock className="w-4 h-4 shrink-0" aria-hidden="true" />,
           onClick: () => navigate('/collection/aging'),
         },
@@ -201,7 +214,7 @@ export function createSidebarNavGroups(navigate: (path: string) => void): Sideba
         },
         {
           id: 'operations',
-          label: 'Expenses & AP',
+          label: 'Office & Project Expenses',
           icon: <Briefcase className="w-4 h-4 shrink-0" aria-hidden="true" />,
           onClick: () => navigate('/operations/expenses'),
         },
@@ -219,7 +232,7 @@ export function createSidebarNavGroups(navigate: (path: string) => void): Sideba
         },
         {
           id: 'settings',
-          label: 'Settings & Series',
+          label: 'Company Settings',
           icon: <Settings className="w-4 h-4 shrink-0" aria-hidden="true" />,
           onClick: () => navigate('/settings'),
         },
@@ -231,13 +244,13 @@ export function createSidebarNavGroups(navigate: (path: string) => void): Sideba
         },
         {
           id: 'migration',
-          label: 'Migration Wizard',
+          label: 'Data Import & Migration',
           icon: <ArrowRightLeft className="w-4 h-4 shrink-0" aria-hidden="true" />,
           onClick: () => navigate('/migration/wizard'),
         },
         {
           id: 'audit',
-          label: 'Security & Audit',
+          label: 'Activity & Audit Log',
           icon: <ShieldCheck className="w-4 h-4 shrink-0" aria-hidden="true" />,
           onClick: () => navigate('/audit'),
         },

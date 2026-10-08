@@ -12,7 +12,7 @@ interface TenantDirectoryTableProps {
 }
 
 const FILTER_OPTIONS: Array<{ key: 'ALL' | 'ACTIVE' | 'SUSPENDED'; label: string }> = [
-  { key: 'ALL', label: 'All Tenants' },
+  { key: 'ALL', label: 'All Companies' },
   { key: 'ACTIVE', label: 'Active' },
   { key: 'SUSPENDED', label: 'Suspended' },
 ];
@@ -76,10 +76,10 @@ export function TenantDirectoryTable({
           <thead>
             <tr className="border-b border-border bg-surface-sunken/40 text-caption font-semibold text-text-muted">
               <th className="py-3 px-4">Company Name</th>
-              <th className="py-3 px-4">Tenant Code</th>
-              <th className="py-3 px-4">Region / Timezone</th>
+              <th className="py-3 px-4">Company Code</th>
+              <th className="py-3 px-4">Location / Timezone</th>
               <th className="py-3 px-4 text-center">Status</th>
-              <th className="py-3 px-4">Created Date</th>
+              <th className="py-3 px-4">Registration Date</th>
               <th className="py-3 px-4 text-right">Actions</th>
             </tr>
           </thead>
@@ -89,9 +89,9 @@ export function TenantDirectoryTable({
                 <td colSpan={6} className="py-12 text-center text-text-muted">
                   <div className="flex flex-col items-center justify-center gap-2">
                     <Building2 className="w-8 h-8 text-text-disabled" />
-                    <p className="text-body font-medium text-text">No tenant companies found</p>
+                    <p className="text-body font-medium text-text">No companies found</p>
                     <p className="text-caption text-text-muted">
-                      Try adjusting your search or onboarding a new company tenant.
+                      Try adjusting your search or register a new client company.
                     </p>
                   </div>
                 </td>

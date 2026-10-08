@@ -51,7 +51,7 @@ function ExecutiveHeader({ isLoading, onRefresh, onNavigate }: ExecutiveHeaderPr
       <div className="space-y-1">
         <div className="flex items-center gap-2.5 flex-wrap">
           <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-text-muted">
-            Enterprise Cockpit · Real Estate Portfolio
+            Real Estate Portfolio & Management
           </span>
           <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-caption font-semibold bg-surface-sunken text-text-muted border border-border">
             <span className="relative flex h-1.5 w-1.5">
@@ -61,11 +61,10 @@ function ExecutiveHeader({ isLoading, onRefresh, onNavigate }: ExecutiveHeaderPr
             Live Sync
           </span>
         </div>
-        <h1 className="text-h1 font-bold tracking-tight text-text font-sans">
-          Executive Dashboard
-        </h1>
+        <h1 className="text-h1 font-bold tracking-tight text-text font-sans">Overview Dashboard</h1>
         <p className="text-small text-text-muted">
-          Consolidated property portfolio, sales velocity, and statutory financial reconciliation.
+          Complete overview of property inventory, sales bookings, customer collections, and company
+          finances.
         </p>
       </div>
 
@@ -86,7 +85,7 @@ function ExecutiveHeader({ isLoading, onRefresh, onNavigate }: ExecutiveHeaderPr
           onClick={() => onNavigate('/collection/receipts')}
           leftIcon={<CreditCard className="w-3.5 h-3.5" />}
         >
-          Record Collection
+          Record Payment
         </Button>
 
         <Button
@@ -152,7 +151,7 @@ function FilterToolbar({
       </div>
 
       <span className="text-caption text-text-muted hidden lg:inline font-mono">
-        Reconciled with statutory ledgers (AT-15)
+        Updated in real-time
       </span>
     </div>
   );
@@ -161,21 +160,21 @@ function FilterToolbar({
 function QuickWorkflowDeck({ onNavigate }: { onNavigate: (path: string) => void }) {
   const links = [
     { label: 'Property Inventory', path: '/properties', icon: Building2 },
-    { label: 'Customers KYC', path: '/customers', icon: Users },
+    { label: 'Customer Directory', path: '/customers', icon: Users },
     { label: 'Price Quotations', path: '/sales/quotations', icon: FileSpreadsheet },
-    { label: 'Contracts & Bookings', path: '/sales/bookings', icon: Receipt },
-    { label: 'Money Receipts', path: '/collection/receipts', icon: CreditCard },
-    { label: 'General Ledger', path: '/accounting/coa', icon: Landmark },
-    { label: 'Statutory Reports', path: '/reports', icon: TrendingUp },
+    { label: 'Bookings & Sales', path: '/sales/bookings', icon: Receipt },
+    { label: 'Payments & Receipts', path: '/collection/receipts', icon: CreditCard },
+    { label: 'Chart of Accounts', path: '/accounting/coa', icon: Landmark },
+    { label: 'Reports & Analytics', path: '/reports', icon: TrendingUp },
   ];
 
   return (
     <div className="rounded-card border border-border bg-surface p-4 space-y-2.5">
       <div className="flex items-center justify-between text-caption text-text-muted font-medium">
         <span className="font-mono uppercase tracking-wider text-[11px] font-semibold">
-          Executive Workflow Fast-Track
+          Quick Shortcuts
         </span>
-        <span className="hidden sm:inline">Instant jump to core lifecycle stages</span>
+        <span className="hidden sm:inline">Quick access to daily key operations</span>
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-2">

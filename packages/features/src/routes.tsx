@@ -155,7 +155,7 @@ export function ProtectedLayout() {
   const headerProps = buildHeaderProps(user, isSuperAdmin, {
     onSearch: () => setIsSearchOpen(true),
     onNotif: () => setIsNotifOpen(true),
-    onProfile: () => navigate('/profile'),
+    onProfile: () => navigate(isSuperAdmin ? '/system/profile' : '/profile'),
   });
 
   return (

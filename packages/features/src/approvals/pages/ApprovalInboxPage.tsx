@@ -57,21 +57,20 @@ export function ApprovalInboxPage(): ReactElement {
             items={[
               { label: 'Overview', href: '/dashboard', onClick: () => navigate('/dashboard') },
               { label: 'Finance & Accounts' },
-              { label: 'Approvals Matrix' },
+              { label: 'Pending Approvals' },
             ]}
           />
           <div className="flex items-center gap-3 mt-1.5">
-            <h1 className="text-h1 font-bold text-text">Approvals Matrix</h1>
+            <h1 className="text-h1 font-bold text-text">Pending Approvals</h1>
             <span className="text-caption font-semibold px-2.5 py-0.5 rounded-full bg-warning/12 text-warning border border-warning/20">
-              {kpis.pendingCount} Pending Review
+              {kpis.pendingCount} Awaiting Review
             </span>
             <span className="text-caption font-semibold px-2.5 py-0.5 rounded-full bg-surface-sunken text-text-2 border border-border">
-              {approvals.length} {approvals.length === 1 ? 'Total' : 'Totals'}
+              {approvals.length} {approvals.length === 1 ? 'Total' : 'Total'}
             </span>
           </div>
           <p className="text-small text-text-muted mt-1">
-            Maker-checker verification, multi-tier authorization center, and financial exception
-            governance.
+            Review and approve discount requests, office expenses, and special authorizations.
           </p>
         </div>
       </div>

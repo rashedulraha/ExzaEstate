@@ -73,9 +73,9 @@ export function JournalListPage() {
     <div className="space-y-6" data-testid="journal-list-page">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-h1 font-bold text-text">Journal Vouchers</h1>
+          <h1 className="text-h1 font-bold text-text">Journal Entries</h1>
           <p className="text-small text-text-muted mt-1">
-            General ledger journal vouchers, double-entry audit trail, and immutability controls.
+            View accounting journal vouchers, transaction entries, and audit records.
           </p>
         </div>
         {canCreate && (
@@ -85,7 +85,7 @@ export function JournalListPage() {
             data-testid="create-journal-btn"
           >
             <Plus className="w-4 h-4 mr-1.5" />
-            New Journal Voucher
+            New Journal Entry
           </Button>
         )}
       </div>
@@ -93,15 +93,15 @@ export function JournalListPage() {
       {/* KPI Cards */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
         <KpiCard
-          label="Posted Ledger Volume"
+          label="Total Posted Amount"
           value={kpis.totalPostedVolumePaisa}
           isMoney
           highlight
         />
-        <KpiCard label="Draft Vouchers" value={kpis.countDraft} />
-        <KpiCard label="In Review" value={kpis.countReview} />
-        <KpiCard label="Posted Vouchers" value={kpis.countPosted} />
-        <KpiCard label="Reversed Offsets" value={kpis.countReversed} />
+        <KpiCard label="Draft Entries" value={kpis.countDraft} />
+        <KpiCard label="Pending Review" value={kpis.countReview} />
+        <KpiCard label="Posted Entries" value={kpis.countPosted} />
+        <KpiCard label="Reversed Entries" value={kpis.countReversed} />
       </div>
 
       {/* Filters Bar */}
@@ -109,7 +109,7 @@ export function JournalListPage() {
         <div className="shadow-xs p-3.5 rounded-card border border-border bg-surface flex flex-wrap items-center gap-3">
           <div className="w-64">
             <Input
-              placeholder="Search voucher # or narration..."
+              placeholder="Search voucher number or notes..."
               value={filters.search || ''}
               onChange={(e) => setFilters((prev) => ({ ...prev, search: e.target.value }))}
               prefixIcon={<Search className="w-4 h-4 text-text-muted" />}

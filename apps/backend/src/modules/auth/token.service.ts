@@ -7,7 +7,8 @@ import { TenantDb } from '../../database/tenant-db.service.js';
 import type { TenantPrisma } from '../../database/tenant-prisma.js';
 import { CACHE_STORE, type CacheStore } from '../../ports/index.js';
 
-export type { JwtAccessTokenPayload } from '../../common/guards/jwt-auth.utils.js';
+import type { JwtAccessTokenPayload } from '../../common/guards/jwt-auth.utils.js';
+export type { JwtAccessTokenPayload };
 
 export interface SessionContext {
   userId: string;

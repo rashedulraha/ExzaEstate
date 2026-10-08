@@ -30,7 +30,7 @@ export function PlatformAuditLogsTable({ logs, isLoading }: PlatformAuditLogsTab
           <Search className="absolute left-3 top-2.5 h-4 w-4 text-text-muted" />
           <input
             type="text"
-            placeholder="Search audit trail by action, reason, company..."
+            placeholder="Search activity by action, company, or reason..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="w-full rounded-button border border-border-input bg-surface pl-9 pr-4 py-1.5 text-body text-text placeholder:text-text-disabled transition focus:border-focus focus:outline-none focus:ring-1 focus:ring-focus"
@@ -38,9 +38,9 @@ export function PlatformAuditLogsTable({ logs, isLoading }: PlatformAuditLogsTab
         </div>
 
         <div className="flex items-center gap-2 self-end sm:self-auto text-caption text-text-muted">
-          <span>Immutable Platform Log</span>
+          <span>Permanent Activity Log</span>
           <span className="font-mono tabular-nums px-2 py-0.5 rounded-button bg-surface-sunken border border-border">
-            {logs.length} events
+            {logs.length} actions
           </span>
         </div>
       </div>
@@ -50,11 +50,11 @@ export function PlatformAuditLogsTable({ logs, isLoading }: PlatformAuditLogsTab
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="border-b border-border bg-surface-sunken/40 text-caption font-semibold text-text-muted">
-              <th className="py-3 px-4">Event Timestamp</th>
-              <th className="py-3 px-4">Action</th>
-              <th className="py-3 px-4">Company Scope</th>
-              <th className="py-3 px-4">Entity Type</th>
-              <th className="py-3 px-4">Audit Justification & Marker</th>
+              <th className="py-3 px-4">Date &amp; Time</th>
+              <th className="py-3 px-4">Action Taken</th>
+              <th className="py-3 px-4">Company</th>
+              <th className="py-3 px-4">Category</th>
+              <th className="py-3 px-4">Details &amp; Reason</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-border text-body">

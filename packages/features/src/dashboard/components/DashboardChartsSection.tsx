@@ -138,13 +138,13 @@ function SalesLeaderboardTable({
     <div className="card-workspace p-5 sm:p-6 space-y-4 flex flex-col justify-between">
       <div className="flex items-center justify-between gap-4 pb-1 border-b border-border/80">
         <div>
-          <h4 className="text-body font-semibold text-text">Sales Executive Performance</h4>
+          <h4 className="text-body font-semibold text-text">Sales Team Performance</h4>
           <p className="text-caption text-text-muted">
-            Conversion and revenue realization by representative
+            Sales inquiries, closed bookings, and total value by team member
           </p>
         </div>
         <span className="inline-flex shrink-0 items-center rounded-full bg-surface-sunken px-2.5 py-0.5 text-caption tabular-nums text-text-muted border border-border">
-          {ranked.length} representatives
+          {ranked.length} sales members
         </span>
       </div>
 
@@ -153,9 +153,9 @@ function SalesLeaderboardTable({
           <table className="w-full text-left text-small">
             <thead className="bg-surface-sunken text-text-muted border-b border-border text-caption">
               <tr>
-                <th className="px-3.5 py-2 font-medium">Representative</th>
+                <th className="px-3.5 py-2 font-medium">Sales Member</th>
                 <th className="px-3.5 py-2 text-right font-medium">Bookings</th>
-                <th className="px-3.5 py-2 text-right font-medium">Rate</th>
+                <th className="px-3.5 py-2 text-right font-medium">Success Rate</th>
                 <th className="px-3.5 py-2 text-right font-medium">Sales Value</th>
               </tr>
             </thead>
@@ -163,7 +163,7 @@ function SalesLeaderboardTable({
               {ranked.length === 0 ? (
                 <tr>
                   <td colSpan={4} className="px-3.5 py-6 text-center text-text-muted text-small">
-                    No sales executive activity recorded for this period
+                    No sales activity recorded for this period
                   </td>
                 </tr>
               ) : (
@@ -252,21 +252,21 @@ export function DashboardChartsSection({
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <CashFlowLine
           data={cashFlowPoints}
-          title="Monthly Operating Cash Flow"
-          subtitle="Cleared collections vs posted expenses (BDT)"
+          title="Monthly Cash Flow & Income"
+          subtitle="Collections received vs expenses paid (BDT)"
         />
         <PipelineFunnel
           stages={funnelStages}
-          title="Sales Conversion Funnel"
-          subtitle="Progression from customer inquiries to confirmed bookings"
+          title="Sales Journey & Conversion"
+          subtitle="Inquiries progressing to site visits and confirmed bookings"
         />
       </div>
 
       {/* Full-width AR Aging Strip */}
       <AgingStrip
         buckets={agingBuckets}
-        title="Accounts Receivable Aging Strip (P0)"
-        subtitle="Outstanding balances distributed across past-due timing buckets"
+        title="Customer Overdue & Due Collections Timeline"
+        subtitle="Pending installment dues categorized by days overdue"
       />
 
       {/* 2-Column: Sales Executive Performance Leaderboard & Action Center */}

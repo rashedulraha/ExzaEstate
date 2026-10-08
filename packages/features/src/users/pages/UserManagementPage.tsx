@@ -58,7 +58,7 @@ export function UserManagementPage() {
     return (
       <ErrorState
         title="Failed to Load Users"
-        message="Unable to retrieve employee accounts. Ensure administrative permissions are active."
+        message="Unable to load employee accounts. Please check your connection or permissions."
         onRetry={() => refetch()}
       />
     );
@@ -141,7 +141,7 @@ export function UserManagementPage() {
         <div className="card-stat">
           <div className="flex items-center justify-between">
             <span className="text-caption font-semibold uppercase tracking-wider text-text-muted">
-              Active Credentials
+              Active Users
             </span>
             <UserCheck className="w-4 h-4 text-success" />
           </div>
@@ -153,7 +153,7 @@ export function UserManagementPage() {
         <div className="card-stat">
           <div className="flex items-center justify-between">
             <span className="text-caption font-semibold uppercase tracking-wider text-text-muted">
-              Suspended / Inactive
+              Inactive Users
             </span>
             <UserX className="w-4 h-4 text-text-muted" />
           </div>
@@ -165,7 +165,7 @@ export function UserManagementPage() {
         <div className="card-stat">
           <div className="flex items-center justify-between">
             <span className="text-caption font-semibold uppercase tracking-wider text-text-muted">
-              2FA Protected
+              Two-Factor Secured
             </span>
             <ShieldCheck className="w-4 h-4 text-primary" />
           </div>

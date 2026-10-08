@@ -88,7 +88,7 @@ export function RoleManagementPage() {
             </span>
           </div>
           <p className="text-body text-text-muted mt-1">
-            Enterprise RBAC definitions, hierarchical approval grants, and module data scopes.
+            Manage employee roles, access permissions, and approval privileges across modules.
           </p>
         </div>
 

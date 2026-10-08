@@ -89,8 +89,8 @@ function CustomerListContent({
     return (
       <EmptyState
         dashedBorder
-        title="No customers registered"
-        description="Register buyers or convert active sales leads from the CRM pipeline."
+        title="No Customers Registered"
+        description="Register property buyers or convert inquiries from your sales leads."
         actionLabel="Register Customer"
         actionVariant="secondary"
         actionIcon={<Plus className="w-4 h-4" />}
@@ -172,10 +172,10 @@ export function CustomerListPage(): ReactElement {
                 value={filters.kycStatus ?? ''}
                 onChange={(val) => setFilters({ ...filters, kycStatus: val })}
                 options={[
-                  { label: 'All KYC Statuses', value: '' },
-                  { label: 'VERIFIED', value: 'VERIFIED' },
-                  { label: 'PENDING', value: 'PENDING' },
-                  { label: 'UNVERIFIED', value: 'UNVERIFIED' },
+                  { label: 'All Verification Statuses', value: '' },
+                  { label: 'Verified', value: 'VERIFIED' },
+                  { label: 'Pending Verification', value: 'PENDING' },
+                  { label: 'Unverified', value: 'UNVERIFIED' },
                 ]}
               />
             </div>

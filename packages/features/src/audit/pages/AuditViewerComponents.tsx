@@ -36,12 +36,11 @@ export function AuditPageHeader({
         <div className="flex items-center gap-3 mt-1.5">
           <h1 className="text-h1 font-bold text-text">Audit & Security Event Viewer</h1>
           <span className="text-caption font-semibold px-2.5 py-0.5 rounded-full bg-surface-sunken text-primary border border-primary/20">
-            Immutable Append-Only Log
+            Permanent Security Log
           </span>
         </div>
         <p className="text-body text-text-muted mt-1">
-          Tamper-evident audit ledger tracking state mutations, privilege changes, and security
-          events.
+          Complete activity history tracking user actions, data updates, and system logins.
         </p>
       </div>
 

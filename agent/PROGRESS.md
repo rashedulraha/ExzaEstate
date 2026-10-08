@@ -2055,3 +2055,109 @@ Tick a box only after the verification rules above are met. Dependencies are def
    - Executed `pnpm exec oxlint`: 0 warnings, 0 errors across all modified backend and frontend files.
    - Executed `pnpm --filter @exzaestate/features test src/approvals`: 4/4 tests passed.
    - Executed `pnpm --filter @exzaestate/features test`: 184/184 tests passed across 36 test files.
+
+### 2026-10-08 — Resolution: Super Admin Console Comprehensive Redesign & Multi-Page Platform Architecture
+
+1. User Request:
+   - "amar super admin interface update korte hobe , protita page ei obosstha apni thik koren, ar super admin e ki ki info thaka lagbe agula sob kichu diye sabolil vashai apni amake ei amar super admin dashbordd re design kore din"
+2. Root Cause Analysis:
+   - Double-unwrap bug in `useSystemAdmin.ts`: `customInstance` already unwrap envelopes (`response.data`), but `healthQuery` did `return res.data;` resulting in `undefined`. This forced `ClusterTelemetryConsole` to render `CLUSTER_DEGRADED` and `0.0 MB` memory.
+   - Stale navigation routing: Sidebar items for Audit (`/audit`), Tenants (`/system/dashboard`), Health (`/system/dashboard`), and Profile (`/profile`) either pointed to tenant routes or reset to dashboard without dedicated views or sidebar active indicator.
+   - Missing dedicated pages for platform tenants, licenses, telemetry, audit trail, and super admin profile.
+3. Architecture & Implementation Fix:
+   - [useSystemAdmin.ts](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/system-admin/hooks/useSystemAdmin.ts): Fixed double-unwrapping across health, tenants, licenses, audit logs, and mutations.
+   - [PlatformTenantsPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/system-admin/pages/PlatformTenantsPage.tsx): Dedicated tenant workspaces management page with KPI cards, search, status filter pills, and action modals.
+   - [PlatformLicensesPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/system-admin/pages/PlatformLicensesPage.tsx): Dedicated Ed25519 cryptographic licensing authority page with machine fingerprint tracking.
+   - [PlatformHealthPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/system-admin/pages/PlatformHealthPage.tsx): Dedicated infrastructure cluster telemetry console with Node.js V8 memory gauges, PG18 RLS engine state, and BullMQ worker queues.
+   - [PlatformAuditPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/system-admin/pages/PlatformAuditPage.tsx): Dedicated platform immutable audit trail page.
+   - [PlatformProfilePage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/system-admin/pages/PlatformProfilePage.tsx): Dedicated Super Admin identity, Argon2id credentials, session controls, and Meridian theme toggle.
+   - [PlatformSuperAdminDashboardPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/system-admin/pages/PlatformSuperAdminDashboardPage.tsx): Redesigned master cockpit with executive fast-navigation cards and sleek tabbed workstation.
+   - [PlatformDashboardTabs.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/system-admin/pages/PlatformDashboardTabs.tsx): Segmented pill tabs with icons and count badges.
+   - [navigation.config.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/navigation.config.tsx) & [routes.helpers.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/routes.helpers.tsx): Updated route prefix map and sidebar click handlers.
+   - [system-admin.routes.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/system-admin/system-admin.routes.tsx) & [index.ts](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/system-admin/index.ts): Mounted all 6 dedicated pages.
+4. Verification:
+   - `pnpm oxlint packages/features/src/system-admin`: 0 warnings, 0 errors across 22 files.
+   - `pnpm --filter @exzaestate/features test src/navigation.config.spec.ts`: 4/4 tests passed.
+
+### 2026-10-08 — Resolution: Comprehensive Non-Technical Executive Content & Copy Rewrite for Super Admin Portal
+
+1. User Request:
+   - "amar ei super admin dashbord er ekt aproblem hocche ekhabe sob kichu technical vashai likha ache so a amar client to ar technical cal trams boje nah take non tecnical vabe boja te hobe so ami chaibo amar super admin dashbord apni content valokore rewrite korben keno sob kichu ekta non technical person er noton nah lage"
+2. Action Taken & Architecture:
+   - Systematically audited and transformed every user-facing label, card title, badge, modal header, and table column across the entire Super Admin portal (`/system/*`) from developer jargon into clear, professional, client-friendly business language.
+   - Key Terminology Transformations:
+     - "Tenant / Multi-Tenant Workspace" → "Company / Client Business"
+     - "Provisioning Database Schema" → "Registering & Activating Company"
+     - "Ed25519 Cryptographic License / Machine Fingerprint" → "Software License / Device-Locked License"
+     - "Cluster Telemetry / Node V8 Heap RSS" → "System Status & Performance / Server Memory Usage"
+     - "PostgreSQL 18 Row-Level Security (RLS) Guard" → "Company Data Privacy Guard"
+     - "BullMQ Redis Worker Pool / In-Flight Jobs" → "Automated Tasks & Sync Jobs"
+     - "Immutable Ledger" → "Permanent Activity & Audit History"
+     - "Argon2id Hash Protection (64 MB cost)" → "High-Grade Password Protection"
+   - Files Updated:
+     - `navigation.config.tsx` & `navigation.config.spec.ts`: Sidebar groups and navigation items.
+     - `routes.helpers.tsx`: Super Admin header title and search placeholder.
+     - `PlatformDashboardHeader.tsx`: "Platform Administration Overview", "Register Company".
+     - `ClusterTelemetryConsole.tsx`: "System & Server Operational Status", "All Systems Running", friendly memory & storage meters.
+     - `PlatformSuperAdminDashboardPage.tsx`: Executive fast-navigation cards and summary badges.
+     - `PlatformDashboardTabs.tsx`: "Company Directory", "Software Licenses", "Activity & Audit Log".
+     - `PlatformTenantsPage.tsx`: "Company Directory & Workspaces", "Active Companies", "Suspended Accounts".
+     - `TenantDirectoryTable.tsx`: "Company Code", "Location / Timezone", "Registration Date".
+     - `OnboardTenantModal.tsx`: "Register New Company", clear non-technical form fields and "Register & Create Company".
+     - `TenantDetailModal.tsx`: Friendly company details and suspension notice.
+     - `PlatformLicensesPage.tsx` & `PlatformLicensesTable.tsx`: "Software Licenses & Subscriptions", friendly plan tiers and device limits.
+     - `LicenseGeneratorModal.tsx`: "Create Software License", customer plan selection, expiration options.
+     - `PlatformHealthPage.tsx` & `SystemHealthCardGrid.tsx`: "System Health & Server Performance", server runtime, background tasks, and database protection.
+     - `PlatformAuditPage.tsx` & `PlatformAuditLogsTable.tsx`: "System Activity & Audit Log", permanent history table.
+     - `PlatformProfilePage.tsx`: "Super Admin Account & Security", password protection, data privacy guard, and session management.
+     - `PlatformCommandPalette.tsx` & `PlatformPaletteResults.tsx`: "Quick Action Center", friendly action titles and scope tabs ("Companies", "Actions", "Licenses").
+3. Verification:
+   - `pnpm oxlint packages/features/src/system-admin`: 0 warnings, 0 errors across 22 files.
+   - `pnpm --filter @exzaestate/features test src/navigation.config.spec.ts`: 4/4 tests passed.
+
+### 2026-10-08 — Resolution: Comprehensive Non-Technical Client & User Dashboard Content Rewrite (/goal)
+
+1. User Request:
+   - "/goal ekhonapni jevabe amar super admin er content updatekorle saliand and no tecnical person redable so sei vabe apni amake amar user dashbord er mane client site er taw apni kore din din jeno sobai sob kicho valo vabe bojte pare . ar kothing kono trams likhbenn nah sob kichu sohoj vabe korben jeno user kono kicu bojte somossha nai"
+2. Action Taken & Architecture:
+   - Performed a 100% thorough audit and rewrite of all user-facing client dashboard pages, components, sidebar navigation, search palette, tables, metric strips, and modals across `packages/features/src/` to replace complex technical and developer jargon with simple, intuitive, non-technical real-estate terms.
+   - Key Terminology Transformations on Client / User Side:
+     - "Executive Cockpit" → "Overview Dashboard" / "Overview & Reports"
+     - "Institutional Asset Valuation & Velocity" → "Total Portfolio Value & Sales Summary"
+     - "Accounts Receivable (AR) / Outstanding AR" → "Customer Due Balance / Total Customer Due"
+     - "Accounts Payable (AP) / Outstanding Payables" → "Pending Bills / Unpaid Bills & Claims"
+     - "AR Aging Analysis / Delinquency Buckets" → "Due & Overdue Collections / Overdue Installment Periods"
+     - "Approvals Matrix / Maker-Checker (AT-24)" → "Pending Approvals / Management Approval Policy"
+     - "Operational Expenses & Vouchers" → "Office & Project Expenses"
+     - "Chart of Accounts / Terminal Accounts" → "Chart of Accounts / Posting Accounts"
+     - "Journal Vouchers" → "Journal Entries"
+     - "Payment Terrace" → "Installment Progress Chart"
+     - "Customer Statement of Account (Running Ledger)" → "Customer Account Statement"
+     - "Cheque Management & Clearance" → "Cheque Clearing & Records"
+     - "KYC Verification Status" → "Customer Verification (Verified / Pending Verification / Unverified)"
+     - "Go-Live Data Migration / Pre-Cutover Draft" → "Data Import & Migration Wizard / Draft Batch"
+     - "Transact Ready" → "Ready for Business"
+     - "Security & Audit Event Viewer (Tamper-Evident)" → "Activity & Security Audit Log"
+     - "Users & Credentials (RBAC)" → "Users & Employees / Roles & Permissions"
+   - Files Modified:
+     - `navigation.config.tsx` & `navigation.config.spec.ts`
+     - `routes.helpers.tsx`
+     - `search-palette.constants.tsx` & `search.spec.tsx`
+     - `ExecutiveDashboardPage.tsx`, `ExecutivePortfolioHero.tsx`, `ExecutiveKpiStrip.tsx`, `InventoryAbsorptionStrip.tsx`, `DashboardChartsSection.tsx`, `ExecutiveActionCenter.tsx`, `dashboard.spec.tsx`
+     - `ApprovalInboxPage.tsx`, `ApprovalKpiStrip.tsx`, `ApprovalDecisionModal.tsx`, `ApprovalDataTable.tsx`, `ApprovalDetailDrawer.tsx`
+     - `AgingDashboardPage.tsx`, `PaymentListPage.tsx`, `InstallmentSchedulePage.tsx`, `CustomerStatementPage.tsx`, `ChequeManagementPage.tsx`
+     - `CoaPage.tsx`, `JournalListPage.tsx`
+     - `ExpenseListPage.tsx`
+     - `ReportsHubPage.tsx`, `ReportsMetricsBar.tsx`
+     - `SettingsPage.tsx`
+     - `SetupChecklistComponents.tsx`
+     - `MigrationWizardPage.tsx`
+     - `AuditViewerComponents.tsx`
+     - `UserManagementPage.tsx`, `RoleManagementPage.tsx`
+     - `CustomerListPage.tsx`
+     - `BookingListPage.tsx`, `QuotationListPage.tsx`
+3. Verification:
+   - `pnpm oxlint packages/features/src`: 0 warnings, 0 errors across 402 files.
+   - `pnpm oxlint`: 0 warnings, 0 errors across 1772 files.
+   - `turbo run typecheck`: 9 of 9 packages passed with zero errors (`@exzaestate/features`, `@exzaestate/backend`, `@exzaestate/ui`, `@exzaestate/web`, `@exzaestate/desktop`, `@exzaestate/app-core`, `@exzaestate/api-client`, `@exzaestate/shared`, `@exzaestate/config`).
+   - `pnpm --filter @exzaestate/features test`: 36 test files passed, 184/184 unit & regression tests passed.

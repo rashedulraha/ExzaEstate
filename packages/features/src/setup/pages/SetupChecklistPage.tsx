@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import { LoadingState, ErrorState } from '@exzaestate/ui';
-import { useSetupChecklist, type SetupChecklistItem } from '../hooks/useSetupChecklist.js';
+import { useSetupChecklist } from '../hooks/useSetupChecklist.js';
+import type { SetupChecklistItem } from '../schemas/setup.schema.js';
 import { SetupProgressBar } from '../components/SetupProgressBar.js';
 import { TransactReadyBanner } from '../components/TransactReadyBanner.js';
 import { ChecklistCard } from '../components/ChecklistCard.js';

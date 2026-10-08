@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { Button, Input, Select, EmptyState } from '@exzaestate/ui';
-import { Plus, Search, X } from 'lucide-react';
+import { Plus, Search, X, Folder } from 'lucide-react';
 import type { AccountTreeItem } from '../../schemas/accounting.schema.js';
 import { TreeNode } from './CoaTreeNode.js';
 

@@ -67,7 +67,7 @@ describe('Executive Dashboard & AT-15 Verification', () => {
     // Check titles
     expect(screen.getByText('Total Sales')).toBeDefined();
     expect(screen.getByText('Total Collection')).toBeDefined();
-    expect(screen.getByText('Outstanding AR')).toBeDefined();
+    expect(screen.getByText('Customer Due Balance')).toBeDefined();
     expect(screen.getByText('Cash & Bank Balance')).toBeDefined();
 
     // Check formatted values
@@ -88,10 +88,10 @@ describe('Executive Dashboard & AT-15 Verification', () => {
     );
 
     // Section headings
-    expect(screen.getByText('Accounts Receivable Aging Strip (P0)')).toBeDefined();
-    expect(screen.getByText('Sales Conversion Funnel')).toBeDefined();
-    expect(screen.getByText('Monthly Operating Cash Flow')).toBeDefined();
-    expect(screen.getByText('Sales Executive Performance')).toBeDefined();
+    expect(screen.getByText('Customer Overdue & Due Collections Timeline')).toBeDefined();
+    expect(screen.getByText('Sales Journey & Conversion')).toBeDefined();
+    expect(screen.getByText('Monthly Cash Flow & Income')).toBeDefined();
+    expect(screen.getByText('Sales Team Performance')).toBeDefined();
 
     // Check SVG elements rendered
     const svgs = container.querySelectorAll('svg');

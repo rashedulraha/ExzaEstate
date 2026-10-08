@@ -25,6 +25,8 @@ export interface SystemHealthMetrics {
   };
 }
 
+export type SystemHealthData = SystemHealthMetrics;
+
 export interface TenantBranch {
   id: string;
   name: string;

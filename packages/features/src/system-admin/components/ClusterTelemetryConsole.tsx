@@ -49,23 +49,29 @@ function ConsoleTopBar({ isHealthy, isLoading, onRefresh }: ConsoleTopBarProps) 
             />
           </span>
           <span className="font-semibold text-text text-small tracking-tight">
-            Cluster Architecture & Node State
+            System & Server Operational Status
           </span>
         </div>
-        <span className="text-caption font-mono text-text-muted px-2 py-0.5 rounded-button bg-surface-sunken border border-border">
-          {isHealthy ? 'CLUSTER_HEALTHY' : 'CLUSTER_DEGRADED'}
+        <span
+          className={`text-caption px-2.5 py-0.5 rounded-full border font-medium ${
+            isHealthy
+              ? 'bg-success/10 text-success border-success/20'
+              : 'bg-danger/10 text-danger border-danger/20'
+          }`}
+        >
+          {isHealthy ? 'All Systems Running' : 'Attention Needed'}
         </span>
       </div>
 
       <div className="flex items-center gap-3 text-caption text-text-muted">
-        <span className="hidden sm:inline">Telemetry auto-refreshes every 15s</span>
+        <span className="hidden sm:inline">Auto-refreshes every 15s</span>
         {onRefresh && (
           <button
             type="button"
             onClick={onRefresh}
             className="p-1 rounded text-text-muted hover:text-text hover:bg-surface-sunken cursor-pointer transition active:scale-[0.96]"
-            title="Refresh telemetry"
-            aria-label="Refresh telemetry"
+            title="Refresh status"
+            aria-label="Refresh status"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? 'animate-spin' : ''}`} />
           </button>
@@ -76,27 +82,27 @@ function ConsoleTopBar({ isHealthy, isLoading, onRefresh }: ConsoleTopBarProps) 
 }
 
 function DatabaseTelemetryCard({ health }: { health?: SystemHealthMetrics }) {
-  const backupText = health?.backupStatus.status || 'Verified Clean';
+  const backupText = health?.backupStatus.status || 'Up to Date';
 
   return (
     <div className="p-5 space-y-3">
       <div className="flex items-center justify-between text-caption text-text-muted font-medium">
         <span className="flex items-center gap-1.5">
           <Database className="w-3.5 h-3.5 text-primary" />
-          Database Engine
+          Database & Storage
         </span>
-        <span className="text-success font-semibold">RLS Enforced</span>
+        <span className="text-success font-semibold text-caption">Privacy Guard Active</span>
       </div>
 
       <div>
-        <div className="text-h2 font-semibold text-text tracking-tight">PostgreSQL 18</div>
+        <div className="text-h2 font-semibold text-text tracking-tight">PostgreSQL Database</div>
         <p className="text-caption text-text-muted mt-0.5">
-          Multi-tenant isolated with session-level tenant switching
+          Each company&apos;s records are strictly isolated and private
         </p>
       </div>
 
       <div className="pt-2 border-t border-border/60 flex items-center justify-between text-caption">
-        <span className="text-text-muted">Backup Snapshot</span>
+        <span className="text-text-muted">Automated Backup</span>
         <span className="font-mono text-text font-medium">{backupText}</span>
       </div>
     </div>
@@ -114,7 +120,7 @@ function MemoryTelemetryCard({ health }: { health?: SystemHealthMetrics }) {
       <div className="flex items-center justify-between text-caption text-text-muted font-medium">
         <span className="flex items-center gap-1.5">
           <Server className="w-3.5 h-3.5 text-primary" />
-          Node.js Memory
+          Server Memory Usage
         </span>
         <span className="font-mono tabular-nums text-text font-semibold">{memoryPct}% used</span>
       </div>
@@ -135,7 +141,7 @@ function MemoryTelemetryCard({ health }: { health?: SystemHealthMetrics }) {
       </div>
 
       <div className="pt-2 border-t border-border/60 flex items-center justify-between text-caption">
-        <span className="text-text-muted">Total Resident Set (RSS)</span>
+        <span className="text-text-muted">Total Memory Allocated</span>
         <span className="font-mono tabular-nums text-text font-medium">{formatMb(rss)}</span>
       </div>
     </div>
@@ -152,7 +158,7 @@ function JobDispatcherTelemetryCard({ health }: { health?: SystemHealthMetrics }
       <div className="flex items-center justify-between text-caption text-text-muted font-medium">
         <span className="flex items-center gap-1.5">
           <Activity className="w-3.5 h-3.5 text-primary" />
-          Job Dispatcher
+          Background Tasks & Sync
         </span>
         <span className="font-mono tabular-nums text-text">Uptime: {uptimeStr}</span>
       </div>
@@ -160,15 +166,15 @@ function JobDispatcherTelemetryCard({ health }: { health?: SystemHealthMetrics }
       <div>
         <div className="text-h2 font-semibold text-text tracking-tight tabular-nums">
           {inFlight}
-          <span className="text-caption font-normal text-text-muted ml-2">jobs in flight</span>
+          <span className="text-caption font-normal text-text-muted ml-2">tasks processing</span>
         </div>
         <p className="text-caption text-text-muted mt-0.5">
-          BullMQ Redis worker pool & outbox event processor
+          Automated emails, scheduled notifications, and data sync
         </p>
       </div>
 
       <div className="pt-2 border-t border-border/60 flex items-center justify-between text-caption">
-        <span className="text-text-muted">Completed / Failed</span>
+        <span className="text-text-muted">Completed / Retried</span>
         <span className="font-mono tabular-nums text-text font-medium">{queueStats}</span>
       </div>
     </div>
@@ -191,17 +197,17 @@ function ClusterRegistryRibbon({
   return (
     <div className="px-5 py-3 bg-surface-sunken/40 border-t border-border grid grid-cols-2 sm:grid-cols-4 gap-4 text-small">
       <div className="flex items-center justify-between sm:justify-start sm:gap-2">
-        <span className="text-text-muted text-caption">Total Tenants:</span>
+        <span className="text-text-muted text-caption">Total Companies:</span>
         <span className="font-semibold text-text tabular-nums">{totalTenantsCount}</span>
       </div>
 
       <div className="flex items-center justify-between sm:justify-start sm:gap-2">
-        <span className="text-text-muted text-caption">Active Workspaces:</span>
+        <span className="text-text-muted text-caption">Active Companies:</span>
         <span className="font-semibold text-success tabular-nums">{activeTenantsCount}</span>
       </div>
 
       <div className="flex items-center justify-between sm:justify-start sm:gap-2">
-        <span className="text-text-muted text-caption">Suspended:</span>
+        <span className="text-text-muted text-caption">Suspended Accounts:</span>
         <span className="font-semibold text-danger tabular-nums">{suspendedTenantsCount}</span>
       </div>
 

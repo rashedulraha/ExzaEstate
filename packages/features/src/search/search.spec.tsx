@@ -36,10 +36,10 @@ describe('Global Search Command Palette', () => {
     expect(input).toBeDefined();
 
     // Default fast-jump commands
-    expect(screen.getByText('Go to Executive Dashboard')).toBeDefined();
+    expect(screen.getByText('Go to Overview Dashboard')).toBeDefined();
     expect(screen.getByText('Browse Property Inventory')).toBeDefined();
-    expect(screen.getByText('View All Bookings')).toBeDefined();
-    expect(screen.getByText('Security & Audit Log Viewer')).toBeDefined();
+    expect(screen.getByText('View All Bookings & Sales')).toBeDefined();
+    expect(screen.getByText('Activity & Audit Log')).toBeDefined();
   });
 
   it('handles input changes and escape key to close', () => {

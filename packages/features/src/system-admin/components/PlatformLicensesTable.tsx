@@ -71,10 +71,10 @@ export function PlatformLicensesTable({
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="border-b border-border bg-surface-sunken/40 text-caption font-semibold text-text-muted">
-              <th className="py-3 px-4">License Key & Sig</th>
+              <th className="py-3 px-4">License Key</th>
               <th className="py-3 px-4">Company</th>
-              <th className="py-3 px-4">Plan Tier</th>
-              <th className="py-3 px-4">Hardware Machine ID</th>
+              <th className="py-3 px-4">Subscription Plan</th>
+              <th className="py-3 px-4">Device / Machine ID</th>
               <th className="py-3 px-4">Capacity Limits</th>
               <th className="py-3 px-4">Status</th>
               <th className="py-3 px-4 text-right">Valid Until</th>
@@ -126,9 +126,9 @@ function LicensesTableBody({
         <td colSpan={7} className="py-12 text-center text-text-muted">
           <div className="flex flex-col items-center justify-center gap-2">
             <ShieldCheck className="w-8 h-8 text-text-disabled" />
-            <p className="text-body font-medium text-text">No cryptographic licenses found</p>
+            <p className="text-body font-medium text-text">No software licenses found</p>
             <p className="text-caption text-text-muted">
-              Issue an offline Ed25519 cryptographic license for any company tenant.
+              Create a new software license for any registered client company.
             </p>
           </div>
         </td>
@@ -170,7 +170,7 @@ function LicensesTableBody({
                 </button>
               </div>
               <div className="text-[10px] font-mono text-text-muted truncate max-w-xs mt-0.5">
-                Ed25519: {lic.signature ? `${lic.signature.slice(0, 24)}...` : 'Verified Signature'}
+                Signature: Verified &amp; Active
               </div>
             </td>
 
@@ -194,7 +194,7 @@ function LicensesTableBody({
                   {lic.machineId}
                 </span>
               ) : (
-                <span className="text-text-muted/60">Cloud (Unbound)</span>
+                <span className="text-text-muted/60">All Devices (Cloud)</span>
               )}
             </td>
 

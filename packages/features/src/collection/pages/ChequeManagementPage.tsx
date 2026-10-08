@@ -80,10 +80,9 @@ export function ChequeManagementPage() {
     <div className="space-y-6" data-testid="cheque-management-page">
       {/* Header */}
       <div>
-        <h1 className="text-h1 font-bold text-text">Cheque Clearing & Management</h1>
+        <h1 className="text-h1 font-bold text-text">Cheque Clearing & Records</h1>
         <p className="text-small text-text-muted mt-1">
-          Track deposited cheques, record bank clearances, and process bounced cheques with reversal
-          workflows.
+          Track received cheques, mark cheques as cleared in bank, and handle bounced cheques.
         </p>
       </div>
 
@@ -104,7 +103,7 @@ export function ChequeManagementPage() {
         <div className="p-4 rounded-card border border-border bg-surface flex items-center justify-between">
           <div className="space-y-1">
             <span className="text-caption font-semibold uppercase tracking-wider text-text-muted">
-              Pending Clearing ({kpis.pendingCount})
+              In Bank Clearing ({kpis.pendingCount})
             </span>
             <p className="text-h2 font-bold text-warning tabular-nums">
               {formatMoney(kpis.pendingPaisa)}
@@ -118,7 +117,7 @@ export function ChequeManagementPage() {
         <div className="p-4 rounded-card border border-border bg-surface flex items-center justify-between">
           <div className="space-y-1">
             <span className="text-caption font-semibold uppercase tracking-wider text-text-muted">
-              Cleared ({kpis.clearedCount})
+              Cleared in Bank ({kpis.clearedCount})
             </span>
             <p className="text-h2 font-bold text-success tabular-nums">
               {formatMoney(kpis.clearedPaisa)}
@@ -132,7 +131,7 @@ export function ChequeManagementPage() {
         <div className="p-4 rounded-card border border-border bg-surface flex items-center justify-between">
           <div className="space-y-1">
             <span className="text-caption font-semibold uppercase tracking-wider text-text-muted">
-              Bounced ({kpis.bouncedCount})
+              Bounced Cheques ({kpis.bouncedCount})
             </span>
             <p className="text-h2 font-bold text-danger tabular-nums">
               {formatMoney(kpis.bouncedPaisa)}

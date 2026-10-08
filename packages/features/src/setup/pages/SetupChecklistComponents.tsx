@@ -39,12 +39,12 @@ export function SetupChecklistHeader({
             <span
               className={`w-1.5 h-1.5 rounded-full ${canTransact ? 'bg-success' : 'bg-warning'}`}
             />
-            {canTransact ? 'Transact Ready' : 'Setup In Progress'}
+            {canTransact ? 'Ready for Business' : 'Setup In Progress'}
           </span>
         </div>
         <p className="text-body text-text-muted mt-1">
-          Enterprise first-time setup checklist per FLOW-02. Complete mandatory items to enable
-          financial operations.
+          Complete the essential setup steps to start recording bookings, payments, and accounting
+          transactions.
         </p>
       </div>
 
@@ -85,7 +85,7 @@ export function SetupChecklistKpis({
       <div className="card-stat">
         <div className="flex items-center justify-between">
           <span className="text-caption font-semibold uppercase tracking-wider text-text-muted">
-            Satisfied Steps
+            Completed Steps
           </span>
           <ListChecks className="w-4 h-4 text-text-muted" />
         </div>

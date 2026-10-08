@@ -95,8 +95,8 @@ export function LicenseGeneratorModal({
     <Dialog
       isOpen={isOpen}
       onClose={handleClose}
-      title="Ed25519 Cryptographic License Generator"
-      description="Issue a digitally signed license payload bound to the company and optional machine hardware ID."
+      title="Create Software License"
+      description="Issue a secure software license for a client company with custom capacity limits and expiration date."
       size="lg"
     >
       {result ? (
@@ -104,9 +104,11 @@ export function LicenseGeneratorModal({
           <div className="rounded-card border border-success/30 bg-success/10 p-4 flex items-start gap-3">
             <ShieldCheck className="w-5 h-5 text-success shrink-0 mt-0.5" />
             <div>
-              <h4 className="text-body font-semibold text-text">License Key Signed Successfully</h4>
+              <h4 className="text-body font-semibold text-text">
+                License Key Created Successfully
+              </h4>
               <p className="text-caption text-text-muted mt-0.5">
-                The Ed25519 cryptographic signature has been generated with SHA-512 validation.
+                The software license is active and ready for the company to activate.
               </p>
             </div>
           </div>
@@ -114,7 +116,7 @@ export function LicenseGeneratorModal({
           <div>
             <div className="flex items-center justify-between mb-1.5">
               <label className="text-caption font-semibold text-text-muted">
-                Signed License Key
+                Software License Key
               </label>
               <button
                 type="button"
@@ -135,7 +137,7 @@ export function LicenseGeneratorModal({
 
           <div>
             <label className="block text-caption font-semibold text-text-muted mb-1.5">
-              Ed25519 Digital Signature
+              Security Verification Code
             </label>
             <textarea
               readOnly
@@ -165,7 +167,7 @@ export function LicenseGeneratorModal({
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label className="block text-label text-text font-medium mb-1">
-                Target Company Tenant *
+                Client Company *
               </label>
               <select {...register('companyId')} className={inputClass}>
                 <option value="">Select a company...</option>
@@ -182,13 +184,13 @@ export function LicenseGeneratorModal({
 
             <div>
               <label className="block text-label text-text font-medium mb-1">
-                License Plan Tier
+                Subscription Plan
               </label>
               <select {...register('plan')} className={inputClass}>
-                <option value="STARTER">Starter Tier (Small Office)</option>
-                <option value="GROWTH">Growth Tier (Multi-Branch)</option>
-                <option value="ENTERPRISE">Enterprise Tier (Unlimited Scale)</option>
-                <option value="CUSTOM">Custom Dedicated</option>
+                <option value="STARTER">Starter Plan (Small Office)</option>
+                <option value="GROWTH">Growth Plan (Multi-Branch)</option>
+                <option value="ENTERPRISE">Enterprise Plan (Unlimited Scale)</option>
+                <option value="CUSTOM">Custom Plan</option>
               </select>
             </div>
           </div>
@@ -196,7 +198,7 @@ export function LicenseGeneratorModal({
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label className="block text-label text-text font-medium mb-1">
-                Valid Until (Expiry Date) *
+                Expiration Date *
               </label>
               <input type="date" {...register('validUntil')} className={inputClass} />
               {errors.validUntil && (
@@ -206,7 +208,7 @@ export function LicenseGeneratorModal({
 
             <div>
               <label className="block text-label text-text font-medium mb-1">
-                Max Allowed Staff Seats
+                Allowed Staff Seats
               </label>
               <input
                 type="number"
@@ -224,7 +226,7 @@ export function LicenseGeneratorModal({
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label className="block text-label text-text font-medium mb-1">
-                Max Allowed Branches
+                Allowed Office Branches
               </label>
               <input
                 type="number"
@@ -237,7 +239,7 @@ export function LicenseGeneratorModal({
 
             <div>
               <label className="block text-label text-text font-medium mb-1">
-                Max Active Real Estate Projects
+                Allowed Real Estate Projects
               </label>
               <input
                 type="number"
@@ -251,16 +253,16 @@ export function LicenseGeneratorModal({
 
           <div>
             <label className="block text-label text-text font-medium mb-1">
-              Machine Hardware Fingerprint ID (Optional)
+              Lock to Specific Computer ID (Optional)
             </label>
             <input
               type="text"
-              placeholder="e.g. SHA256-HW-NODE-89F12A (leave empty for cloud access)"
+              placeholder="e.g. DEVICE-HW-89F12A (leave empty for cloud access)"
               {...register('machineId')}
               className={inputClass}
             />
             <p className="mt-1 text-caption text-text-muted">
-              Used strictly for offline Desktop Standalone installations to lock to client hardware.
+              Leave blank for cloud usage, or enter office device ID for offline desktop mode.
             </p>
           </div>
 
@@ -275,7 +277,7 @@ export function LicenseGeneratorModal({
               isLoading={isGenerating}
               leftIcon={<KeyRound className="w-4 h-4" />}
             >
-              Sign & Generate License
+              Create &amp; Issue License
             </Button>
           </div>
         </form>

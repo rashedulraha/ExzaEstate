@@ -10,16 +10,6 @@ import type {
   GeneratedLicenseResult,
 } from '../schemas/system-admin.schema.js';
 
-interface HealthApiResponse {
-  success: boolean;
-  data: SystemHealthMetrics;
-}
-
-interface LicenseApiResponse {
-  success: boolean;
-  data: GeneratedLicenseResult;
-}
-
 export function useSystemAdmin() {
   const queryClient = useQueryClient();
 
@@ -27,11 +17,15 @@ export function useSystemAdmin() {
   const tenantsQuery = useQuery<TenantItem[]>({
     queryKey: ['system', 'tenants'],
     queryFn: async () => {
-      const data = await customInstance<TenantItem[]>({
+      const data = await customInstance<TenantItem[] | { data: TenantItem[] }>({
         url: '/api/v1/system/tenants',
         method: 'GET',
       });
-      return data;
+      if (Array.isArray(data)) return data;
+      if (data && typeof data === 'object' && 'data' in data && Array.isArray(data.data)) {
+        return data.data;
+      }
+      return [];
     },
     staleTime: 30_000,
   });
@@ -40,11 +34,14 @@ export function useSystemAdmin() {
   const healthQuery = useQuery<SystemHealthMetrics>({
     queryKey: ['system', 'health'],
     queryFn: async () => {
-      const res = await customInstance<HealthApiResponse>({
+      const res = await customInstance<SystemHealthMetrics | { data: SystemHealthMetrics }>({
         url: '/api/v1/system/health',
         method: 'GET',
       });
-      return res.data;
+      if (res && typeof res === 'object' && 'data' in res && res.data) {
+        return res.data;
+      }
+      return res as SystemHealthMetrics;
     },
     refetchInterval: 15_000, // Live poll every 15 seconds
   });
@@ -53,11 +50,15 @@ export function useSystemAdmin() {
   const licensesQuery = useQuery<PlatformLicenseItem[]>({
     queryKey: ['system', 'licenses'],
     queryFn: async () => {
-      const data = await customInstance<PlatformLicenseItem[]>({
+      const data = await customInstance<PlatformLicenseItem[] | { data: PlatformLicenseItem[] }>({
         url: '/api/v1/system/licenses',
         method: 'GET',
       });
-      return data;
+      if (Array.isArray(data)) return data;
+      if (data && typeof data === 'object' && 'data' in data && Array.isArray(data.data)) {
+        return data.data;
+      }
+      return [];
     },
     staleTime: 30_000,
   });
@@ -66,11 +67,15 @@ export function useSystemAdmin() {
   const auditLogsQuery = useQuery<PlatformAuditLogItem[]>({
     queryKey: ['system', 'audit-logs'],
     queryFn: async () => {
-      const data = await customInstance<PlatformAuditLogItem[]>({
+      const data = await customInstance<PlatformAuditLogItem[] | { data: PlatformAuditLogItem[] }>({
         url: '/api/v1/system/tenants/audit-logs',
         method: 'GET',
       });
-      return data;
+      if (Array.isArray(data)) return data;
+      if (data && typeof data === 'object' && 'data' in data && Array.isArray(data.data)) {
+        return data.data;
+      }
+      return [];
     },
     staleTime: 30_000,
   });
@@ -78,11 +83,18 @@ export function useSystemAdmin() {
   // Mutation: Onboard New Tenant Company
   const onboardMutation = useMutation({
     mutationFn: async (dto: OnboardTenantFormData) => {
-      return customInstance<{ companyId: string; companyCode: string; branchId: string }>({
+      const res = await customInstance<
+        | { companyId: string; companyCode: string; branchId: string }
+        | { data: { companyId: string; companyCode: string; branchId: string } }
+      >({
         url: '/api/v1/system/tenants',
         method: 'POST',
         data: dto,
       });
+      if (res && typeof res === 'object' && 'data' in res && res.data) {
+        return res.data;
+      }
+      return res as { companyId: string; companyCode: string; branchId: string };
     },
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ['system', 'tenants'] });
@@ -119,12 +131,15 @@ export function useSystemAdmin() {
   // Mutation: Generate Cryptographic Ed25519 License
   const licenseMutation = useMutation({
     mutationFn: async (dto: GenerateLicenseFormData) => {
-      const res = await customInstance<LicenseApiResponse>({
+      const res = await customInstance<GeneratedLicenseResult | { data: GeneratedLicenseResult }>({
         url: '/api/v1/system/licenses',
         method: 'POST',
         data: dto,
       });
-      return res.data;
+      if (res && typeof res === 'object' && 'data' in res && res.data) {
+        return res.data;
+      }
+      return res as GeneratedLicenseResult;
     },
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ['system', 'licenses'] });
