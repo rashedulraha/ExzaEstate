@@ -2161,3 +2161,30 @@ Tick a box only after the verification rules above are met. Dependencies are def
    - `pnpm oxlint`: 0 warnings, 0 errors across 1772 files.
    - `turbo run typecheck`: 9 of 9 packages passed with zero errors (`@exzaestate/features`, `@exzaestate/backend`, `@exzaestate/ui`, `@exzaestate/web`, `@exzaestate/desktop`, `@exzaestate/app-core`, `@exzaestate/api-client`, `@exzaestate/shared`, `@exzaestate/config`).
    - `pnpm --filter @exzaestate/features test`: 36 test files passed, 184/184 unit & regression tests passed.
+
+### 2026-10-08 — Resolution: Standardize Currency Prefix to BDT Across Entire Platform & AGENTS.md Constitution Invariant
+
+1. User Request:
+   - "৳ eita nah use kore apni BDT eita use kroen ar amar agents.md file updatekore din jeon sob somoi BDT use kore ৳ eita nah use kore"
+2. Action Taken & Architecture:
+   - Updated system constitution and operational manuals:
+     - `AGENTS.md`: Updated Pinned Technology Stack and Invariant 7 to explicitly enforce the `BDT ` prefix (`BDT 5,00,000` / `BDT 1,50,00,000`) and strictly forbid using the `৳` symbol.
+     - `agent/rules.md`: Updated formatting standards and examples to mandate `BDT 5,00,000`.
+     - `agent/golden-module-frontend.md` & `agent/design.md`: Replaced all legacy `৳` symbols with `BDT ` prefix.
+   - Updated Shared Package:
+     - `packages/shared/src/format.ts`: Changed default parameter `currencySymbol = 'BDT '`.
+     - `packages/shared/src/i18n/en.json`: Updated `"currency.symbol": "BDT"`.
+     - `packages/shared/src/format.spec.ts`: Updated test suite with `BDT ` expectations (22/22 tests passed).
+   - Updated UI & Frontend Features:
+     - `packages/ui`: Updated test assertions and UI signatures for `BDT ` formatting (43/43 tests passed).
+     - `packages/app-core`: Updated runtime format tests (7/7 tests passed).
+     - `packages/features`: Updated `useAgingDashboard.ts`, `ExpenseListPage.tsx`, `BankReconciliationModal.tsx`, `BankTransferModal.tsx`, and test specs across approvals, collection, property, sales, and accounting (184/184 tests passed).
+   - Updated Backend DTOs & Validation Pipelines:
+     - DTO descriptions and OpenAPI examples in accounting, collection, migration, and sales modules.
+     - Regenerated OpenAPI specs and client SDK: `pnpm gen:api`.
+     - All 202 backend unit tests passed.
+   - Architectural Quality Gates & CI:
+     - `pnpm check:all`: Passed all 9 architectural gates (40/40 Acceptance Tests green, 0 breaking OpenAPI changes, zero API drift).
+     - `pnpm lint`, `pnpm typecheck`, `pnpm build`: 100% green with zero errors.
+3. Verification:
+   - Staged, committed, pushed to `origin main`, and verified all GitHub Actions CI jobs passed.
