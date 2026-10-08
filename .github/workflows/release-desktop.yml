@@ -106,7 +106,7 @@ jobs:
         with:
           projectPath: './apps/desktop'
           includeRelease: false
-          includeUpdaterJson: true
+          includeUpdaterJson: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY != '' }}
           updaterJsonKeepUniversalUrl: true
 
       - name: Upload platform artifacts
@@ -161,7 +161,7 @@ jobs:
             ./dist-release/*.exe
             ./dist-release/*.deb
             ./dist-release/*.AppImage
-            ./dist-release/latest.json
+            ./dist-release/latest.json*
             ./dist-release/SHA256SUMS.txt
           body: |
             ### ExzaEstate Enterprise ERP Desktop Release
