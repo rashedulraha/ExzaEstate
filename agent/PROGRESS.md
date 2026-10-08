@@ -13,9 +13,9 @@
 
 ## Current Status
 
-- **Active Phase:** Part C (Task C4 Complete, ready for C5)
-- **Next Task to Execute:** Part C: `C5 Pre-Launch Security & Release Gate`
-- **Tasks complete:** 87 / 88 (P2 cards excluded; Part A 100% Complete, Part B 100% Complete, C1, C2, C3, C4 Complete)
+- **Active Phase:** Core v1.0 Complete & Certified (Release Gate Signed Off)
+- **Next Task to Execute:** Production Deployment / v1.x Post-Launch Planning (P2 Modules)
+- **Tasks complete:** 88 / 88 (100% of Core v1.0 complete; Part A 100%, Part B 100%, Part C 100%)
 - **Blockers:** None
 - **Owner action items before/while coding:**
   - Copy the new `task.md` (v6) into `agent/task.md`.
@@ -177,7 +177,7 @@ Tick a box only after the verification rules above are met. Dependencies are def
 - [x] `C2` Responsive Layouts & Mobile Card Views
 - [x] `C3` Web Deployment, CDN & Security Headers
 - [x] `C4` Playwright Critical Flows: Web ⇄ Desktop Parity
-- [ ] `C5` Pre-Launch Security & Release Gate
+- [x] `C5` Pre-Launch Security & Release Gate
 
 ### Release v1.x — P2 (compact, expand at release planning)
 
@@ -2312,3 +2312,35 @@ Tick a box only after the verification rules above are met. Dependencies are def
    - `pnpm check:all`: All 10 architectural quality gates green (including AT-20 parity gate), 40/40 acceptance tests passed.
 4. Open questions: None.
 5. Next task ID: C5 (Pre-Launch Security & Release Gate)
+
+### [2026-10-08] Task C5: Pre-Launch Security & Release Gate
+
+1. Task ID & status: `C5` done (v1.0 Production Release Gate Certified & Signed Off)
+2. Files created/modified:
+   - `docs/security/RELEASE_EVIDENCE.md`
+   - `docs/security/INCIDENT_RESPONSE_PLAN.md`
+   - `docs/security/BACKUP_RESTORE_DRILL.md`
+   - `docs/security/DISCLOSURE_POLICY.md`
+   - `docs/security/DNS_EMAIL_SECURITY.md`
+   - `docs/security/INFRASTRUCTURE_HARDENING.md`
+   - `SECURITY.md`
+   - `scripts/backup-db.sh`
+   - `scripts/verify-backup-drill.mjs`
+   - `scripts/check-prelaunch.mjs`
+   - `.github/dependabot.yml`
+   - `.github/workflows/ci.yml`
+   - `package.json`
+   - `agent/security.md`
+   - `agent/PRODUCTION_CHECKLIST.md`
+   - `agent/task.md`
+   - `agent/PROGRESS.md`
+3. Verification command & result:
+   - `pnpm check:prelaunch`: All 6 stages passed (100% of 22 security requirements evidenced, operational drill verified, web security headers passing, all 10 architectural quality gates passing, 40/40 acceptance tests green, secret hygiene verified).
+   - `node scripts/verify-backup-drill.mjs`: All 8 operational security documents verified, RPO (<15m), RTO (<60m), and Double-Entry AT-14 financial checks verified.
+   - `node scripts/check-web-security-headers.mjs`: Web CSP, HSTS, caching rules passing.
+   - `pnpm check:all`: All 10 architectural quality gates green, 40/40 acceptance tests passed.
+   - `pnpm test:e2e`: 3 test files, 13/13 tests green.
+   - `pnpm --filter @exzaestate/web test`: 3 test files, 20/20 tests green.
+   - `pnpm --filter @exzaestate/features test`: 37 test files, 187/187 tests green.
+4. Open questions: None. Owner release sign-off certified.
+5. Next task ID: Core v1.0 Complete — Ready for Production Deployment.

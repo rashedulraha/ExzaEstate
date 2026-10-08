@@ -1258,7 +1258,7 @@ These are applied as defaults in `architecture.md` v4 but are still **"Needs sig
 
 #### C5 — Pre-Launch Security & Release Gate
 
-- **Status:** [ ] · **Size:** M (3 steps) · **Depends:** C3, C4, B11
+- **Status:** [x] · **Size:** M (3 steps) · **Depends:** C3, C4, B11
 - **Reads:** `security.md` §13, §14, §16; `architecture.md` §17.
 - **Touches:** `docs/security/**`, `.github/workflows/**` (gate job).
 - **Steps:** **S1** walk **every checkbox in `security.md` §16** and attach evidence (test name, CI job or config) for each — items without evidence block release. **S2** restore drill documented (backups restore-tested), incident-response plan and `security@` disclosure policy published, SPF/DKIM/DMARC configured. **S3** external dependency/vulnerability scan clean. Verify: `pnpm check:prelaunch`.

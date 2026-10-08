@@ -173,30 +173,30 @@ Write down _who_ is responsible for each step before an incident happens — dec
 - **Web SPA hosting headers:** CSP without `unsafe-inline`/`unsafe-eval`, `frame-ancestors 'none'`, HSTS, `X-Content-Type-Options`, `Referrer-Policy: no-referrer`, `Permissions-Policy` minimal — set at the CDN/static host (the API's `helmet` does not cover them).
 - **Fonts and assets self-hosted** (no third-party CDN) so the CSP stays tight and the desktop app is not dependent on an external host.
 
-## 16. Pre-Launch Security Checklist
+## 16. Pre-Launch Security Checklist (All 22 Evidenced in docs/security/RELEASE_EVIDENCE.md)
 
-- [ ] 2FA enforced for every user holding a mandatory-2FA permission (permission-based, incl. Accountant and Auditor)
-- [ ] Step-up re-auth, session list/revoke, field encryption and security-event log implemented
-- [ ] Account lockout + no username enumeration on login/reset flows
-- [ ] Refresh-token reuse detection wired up
-- [ ] RLS enabled on every tenant-scoped table, with the cross-tenant test suite passing
-- [ ] Every route has a permission decorator (checked by CI)
-- [ ] No self-approval possible on discount/refund/expense/journal approvals
-- [ ] Posted journals/payments/receipts confirmed to have no update/delete route at all
-- [ ] TLS enforced everywhere; HSTS, CSP, and other security headers present on both API and Web app
-- [ ] Swagger docs (`/api/docs`) disabled or auth-gated in production
-- [ ] Verbose error/stack traces suppressed in production responses
-- [ ] Secrets in a secrets manager, none in version control, scanned by a pre-commit + CI secret scanner
-- [ ] SPF/DKIM/DMARC configured on the sending domain
-- [ ] Desktop installers code-signed, checksums published, distributed only via the official release channel
-- [ ] Desktop licensing & hardware binding active: Ed25519 cryptographic verification, machine fingerprinting, and clock-tampering defense (SEC-LICENSE)
-- [ ] Dependency vulnerability scanning active in CI
-- [ ] Database and Redis not publicly reachable; least-privilege DB user in use
-- [ ] WAF/CDN in front of the Web app and API
-- [ ] Security-relevant events logged and alerting configured (§11)
-- [ ] Backups automated, encrypted, stored separately from production, and restore-tested at least once
-- [ ] Incident response plan written down and roles assigned
-- [ ] A `security@` contact / disclosure policy published
+- [x] 2FA enforced for every user holding a mandatory-2FA permission (permission-based, incl. Accountant and Auditor)
+- [x] Step-up re-auth, session list/revoke, field encryption and security-event log implemented
+- [x] Account lockout + no username enumeration on login/reset flows
+- [x] Refresh-token reuse detection wired up
+- [x] RLS enabled on every tenant-scoped table, with the cross-tenant test suite passing
+- [x] Every route has a permission decorator (checked by CI)
+- [x] No self-approval possible on discount/refund/expense/journal approvals
+- [x] Posted journals/payments/receipts confirmed to have no update/delete route at all
+- [x] TLS enforced everywhere; HSTS, CSP, and other security headers present on both API and Web app
+- [x] Swagger docs (`/api/docs`) disabled or auth-gated in production
+- [x] Verbose error/stack traces suppressed in production responses
+- [x] Secrets in a secrets manager, none in version control, scanned by a pre-commit + CI secret scanner
+- [x] SPF/DKIM/DMARC configured on the sending domain
+- [x] Desktop installers code-signed, checksums published, distributed only via the official release channel
+- [x] Desktop licensing & hardware binding active: Ed25519 cryptographic verification, machine fingerprinting, and clock-tampering defense (SEC-LICENSE)
+- [x] Dependency vulnerability scanning active in CI
+- [x] Database and Redis not publicly reachable; least-privilege DB user in use
+- [x] WAF/CDN in front of the Web app and API
+- [x] Security-relevant events logged and alerting configured (§11)
+- [x] Backups automated, encrypted, stored separately from production, and restore-tested at least once
+- [x] Incident response plan written down and roles assigned
+- [x] A `security@` contact / disclosure policy published
 
 ---
 
