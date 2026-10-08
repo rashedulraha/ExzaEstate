@@ -8833,6 +8833,348 @@ export const getVendorApControllerGetLedgerMockHandler = (
   );
 };
 
+export const getPurchaseRequestControllerCreateMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/procurement/purchase-requests',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 201 });
+    },
+    options,
+  );
+};
+
+export const getPurchaseRequestControllerFindAllMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/procurement/purchase-requests',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getPurchaseRequestControllerFindByIdMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/procurement/purchase-requests/:id',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getPurchaseRequestControllerUpdateMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.patch>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.patch(
+    '*/api/v1/procurement/purchase-requests/:id',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getPurchaseRequestControllerSubmitMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/procurement/purchase-requests/:id/submit',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 201 });
+    },
+    options,
+  );
+};
+
+export const getPurchaseRequestControllerApproveMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/procurement/purchase-requests/:id/approve',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 201 });
+    },
+    options,
+  );
+};
+
+export const getPurchaseRequestControllerRejectMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/procurement/purchase-requests/:id/reject',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 201 });
+    },
+    options,
+  );
+};
+
+export const getPurchaseRequestControllerConvertToPoMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/procurement/purchase-requests/:id/convert-to-po',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 201 });
+    },
+    options,
+  );
+};
+
+export const getPurchaseOrderControllerCreateMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/procurement/purchase-orders',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 201 });
+    },
+    options,
+  );
+};
+
+export const getPurchaseOrderControllerFindAllMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/procurement/purchase-orders',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getPurchaseOrderControllerFindByIdMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/procurement/purchase-orders/:id',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getPurchaseOrderControllerUpdateMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.patch>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.patch(
+    '*/api/v1/procurement/purchase-orders/:id',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getPurchaseOrderControllerCancelMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/procurement/purchase-orders/:id/cancel',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 201 });
+    },
+    options,
+  );
+};
+
+export const getPurchaseOrderControllerCloseMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/procurement/purchase-orders/:id/close',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 201 });
+    },
+    options,
+  );
+};
+
+export const getGoodsReceiptControllerCreateMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/procurement/goods-receipts',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 201 });
+    },
+    options,
+  );
+};
+
+export const getGoodsReceiptControllerFindAllMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/procurement/goods-receipts',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getGoodsReceiptControllerFindByIdMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/procurement/goods-receipts/:id',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getGoodsReceiptControllerCreateBillMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/api/v1/procurement/goods-receipts/:id/create-bill',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 201 });
+    },
+    options,
+  );
+};
+
 export const getCommissionControllerCreateBrokerMockHandler = (
   overrideResponse?:
     | void
@@ -9441,6 +9783,24 @@ export const getExzaEstateEnterpriseAPIMock = () => [
   getVendorApControllerGetBalanceMockHandler(),
   getVendorApControllerGetAgingMockHandler(),
   getVendorApControllerGetLedgerMockHandler(),
+  getPurchaseRequestControllerCreateMockHandler(),
+  getPurchaseRequestControllerFindAllMockHandler(),
+  getPurchaseRequestControllerFindByIdMockHandler(),
+  getPurchaseRequestControllerUpdateMockHandler(),
+  getPurchaseRequestControllerSubmitMockHandler(),
+  getPurchaseRequestControllerApproveMockHandler(),
+  getPurchaseRequestControllerRejectMockHandler(),
+  getPurchaseRequestControllerConvertToPoMockHandler(),
+  getPurchaseOrderControllerCreateMockHandler(),
+  getPurchaseOrderControllerFindAllMockHandler(),
+  getPurchaseOrderControllerFindByIdMockHandler(),
+  getPurchaseOrderControllerUpdateMockHandler(),
+  getPurchaseOrderControllerCancelMockHandler(),
+  getPurchaseOrderControllerCloseMockHandler(),
+  getGoodsReceiptControllerCreateMockHandler(),
+  getGoodsReceiptControllerFindAllMockHandler(),
+  getGoodsReceiptControllerFindByIdMockHandler(),
+  getGoodsReceiptControllerCreateBillMockHandler(),
   getCommissionControllerCreateBrokerMockHandler(),
   getCommissionControllerCreateRuleMockHandler(),
   getCommissionControllerApproveCommissionMockHandler(),

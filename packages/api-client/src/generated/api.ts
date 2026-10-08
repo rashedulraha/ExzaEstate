@@ -64,6 +64,7 @@ import type {
   CoaControllerGetAccountsParams,
   CompleteFollowUpDto,
   ConvertLeadDto,
+  ConvertPrToPoDto,
   CreateAccountDto,
   CreateAgreementTemplateDto,
   CreateApprovalRuleDto,
@@ -86,6 +87,7 @@ import type {
   CreateEmployeeDto,
   CreateExpenseDto,
   CreateFollowUpDto,
+  CreateGoodsReceiptDto,
   CreateJournalDto,
   CreateLandDto,
   CreateLeadDto,
@@ -95,6 +97,8 @@ import type {
   CreatePaymentPlanTemplateDto,
   CreateProjectDto,
   CreatePropertyDto,
+  CreatePurchaseOrderDto,
+  CreatePurchaseRequestDto,
   CreateQuotationDto,
   CreateRoleDto,
   CreateUserAdminDto,
@@ -125,6 +129,7 @@ import type {
   ForgotPasswordDto,
   GenerateAgreementDto,
   GenerateScheduleDto,
+  GoodsReceiptControllerFindAllParams,
   HealthControllerCheck200,
   HoldPropertyDto,
   InAppNotificationResponseDto,
@@ -166,6 +171,8 @@ import type {
   ProjectControllerListProjectsParams,
   ProjectProfitabilityReportDto,
   PropertyControllerListPropertiesParams,
+  PurchaseOrderControllerFindAllParams,
+  PurchaseRequestControllerFindAllParams,
   QuotationControllerGetQuotationsParams,
   RealtimeControllerStreamParams,
   ReceiptControllerDownloadReceiptPdfParams,
@@ -174,6 +181,7 @@ import type {
   RefundControllerListRefundsParams,
   RejectApprovalDto,
   RejectExpenseDto,
+  RejectPurchaseRequestDto,
   ReopenPeriodDto,
   ReportExportJobResponseDto,
   ReportsControllerGetBalanceSheetParams,
@@ -224,6 +232,8 @@ import type {
   UpdatePreferencesDto,
   UpdateProjectDto,
   UpdatePropertyDto,
+  UpdatePurchaseOrderDto,
+  UpdatePurchaseRequestDto,
   UpdateQuotationDto,
   UpdateRoleDto,
   UpdateRolePermissionsDto,
@@ -33215,6 +33225,1824 @@ export function useVendorApControllerGetLedger<
 
   return query;
 }
+
+/**
+ * @summary Create a new purchase request
+ */
+export const purchaseRequestControllerCreate = (
+  createPurchaseRequestDto: CreatePurchaseRequestDto,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>(
+    {
+      url: `/api/v1/procurement/purchase-requests`,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      data: createPurchaseRequestDto,
+      signal,
+    },
+    options,
+  );
+};
+
+export const getPurchaseRequestControllerCreateMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof purchaseRequestControllerCreate>>,
+    TError,
+    { data: CreatePurchaseRequestDto },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof purchaseRequestControllerCreate>>,
+  TError,
+  { data: CreatePurchaseRequestDto },
+  TContext
+> => {
+  const mutationKey = ['purchaseRequestControllerCreate'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof purchaseRequestControllerCreate>>,
+    { data: CreatePurchaseRequestDto }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return purchaseRequestControllerCreate(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type PurchaseRequestControllerCreateMutationResult = NonNullable<
+  Awaited<ReturnType<typeof purchaseRequestControllerCreate>>
+>;
+export type PurchaseRequestControllerCreateMutationBody = CreatePurchaseRequestDto;
+export type PurchaseRequestControllerCreateMutationError = unknown;
+
+/**
+ * @summary Create a new purchase request
+ */
+export const usePurchaseRequestControllerCreate = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof purchaseRequestControllerCreate>>,
+      TError,
+      { data: CreatePurchaseRequestDto },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof purchaseRequestControllerCreate>>,
+  TError,
+  { data: CreatePurchaseRequestDto },
+  TContext
+> => {
+  const mutationOptions = getPurchaseRequestControllerCreateMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary List purchase requests
+ */
+export const purchaseRequestControllerFindAll = (
+  params?: PurchaseRequestControllerFindAllParams,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>(
+    { url: `/api/v1/procurement/purchase-requests`, method: 'GET', params, signal },
+    options,
+  );
+};
+
+export const getPurchaseRequestControllerFindAllQueryKey = (
+  params?: PurchaseRequestControllerFindAllParams,
+) => {
+  return [`/api/v1/procurement/purchase-requests`, ...(params ? [params] : [])] as const;
+};
+
+export const getPurchaseRequestControllerFindAllQueryOptions = <
+  TData = Awaited<ReturnType<typeof purchaseRequestControllerFindAll>>,
+  TError = unknown,
+>(
+  params?: PurchaseRequestControllerFindAllParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof purchaseRequestControllerFindAll>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getPurchaseRequestControllerFindAllQueryKey(params);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof purchaseRequestControllerFindAll>>> = ({
+    signal,
+  }) => purchaseRequestControllerFindAll(params, requestOptions, signal);
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof purchaseRequestControllerFindAll>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type PurchaseRequestControllerFindAllQueryResult = NonNullable<
+  Awaited<ReturnType<typeof purchaseRequestControllerFindAll>>
+>;
+export type PurchaseRequestControllerFindAllQueryError = unknown;
+
+export function usePurchaseRequestControllerFindAll<
+  TData = Awaited<ReturnType<typeof purchaseRequestControllerFindAll>>,
+  TError = unknown,
+>(
+  params: undefined | PurchaseRequestControllerFindAllParams,
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof purchaseRequestControllerFindAll>>, TError, TData>
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof purchaseRequestControllerFindAll>>,
+          TError,
+          Awaited<ReturnType<typeof purchaseRequestControllerFindAll>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function usePurchaseRequestControllerFindAll<
+  TData = Awaited<ReturnType<typeof purchaseRequestControllerFindAll>>,
+  TError = unknown,
+>(
+  params?: PurchaseRequestControllerFindAllParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof purchaseRequestControllerFindAll>>, TError, TData>
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof purchaseRequestControllerFindAll>>,
+          TError,
+          Awaited<ReturnType<typeof purchaseRequestControllerFindAll>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function usePurchaseRequestControllerFindAll<
+  TData = Awaited<ReturnType<typeof purchaseRequestControllerFindAll>>,
+  TError = unknown,
+>(
+  params?: PurchaseRequestControllerFindAllParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof purchaseRequestControllerFindAll>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary List purchase requests
+ */
+
+export function usePurchaseRequestControllerFindAll<
+  TData = Awaited<ReturnType<typeof purchaseRequestControllerFindAll>>,
+  TError = unknown,
+>(
+  params?: PurchaseRequestControllerFindAllParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof purchaseRequestControllerFindAll>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getPurchaseRequestControllerFindAllQueryOptions(params, options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+/**
+ * @summary Get purchase request details by ID
+ */
+export const purchaseRequestControllerFindById = (
+  id: string,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>(
+    { url: `/api/v1/procurement/purchase-requests/${id}`, method: 'GET', signal },
+    options,
+  );
+};
+
+export const getPurchaseRequestControllerFindByIdQueryKey = (id?: string) => {
+  return [`/api/v1/procurement/purchase-requests/${id}`] as const;
+};
+
+export const getPurchaseRequestControllerFindByIdQueryOptions = <
+  TData = Awaited<ReturnType<typeof purchaseRequestControllerFindById>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof purchaseRequestControllerFindById>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getPurchaseRequestControllerFindByIdQueryKey(id);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof purchaseRequestControllerFindById>>> = ({
+    signal,
+  }) => purchaseRequestControllerFindById(id, requestOptions, signal);
+
+  return { queryKey, queryFn, enabled: !!id, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof purchaseRequestControllerFindById>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type PurchaseRequestControllerFindByIdQueryResult = NonNullable<
+  Awaited<ReturnType<typeof purchaseRequestControllerFindById>>
+>;
+export type PurchaseRequestControllerFindByIdQueryError = unknown;
+
+export function usePurchaseRequestControllerFindById<
+  TData = Awaited<ReturnType<typeof purchaseRequestControllerFindById>>,
+  TError = unknown,
+>(
+  id: string,
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof purchaseRequestControllerFindById>>, TError, TData>
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof purchaseRequestControllerFindById>>,
+          TError,
+          Awaited<ReturnType<typeof purchaseRequestControllerFindById>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function usePurchaseRequestControllerFindById<
+  TData = Awaited<ReturnType<typeof purchaseRequestControllerFindById>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof purchaseRequestControllerFindById>>, TError, TData>
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof purchaseRequestControllerFindById>>,
+          TError,
+          Awaited<ReturnType<typeof purchaseRequestControllerFindById>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function usePurchaseRequestControllerFindById<
+  TData = Awaited<ReturnType<typeof purchaseRequestControllerFindById>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof purchaseRequestControllerFindById>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary Get purchase request details by ID
+ */
+
+export function usePurchaseRequestControllerFindById<
+  TData = Awaited<ReturnType<typeof purchaseRequestControllerFindById>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof purchaseRequestControllerFindById>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getPurchaseRequestControllerFindByIdQueryOptions(id, options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+/**
+ * @summary Update a draft purchase request
+ */
+export const purchaseRequestControllerUpdate = (
+  id: string,
+  updatePurchaseRequestDto: UpdatePurchaseRequestDto,
+  options?: SecondParameter<typeof customInstance>,
+) => {
+  return customInstance<void>(
+    {
+      url: `/api/v1/procurement/purchase-requests/${id}`,
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      data: updatePurchaseRequestDto,
+    },
+    options,
+  );
+};
+
+export const getPurchaseRequestControllerUpdateMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof purchaseRequestControllerUpdate>>,
+    TError,
+    { id: string; data: UpdatePurchaseRequestDto },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof purchaseRequestControllerUpdate>>,
+  TError,
+  { id: string; data: UpdatePurchaseRequestDto },
+  TContext
+> => {
+  const mutationKey = ['purchaseRequestControllerUpdate'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof purchaseRequestControllerUpdate>>,
+    { id: string; data: UpdatePurchaseRequestDto }
+  > = (props) => {
+    const { id, data } = props ?? {};
+
+    return purchaseRequestControllerUpdate(id, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type PurchaseRequestControllerUpdateMutationResult = NonNullable<
+  Awaited<ReturnType<typeof purchaseRequestControllerUpdate>>
+>;
+export type PurchaseRequestControllerUpdateMutationBody = UpdatePurchaseRequestDto;
+export type PurchaseRequestControllerUpdateMutationError = unknown;
+
+/**
+ * @summary Update a draft purchase request
+ */
+export const usePurchaseRequestControllerUpdate = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof purchaseRequestControllerUpdate>>,
+      TError,
+      { id: string; data: UpdatePurchaseRequestDto },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof purchaseRequestControllerUpdate>>,
+  TError,
+  { id: string; data: UpdatePurchaseRequestDto },
+  TContext
+> => {
+  const mutationOptions = getPurchaseRequestControllerUpdateMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary Submit draft purchase request for approval
+ */
+export const purchaseRequestControllerSubmit = (
+  id: string,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>(
+    { url: `/api/v1/procurement/purchase-requests/${id}/submit`, method: 'POST', signal },
+    options,
+  );
+};
+
+export const getPurchaseRequestControllerSubmitMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof purchaseRequestControllerSubmit>>,
+    TError,
+    { id: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof purchaseRequestControllerSubmit>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  const mutationKey = ['purchaseRequestControllerSubmit'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof purchaseRequestControllerSubmit>>,
+    { id: string }
+  > = (props) => {
+    const { id } = props ?? {};
+
+    return purchaseRequestControllerSubmit(id, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type PurchaseRequestControllerSubmitMutationResult = NonNullable<
+  Awaited<ReturnType<typeof purchaseRequestControllerSubmit>>
+>;
+
+export type PurchaseRequestControllerSubmitMutationError = unknown;
+
+/**
+ * @summary Submit draft purchase request for approval
+ */
+export const usePurchaseRequestControllerSubmit = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof purchaseRequestControllerSubmit>>,
+      TError,
+      { id: string },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof purchaseRequestControllerSubmit>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  const mutationOptions = getPurchaseRequestControllerSubmitMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary Approve a purchase request
+ */
+export const purchaseRequestControllerApprove = (
+  id: string,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>(
+    { url: `/api/v1/procurement/purchase-requests/${id}/approve`, method: 'POST', signal },
+    options,
+  );
+};
+
+export const getPurchaseRequestControllerApproveMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof purchaseRequestControllerApprove>>,
+    TError,
+    { id: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof purchaseRequestControllerApprove>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  const mutationKey = ['purchaseRequestControllerApprove'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof purchaseRequestControllerApprove>>,
+    { id: string }
+  > = (props) => {
+    const { id } = props ?? {};
+
+    return purchaseRequestControllerApprove(id, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type PurchaseRequestControllerApproveMutationResult = NonNullable<
+  Awaited<ReturnType<typeof purchaseRequestControllerApprove>>
+>;
+
+export type PurchaseRequestControllerApproveMutationError = unknown;
+
+/**
+ * @summary Approve a purchase request
+ */
+export const usePurchaseRequestControllerApprove = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof purchaseRequestControllerApprove>>,
+      TError,
+      { id: string },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof purchaseRequestControllerApprove>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  const mutationOptions = getPurchaseRequestControllerApproveMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary Reject a purchase request with reason
+ */
+export const purchaseRequestControllerReject = (
+  id: string,
+  rejectPurchaseRequestDto: RejectPurchaseRequestDto,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>(
+    {
+      url: `/api/v1/procurement/purchase-requests/${id}/reject`,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      data: rejectPurchaseRequestDto,
+      signal,
+    },
+    options,
+  );
+};
+
+export const getPurchaseRequestControllerRejectMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof purchaseRequestControllerReject>>,
+    TError,
+    { id: string; data: RejectPurchaseRequestDto },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof purchaseRequestControllerReject>>,
+  TError,
+  { id: string; data: RejectPurchaseRequestDto },
+  TContext
+> => {
+  const mutationKey = ['purchaseRequestControllerReject'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof purchaseRequestControllerReject>>,
+    { id: string; data: RejectPurchaseRequestDto }
+  > = (props) => {
+    const { id, data } = props ?? {};
+
+    return purchaseRequestControllerReject(id, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type PurchaseRequestControllerRejectMutationResult = NonNullable<
+  Awaited<ReturnType<typeof purchaseRequestControllerReject>>
+>;
+export type PurchaseRequestControllerRejectMutationBody = RejectPurchaseRequestDto;
+export type PurchaseRequestControllerRejectMutationError = unknown;
+
+/**
+ * @summary Reject a purchase request with reason
+ */
+export const usePurchaseRequestControllerReject = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof purchaseRequestControllerReject>>,
+      TError,
+      { id: string; data: RejectPurchaseRequestDto },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof purchaseRequestControllerReject>>,
+  TError,
+  { id: string; data: RejectPurchaseRequestDto },
+  TContext
+> => {
+  const mutationOptions = getPurchaseRequestControllerRejectMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary Convert an approved purchase request to a Purchase Order
+ */
+export const purchaseRequestControllerConvertToPo = (
+  id: string,
+  convertPrToPoDto: ConvertPrToPoDto,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>(
+    {
+      url: `/api/v1/procurement/purchase-requests/${id}/convert-to-po`,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      data: convertPrToPoDto,
+      signal,
+    },
+    options,
+  );
+};
+
+export const getPurchaseRequestControllerConvertToPoMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof purchaseRequestControllerConvertToPo>>,
+    TError,
+    { id: string; data: ConvertPrToPoDto },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof purchaseRequestControllerConvertToPo>>,
+  TError,
+  { id: string; data: ConvertPrToPoDto },
+  TContext
+> => {
+  const mutationKey = ['purchaseRequestControllerConvertToPo'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof purchaseRequestControllerConvertToPo>>,
+    { id: string; data: ConvertPrToPoDto }
+  > = (props) => {
+    const { id, data } = props ?? {};
+
+    return purchaseRequestControllerConvertToPo(id, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type PurchaseRequestControllerConvertToPoMutationResult = NonNullable<
+  Awaited<ReturnType<typeof purchaseRequestControllerConvertToPo>>
+>;
+export type PurchaseRequestControllerConvertToPoMutationBody = ConvertPrToPoDto;
+export type PurchaseRequestControllerConvertToPoMutationError = unknown;
+
+/**
+ * @summary Convert an approved purchase request to a Purchase Order
+ */
+export const usePurchaseRequestControllerConvertToPo = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof purchaseRequestControllerConvertToPo>>,
+      TError,
+      { id: string; data: ConvertPrToPoDto },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof purchaseRequestControllerConvertToPo>>,
+  TError,
+  { id: string; data: ConvertPrToPoDto },
+  TContext
+> => {
+  const mutationOptions = getPurchaseRequestControllerConvertToPoMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary Create a new purchase order
+ */
+export const purchaseOrderControllerCreate = (
+  createPurchaseOrderDto: CreatePurchaseOrderDto,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>(
+    {
+      url: `/api/v1/procurement/purchase-orders`,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      data: createPurchaseOrderDto,
+      signal,
+    },
+    options,
+  );
+};
+
+export const getPurchaseOrderControllerCreateMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof purchaseOrderControllerCreate>>,
+    TError,
+    { data: CreatePurchaseOrderDto },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof purchaseOrderControllerCreate>>,
+  TError,
+  { data: CreatePurchaseOrderDto },
+  TContext
+> => {
+  const mutationKey = ['purchaseOrderControllerCreate'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof purchaseOrderControllerCreate>>,
+    { data: CreatePurchaseOrderDto }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return purchaseOrderControllerCreate(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type PurchaseOrderControllerCreateMutationResult = NonNullable<
+  Awaited<ReturnType<typeof purchaseOrderControllerCreate>>
+>;
+export type PurchaseOrderControllerCreateMutationBody = CreatePurchaseOrderDto;
+export type PurchaseOrderControllerCreateMutationError = unknown;
+
+/**
+ * @summary Create a new purchase order
+ */
+export const usePurchaseOrderControllerCreate = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof purchaseOrderControllerCreate>>,
+      TError,
+      { data: CreatePurchaseOrderDto },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof purchaseOrderControllerCreate>>,
+  TError,
+  { data: CreatePurchaseOrderDto },
+  TContext
+> => {
+  const mutationOptions = getPurchaseOrderControllerCreateMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary List purchase orders
+ */
+export const purchaseOrderControllerFindAll = (
+  params?: PurchaseOrderControllerFindAllParams,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>(
+    { url: `/api/v1/procurement/purchase-orders`, method: 'GET', params, signal },
+    options,
+  );
+};
+
+export const getPurchaseOrderControllerFindAllQueryKey = (
+  params?: PurchaseOrderControllerFindAllParams,
+) => {
+  return [`/api/v1/procurement/purchase-orders`, ...(params ? [params] : [])] as const;
+};
+
+export const getPurchaseOrderControllerFindAllQueryOptions = <
+  TData = Awaited<ReturnType<typeof purchaseOrderControllerFindAll>>,
+  TError = unknown,
+>(
+  params?: PurchaseOrderControllerFindAllParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof purchaseOrderControllerFindAll>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getPurchaseOrderControllerFindAllQueryKey(params);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof purchaseOrderControllerFindAll>>> = ({
+    signal,
+  }) => purchaseOrderControllerFindAll(params, requestOptions, signal);
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof purchaseOrderControllerFindAll>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type PurchaseOrderControllerFindAllQueryResult = NonNullable<
+  Awaited<ReturnType<typeof purchaseOrderControllerFindAll>>
+>;
+export type PurchaseOrderControllerFindAllQueryError = unknown;
+
+export function usePurchaseOrderControllerFindAll<
+  TData = Awaited<ReturnType<typeof purchaseOrderControllerFindAll>>,
+  TError = unknown,
+>(
+  params: undefined | PurchaseOrderControllerFindAllParams,
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof purchaseOrderControllerFindAll>>, TError, TData>
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof purchaseOrderControllerFindAll>>,
+          TError,
+          Awaited<ReturnType<typeof purchaseOrderControllerFindAll>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function usePurchaseOrderControllerFindAll<
+  TData = Awaited<ReturnType<typeof purchaseOrderControllerFindAll>>,
+  TError = unknown,
+>(
+  params?: PurchaseOrderControllerFindAllParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof purchaseOrderControllerFindAll>>, TError, TData>
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof purchaseOrderControllerFindAll>>,
+          TError,
+          Awaited<ReturnType<typeof purchaseOrderControllerFindAll>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function usePurchaseOrderControllerFindAll<
+  TData = Awaited<ReturnType<typeof purchaseOrderControllerFindAll>>,
+  TError = unknown,
+>(
+  params?: PurchaseOrderControllerFindAllParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof purchaseOrderControllerFindAll>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary List purchase orders
+ */
+
+export function usePurchaseOrderControllerFindAll<
+  TData = Awaited<ReturnType<typeof purchaseOrderControllerFindAll>>,
+  TError = unknown,
+>(
+  params?: PurchaseOrderControllerFindAllParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof purchaseOrderControllerFindAll>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getPurchaseOrderControllerFindAllQueryOptions(params, options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+/**
+ * @summary Get purchase order details by ID
+ */
+export const purchaseOrderControllerFindById = (
+  id: string,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>(
+    { url: `/api/v1/procurement/purchase-orders/${id}`, method: 'GET', signal },
+    options,
+  );
+};
+
+export const getPurchaseOrderControllerFindByIdQueryKey = (id?: string) => {
+  return [`/api/v1/procurement/purchase-orders/${id}`] as const;
+};
+
+export const getPurchaseOrderControllerFindByIdQueryOptions = <
+  TData = Awaited<ReturnType<typeof purchaseOrderControllerFindById>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof purchaseOrderControllerFindById>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getPurchaseOrderControllerFindByIdQueryKey(id);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof purchaseOrderControllerFindById>>> = ({
+    signal,
+  }) => purchaseOrderControllerFindById(id, requestOptions, signal);
+
+  return { queryKey, queryFn, enabled: !!id, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof purchaseOrderControllerFindById>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type PurchaseOrderControllerFindByIdQueryResult = NonNullable<
+  Awaited<ReturnType<typeof purchaseOrderControllerFindById>>
+>;
+export type PurchaseOrderControllerFindByIdQueryError = unknown;
+
+export function usePurchaseOrderControllerFindById<
+  TData = Awaited<ReturnType<typeof purchaseOrderControllerFindById>>,
+  TError = unknown,
+>(
+  id: string,
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof purchaseOrderControllerFindById>>, TError, TData>
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof purchaseOrderControllerFindById>>,
+          TError,
+          Awaited<ReturnType<typeof purchaseOrderControllerFindById>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function usePurchaseOrderControllerFindById<
+  TData = Awaited<ReturnType<typeof purchaseOrderControllerFindById>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof purchaseOrderControllerFindById>>, TError, TData>
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof purchaseOrderControllerFindById>>,
+          TError,
+          Awaited<ReturnType<typeof purchaseOrderControllerFindById>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function usePurchaseOrderControllerFindById<
+  TData = Awaited<ReturnType<typeof purchaseOrderControllerFindById>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof purchaseOrderControllerFindById>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary Get purchase order details by ID
+ */
+
+export function usePurchaseOrderControllerFindById<
+  TData = Awaited<ReturnType<typeof purchaseOrderControllerFindById>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof purchaseOrderControllerFindById>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getPurchaseOrderControllerFindByIdQueryOptions(id, options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+/**
+ * @summary Update a purchase order
+ */
+export const purchaseOrderControllerUpdate = (
+  id: string,
+  updatePurchaseOrderDto: UpdatePurchaseOrderDto,
+  options?: SecondParameter<typeof customInstance>,
+) => {
+  return customInstance<void>(
+    {
+      url: `/api/v1/procurement/purchase-orders/${id}`,
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      data: updatePurchaseOrderDto,
+    },
+    options,
+  );
+};
+
+export const getPurchaseOrderControllerUpdateMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof purchaseOrderControllerUpdate>>,
+    TError,
+    { id: string; data: UpdatePurchaseOrderDto },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof purchaseOrderControllerUpdate>>,
+  TError,
+  { id: string; data: UpdatePurchaseOrderDto },
+  TContext
+> => {
+  const mutationKey = ['purchaseOrderControllerUpdate'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof purchaseOrderControllerUpdate>>,
+    { id: string; data: UpdatePurchaseOrderDto }
+  > = (props) => {
+    const { id, data } = props ?? {};
+
+    return purchaseOrderControllerUpdate(id, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type PurchaseOrderControllerUpdateMutationResult = NonNullable<
+  Awaited<ReturnType<typeof purchaseOrderControllerUpdate>>
+>;
+export type PurchaseOrderControllerUpdateMutationBody = UpdatePurchaseOrderDto;
+export type PurchaseOrderControllerUpdateMutationError = unknown;
+
+/**
+ * @summary Update a purchase order
+ */
+export const usePurchaseOrderControllerUpdate = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof purchaseOrderControllerUpdate>>,
+      TError,
+      { id: string; data: UpdatePurchaseOrderDto },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof purchaseOrderControllerUpdate>>,
+  TError,
+  { id: string; data: UpdatePurchaseOrderDto },
+  TContext
+> => {
+  const mutationOptions = getPurchaseOrderControllerUpdateMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary Cancel a purchase order
+ */
+export const purchaseOrderControllerCancel = (
+  id: string,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>(
+    { url: `/api/v1/procurement/purchase-orders/${id}/cancel`, method: 'POST', signal },
+    options,
+  );
+};
+
+export const getPurchaseOrderControllerCancelMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof purchaseOrderControllerCancel>>,
+    TError,
+    { id: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof purchaseOrderControllerCancel>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  const mutationKey = ['purchaseOrderControllerCancel'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof purchaseOrderControllerCancel>>,
+    { id: string }
+  > = (props) => {
+    const { id } = props ?? {};
+
+    return purchaseOrderControllerCancel(id, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type PurchaseOrderControllerCancelMutationResult = NonNullable<
+  Awaited<ReturnType<typeof purchaseOrderControllerCancel>>
+>;
+
+export type PurchaseOrderControllerCancelMutationError = unknown;
+
+/**
+ * @summary Cancel a purchase order
+ */
+export const usePurchaseOrderControllerCancel = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof purchaseOrderControllerCancel>>,
+      TError,
+      { id: string },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof purchaseOrderControllerCancel>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  const mutationOptions = getPurchaseOrderControllerCancelMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary Close a fulfilled or completed purchase order
+ */
+export const purchaseOrderControllerClose = (
+  id: string,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>(
+    { url: `/api/v1/procurement/purchase-orders/${id}/close`, method: 'POST', signal },
+    options,
+  );
+};
+
+export const getPurchaseOrderControllerCloseMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof purchaseOrderControllerClose>>,
+    TError,
+    { id: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof purchaseOrderControllerClose>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  const mutationKey = ['purchaseOrderControllerClose'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof purchaseOrderControllerClose>>,
+    { id: string }
+  > = (props) => {
+    const { id } = props ?? {};
+
+    return purchaseOrderControllerClose(id, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type PurchaseOrderControllerCloseMutationResult = NonNullable<
+  Awaited<ReturnType<typeof purchaseOrderControllerClose>>
+>;
+
+export type PurchaseOrderControllerCloseMutationError = unknown;
+
+/**
+ * @summary Close a fulfilled or completed purchase order
+ */
+export const usePurchaseOrderControllerClose = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof purchaseOrderControllerClose>>,
+      TError,
+      { id: string },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof purchaseOrderControllerClose>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  const mutationOptions = getPurchaseOrderControllerCloseMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary Create and record a new Goods Receipt Note (GRN)
+ */
+export const goodsReceiptControllerCreate = (
+  createGoodsReceiptDto: CreateGoodsReceiptDto,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>(
+    {
+      url: `/api/v1/procurement/goods-receipts`,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      data: createGoodsReceiptDto,
+      signal,
+    },
+    options,
+  );
+};
+
+export const getGoodsReceiptControllerCreateMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof goodsReceiptControllerCreate>>,
+    TError,
+    { data: CreateGoodsReceiptDto },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof goodsReceiptControllerCreate>>,
+  TError,
+  { data: CreateGoodsReceiptDto },
+  TContext
+> => {
+  const mutationKey = ['goodsReceiptControllerCreate'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof goodsReceiptControllerCreate>>,
+    { data: CreateGoodsReceiptDto }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return goodsReceiptControllerCreate(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type GoodsReceiptControllerCreateMutationResult = NonNullable<
+  Awaited<ReturnType<typeof goodsReceiptControllerCreate>>
+>;
+export type GoodsReceiptControllerCreateMutationBody = CreateGoodsReceiptDto;
+export type GoodsReceiptControllerCreateMutationError = unknown;
+
+/**
+ * @summary Create and record a new Goods Receipt Note (GRN)
+ */
+export const useGoodsReceiptControllerCreate = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof goodsReceiptControllerCreate>>,
+      TError,
+      { data: CreateGoodsReceiptDto },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof goodsReceiptControllerCreate>>,
+  TError,
+  { data: CreateGoodsReceiptDto },
+  TContext
+> => {
+  const mutationOptions = getGoodsReceiptControllerCreateMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+
+/**
+ * @summary List goods receipt notes
+ */
+export const goodsReceiptControllerFindAll = (
+  params?: GoodsReceiptControllerFindAllParams,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>(
+    { url: `/api/v1/procurement/goods-receipts`, method: 'GET', params, signal },
+    options,
+  );
+};
+
+export const getGoodsReceiptControllerFindAllQueryKey = (
+  params?: GoodsReceiptControllerFindAllParams,
+) => {
+  return [`/api/v1/procurement/goods-receipts`, ...(params ? [params] : [])] as const;
+};
+
+export const getGoodsReceiptControllerFindAllQueryOptions = <
+  TData = Awaited<ReturnType<typeof goodsReceiptControllerFindAll>>,
+  TError = unknown,
+>(
+  params?: GoodsReceiptControllerFindAllParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof goodsReceiptControllerFindAll>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGoodsReceiptControllerFindAllQueryKey(params);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof goodsReceiptControllerFindAll>>> = ({
+    signal,
+  }) => goodsReceiptControllerFindAll(params, requestOptions, signal);
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof goodsReceiptControllerFindAll>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type GoodsReceiptControllerFindAllQueryResult = NonNullable<
+  Awaited<ReturnType<typeof goodsReceiptControllerFindAll>>
+>;
+export type GoodsReceiptControllerFindAllQueryError = unknown;
+
+export function useGoodsReceiptControllerFindAll<
+  TData = Awaited<ReturnType<typeof goodsReceiptControllerFindAll>>,
+  TError = unknown,
+>(
+  params: undefined | GoodsReceiptControllerFindAllParams,
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof goodsReceiptControllerFindAll>>, TError, TData>
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof goodsReceiptControllerFindAll>>,
+          TError,
+          Awaited<ReturnType<typeof goodsReceiptControllerFindAll>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useGoodsReceiptControllerFindAll<
+  TData = Awaited<ReturnType<typeof goodsReceiptControllerFindAll>>,
+  TError = unknown,
+>(
+  params?: GoodsReceiptControllerFindAllParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof goodsReceiptControllerFindAll>>, TError, TData>
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof goodsReceiptControllerFindAll>>,
+          TError,
+          Awaited<ReturnType<typeof goodsReceiptControllerFindAll>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useGoodsReceiptControllerFindAll<
+  TData = Awaited<ReturnType<typeof goodsReceiptControllerFindAll>>,
+  TError = unknown,
+>(
+  params?: GoodsReceiptControllerFindAllParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof goodsReceiptControllerFindAll>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary List goods receipt notes
+ */
+
+export function useGoodsReceiptControllerFindAll<
+  TData = Awaited<ReturnType<typeof goodsReceiptControllerFindAll>>,
+  TError = unknown,
+>(
+  params?: GoodsReceiptControllerFindAllParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof goodsReceiptControllerFindAll>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getGoodsReceiptControllerFindAllQueryOptions(params, options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+/**
+ * @summary Get goods receipt note details by ID
+ */
+export const goodsReceiptControllerFindById = (
+  id: string,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>(
+    { url: `/api/v1/procurement/goods-receipts/${id}`, method: 'GET', signal },
+    options,
+  );
+};
+
+export const getGoodsReceiptControllerFindByIdQueryKey = (id?: string) => {
+  return [`/api/v1/procurement/goods-receipts/${id}`] as const;
+};
+
+export const getGoodsReceiptControllerFindByIdQueryOptions = <
+  TData = Awaited<ReturnType<typeof goodsReceiptControllerFindById>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof goodsReceiptControllerFindById>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGoodsReceiptControllerFindByIdQueryKey(id);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof goodsReceiptControllerFindById>>> = ({
+    signal,
+  }) => goodsReceiptControllerFindById(id, requestOptions, signal);
+
+  return { queryKey, queryFn, enabled: !!id, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof goodsReceiptControllerFindById>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type GoodsReceiptControllerFindByIdQueryResult = NonNullable<
+  Awaited<ReturnType<typeof goodsReceiptControllerFindById>>
+>;
+export type GoodsReceiptControllerFindByIdQueryError = unknown;
+
+export function useGoodsReceiptControllerFindById<
+  TData = Awaited<ReturnType<typeof goodsReceiptControllerFindById>>,
+  TError = unknown,
+>(
+  id: string,
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof goodsReceiptControllerFindById>>, TError, TData>
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof goodsReceiptControllerFindById>>,
+          TError,
+          Awaited<ReturnType<typeof goodsReceiptControllerFindById>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useGoodsReceiptControllerFindById<
+  TData = Awaited<ReturnType<typeof goodsReceiptControllerFindById>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof goodsReceiptControllerFindById>>, TError, TData>
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof goodsReceiptControllerFindById>>,
+          TError,
+          Awaited<ReturnType<typeof goodsReceiptControllerFindById>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useGoodsReceiptControllerFindById<
+  TData = Awaited<ReturnType<typeof goodsReceiptControllerFindById>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof goodsReceiptControllerFindById>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary Get goods receipt note details by ID
+ */
+
+export function useGoodsReceiptControllerFindById<
+  TData = Awaited<ReturnType<typeof goodsReceiptControllerFindById>>,
+  TError = unknown,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof goodsReceiptControllerFindById>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getGoodsReceiptControllerFindByIdQueryOptions(id, options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+/**
+ * @summary Generate a draft Vendor Bill from a Goods Receipt (3-Way Matching)
+ */
+export const goodsReceiptControllerCreateBill = (
+  id: string,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>(
+    { url: `/api/v1/procurement/goods-receipts/${id}/create-bill`, method: 'POST', signal },
+    options,
+  );
+};
+
+export const getGoodsReceiptControllerCreateBillMutationOptions = <
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof goodsReceiptControllerCreateBill>>,
+    TError,
+    { id: string },
+    TContext
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof goodsReceiptControllerCreateBill>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  const mutationKey = ['goodsReceiptControllerCreateBill'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof goodsReceiptControllerCreateBill>>,
+    { id: string }
+  > = (props) => {
+    const { id } = props ?? {};
+
+    return goodsReceiptControllerCreateBill(id, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type GoodsReceiptControllerCreateBillMutationResult = NonNullable<
+  Awaited<ReturnType<typeof goodsReceiptControllerCreateBill>>
+>;
+
+export type GoodsReceiptControllerCreateBillMutationError = unknown;
+
+/**
+ * @summary Generate a draft Vendor Bill from a Goods Receipt (3-Way Matching)
+ */
+export const useGoodsReceiptControllerCreateBill = <TError = unknown, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof goodsReceiptControllerCreateBill>>,
+      TError,
+      { id: string },
+      TContext
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof goodsReceiptControllerCreateBill>>,
+  TError,
+  { id: string },
+  TContext
+> => {
+  const mutationOptions = getGoodsReceiptControllerCreateBillMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
 
 /**
  * @summary Register a new broker

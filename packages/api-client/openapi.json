@@ -10930,6 +10930,663 @@
         "tags": ["Accounts Payable"]
       }
     },
+    "/api/v1/procurement/purchase-requests": {
+      "post": {
+        "operationId": "PurchaseRequestController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePurchaseRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Create a new purchase request",
+        "tags": ["Procurement - Purchase Requests"]
+      },
+      "get": {
+        "operationId": "PurchaseRequestController_findAll",
+        "parameters": [
+          {
+            "name": "projectId",
+            "required": false,
+            "in": "query",
+            "description": "Filter by Project ID",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "vendorId",
+            "required": false,
+            "in": "query",
+            "description": "Filter by Vendor ID",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "description": "Filter by status",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "description": "Search term",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "Page limit",
+            "schema": {
+              "default": 50
+            }
+          },
+          {
+            "name": "offset",
+            "required": false,
+            "in": "query",
+            "description": "Page offset",
+            "schema": {
+              "default": 0
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "List purchase requests",
+        "tags": ["Procurement - Purchase Requests"]
+      }
+    },
+    "/api/v1/procurement/purchase-requests/{id}": {
+      "get": {
+        "operationId": "PurchaseRequestController_findById",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get purchase request details by ID",
+        "tags": ["Procurement - Purchase Requests"]
+      },
+      "patch": {
+        "operationId": "PurchaseRequestController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePurchaseRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Update a draft purchase request",
+        "tags": ["Procurement - Purchase Requests"]
+      }
+    },
+    "/api/v1/procurement/purchase-requests/{id}/submit": {
+      "post": {
+        "operationId": "PurchaseRequestController_submit",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Submit draft purchase request for approval",
+        "tags": ["Procurement - Purchase Requests"]
+      }
+    },
+    "/api/v1/procurement/purchase-requests/{id}/approve": {
+      "post": {
+        "operationId": "PurchaseRequestController_approve",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Approve a purchase request",
+        "tags": ["Procurement - Purchase Requests"]
+      }
+    },
+    "/api/v1/procurement/purchase-requests/{id}/reject": {
+      "post": {
+        "operationId": "PurchaseRequestController_reject",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RejectPurchaseRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Reject a purchase request with reason",
+        "tags": ["Procurement - Purchase Requests"]
+      }
+    },
+    "/api/v1/procurement/purchase-requests/{id}/convert-to-po": {
+      "post": {
+        "operationId": "PurchaseRequestController_convertToPo",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConvertPrToPoDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Convert an approved purchase request to a Purchase Order",
+        "tags": ["Procurement - Purchase Requests"]
+      }
+    },
+    "/api/v1/procurement/purchase-orders": {
+      "post": {
+        "operationId": "PurchaseOrderController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePurchaseOrderDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Create a new purchase order",
+        "tags": ["Procurement - Purchase Orders"]
+      },
+      "get": {
+        "operationId": "PurchaseOrderController_findAll",
+        "parameters": [
+          {
+            "name": "projectId",
+            "required": false,
+            "in": "query",
+            "description": "Filter by Project ID",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "vendorId",
+            "required": false,
+            "in": "query",
+            "description": "Filter by Vendor ID",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "description": "Filter by status",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "description": "Search term",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "Page limit",
+            "schema": {
+              "default": 50
+            }
+          },
+          {
+            "name": "offset",
+            "required": false,
+            "in": "query",
+            "description": "Page offset",
+            "schema": {
+              "default": 0
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "List purchase orders",
+        "tags": ["Procurement - Purchase Orders"]
+      }
+    },
+    "/api/v1/procurement/purchase-orders/{id}": {
+      "get": {
+        "operationId": "PurchaseOrderController_findById",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get purchase order details by ID",
+        "tags": ["Procurement - Purchase Orders"]
+      },
+      "patch": {
+        "operationId": "PurchaseOrderController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePurchaseOrderDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Update a purchase order",
+        "tags": ["Procurement - Purchase Orders"]
+      }
+    },
+    "/api/v1/procurement/purchase-orders/{id}/cancel": {
+      "post": {
+        "operationId": "PurchaseOrderController_cancel",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Cancel a purchase order",
+        "tags": ["Procurement - Purchase Orders"]
+      }
+    },
+    "/api/v1/procurement/purchase-orders/{id}/close": {
+      "post": {
+        "operationId": "PurchaseOrderController_close",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Close a fulfilled or completed purchase order",
+        "tags": ["Procurement - Purchase Orders"]
+      }
+    },
+    "/api/v1/procurement/goods-receipts": {
+      "post": {
+        "operationId": "GoodsReceiptController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateGoodsReceiptDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Create and record a new Goods Receipt Note (GRN)",
+        "tags": ["Procurement - Goods Receipts (GRN)"]
+      },
+      "get": {
+        "operationId": "GoodsReceiptController_findAll",
+        "parameters": [
+          {
+            "name": "projectId",
+            "required": false,
+            "in": "query",
+            "description": "Filter by Project ID",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "vendorId",
+            "required": false,
+            "in": "query",
+            "description": "Filter by Vendor ID",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "description": "Filter by status",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "description": "Search term",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "Page limit",
+            "schema": {
+              "default": 50
+            }
+          },
+          {
+            "name": "offset",
+            "required": false,
+            "in": "query",
+            "description": "Page offset",
+            "schema": {
+              "default": 0
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "List goods receipt notes",
+        "tags": ["Procurement - Goods Receipts (GRN)"]
+      }
+    },
+    "/api/v1/procurement/goods-receipts/{id}": {
+      "get": {
+        "operationId": "GoodsReceiptController_findById",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get goods receipt note details by ID",
+        "tags": ["Procurement - Goods Receipts (GRN)"]
+      }
+    },
+    "/api/v1/procurement/goods-receipts/{id}/create-bill": {
+      "post": {
+        "operationId": "GoodsReceiptController_createBill",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Generate a draft Vendor Bill from a Goods Receipt (3-Way Matching)",
+        "tags": ["Procurement - Goods Receipts (GRN)"]
+      }
+    },
     "/api/v1/commissions/brokers": {
       "post": {
         "operationId": "CommissionController_createBroker",
@@ -17577,6 +18234,352 @@
           }
         },
         "required": ["vendorId", "amountPaisa"]
+      },
+      "CreatePurchaseRequestLineDto": {
+        "type": "object",
+        "properties": {
+          "itemDescription": {
+            "type": "string",
+            "description": "Item or material description",
+            "example": "Portland Composite Cement (50kg bag)"
+          },
+          "category": {
+            "type": "string",
+            "description": "Category",
+            "example": "CEMENT",
+            "default": "GENERAL"
+          },
+          "quantity": {
+            "type": "string",
+            "description": "Quantity (decimal string)",
+            "example": "500.00"
+          },
+          "unit": {
+            "type": "string",
+            "description": "Measurement unit",
+            "example": "BAG",
+            "default": "PCS"
+          },
+          "estimatedUnitPricePaisa": {
+            "type": "string",
+            "description": "Estimated unit price in paisa",
+            "example": "55000"
+          },
+          "notes": {
+            "type": "string",
+            "description": "Line notes / specifications"
+          }
+        },
+        "required": ["itemDescription", "quantity", "estimatedUnitPricePaisa"]
+      },
+      "CreatePurchaseRequestDto": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Request Title",
+            "example": "Basement Casting Cement & Rebar Procurement"
+          },
+          "projectId": {
+            "type": "string",
+            "description": "Project ID (UUID)"
+          },
+          "department": {
+            "type": "string",
+            "description": "Requesting department",
+            "example": "Civil Engineering"
+          },
+          "requiredDate": {
+            "type": "string",
+            "description": "Required date (ISO string)"
+          },
+          "priority": {
+            "type": "string",
+            "description": "Priority level",
+            "example": "HIGH",
+            "default": "MEDIUM"
+          },
+          "notes": {
+            "type": "string",
+            "description": "General notes / rationale"
+          },
+          "lines": {
+            "description": "Material request line items",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CreatePurchaseRequestLineDto"
+            }
+          }
+        },
+        "required": ["title", "lines"]
+      },
+      "UpdatePurchaseRequestDto": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Request Title"
+          },
+          "projectId": {
+            "type": "string",
+            "description": "Project ID (UUID)"
+          },
+          "department": {
+            "type": "string",
+            "description": "Requesting department"
+          },
+          "requiredDate": {
+            "type": "string",
+            "description": "Required date (ISO string)"
+          },
+          "priority": {
+            "type": "string",
+            "description": "Priority level"
+          },
+          "notes": {
+            "type": "string",
+            "description": "General notes / rationale"
+          },
+          "lines": {
+            "description": "Material request line items",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CreatePurchaseRequestLineDto"
+            }
+          }
+        }
+      },
+      "RejectPurchaseRequestDto": {
+        "type": "object",
+        "properties": {
+          "reason": {
+            "type": "string",
+            "description": "Mandatory rejection reason",
+            "example": "Exceeds monthly project allocation threshold"
+          }
+        },
+        "required": ["reason"]
+      },
+      "ConvertPrToPoDto": {
+        "type": "object",
+        "properties": {
+          "vendorId": {
+            "type": "string",
+            "description": "Target Vendor ID (UUID)"
+          },
+          "expectedDeliveryDate": {
+            "type": "string",
+            "description": "Expected delivery date (ISO string)"
+          },
+          "deliveryAddress": {
+            "type": "string",
+            "description": "Site delivery address"
+          },
+          "termsAndConditions": {
+            "type": "string",
+            "description": "Terms and conditions"
+          },
+          "notes": {
+            "type": "string",
+            "description": "Purchase order notes"
+          }
+        },
+        "required": ["vendorId"]
+      },
+      "CreatePurchaseOrderLineDto": {
+        "type": "object",
+        "properties": {
+          "prLineId": {
+            "type": "string",
+            "description": "Originating PR line ID (UUID)"
+          },
+          "itemDescription": {
+            "type": "string",
+            "description": "Item description",
+            "example": "500W High Mast Site Lighting Unit"
+          },
+          "category": {
+            "type": "string",
+            "description": "Category",
+            "example": "ELECTRICAL",
+            "default": "GENERAL"
+          },
+          "quantity": {
+            "type": "string",
+            "description": "Ordered quantity (decimal string)",
+            "example": "10.00"
+          },
+          "unit": {
+            "type": "string",
+            "description": "Unit of measure",
+            "example": "PCS",
+            "default": "PCS"
+          },
+          "unitPricePaisa": {
+            "type": "string",
+            "description": "Negotiated unit price in paisa",
+            "example": "2500000"
+          },
+          "notes": {
+            "type": "string",
+            "description": "Line notes / item specs"
+          }
+        },
+        "required": ["itemDescription", "quantity", "unitPricePaisa"]
+      },
+      "CreatePurchaseOrderDto": {
+        "type": "object",
+        "properties": {
+          "vendorId": {
+            "type": "string",
+            "description": "Vendor ID (UUID)"
+          },
+          "prId": {
+            "type": "string",
+            "description": "Originating Purchase Request ID (UUID)"
+          },
+          "projectId": {
+            "type": "string",
+            "description": "Project ID (UUID)"
+          },
+          "orderDate": {
+            "type": "string",
+            "description": "Order date (ISO string)"
+          },
+          "expectedDeliveryDate": {
+            "type": "string",
+            "description": "Expected delivery date (ISO string)"
+          },
+          "deliveryAddress": {
+            "type": "string",
+            "description": "Site or warehouse delivery address"
+          },
+          "termsAndConditions": {
+            "type": "string",
+            "description": "Payment and delivery terms"
+          },
+          "notes": {
+            "type": "string",
+            "description": "Order notes"
+          },
+          "lines": {
+            "description": "Purchase Order line items",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CreatePurchaseOrderLineDto"
+            }
+          }
+        },
+        "required": ["vendorId", "lines"]
+      },
+      "UpdatePurchaseOrderDto": {
+        "type": "object",
+        "properties": {
+          "expectedDeliveryDate": {
+            "type": "string",
+            "description": "Expected delivery date (ISO string)"
+          },
+          "deliveryAddress": {
+            "type": "string",
+            "description": "Site or warehouse delivery address"
+          },
+          "termsAndConditions": {
+            "type": "string",
+            "description": "Terms and conditions"
+          },
+          "notes": {
+            "type": "string",
+            "description": "Order notes"
+          },
+          "lines": {
+            "description": "Purchase Order line items",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CreatePurchaseOrderLineDto"
+            }
+          }
+        }
+      },
+      "CreateGoodsReceiptLineDto": {
+        "type": "object",
+        "properties": {
+          "poLineId": {
+            "type": "string",
+            "description": "Purchase Order line ID (UUID)"
+          },
+          "itemDescription": {
+            "type": "string",
+            "description": "Material / item description",
+            "example": "Grade 60 16mm TMT Deformed Rebar"
+          },
+          "receivedQuantity": {
+            "type": "string",
+            "description": "Delivered quantity (decimal string)",
+            "example": "5.00"
+          },
+          "acceptedQuantity": {
+            "type": "string",
+            "description": "Accepted quantity after QA inspection (decimal string)",
+            "example": "4.80"
+          },
+          "rejectedQuantity": {
+            "type": "string",
+            "description": "Rejected quantity (decimal string)",
+            "example": "0.20",
+            "default": "0.00"
+          },
+          "unit": {
+            "type": "string",
+            "description": "Unit of measure",
+            "example": "TON",
+            "default": "PCS"
+          },
+          "unitPricePaisa": {
+            "type": "string",
+            "description": "Unit price in paisa",
+            "example": "8500000"
+          },
+          "rejectionReason": {
+            "type": "string",
+            "description": "Reason for rejecting sub-lot",
+            "example": "Surface corrosion / bend defect"
+          },
+          "notes": {
+            "type": "string",
+            "description": "Line inspection notes"
+          }
+        },
+        "required": ["itemDescription", "receivedQuantity", "acceptedQuantity", "unitPricePaisa"]
+      },
+      "CreateGoodsReceiptDto": {
+        "type": "object",
+        "properties": {
+          "poId": {
+            "type": "string",
+            "description": "Purchase Order ID (UUID)"
+          },
+          "receiptDate": {
+            "type": "string",
+            "description": "Receipt date (ISO string)"
+          },
+          "challanNumber": {
+            "type": "string",
+            "description": "Supplier Delivery Challan Number",
+            "example": "CH-2026-9812"
+          },
+          "notes": {
+            "type": "string",
+            "description": "Receiving inspection notes"
+          },
+          "lines": {
+            "description": "Received material line items",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CreateGoodsReceiptLineDto"
+            }
+          }
+        },
+        "required": ["poId", "lines"]
       },
       "CreateBrokerDto": {
         "type": "object",
