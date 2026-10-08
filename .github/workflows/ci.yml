@@ -90,6 +90,14 @@ jobs:
   tests:
     name: Integration & Unit Tests
     runs-on: ubuntu-latest
+    env:
+      JWT_ACCESS_SECRET: super_secret_jwt_access_key_min_32_characters_long!
+      JWT_REFRESH_SECRET: super_secret_jwt_refresh_key_min_32_characters_long!
+      LOCAL_API_SECRET: super_secret_local_launch_token_32chars!
+      DATABASE_URL: postgresql://exza_app:exza_app_secret@localhost:5432/exzaestate?schema=public
+      MIGRATOR_DATABASE_URL: postgresql://exza_migrator:exza_migrator_secret@localhost:5432/exzaestate?schema=public
+      SYSTEM_DATABASE_URL: postgresql://exza_system:exza_system_secret@localhost:5432/exzaestate?schema=public
+      REDIS_URL: redis://localhost:6379
     services:
       postgres:
         image: postgres:18.6-alpine
@@ -151,24 +159,14 @@ jobs:
 
       - name: Run baseline seed
         run: pnpm db:seed
-        env:
-          DATABASE_URL: postgresql://exza_app:exza_app_secret@localhost:5432/exzaestate?schema=public
-          SYSTEM_DATABASE_URL: postgresql://exza_system:exza_system_secret@localhost:5432/exzaestate?schema=public
 
       - name: Run demo seed
         run: pnpm db:seed:demo
-        env:
-          DATABASE_URL: postgresql://exza_app:exza_app_secret@localhost:5432/exzaestate?schema=public
-          SYSTEM_DATABASE_URL: postgresql://exza_system:exza_system_secret@localhost:5432/exzaestate?schema=public
 
       - name: Run full test suite (backend & shared)
         run: pnpm test
         env:
           NODE_ENV: test
-          DATABASE_URL: postgresql://exza_app:exza_app_secret@localhost:5432/exzaestate?schema=public
-          MIGRATOR_DATABASE_URL: postgresql://exza_migrator:exza_migrator_secret@localhost:5432/exzaestate?schema=public
-          SYSTEM_DATABASE_URL: postgresql://exza_system:exza_system_secret@localhost:5432/exzaestate?schema=public
-          REDIS_URL: redis://localhost:6379
 
   build:
     name: Build Packages & Apps
