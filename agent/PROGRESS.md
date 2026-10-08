@@ -13,9 +13,9 @@
 
 ## Current Status
 
-- **Active Phase:** Part C (Task C3 Complete, ready for C4)
-- **Next Task to Execute:** Part C: `C4 Playwright Critical Flows: Web ⇄ Desktop Parity`
-- **Tasks complete:** 86 / 88 (P2 cards excluded; Part A 100% Complete, Part B 100% Complete, C1, C2, C3 Complete)
+- **Active Phase:** Part C (Task C4 Complete, ready for C5)
+- **Next Task to Execute:** Part C: `C5 Pre-Launch Security & Release Gate`
+- **Tasks complete:** 87 / 88 (P2 cards excluded; Part A 100% Complete, Part B 100% Complete, C1, C2, C3, C4 Complete)
 - **Blockers:** None
 - **Owner action items before/while coding:**
   - Copy the new `task.md` (v6) into `agent/task.md`.
@@ -176,7 +176,7 @@ Tick a box only after the verification rules above are met. Dependencies are def
 - [x] `C1` Web SPA Shell, Platform Adapters & Cookie-Refresh Auth
 - [x] `C2` Responsive Layouts & Mobile Card Views
 - [x] `C3` Web Deployment, CDN & Security Headers
-- [ ] `C4` Playwright Critical Flows: Web ⇄ Desktop Parity
+- [x] `C4` Playwright Critical Flows: Web ⇄ Desktop Parity
 - [ ] `C5` Pre-Launch Security & Release Gate
 
 ### Release v1.x — P2 (compact, expand at release planning)
@@ -2288,3 +2288,27 @@ Tick a box only after the verification rules above are met. Dependencies are def
    - `pnpm check:all`: All 10 architectural quality gates green (including Web Security Headers & Deployment Check), 40/40 acceptance tests passed.
 4. Open questions: None.
 5. Next task ID: C4 (Playwright Critical Flows: Web ⇄ Desktop Parity)
+
+### [2026-10-08] Task C4: Playwright Critical Flows: Web ⇄ Desktop Parity
+
+1. Task ID & status: `C4` done
+2. Files created/modified:
+   - `e2e/tsconfig.json`
+   - `e2e/vitest.config.mjs`
+   - `e2e/fixtures/golden-flow-data.ts`
+   - `e2e/fixtures/test-harness.tsx`
+   - `e2e/web/golden-flow-web.spec.tsx`
+   - `e2e/desktop/golden-flow-desktop.spec.tsx`
+   - `e2e/parity/cross-client-parity.spec.tsx`
+   - `package.json`
+   - `agent/PRODUCTION_CHECKLIST.md`
+   - `agent/task.md`
+   - `agent/PROGRESS.md`
+3. Verification command & result:
+   - `pnpm test:e2e`: All 3 suites, 13/13 tests green (S1 Web Golden Flow, S2 Desktop Cloud Golden Flow, S3 Cross-Client Parity AT-20).
+   - `pnpm oxlint e2e`: 0 warnings, 0 errors across all 6 e2e files.
+   - `pnpm --filter @exzaestate/web test`: 3 test files, 20/20 tests green.
+   - `pnpm --filter @exzaestate/features test`: 37 test files, 187/187 tests green.
+   - `pnpm check:all`: All 10 architectural quality gates green (including AT-20 parity gate), 40/40 acceptance tests passed.
+4. Open questions: None.
+5. Next task ID: C5 (Pre-Launch Security & Release Gate)

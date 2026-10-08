@@ -1250,7 +1250,7 @@ These are applied as defaults in `architecture.md` v4 but are still **"Needs sig
 
 #### C4 — Playwright Critical Flows: Web ⇄ Desktop Parity
 
-- **Status:** [ ] · **Size:** M (3 steps) · **Depends:** C2, B8
+- **Status:** [x] · **Size:** M (3 steps) · **Depends:** C2, B8
 - **Reads:** `architecture.md` §16; `prd.md` AT-20, §1.4.
 - **Touches:** `e2e/**`.
 - **Steps:** **S1** Golden Flow through the UI on Web. **S2** same flow on Desktop (Cloud mode). **S3** cross-client parity check. Verify: `pnpm test:e2e`.
