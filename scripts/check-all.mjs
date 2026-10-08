@@ -30,6 +30,7 @@ const checks = [
   { name: 'Booking Statuses Index Check', script: 'check-booking-statuses-index.mjs' },
   { name: 'Acceptance Test Matrix Coverage', script: 'check-acceptance-matrix.mjs' },
   { name: 'OpenAPI Breaking Change Check', script: 'check-openapi-breaking.mjs' },
+  { name: 'Web Security Headers & Deployment Check', script: 'check-web-security-headers.mjs' },
 ];
 
 console.log('--- Running ExzaEstate Architectural Quality Gates ---');

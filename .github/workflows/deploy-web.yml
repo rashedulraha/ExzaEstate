@@ -1,0 +1,100 @@
+name: Deploy Web SPA
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'apps/web/**'
+      - 'packages/**'
+      - '.github/workflows/deploy-web.yml'
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Deployment Environment'
+        required: true
+        default: 'production'
+        type: choice
+        options:
+          - production
+          - staging
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build-and-verify:
+    name: Build & Security Audit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 24 LTS
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 12.8.2
+          run_install: false
+
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install Dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Typecheck Web App
+        run: pnpm --filter @exzaestate/web typecheck
+
+      - name: Build Web SPA
+        run: pnpm --filter @exzaestate/web build
+
+      - name: Verify Web Security Headers & Asset Isolation
+        run: node scripts/check-web-security-headers.mjs
+
+      - name: Run Web Tests
+        run: pnpm --filter @exzaestate/web test
+
+      - name: Upload Web Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-dist
+          path: apps/web/dist
+          retention-days: 7
+
+  deploy:
+    name: Deploy to Edge CDN / Host
+    needs: build-and-verify
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment || 'production' }}
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Download Web Build Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: web-dist
+          path: apps/web/dist
+
+      - name: Verify Deployment Artifacts
+        run: |
+          test -f apps/web/dist/index.html || { echo "Missing index.html"; exit 1; }
+          test -f apps/web/dist/_headers || { echo "Missing _headers"; exit 1; }
+          test -f apps/web/dist/_redirects || { echo "Missing _redirects"; exit 1; }
+          echo "Web build artifact verified for ${{ github.event.inputs.environment || 'production' }} deployment."

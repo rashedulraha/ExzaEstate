@@ -1,0 +1,2 @@
+# SPA rewrite rule: redirect all routes to /index.html with status 200
+/* /index.html 200
