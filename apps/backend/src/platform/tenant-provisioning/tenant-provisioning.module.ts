@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { DatabaseModule } from '../../database/database.module.js';
+import { PlatformModule } from '../platform.module.js';
 import { CompanyBranchStep } from './steps/company-branch.step.js';
 import { RolesPermissionsStep } from './steps/roles-permissions.step.js';
 import { ManagingDirectorStep } from './steps/managing-director.step.js';
@@ -28,7 +29,7 @@ import { DemoExpenseStep } from './demo-seed/steps/demo-expense.step.js';
 import { DemoSeedService } from './demo-seed/demo-seed.service.js';
 
 @Module({
-  imports: [DatabaseModule],
+  imports: [DatabaseModule, PlatformModule],
   providers: [
     CompanyBranchStep,
     RolesPermissionsStep,
