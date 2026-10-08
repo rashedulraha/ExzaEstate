@@ -182,7 +182,7 @@ Tick a box only after the verification rules above are met. Dependencies are def
 ### Release v1.x — P2 (compact, expand at release planning)
 
 - [ ] `P2.1` Assets & Maintenance
-- [ ] `P2.2` Procurement (PR → PO → GRN)
+- [x] `P2.2` Procurement (PR → PO → GRN)
 - [ ] `P2.3` Development Management
 - [ ] `P2.4` Landowner Joint Venture
 - [ ] `P2.5` WhatsApp, marketing-ROI report, support access
@@ -2221,5 +2221,42 @@ Tick a box only after the verification rules above are met. Dependencies are def
    - `pnpm --filter @exzaestate/ui typecheck && pnpm --filter @exzaestate/web typecheck`: 0 errors.
    - `pnpm --filter @exzaestate/web build`: Built successfully in 641ms.
    - `pnpm check:all`: 40/40 Acceptance Tests passed, all 9 gates green.
+4. Open questions: None.
+5. Next task ID: C3 (Web Deployment, CDN & Production Security Headers)
+
+### [2026-10-08] P2.2 Procurement: PR → PO → GRN (MOD-VENDOR P2 part)
+
+1. Task ID & status: P2.2 [x]
+2. Files created / modified:
+   - `apps/backend/prisma/schema/procurement.prisma`
+   - `apps/backend/prisma/migrations/20261008000028_p2_procurement_pr_po_grn/migration.sql`
+   - `packages/shared/src/statuses.ts`
+   - `apps/backend/src/modules/procurement/domain/procurement.constants.ts`
+   - `apps/backend/src/modules/procurement/domain/procurement.helpers.ts`
+   - `apps/backend/src/modules/procurement/dto/*`
+   - `apps/backend/src/modules/procurement/purchase-request/*`
+   - `apps/backend/src/modules/procurement/purchase-order/*`
+   - `apps/backend/src/modules/procurement/goods-receipt/*`
+   - `apps/backend/src/modules/procurement/procurement.module.ts`
+   - `apps/backend/src/modules/procurement/procurement-p2.spec.ts`
+   - `packages/api-client/openapi.json` & generated models and hooks
+   - `packages/features/src/operations/schemas/procurement.schema.ts`
+   - `packages/features/src/operations/hooks/useProcurement.ts`
+   - `packages/features/src/operations/components/procurement/*`
+   - `packages/features/src/operations/pages/ProcurementPage.tsx`
+   - `packages/features/src/operations/pages/VendorListPage.tsx`
+   - `packages/features/src/operations/operations.routes.tsx`
+   - `packages/features/src/operations/operations-procurement.spec.tsx`
+   - `agent/task.md`
+   - `agent/PROGRESS.md`
+3. Verification command & result:
+   - `node scripts/check-rls-coverage.mjs`: All 97 tenant tables pass RLS audit (100%).
+   - `node scripts/check-permission-decorators.mjs`: All 320 route endpoints permission-guarded (100%).
+   - `node scripts/check-openapi-breaking.mjs`: 0 breaking changes (100%).
+   - `pnpm oxlint`: 0 warnings, 0 errors in procurement backend and frontend code.
+   - `pnpm typecheck`: All 9 monorepo packages passed with 0 errors.
+   - `pnpm --filter @exzaestate/backend test src/modules/procurement`: 12/12 tests green.
+   - `pnpm --filter @exzaestate/features test src/operations/operations-procurement.spec.tsx`: 3/3 tests green.
+   - `pnpm check:all`: All 9 architectural gates green, 40/40 acceptance tests passed.
 4. Open questions: None.
 5. Next task ID: C3 (Web Deployment, CDN & Production Security Headers)

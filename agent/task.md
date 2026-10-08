@@ -1271,7 +1271,7 @@ These are applied as defaults in `architecture.md` v4 but are still **"Needs sig
 > Each P2 module goes through Part A → B → C when released (`prd.md` §1.2). These are intentionally compact; expand to full cards (Reads/Touches/Steps/Acceptance) at release planning. **Depends** for all: C5.
 
 - [ ] `P2.1` **Assets & Maintenance** (`MOD-ASSET`, `MOD-MAINT`; includes asset depreciation) — backend, Desktop screens, Web parity.
-- [ ] `P2.2` **Procurement: PR → PO → GRN** (`MOD-VENDOR` P2 part).
+- [x] `P2.2` **Procurement: PR → PO → GRN** (`MOD-VENDOR` P2 part) — schema, RLS, NestJS controllers/services, API client, Web/Desktop feature screens, 3-way match, tests.
 - [ ] `P2.3` **Development Management** (`MOD-DEV`, WIP cost by project).
 - [ ] `P2.4` **Landowner Joint Venture** (`MOD-JV`; `owner_type = LANDOWNER`).
 - [ ] `P2.5` **WhatsApp channel, marketing-ROI report, tenant-consented support access.**
