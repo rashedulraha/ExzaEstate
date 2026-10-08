@@ -150,7 +150,7 @@ describe('packages/app-core', () => {
         </PlatformProvider>,
       );
 
-      expect(screen.getByTestId('money').textContent).toBe('BDT 5,00,000.00');
+      expect(screen.getByTestId('money').textContent).toBe('৳5,00,000.00');
       expect(screen.getByTestId('date').textContent).toBe('04 Oct 2026');
     });
   });
