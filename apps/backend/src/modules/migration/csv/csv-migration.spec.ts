@@ -88,9 +88,9 @@ Jane Doe,+8801711000003,test3@example.com,INVALID_TYPE`;
     expect(report.errors[2]?.code).toBe('INVALID_ENUM');
 
     // 2. Import invocation must reject and NOT call database create
-    await expect(
-      service.importCsv(companyId, userId, 'CUSTOMERS', malformedCsv),
-    ).rejects.toThrow(BadRequestException);
+    await expect(service.importCsv(companyId, userId, 'CUSTOMERS', malformedCsv)).rejects.toThrow(
+      BadRequestException,
+    );
 
     // CRITICAL AT-38 ASSERTION: Nothing was imported
     expect(mockPrisma.customer.create).not.toHaveBeenCalled();

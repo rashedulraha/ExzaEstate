@@ -36,6 +36,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Build shared package
+        run: pnpm --filter @exzaestate/shared build
+
       - name: Generate Prisma Client
         run: pnpm db:generate
 
@@ -68,6 +71,9 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+
+      - name: Build shared package
+        run: pnpm --filter @exzaestate/shared build
 
       - name: Generate Prisma Client
         run: pnpm db:generate
@@ -126,6 +132,9 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+
+      - name: Build shared package
+        run: pnpm --filter @exzaestate/shared build
 
       - name: Initialize PostgreSQL database roles
         run: |
@@ -203,7 +212,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 24.x
-          cache: 'pnpm'
 
       - name: Run Gitleaks secret scan
         uses: gitleaks/gitleaks-action@v2

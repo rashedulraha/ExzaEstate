@@ -10,10 +10,7 @@ import {
   computePaymentState,
   computeRemainingAmountPaisa,
 } from '../installment/domain/installment-state.js';
-import type {
-  PaymentReversalResponseDto,
-  ReversePaymentDto,
-} from './dto/reverse-payment.dto.js';
+import type { PaymentReversalResponseDto, ReversePaymentDto } from './dto/reverse-payment.dto.js';
 
 @Injectable()
 export class ReversalService {
@@ -67,7 +64,16 @@ export class ReversalService {
       });
 
       // 2. Void associated Receipt (RULE-IMMUTABLE: receipt is marked void, never deleted)
-      await this.voidReceiptIfExists(tx, companyId, payment.receipt, userId, dto.reason, fiscalYear, dto.approvalId, now);
+      await this.voidReceiptIfExists(
+        tx,
+        companyId,
+        payment.receipt,
+        userId,
+        dto.reason,
+        fiscalYear,
+        dto.approvalId,
+        now,
+      );
 
       // 3. Re-open installments (reverse allocation)
       await this.reopenInstallments(tx, companyId, payment.bookingId, payment.amountPaisa);
@@ -224,7 +230,11 @@ export class ReversalService {
         const deduction =
           amountToReverse >= inst.paidAmountPaisa ? inst.paidAmountPaisa : amountToReverse;
         const newPaidPaisa = inst.paidAmountPaisa - deduction;
-        const newRemainingPaisa = computeRemainingAmountPaisa(inst.amountPaisa, newPaidPaisa, inst.waivedAmountPaisa);
+        const newRemainingPaisa = computeRemainingAmountPaisa(
+          inst.amountPaisa,
+          newPaidPaisa,
+          inst.waivedAmountPaisa,
+        );
         const newPaymentState = computePaymentState({
           amountPaisa: inst.amountPaisa,
           paidAmountPaisa: newPaidPaisa,

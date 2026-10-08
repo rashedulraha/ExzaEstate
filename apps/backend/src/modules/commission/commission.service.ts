@@ -7,20 +7,10 @@ import { AuditService } from '../../platform/audit/audit.service.js';
 import { SequenceService } from '../../platform/sequence/sequence.service.js';
 import { FieldCryptoService } from '../../platform/security/field-crypto.service.js';
 import { PostingService } from '../accounting/posting/posting.service.js';
-import {
-  COMMISSION_STATUS,
-  COMMISSION_TRIGGER_EVENT,
-} from './domain/commission.constants.js';
+import { COMMISSION_STATUS, COMMISSION_TRIGGER_EVENT } from './domain/commission.constants.js';
 import { calculateCommissionAmount } from './domain/commission-calc.engine.js';
-import {
-  generateBrokerNumber,
-  generateCommissionNumber,
-} from './commission.helper.js';
-import type {
-  CreateBrokerDto,
-  CreateCommissionRuleDto,
-  PayCommissionDto,
-} from './dto/index.js';
+import { generateBrokerNumber, generateCommissionNumber } from './commission.helper.js';
+import type { CreateBrokerDto, CreateCommissionRuleDto, PayCommissionDto } from './dto/index.js';
 
 @Injectable()
 export class CommissionService {
@@ -32,12 +22,7 @@ export class CommissionService {
     private readonly postingService: PostingService,
   ) {}
 
-  async createBroker(
-    companyId: string,
-    userId: string,
-    dto: CreateBrokerDto,
-    tx?: TenantPrisma,
-  ) {
+  async createBroker(companyId: string, userId: string, dto: CreateBrokerDto, tx?: TenantPrisma) {
     const runner = async (db: TenantPrisma) => {
       const brokerNumber = await generateBrokerNumber(db, this.sequenceService);
 

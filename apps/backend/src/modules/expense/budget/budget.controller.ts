@@ -39,10 +39,7 @@ export class BudgetController {
   @Get()
   @RequirePermission(PERMISSIONS.BUDGET_VIEW)
   @ApiOperation({ summary: 'List budgets with spend metrics' })
-  async listBudgets(
-    @CurrentUser('companyId') companyId: string,
-    @Query() query: BudgetQueryDto,
-  ) {
+  async listBudgets(@CurrentUser('companyId') companyId: string, @Query() query: BudgetQueryDto) {
     return this.budgetService.listBudgets(companyId, query);
   }
 }

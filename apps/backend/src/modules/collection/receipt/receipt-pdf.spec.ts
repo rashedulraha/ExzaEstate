@@ -4,7 +4,10 @@ import type { TenantPrisma } from '../../../database/tenant-prisma.js';
 import type { AuditService } from '../../../platform/audit/audit.service.js';
 import type { PdfRenderer } from '../../../ports/index.js';
 import { ReceiptService } from './receipt.service.js';
-import { renderQuotationHtml, type QuotationTemplateData } from '../../sales/quotation/templates/quotation.template.js';
+import {
+  renderQuotationHtml,
+  type QuotationTemplateData,
+} from '../../sales/quotation/templates/quotation.template.js';
 
 describe('Bangla Templates & Receipt PDF (A9.2 S3, S4 / AT-39)', () => {
   let receiptService: ReceiptService;

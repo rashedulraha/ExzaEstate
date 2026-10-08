@@ -15,7 +15,8 @@ export class BdSmsGatewayAdapter implements SmsProvider {
   private readonly senderId: string;
 
   constructor(config?: BdSmsGatewayConfig) {
-    this.apiUrl = config?.apiUrl ?? process.env['SMS_GATEWAY_URL'] ?? 'https://api.sms-gateway.bd/v1/send';
+    this.apiUrl =
+      config?.apiUrl ?? process.env['SMS_GATEWAY_URL'] ?? 'https://api.sms-gateway.bd/v1/send';
     this.apiKey = config?.apiKey ?? process.env['SMS_GATEWAY_API_KEY'] ?? '';
     this.senderId = config?.senderId ?? process.env['SMS_SENDER_ID'] ?? 'ExzaEstate';
   }

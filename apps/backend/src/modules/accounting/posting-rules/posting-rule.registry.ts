@@ -3,11 +3,7 @@ import { PostingRuleHandler } from './posting-rule.interface.js';
 import { BookingConfirmedRule } from './booking-confirmed.rule.js';
 import { ChequeClearedRule, PaymentPostedRule } from './payment-posted.rule.js';
 import { PaymentReversedRule } from './payment-reversed.rule.js';
-import {
-  InstallmentWaivedRule,
-  LateFeeChargedRule,
-  LateFeeWaivedRule,
-} from './late-fee.rule.js';
+import { InstallmentWaivedRule, LateFeeChargedRule, LateFeeWaivedRule } from './late-fee.rule.js';
 import { BookingCancelledRule } from './booking-cancelled.rule.js';
 import { RefundPaidRule } from './refund-paid.rule.js';
 import {

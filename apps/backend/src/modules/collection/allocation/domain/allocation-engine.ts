@@ -1,4 +1,7 @@
-import { computePaymentState, computeRemainingAmountPaisa } from '../../installment/domain/installment-state.js';
+import {
+  computePaymentState,
+  computeRemainingAmountPaisa,
+} from '../../installment/domain/installment-state.js';
 
 export interface InstallmentAllocationTarget {
   id: string;
@@ -58,8 +61,10 @@ function sortInstallmentsForAllocation(
       return priorityA - priorityB;
     }
 
-    const dueA = typeof a.dueDate === 'string' ? a.dueDate.slice(0, 10) : a.dueDate.toISOString().slice(0, 10);
-    const dueB = typeof b.dueDate === 'string' ? b.dueDate.slice(0, 10) : b.dueDate.toISOString().slice(0, 10);
+    const dueA =
+      typeof a.dueDate === 'string' ? a.dueDate.slice(0, 10) : a.dueDate.toISOString().slice(0, 10);
+    const dueB =
+      typeof b.dueDate === 'string' ? b.dueDate.slice(0, 10) : b.dueDate.toISOString().slice(0, 10);
     if (dueA !== dueB) {
       return dueA.localeCompare(dueB);
     }

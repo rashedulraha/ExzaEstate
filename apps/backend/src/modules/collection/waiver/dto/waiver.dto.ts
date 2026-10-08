@@ -2,7 +2,10 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsOptional, IsString } from 'class-validator';
 
 export class RequestWaiverDto {
-  @ApiPropertyOptional({ example: '10000000', description: 'Amount to waive in paisa. If omitted, full remaining amount is waived.' })
+  @ApiPropertyOptional({
+    example: '10000000',
+    description: 'Amount to waive in paisa. If omitted, full remaining amount is waived.',
+  })
   @IsOptional()
   @IsString()
   amountPaisa?: string;

@@ -10,9 +10,7 @@ describe('OpenAPI Breaking Change Checker (ARCH-API-COMPAT / D-13 / A9.7)', () =
       '/api/v1/sales/bookings': {
         get: {
           operationId: 'getBookings',
-          parameters: [
-            { name: 'page', in: 'query', required: false },
-          ],
+          parameters: [{ name: 'page', in: 'query', required: false }],
           responses: {
             '200': {
               description: 'List bookings',
@@ -94,11 +92,15 @@ describe('OpenAPI Breaking Change Checker (ARCH-API-COMPAT / D-13 / A9.7)', () =
 
   it('fails when an inline response property is removed', () => {
     const modifiedSpec = JSON.parse(JSON.stringify(baseSpec));
-    delete modifiedSpec.paths['/api/v1/sales/bookings'].get.responses['200'].content['application/json'].schema.properties.total;
+    delete modifiedSpec.paths['/api/v1/sales/bookings'].get.responses['200'].content[
+      'application/json'
+    ].schema.properties.total;
 
     const issues = findOpenApiBreakingChanges(baseSpec, modifiedSpec);
     expect(issues.length).toBeGreaterThan(0);
-    const responseFieldRemoved = issues.find((i: { type: string }) => i.type === 'RESPONSE_FIELD_REMOVED');
+    const responseFieldRemoved = issues.find(
+      (i: { type: string }) => i.type === 'RESPONSE_FIELD_REMOVED',
+    );
     expect(responseFieldRemoved).toBeDefined();
   });
 

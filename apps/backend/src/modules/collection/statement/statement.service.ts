@@ -82,19 +82,11 @@ export class StatementService {
         include: {
           journal: true,
         },
-        orderBy: [
-          { journal: { postingDate: 'asc' } },
-          { createdAt: 'asc' },
-          { id: 'asc' },
-        ],
+        orderBy: [{ journal: { postingDate: 'asc' } }, { createdAt: 'asc' }, { id: 'asc' }],
       });
 
-      const {
-        statementLines,
-        totalDebits,
-        totalCredits,
-        closingOutstandingPaisa,
-      } = computeStatementLines(lines, openingBalancePaisa);
+      const { statementLines, totalDebits, totalCredits, closingOutstandingPaisa } =
+        computeStatementLines(lines, openingBalancePaisa);
 
       // 3. Compute Customer Advance Balance (Account 2200, Credit normal)
       const advanceLines = await tx.journalLine.findMany({
@@ -128,7 +120,6 @@ export class StatementService {
         formattedCustomerAdvance: formatMoney(customerAdvancePaisa),
         lines: statementLines,
       };
-
     });
   }
 

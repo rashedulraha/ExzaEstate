@@ -104,7 +104,10 @@ export class ManagementKpiQuery {
               balance += line.creditPaisa - line.debitPaisa;
             }
           }
-        } else if ('balancePaisa' in acc && typeof (acc as Record<string, unknown>).balancePaisa === 'bigint') {
+        } else if (
+          'balancePaisa' in acc &&
+          typeof (acc as Record<string, unknown>).balancePaisa === 'bigint'
+        ) {
           balance = (acc as unknown as { balancePaisa: bigint }).balancePaisa;
         }
         if (acc.code === '1100') arBalance += balance;

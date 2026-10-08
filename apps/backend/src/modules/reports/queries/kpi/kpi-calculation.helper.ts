@@ -5,7 +5,9 @@ import type {
   ScopeFilterContext,
 } from './kpi.types.js';
 
-export function buildScopeWhere(scopeCtx?: ScopeFilterContext): { salesExecutiveId?: string | { in: string[] } } {
+export function buildScopeWhere(scopeCtx?: ScopeFilterContext): {
+  salesExecutiveId?: string | { in: string[] };
+} {
   if (!scopeCtx || scopeCtx.scope === 'ALL') {
     return {};
   }
@@ -39,10 +41,7 @@ export function buildSalesWhere(
         }
       : {};
 
-  const projectFilter =
-    propertyIds !== undefined
-      ? { propertyId: { in: propertyIds } }
-      : {};
+  const projectFilter = propertyIds !== undefined ? { propertyId: { in: propertyIds } } : {};
 
   return {
     companyId,

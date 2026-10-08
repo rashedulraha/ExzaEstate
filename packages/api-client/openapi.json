@@ -1,6 +1,19 @@
 {
   "openapi": "3.0.0",
   "paths": {
+    "/api/v1": {
+      "get": {
+        "operationId": "AppController_getRoot",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "API operational status, welcome message, and metadata"
+          }
+        },
+        "summary": "Platform API v1 root information and status",
+        "tags": ["System"]
+      }
+    },
     "/api/v1/health": {
       "get": {
         "operationId": "HealthController_check",
@@ -6807,7 +6820,19 @@
             "description": ""
           }
         },
-        "tags": ["SystemLicense"]
+        "summary": "Issue an Ed25519 cryptographic license for a tenant",
+        "tags": ["System Admin - Licenses"]
+      },
+      "get": {
+        "operationId": "SystemLicenseController_listLicenses",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "List all issued platform licenses",
+        "tags": ["System Admin - Licenses"]
       }
     },
     "/api/v1/projects": {
@@ -9782,6 +9807,24 @@
         "tags": ["System Admin - Tenants"]
       }
     },
+    "/api/v1/system/tenants/audit-logs": {
+      "get": {
+        "operationId": "SystemTenantController_listAuditLogs",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "List recent platform audit log events",
+        "tags": ["System Admin - Tenants"]
+      }
+    },
     "/api/v1/system/tenants/{id}": {
       "get": {
         "operationId": "SystemTenantController_getTenantById",
@@ -10230,6 +10273,63 @@
           }
         ],
         "summary": "Create a new expense voucher (draft)",
+        "tags": ["Expenses"]
+      },
+      "get": {
+        "operationId": "ExpenseController_listVouchers",
+        "parameters": [
+          {
+            "name": "status",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "projectId",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "categoryId",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "offset",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "List operational expense vouchers",
         "tags": ["Expenses"]
       }
     },
@@ -17628,6 +17728,21 @@
             "type": "string",
             "description": "Company timezone",
             "example": "Asia/Dhaka"
+          },
+          "tradeLicense": {
+            "type": "string",
+            "description": "Company trade license number",
+            "example": "TRAD/DNCC/019283/2026"
+          },
+          "licenseKey": {
+            "type": "string",
+            "description": "License key issued on purchase",
+            "example": "EXZA-ENTERPRISE-2026-ABCD-EF01-9999"
+          },
+          "machineId": {
+            "type": "string",
+            "description": "Machine fingerprint ID",
+            "example": "8f4c2b9a7d1e3f5a8b0c4e6d2f1a9b7c..."
           }
         }
       },

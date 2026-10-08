@@ -9,10 +9,7 @@ describe('ClientVersionMiddleware (D-13 / ARCH-API-COMPAT)', () => {
     minSupportedClientVersion: '0.1.0',
   } as unknown as ConfigService;
 
-  function createMocks(options: {
-    headers?: Record<string, string>;
-    path?: string;
-  }) {
+  function createMocks(options: { headers?: Record<string, string>; path?: string }) {
     const req = {
       headers: options.headers ?? {},
       path: options.path ?? '/api/v1/sales/bookings',

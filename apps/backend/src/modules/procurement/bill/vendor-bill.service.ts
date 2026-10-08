@@ -32,12 +32,7 @@ export class VendorBillService {
     });
   }
 
-  async createBill(
-    companyId: string,
-    userId: string,
-    dto: CreateVendorBillDto,
-    tx?: TenantPrisma,
-  ) {
+  async createBill(companyId: string, userId: string, dto: CreateVendorBillDto, tx?: TenantPrisma) {
     const runner = async (db: TenantPrisma) => {
       const vendor = await db.vendor.findFirst({
         where: { id: dto.vendorId, companyId, deletedAt: null },

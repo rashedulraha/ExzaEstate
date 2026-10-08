@@ -1,10 +1,4 @@
-import {
-  Inject,
-  Injectable,
-  Logger,
-  OnModuleDestroy,
-  Optional,
-} from '@nestjs/common';
+import { Inject, Injectable, Logger, OnModuleDestroy, Optional } from '@nestjs/common';
 import { PUB_SUB, type PubSub, type UnsubscribeFn } from '../../ports/index.js';
 import {
   PERMISSION_RESOLVER,
@@ -99,10 +93,7 @@ export class RealtimeService implements OnModuleDestroy {
     }
   }
 
-  async connectClient(
-    client: RealtimeClient,
-    lastEventId?: string | null,
-  ): Promise<UnsubscribeFn> {
+  async connectClient(client: RealtimeClient, lastEventId?: string | null): Promise<UnsubscribeFn> {
     this.clients.set(client.id, client);
 
     // Subscribe to company channel and direct user channel

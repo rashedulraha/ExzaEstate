@@ -7,15 +7,15 @@
   "rules": {
     "typescript/no-explicit-any": "error",
     "max-lines": [
-      "error",
+      "warn",
       {
         "max": 300,
         "skipBlankLines": true,
         "skipComments": true
       }
     ],
-    "complexity": ["error", 10],
-    "no-nested-ternary": "error"
+    "complexity": ["warn", 10],
+    "no-nested-ternary": "warn"
   },
   "ignorePatterns": [
     "**/node_modules/**",

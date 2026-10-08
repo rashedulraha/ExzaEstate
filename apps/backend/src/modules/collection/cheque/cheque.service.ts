@@ -60,8 +60,11 @@ export class ChequeService {
       });
 
       // 2. Allocate payment & issue receipt
-      const { allocation, previousDuePaisa, currentDuePaisa } =
-        await processPaymentAllocation(tx, companyId, payment);
+      const { allocation, previousDuePaisa, currentDuePaisa } = await processPaymentAllocation(
+        tx,
+        companyId,
+        payment,
+      );
 
       const { receipt, receiptNumber } = await issuePaymentReceipt(
         tx,

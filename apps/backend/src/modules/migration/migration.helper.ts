@@ -71,7 +71,13 @@ export function validateOpeningBalanceLines(dto: PostOpeningBalanceDto): {
 }
 
 export async function resolveAccountMap(
-  tx: { account: { findMany: (args: { where: { companyId: string; code: { in: string[] } } }) => Promise<{ code: string; id: string }[]> } },
+  tx: {
+    account: {
+      findMany: (args: {
+        where: { companyId: string; code: { in: string[] } };
+      }) => Promise<{ code: string; id: string }[]>;
+    };
+  },
   companyId: string,
   accountCodes: string[],
 ): Promise<Map<string, string>> {

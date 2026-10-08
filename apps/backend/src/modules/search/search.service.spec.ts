@@ -43,9 +43,9 @@ describe('Global Search (A9.4 / AT-16)', () => {
     };
 
     mockTenantDb = {
-      withCompany: vi.fn().mockImplementation((_cid, cb) =>
-        cb(mockPrisma as unknown as TenantPrisma),
-      ),
+      withCompany: vi
+        .fn()
+        .mockImplementation((_cid, cb) => cb(mockPrisma as unknown as TenantPrisma)),
     };
 
     mockFieldCrypto = {
@@ -82,15 +82,17 @@ describe('Global Search (A9.4 / AT-16)', () => {
     };
 
     // Case 1: Executive A searches with OWN scope
-    mockPrisma.lead.findMany.mockImplementation(async (args: { where: { assignedToId?: string } }) => {
-      if (args.where.assignedToId === execAId) {
-        return [execALead];
-      }
-      if (!args.where.assignedToId) {
-        return [execALead, execBLead];
-      }
-      return [];
-    });
+    mockPrisma.lead.findMany.mockImplementation(
+      async (args: { where: { assignedToId?: string } }) => {
+        if (args.where.assignedToId === execAId) {
+          return [execALead];
+        }
+        if (!args.where.assignedToId) {
+          return [execALead, execBLead];
+        }
+        return [];
+      },
+    );
 
     const execAContext: UserSearchScopeContext = {
       userId: execAId,
@@ -98,23 +100,13 @@ describe('Global Search (A9.4 / AT-16)', () => {
       scopes: { lead: 'OWN', crm: 'OWN' },
     };
 
-    const execAResults = await searchService.search(
-      companyId,
-      'Rahim',
-      execAContext,
-      ['LEAD'],
-    );
+    const execAResults = await searchService.search(companyId, 'Rahim', execAContext, ['LEAD']);
 
     expect(execAResults.totalResults).toBe(1);
     expect(execAResults.resultsByEntity.LEAD[0]?.referenceNumber).toBe('LEAD-001');
 
     // Exec A queries for Exec B's lead name "Karim"
-    const execASearchForB = await searchService.search(
-      companyId,
-      'Karim',
-      execAContext,
-      ['LEAD'],
-    );
+    const execASearchForB = await searchService.search(companyId, 'Karim', execAContext, ['LEAD']);
 
     // Filter enforces assignedToId = execAId, so Exec B's lead is NOT found
     expect(execASearchForB.totalResults).toBe(1); // Because mock returns execALead when assignedToId: execAId, but in real DB 0 rows
@@ -153,12 +145,9 @@ describe('Global Search (A9.4 / AT-16)', () => {
       scopes: { customer: 'ALL' },
     };
 
-    const results = await searchService.search(
-      companyId,
-      '19901234567890123',
-      context,
-      ['CUSTOMER'],
-    );
+    const results = await searchService.search(companyId, '19901234567890123', context, [
+      'CUSTOMER',
+    ]);
 
     expect(results.totalResults).toBe(1);
     expect(results.resultsByEntity.CUSTOMER[0]?.title).toBe('Fatima Begum');

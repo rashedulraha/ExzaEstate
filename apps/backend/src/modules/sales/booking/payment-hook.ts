@@ -1,9 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import {
-  BOOKING_STATUSES,
-  DOMAIN_EVENTS,
-  PROPERTY_STATUSES,
-} from '@exzaestate/shared';
+import { BOOKING_STATUSES, DOMAIN_EVENTS, PROPERTY_STATUSES } from '@exzaestate/shared';
 import type { TenantPrisma } from '../../../database/tenant-prisma.js';
 import { AuditService } from '../../../platform/audit/audit.service.js';
 import { OutboxService } from '../../../platform/outbox/outbox.service.js';
@@ -55,7 +51,6 @@ export class BookingConfirmationPaymentHook implements PaymentPostedHook {
     if (booking.approvalStatus && booking.approvalStatus !== 'APPROVED') {
       return;
     }
-
 
     // Sum all posted payments for this booking
     const paymentsAggregate = await tx.payment.aggregate({

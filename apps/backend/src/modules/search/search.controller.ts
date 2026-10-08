@@ -3,7 +3,10 @@ import { PERMISSIONS } from '@exzaestate/shared';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard.js';
 import { PermissionsGuard } from '../../common/guards/permissions.guard.js';
 import { RequirePermission } from '../../common/decorators/require-permission.decorator.js';
-import { CurrentUser, type AuthenticatedUser } from '../../common/decorators/current-user.decorator.js';
+import {
+  CurrentUser,
+  type AuthenticatedUser,
+} from '../../common/decorators/current-user.decorator.js';
 import { SearchQueryDto } from './dto/search-query.dto.js';
 import { SearchService } from './search.service.js';
 import type { GlobalSearchResponseDto, SearchEntityType } from './search.types.js';

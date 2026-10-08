@@ -6,8 +6,7 @@ export const VENDOR_BILL_STATUS = {
   CANCELLED: 'CANCELLED',
 } as const;
 
-export type VendorBillStatus =
-  (typeof VENDOR_BILL_STATUS)[keyof typeof VENDOR_BILL_STATUS];
+export type VendorBillStatus = (typeof VENDOR_BILL_STATUS)[keyof typeof VENDOR_BILL_STATUS];
 
 export const VENDOR_PAYMENT_STATUS = {
   DRAFT: 'DRAFT',

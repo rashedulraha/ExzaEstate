@@ -33,7 +33,9 @@ export class LocalSecretGuard implements CanActivate {
       hostname === '127.0.0.1' || hostname === 'localhost' || hostname === '[::1]';
 
     if (!isLoopbackHost) {
-      this.logger.warn(`Rejected request with foreign Host header: "${rawHost}" from IP: ${request.ip}`);
+      this.logger.warn(
+        `Rejected request with foreign Host header: "${rawHost}" from IP: ${request.ip}`,
+      );
       throw new ForbiddenException({
         code: 'INVALID_HOST_HEADER',
         message: 'Host header must be a loopback address (127.0.0.1 or localhost) in local mode',

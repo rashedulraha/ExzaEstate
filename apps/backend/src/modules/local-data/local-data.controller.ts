@@ -26,7 +26,9 @@ export class LocalDataController {
   @Public()
   @Post('provision')
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Provision first-launch company and administrator for standalone local mode' })
+  @ApiOperation({
+    summary: 'Provision first-launch company and administrator for standalone local mode',
+  })
   async provision(@Body() dto: LocalProvisioningDto) {
     return this.provisioningService.provisionLocalStandalone(dto);
   }

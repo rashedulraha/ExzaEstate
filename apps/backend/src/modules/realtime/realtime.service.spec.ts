@@ -132,7 +132,10 @@ describe('Realtime SSE Stream & PubSub Fan-Out (A9.1)', () => {
   });
 
   it('S2: filters events by requiredPermission — clients lacking permission do not receive event', async () => {
-    const adminClient = createMockClient('c-admin', companyA, userA1, ['REPORT_VIEW', 'EXPENSE_APPROVE']);
+    const adminClient = createMockClient('c-admin', companyA, userA1, [
+      'REPORT_VIEW',
+      'EXPENSE_APPROVE',
+    ]);
     const execClient = createMockClient('c-exec', companyA, userA2, ['LEAD_VIEW']);
 
     await service.connectClient(adminClient.client);

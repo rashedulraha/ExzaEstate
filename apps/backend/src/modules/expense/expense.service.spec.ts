@@ -61,7 +61,9 @@ describe('ExpenseService (A8.1 & AT-07)', () => {
     };
 
     mockTenantDb = {
-      withCompany: vi.fn(async (_cid, cb) => cb(mockTx as unknown as import('../../database/tenant-prisma.js').TenantPrisma)),
+      withCompany: vi.fn(async (_cid, cb) =>
+        cb(mockTx as unknown as import('../../database/tenant-prisma.js').TenantPrisma),
+      ),
     };
 
     mockSequenceService = {
@@ -152,13 +154,11 @@ describe('ExpenseService (A8.1 & AT-07)', () => {
         createdById: userId,
       });
       mockTx.companySetting.findUnique.mockResolvedValue(null); // default threshold
-      mockTx.userRole.findMany.mockResolvedValue([
-        { role: { code: 'GENERAL_MANAGER' } },
-      ]);
+      mockTx.userRole.findMany.mockResolvedValue([{ role: { code: 'GENERAL_MANAGER' } }]);
 
-      await expect(
-        service.approveVoucher(companyId, gmUserId, 'voucher-1'),
-      ).rejects.toThrow('strictly requires Managing Director (MD) approval');
+      await expect(service.approveVoucher(companyId, gmUserId, 'voucher-1')).rejects.toThrow(
+        'strictly requires Managing Director (MD) approval',
+      );
     });
 
     it('allows MD to approve ৳6,00,000 expense', async () => {
@@ -169,9 +169,7 @@ describe('ExpenseService (A8.1 & AT-07)', () => {
         createdById: userId,
       });
       mockTx.companySetting.findUnique.mockResolvedValue(null);
-      mockTx.userRole.findMany.mockResolvedValue([
-        { role: { code: 'MANAGING_DIRECTOR' } },
-      ]);
+      mockTx.userRole.findMany.mockResolvedValue([{ role: { code: 'MANAGING_DIRECTOR' } }]);
       mockTx.expenseVoucher.update.mockResolvedValue({
         id: 'voucher-1',
         status: EXPENSE_STATUS.APPROVED,
@@ -194,9 +192,7 @@ describe('ExpenseService (A8.1 & AT-07)', () => {
         createdById: userId,
       });
       mockTx.companySetting.findUnique.mockResolvedValue(null);
-      mockTx.userRole.findMany.mockResolvedValue([
-        { role: { code: 'GENERAL_MANAGER' } },
-      ]);
+      mockTx.userRole.findMany.mockResolvedValue([{ role: { code: 'GENERAL_MANAGER' } }]);
       mockTx.expenseVoucher.update.mockResolvedValue({
         id: 'voucher-2',
         status: EXPENSE_STATUS.APPROVED,

@@ -9,11 +9,7 @@ export interface CostOfLandSoldInput {
  * Formula: (sq ft sold ÷ total saleable sq ft) × project WIP balance (accounting-rules.md §3.10)
  */
 export function calculateCostOfLandSold(input: CostOfLandSoldInput): bigint {
-  if (
-    input.totalSaleableSqFt <= 0 ||
-    input.sqFtSold <= 0 ||
-    input.projectWipBalancePaisa <= 0n
-  ) {
+  if (input.totalSaleableSqFt <= 0 || input.sqFtSold <= 0 || input.projectWipBalancePaisa <= 0n) {
     return 0n;
   }
 

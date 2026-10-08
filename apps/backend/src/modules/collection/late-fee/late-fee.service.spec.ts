@@ -30,9 +30,11 @@ describe('LateFeeService (AT-33 & Phase A7.7)', () => {
         findFirst: vi.fn(),
       },
       lateFeeRecord: {
-        create: vi.fn().mockImplementation((args: { data: Record<string, unknown> }) =>
-          Promise.resolve({ id: 'lf-1', ...args?.data, createdAt: new Date() }),
-        ),
+        create: vi
+          .fn()
+          .mockImplementation((args: { data: Record<string, unknown> }) =>
+            Promise.resolve({ id: 'lf-1', ...args?.data, createdAt: new Date() }),
+          ),
         findFirst: vi.fn(),
         update: vi.fn(),
       },

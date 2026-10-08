@@ -57,9 +57,7 @@ export class RealtimeOutboxListener implements OnModuleInit {
           : undefined;
 
     const requiredPermission =
-      typeof payload['requiredPermission'] === 'string'
-        ? payload['requiredPermission']
-        : undefined;
+      typeof payload['requiredPermission'] === 'string' ? payload['requiredPermission'] : undefined;
 
     await this.realtimeService.publish({
       id: record.id,

@@ -51,9 +51,7 @@ export function renderReceiptHtml(data: ReceiptTemplateData, lang: 'en' | 'bn' =
         customerSign: 'Customer Signature',
       };
 
-  const watermarkHtml = data.watermark
-    ? `<div class="watermark">${data.watermark}</div>`
-    : '';
+  const watermarkHtml = data.watermark ? `<div class="watermark">${data.watermark}</div>` : '';
 
   return `<!DOCTYPE html>
 <html lang="${lang}">

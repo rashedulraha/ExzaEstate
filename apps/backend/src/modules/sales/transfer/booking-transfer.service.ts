@@ -64,10 +64,7 @@ export class BookingTransferService {
         );
       }
 
-      if (
-        originalBooking.status === 'CANCELLED' ||
-        originalBooking.status === 'TRANSFERRED'
-      ) {
+      if (originalBooking.status === 'CANCELLED' || originalBooking.status === 'TRANSFERRED') {
         throw new AppException(
           ERROR_CODES.INVALID_STATE_TRANSITION,
           `Cannot transfer booking in status: ${originalBooking.status}`,

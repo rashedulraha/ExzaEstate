@@ -132,7 +132,6 @@ export interface InstallmentWaivedPayload {
   projectId?: string;
 }
 
-
 export interface BookingCancelledPayload {
   bookingId: string;
   bookingNumber: string;

@@ -38,36 +38,44 @@ describe('MigrationService (AT-29 & Phase A7.9)', () => {
   beforeEach(() => {
     mockTx = {
       migrationBatch: {
-        create: vi.fn().mockImplementation((args: { data: Record<string, unknown> }) =>
-          Promise.resolve({ id: 'batch-1', ...args?.data, createdAt: new Date() }),
-        ),
+        create: vi
+          .fn()
+          .mockImplementation((args: { data: Record<string, unknown> }) =>
+            Promise.resolve({ id: 'batch-1', ...args?.data, createdAt: new Date() }),
+          ),
         findFirst: vi.fn(),
-        update: vi.fn().mockImplementation((args: { where: { id: string }; data: Record<string, unknown> }) =>
-          Promise.resolve({
-            id: args?.where?.id,
-            batchNumber: 'MIG-2026-00001',
-            goLiveDate: new Date('2026-07-01'),
-            createdAt: new Date(),
-            ...args?.data,
-          }),
-        ),
+        update: vi
+          .fn()
+          .mockImplementation((args: { where: { id: string }; data: Record<string, unknown> }) =>
+            Promise.resolve({
+              id: args?.where?.id,
+              batchNumber: 'MIG-2026-00001',
+              goLiveDate: new Date('2026-07-01'),
+              createdAt: new Date(),
+              ...args?.data,
+            }),
+          ),
       },
 
       account: {
         findMany: vi.fn(),
       },
       journal: {
-        create: vi.fn().mockImplementation((args: { data: Record<string, unknown> }) =>
-          Promise.resolve({ id: 'jrn-opn-1', ...args?.data }),
-        ),
+        create: vi
+          .fn()
+          .mockImplementation((args: { data: Record<string, unknown> }) =>
+            Promise.resolve({ id: 'jrn-opn-1', ...args?.data }),
+          ),
       },
       journalLine: {
         findMany: vi.fn(),
       },
       legacyBookingRecord: {
-        create: vi.fn().mockImplementation((args: { data: Record<string, unknown> }) =>
-          Promise.resolve({ id: 'lbr-1', ...args?.data }),
-        ),
+        create: vi
+          .fn()
+          .mockImplementation((args: { data: Record<string, unknown> }) =>
+            Promise.resolve({ id: 'lbr-1', ...args?.data }),
+          ),
         findMany: vi.fn(),
         count: vi.fn().mockResolvedValue(2),
       },
@@ -251,8 +259,7 @@ describe('MigrationService (AT-29 & Phase A7.9)', () => {
       expect.objectContaining({
         action: 'MIGRATION_BATCH_FINALIZED',
         after: expect.objectContaining({
-          approvedAdjustmentReason:
-            'Approved ৳500 historical rounding difference write-off by MD',
+          approvedAdjustmentReason: 'Approved ৳500 historical rounding difference write-off by MD',
         }),
       }),
     );

@@ -73,6 +73,3 @@ import { OverdueCalculationService } from './jobs/overdue-calculation.service.js
   ],
 })
 export class CollectionModule {}
-
-
-

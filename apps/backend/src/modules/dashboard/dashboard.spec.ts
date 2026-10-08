@@ -44,9 +44,9 @@ describe('Management Dashboard KPIs & Reports (A9.3 / AT-15)', () => {
     };
 
     mockTenantDb = {
-      withCompany: vi.fn().mockImplementation((_cid, cb) =>
-        cb(mockPrisma as unknown as TenantPrisma),
-      ),
+      withCompany: vi
+        .fn()
+        .mockImplementation((_cid, cb) => cb(mockPrisma as unknown as TenantPrisma)),
     };
 
     kpiQuery = new ManagementKpiQuery(mockTenantDb as TenantDb);
@@ -111,8 +111,24 @@ describe('Management Dashboard KPIs & Reports (A9.3 / AT-15)', () => {
 
     // 3. Properties: 1 Available (50m), 1 Booked (75m)
     const mockProperties = [
-      { id: 'p-1', code: 'P-101', projectId: 'proj-1', status: 'Available', type: 'Apartment', areaSqft: 1500, netPricePaisa: 500000000n },
-      { id: 'p-2', code: 'P-102', projectId: 'proj-1', status: 'Booked', type: 'Apartment', areaSqft: 2000, netPricePaisa: 750000000n },
+      {
+        id: 'p-1',
+        code: 'P-101',
+        projectId: 'proj-1',
+        status: 'Available',
+        type: 'Apartment',
+        areaSqft: 1500,
+        netPricePaisa: 500000000n,
+      },
+      {
+        id: 'p-2',
+        code: 'P-102',
+        projectId: 'proj-1',
+        status: 'Booked',
+        type: 'Apartment',
+        areaSqft: 2000,
+        netPricePaisa: 750000000n,
+      },
     ];
 
     mockPrisma.booking.findMany.mockResolvedValue(mockBookings);
@@ -130,9 +146,7 @@ describe('Management Dashboard KPIs & Reports (A9.3 / AT-15)', () => {
       { id: 'c-1', name: 'Customer A' },
       { id: 'c-2', name: 'Customer B' },
     ]);
-    mockPrisma.project.findMany.mockResolvedValue([
-      { id: 'proj-1', name: 'Gulshan Enclave' },
-    ]);
+    mockPrisma.project.findMany.mockResolvedValue([{ id: 'proj-1', name: 'Gulshan Enclave' }]);
     mockPrisma.user.findMany.mockResolvedValue([
       { id: exec1Id, fullName: 'Executive 1' },
       { id: exec2Id, fullName: 'Executive 2' },
@@ -157,16 +171,20 @@ describe('Management Dashboard KPIs & Reports (A9.3 / AT-15)', () => {
 
     expect(dashboardKpi.inventory.totalUnits).toBe(inventoryReport.summary.totalUnits);
     expect(dashboardKpi.inventory.availableUnits).toBe(inventoryReport.summary.availableUnits);
-    expect(dashboardKpi.inventory.totalInventoryValuePaisa).toBe(inventoryReport.summary.totalInventoryValuePaisa);
+    expect(dashboardKpi.inventory.totalInventoryValuePaisa).toBe(
+      inventoryReport.summary.totalInventoryValuePaisa,
+    );
   });
 
   it('BR-14: Excludes transferred successor bookings and cancelled bookings from sales count', async () => {
-    mockPrisma.booking.findMany.mockImplementation((args: { where: { isTransfer?: boolean; status?: { in?: string[] } } }) => {
-      // Assert that query strictly filters isTransfer = false and only confirmed/active statuses
-      expect(args.where.isTransfer).toBe(false);
-      expect(args.where.status?.in).not.toContain('CANCELLED');
-      return Promise.resolve([]);
-    });
+    mockPrisma.booking.findMany.mockImplementation(
+      (args: { where: { isTransfer?: boolean; status?: { in?: string[] } } }) => {
+        // Assert that query strictly filters isTransfer = false and only confirmed/active statuses
+        expect(args.where.isTransfer).toBe(false);
+        expect(args.where.status?.in).not.toContain('CANCELLED');
+        return Promise.resolve([]);
+      },
+    );
 
     mockPrisma.payment.findMany.mockResolvedValue([]);
     mockPrisma.installment.findMany.mockResolvedValue([]);
@@ -179,10 +197,12 @@ describe('Management Dashboard KPIs & Reports (A9.3 / AT-15)', () => {
   });
 
   it('Scope-aware filtering: Filters by salesExecutiveId when user scope is OWN', async () => {
-    mockPrisma.booking.findMany.mockImplementation((args: { where: { salesExecutiveId?: string } }) => {
-      expect(args.where.salesExecutiveId).toBe(exec1Id);
-      return Promise.resolve([]);
-    });
+    mockPrisma.booking.findMany.mockImplementation(
+      (args: { where: { salesExecutiveId?: string } }) => {
+        expect(args.where.salesExecutiveId).toBe(exec1Id);
+        return Promise.resolve([]);
+      },
+    );
 
     mockPrisma.payment.findMany.mockResolvedValue([]);
     mockPrisma.installment.findMany.mockResolvedValue([]);
@@ -190,27 +210,17 @@ describe('Management Dashboard KPIs & Reports (A9.3 / AT-15)', () => {
     mockPrisma.property.findMany.mockResolvedValue([]);
     mockPrisma.lead.count.mockResolvedValue(0);
 
-    await dashboardService.getSummary(
-      companyId,
-      {},
-      { scope: 'OWN', userId: exec1Id },
-    );
+    await dashboardService.getSummary(companyId, {}, { scope: 'OWN', userId: exec1Id });
 
     expect(mockPrisma.booking.findMany).toHaveBeenCalled();
   });
 
   it('Salesperson Performance: aggregates confirmed bookings, collection, and lead conversion per executive', async () => {
-    mockPrisma.user.findMany.mockResolvedValue([
-      { id: exec1Id, fullName: 'Karim Executive' },
-    ]);
+    mockPrisma.user.findMany.mockResolvedValue([{ id: exec1Id, fullName: 'Karim Executive' }]);
 
-    mockPrisma.booking.findMany.mockResolvedValue([
-      { netPricePaisa: 500000000n },
-    ]);
+    mockPrisma.booking.findMany.mockResolvedValue([{ netPricePaisa: 500000000n }]);
 
-    mockPrisma.payment.findMany.mockResolvedValue([
-      { amountPaisa: 100000000n },
-    ]);
+    mockPrisma.payment.findMany.mockResolvedValue([{ amountPaisa: 100000000n }]);
 
     mockPrisma.lead.count
       .mockResolvedValueOnce(20) // 20 assigned

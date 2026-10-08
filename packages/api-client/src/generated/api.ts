@@ -115,6 +115,7 @@ import type {
   Enable2FaDto,
   EntityHistoryResponseDto,
   ExpenseControllerListCategoriesParams,
+  ExpenseControllerListVouchersParams,
   ExportJobResponseDto,
   ExportLedgerDto,
   ExportReportDto,
@@ -245,6 +246,125 @@ type AwaitedInput<T> = PromiseLike<T> | T;
 type Awaited<O> = O extends AwaitedInput<infer T> ? T : never;
 
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
+
+/**
+ * @summary Platform API v1 root information and status
+ */
+export const appControllerGetRoot = (
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>({ url: `/api/v1`, method: 'GET', signal }, options);
+};
+
+export const getAppControllerGetRootQueryKey = () => {
+  return [`/api/v1`] as const;
+};
+
+export const getAppControllerGetRootQueryOptions = <
+  TData = Awaited<ReturnType<typeof appControllerGetRoot>>,
+  TError = unknown,
+>(options?: {
+  query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof appControllerGetRoot>>, TError, TData>>;
+  request?: SecondParameter<typeof customInstance>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getAppControllerGetRootQueryKey();
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof appControllerGetRoot>>> = ({ signal }) =>
+    appControllerGetRoot(requestOptions, signal);
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof appControllerGetRoot>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type AppControllerGetRootQueryResult = NonNullable<
+  Awaited<ReturnType<typeof appControllerGetRoot>>
+>;
+export type AppControllerGetRootQueryError = unknown;
+
+export function useAppControllerGetRoot<
+  TData = Awaited<ReturnType<typeof appControllerGetRoot>>,
+  TError = unknown,
+>(
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof appControllerGetRoot>>, TError, TData>
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof appControllerGetRoot>>,
+          TError,
+          Awaited<ReturnType<typeof appControllerGetRoot>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useAppControllerGetRoot<
+  TData = Awaited<ReturnType<typeof appControllerGetRoot>>,
+  TError = unknown,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof appControllerGetRoot>>, TError, TData>
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof appControllerGetRoot>>,
+          TError,
+          Awaited<ReturnType<typeof appControllerGetRoot>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useAppControllerGetRoot<
+  TData = Awaited<ReturnType<typeof appControllerGetRoot>>,
+  TError = unknown,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof appControllerGetRoot>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary Platform API v1 root information and status
+ */
+
+export function useAppControllerGetRoot<
+  TData = Awaited<ReturnType<typeof appControllerGetRoot>>,
+  TError = unknown,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof appControllerGetRoot>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getAppControllerGetRootQueryOptions(options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
 
 /**
  * @summary Platform health status
@@ -19830,6 +19950,9 @@ export function useLicenseControllerGetCurrentLicense<
   return query;
 }
 
+/**
+ * @summary Issue an Ed25519 cryptographic license for a tenant
+ */
 export const systemLicenseControllerIssueLicense = (
   createLicenseDto: CreateLicenseDto,
   options?: SecondParameter<typeof customInstance>,
@@ -19889,6 +20012,9 @@ export type SystemLicenseControllerIssueLicenseMutationResult = NonNullable<
 export type SystemLicenseControllerIssueLicenseMutationBody = CreateLicenseDto;
 export type SystemLicenseControllerIssueLicenseMutationError = unknown;
 
+/**
+ * @summary Issue an Ed25519 cryptographic license for a tenant
+ */
 export const useSystemLicenseControllerIssueLicense = <TError = unknown, TContext = unknown>(
   options?: {
     mutation?: UseMutationOptions<
@@ -19910,6 +20036,144 @@ export const useSystemLicenseControllerIssueLicense = <TError = unknown, TContex
 
   return useMutation(mutationOptions, queryClient);
 };
+
+/**
+ * @summary List all issued platform licenses
+ */
+export const systemLicenseControllerListLicenses = (
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>({ url: `/api/v1/system/licenses`, method: 'GET', signal }, options);
+};
+
+export const getSystemLicenseControllerListLicensesQueryKey = () => {
+  return [`/api/v1/system/licenses`] as const;
+};
+
+export const getSystemLicenseControllerListLicensesQueryOptions = <
+  TData = Awaited<ReturnType<typeof systemLicenseControllerListLicenses>>,
+  TError = unknown,
+>(options?: {
+  query?: Partial<
+    UseQueryOptions<Awaited<ReturnType<typeof systemLicenseControllerListLicenses>>, TError, TData>
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getSystemLicenseControllerListLicensesQueryKey();
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof systemLicenseControllerListLicenses>>> = ({
+    signal,
+  }) => systemLicenseControllerListLicenses(requestOptions, signal);
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof systemLicenseControllerListLicenses>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type SystemLicenseControllerListLicensesQueryResult = NonNullable<
+  Awaited<ReturnType<typeof systemLicenseControllerListLicenses>>
+>;
+export type SystemLicenseControllerListLicensesQueryError = unknown;
+
+export function useSystemLicenseControllerListLicenses<
+  TData = Awaited<ReturnType<typeof systemLicenseControllerListLicenses>>,
+  TError = unknown,
+>(
+  options: {
+    query: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof systemLicenseControllerListLicenses>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof systemLicenseControllerListLicenses>>,
+          TError,
+          Awaited<ReturnType<typeof systemLicenseControllerListLicenses>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useSystemLicenseControllerListLicenses<
+  TData = Awaited<ReturnType<typeof systemLicenseControllerListLicenses>>,
+  TError = unknown,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof systemLicenseControllerListLicenses>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof systemLicenseControllerListLicenses>>,
+          TError,
+          Awaited<ReturnType<typeof systemLicenseControllerListLicenses>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useSystemLicenseControllerListLicenses<
+  TData = Awaited<ReturnType<typeof systemLicenseControllerListLicenses>>,
+  TError = unknown,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof systemLicenseControllerListLicenses>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary List all issued platform licenses
+ */
+
+export function useSystemLicenseControllerListLicenses<
+  TData = Awaited<ReturnType<typeof systemLicenseControllerListLicenses>>,
+  TError = unknown,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof systemLicenseControllerListLicenses>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getSystemLicenseControllerListLicensesQueryOptions(options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
 
 /**
  * @summary Create a new project with cost center and optional land link
@@ -28930,6 +29194,147 @@ export function useSystemTenantControllerListTenants<
 }
 
 /**
+ * @summary List recent platform audit log events
+ */
+export const systemTenantControllerListAuditLogs = (
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>(
+    { url: `/api/v1/system/tenants/audit-logs`, method: 'GET', signal },
+    options,
+  );
+};
+
+export const getSystemTenantControllerListAuditLogsQueryKey = () => {
+  return [`/api/v1/system/tenants/audit-logs`] as const;
+};
+
+export const getSystemTenantControllerListAuditLogsQueryOptions = <
+  TData = Awaited<ReturnType<typeof systemTenantControllerListAuditLogs>>,
+  TError = unknown,
+>(options?: {
+  query?: Partial<
+    UseQueryOptions<Awaited<ReturnType<typeof systemTenantControllerListAuditLogs>>, TError, TData>
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getSystemTenantControllerListAuditLogsQueryKey();
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof systemTenantControllerListAuditLogs>>> = ({
+    signal,
+  }) => systemTenantControllerListAuditLogs(requestOptions, signal);
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof systemTenantControllerListAuditLogs>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type SystemTenantControllerListAuditLogsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof systemTenantControllerListAuditLogs>>
+>;
+export type SystemTenantControllerListAuditLogsQueryError = unknown;
+
+export function useSystemTenantControllerListAuditLogs<
+  TData = Awaited<ReturnType<typeof systemTenantControllerListAuditLogs>>,
+  TError = unknown,
+>(
+  options: {
+    query: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof systemTenantControllerListAuditLogs>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof systemTenantControllerListAuditLogs>>,
+          TError,
+          Awaited<ReturnType<typeof systemTenantControllerListAuditLogs>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useSystemTenantControllerListAuditLogs<
+  TData = Awaited<ReturnType<typeof systemTenantControllerListAuditLogs>>,
+  TError = unknown,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof systemTenantControllerListAuditLogs>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof systemTenantControllerListAuditLogs>>,
+          TError,
+          Awaited<ReturnType<typeof systemTenantControllerListAuditLogs>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useSystemTenantControllerListAuditLogs<
+  TData = Awaited<ReturnType<typeof systemTenantControllerListAuditLogs>>,
+  TError = unknown,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof systemTenantControllerListAuditLogs>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary List recent platform audit log events
+ */
+
+export function useSystemTenantControllerListAuditLogs<
+  TData = Awaited<ReturnType<typeof systemTenantControllerListAuditLogs>>,
+  TError = unknown,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof systemTenantControllerListAuditLogs>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getSystemTenantControllerListAuditLogsQueryOptions(options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+/**
  * @summary Get details of a company tenant by ID
  */
 export const systemTenantControllerGetTenantById = (
@@ -30546,6 +30951,141 @@ export const useExpenseControllerCreateVoucher = <TError = unknown, TContext = u
 
   return useMutation(mutationOptions, queryClient);
 };
+
+/**
+ * @summary List operational expense vouchers
+ */
+export const expenseControllerListVouchers = (
+  params: ExpenseControllerListVouchersParams,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>(
+    { url: `/api/v1/expenses/vouchers`, method: 'GET', params, signal },
+    options,
+  );
+};
+
+export const getExpenseControllerListVouchersQueryKey = (
+  params?: ExpenseControllerListVouchersParams,
+) => {
+  return [`/api/v1/expenses/vouchers`, ...(params ? [params] : [])] as const;
+};
+
+export const getExpenseControllerListVouchersQueryOptions = <
+  TData = Awaited<ReturnType<typeof expenseControllerListVouchers>>,
+  TError = unknown,
+>(
+  params: ExpenseControllerListVouchersParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof expenseControllerListVouchers>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getExpenseControllerListVouchersQueryKey(params);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof expenseControllerListVouchers>>> = ({
+    signal,
+  }) => expenseControllerListVouchers(params, requestOptions, signal);
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof expenseControllerListVouchers>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type ExpenseControllerListVouchersQueryResult = NonNullable<
+  Awaited<ReturnType<typeof expenseControllerListVouchers>>
+>;
+export type ExpenseControllerListVouchersQueryError = unknown;
+
+export function useExpenseControllerListVouchers<
+  TData = Awaited<ReturnType<typeof expenseControllerListVouchers>>,
+  TError = unknown,
+>(
+  params: ExpenseControllerListVouchersParams,
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof expenseControllerListVouchers>>, TError, TData>
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof expenseControllerListVouchers>>,
+          TError,
+          Awaited<ReturnType<typeof expenseControllerListVouchers>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useExpenseControllerListVouchers<
+  TData = Awaited<ReturnType<typeof expenseControllerListVouchers>>,
+  TError = unknown,
+>(
+  params: ExpenseControllerListVouchersParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof expenseControllerListVouchers>>, TError, TData>
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof expenseControllerListVouchers>>,
+          TError,
+          Awaited<ReturnType<typeof expenseControllerListVouchers>>
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useExpenseControllerListVouchers<
+  TData = Awaited<ReturnType<typeof expenseControllerListVouchers>>,
+  TError = unknown,
+>(
+  params: ExpenseControllerListVouchersParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof expenseControllerListVouchers>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary List operational expense vouchers
+ */
+
+export function useExpenseControllerListVouchers<
+  TData = Awaited<ReturnType<typeof expenseControllerListVouchers>>,
+  TError = unknown,
+>(
+  params: ExpenseControllerListVouchersParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof expenseControllerListVouchers>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getExpenseControllerListVouchersQueryOptions(params, options);
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
 
 /**
  * @summary Get an expense voucher by ID

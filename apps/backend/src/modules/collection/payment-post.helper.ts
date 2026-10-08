@@ -3,7 +3,10 @@ import { amountToWords, ERROR_CODES } from '@exzaestate/shared';
 import type { Payment } from '@prisma/client';
 import type { TenantPrisma } from '../../database/tenant-prisma.js';
 import type { SequenceService } from '../../platform/sequence/sequence.service.js';
-import { allocatePayment, type AllocationEngineResult } from './allocation/domain/allocation-engine.js';
+import {
+  allocatePayment,
+  type AllocationEngineResult,
+} from './allocation/domain/allocation-engine.js';
 
 export function assertPaymentPostable(
   payment: Payment | null,

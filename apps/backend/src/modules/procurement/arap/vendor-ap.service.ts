@@ -17,11 +17,7 @@ export interface VendorApAgingBucket {
 export class VendorApService {
   constructor(private readonly tenantDb: TenantDb) {}
 
-  async getVendorApBalance(
-    companyId: string,
-    vendorId: string,
-    tx?: TenantPrisma,
-  ) {
+  async getVendorApBalance(companyId: string, vendorId: string, tx?: TenantPrisma) {
     const runner = async (db: TenantPrisma) => {
       const vendor = await db.vendor.findFirst({
         where: { id: vendorId, companyId, deletedAt: null },
@@ -59,11 +55,7 @@ export class VendorApService {
     return tx ? runner(tx) : this.tenantDb.withCompany(companyId, runner);
   }
 
-  async getVendorApAging(
-    companyId: string,
-    asOfDate: Date = new Date(),
-    tx?: TenantPrisma,
-  ) {
+  async getVendorApAging(companyId: string, asOfDate: Date = new Date(), tx?: TenantPrisma) {
     const runner = async (db: TenantPrisma) => {
       const unpaidBills = await db.vendorBill.findMany({
         where: {
@@ -114,11 +106,7 @@ export class VendorApService {
     return tx ? runner(tx) : this.tenantDb.withCompany(companyId, runner);
   }
 
-  async getVendorLedger(
-    companyId: string,
-    vendorId: string,
-    tx?: TenantPrisma,
-  ) {
+  async getVendorLedger(companyId: string, vendorId: string, tx?: TenantPrisma) {
     const runner = async (db: TenantPrisma) => {
       const lines = await db.journalLine.findMany({
         where: {

@@ -219,18 +219,25 @@ function run() {
   const breakingChanges = findOpenApiBreakingChanges(baselineDoc, currentDoc);
 
   if (breakingChanges.length > 0) {
-    console.error(`\n\x1b[31m[BREAKING CHANGE DETECTED]\x1b[0m Found ${breakingChanges.length} breaking change(s) in OpenAPI contract:`);
+    console.error(
+      `\n\x1b[31m[BREAKING CHANGE DETECTED]\x1b[0m Found ${breakingChanges.length} breaking change(s) in OpenAPI contract:`,
+    );
     for (const issue of breakingChanges) {
       console.error(`  \x1b[31m✗ [${issue.type}]\x1b[0m ${issue.location}: ${issue.message}`);
     }
-    console.error('\nUnder /api/v1, changes must be strictly additive. Breaking changes require /api/v2.\n');
+    console.error(
+      '\nUnder /api/v1, changes must be strictly additive. Breaking changes require /api/v2.\n',
+    );
     process.exit(1);
   }
 
-  console.log('\x1b[32m[PASSED]\x1b[0m OpenAPI contract is backward-compatible and additive-only. (0 breaking changes)');
+  console.log(
+    '\x1b[32m[PASSED]\x1b[0m OpenAPI contract is backward-compatible and additive-only. (0 breaking changes)',
+  );
 }
 
-const isDirectExecution = process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.argv[1]);
+const isDirectExecution =
+  process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.argv[1]);
 if (isDirectExecution) {
   run();
 }

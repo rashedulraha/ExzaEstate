@@ -7,7 +7,11 @@ import { PDF_RENDERER, type PdfRenderer } from '../../../ports/index.js';
 import type { QueryReceiptsDto, ReceiptResponseDto } from './dto/receipt-response.dto.js';
 import { renderReceiptHtml, type ReceiptTemplateData } from './templates/receipt.template.js';
 
-function getReceiptWatermark(isVoid: boolean, isReprint: boolean, reprintCount: number): string | null {
+function getReceiptWatermark(
+  isVoid: boolean,
+  isReprint: boolean,
+  reprintCount: number,
+): string | null {
   if (isVoid) return 'VOID';
   if (isReprint || reprintCount > 0) return 'DUPLICATE COPY';
   return null;
@@ -105,9 +109,7 @@ export class ReceiptService {
       }
 
       const inWords =
-        lang === 'bn'
-          ? amountToWords(record.amountPaisa, 'bn')
-          : record.amountInWords;
+        lang === 'bn' ? amountToWords(record.amountPaisa, 'bn') : record.amountInWords;
 
       const templateData: ReceiptTemplateData = {
         receiptNumber: record.receiptNumber,
@@ -186,7 +188,6 @@ export class ReceiptService {
           reprintedById: userId,
         },
       });
-
 
       return toReceiptDto(updated, true);
     });

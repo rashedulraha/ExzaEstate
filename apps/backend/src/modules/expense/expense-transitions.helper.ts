@@ -141,10 +141,7 @@ export async function rejectExpenseVoucher(
   dto: RejectExpenseDto,
 ) {
   const voucher = await getVoucherOrThrow(db, companyId, voucherId);
-  if (
-    voucher.status !== EXPENSE_STATUS.SUBMITTED &&
-    voucher.status !== EXPENSE_STATUS.APPROVED
-  ) {
+  if (voucher.status !== EXPENSE_STATUS.SUBMITTED && voucher.status !== EXPENSE_STATUS.APPROVED) {
     throw new AppException(
       ERROR_CODES.INVALID_STATE_TRANSITION,
       `Cannot reject voucher in status: ${voucher.status}`,

@@ -50,10 +50,7 @@ describe('InstallmentService (A7.1)', () => {
       record: vi.fn().mockResolvedValue(undefined),
     };
 
-    service = new InstallmentService(
-      mockTenantDb as TenantDb,
-      mockAuditService as AuditService,
-    );
+    service = new InstallmentService(mockTenantDb as TenantDb, mockAuditService as AuditService);
   });
 
   it('creates installment schedule with accurate split and records audit event', async () => {
@@ -69,7 +66,9 @@ describe('InstallmentService (A7.1)', () => {
     });
 
     mockTx.installment.count.mockResolvedValue(0);
-    mockTx.installment.create.mockImplementation((args: { data: Record<string, unknown> }) => Promise.resolve({ id: 'inst-1', ...args.data }));
+    mockTx.installment.create.mockImplementation((args: { data: Record<string, unknown> }) =>
+      Promise.resolve({ id: 'inst-1', ...args.data }),
+    );
     mockTx.installment.findMany.mockResolvedValue([
       {
         id: 'inst-1',
@@ -94,7 +93,6 @@ describe('InstallmentService (A7.1)', () => {
       firstDueDate: '2026-11-01',
       frequency: 'MONTHLY',
     });
-
 
     expect(result.totalInstallments).toBe(1);
     expect(mockTx.installment.create).toHaveBeenCalledTimes(1);

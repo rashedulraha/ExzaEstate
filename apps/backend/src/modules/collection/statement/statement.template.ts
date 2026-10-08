@@ -1,6 +1,5 @@
 import type { CustomerStatementResponseDto } from './dto/statement.dto.js';
 
-
 export function generateCustomerStatementHtml(
   data: CustomerStatementResponseDto,
   companyName: string = 'ExzaEstate Development Ltd.',

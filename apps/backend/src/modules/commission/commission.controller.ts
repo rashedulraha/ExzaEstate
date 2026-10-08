@@ -1,12 +1,4 @@
-import {
-  Body,
-  Controller,
-  HttpCode,
-  HttpStatus,
-  Param,
-  Post,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, HttpCode, HttpStatus, Param, Post, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { PERMISSIONS } from '@exzaestate/shared';
 import { CurrentUser } from '../../common/decorators/current-user.decorator.js';
@@ -14,11 +6,7 @@ import { RequirePermission } from '../../common/decorators/require-permission.de
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard.js';
 import { PermissionsGuard } from '../../common/guards/permissions.guard.js';
 import { CommissionService } from './commission.service.js';
-import {
-  CreateBrokerDto,
-  CreateCommissionRuleDto,
-  PayCommissionDto,
-} from './dto/index.js';
+import { CreateBrokerDto, CreateCommissionRuleDto, PayCommissionDto } from './dto/index.js';
 
 @ApiTags('Commissions & Brokers')
 @ApiBearerAuth()

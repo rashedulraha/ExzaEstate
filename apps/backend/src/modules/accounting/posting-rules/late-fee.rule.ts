@@ -7,7 +7,6 @@ import {
   PostingRuleRecord,
 } from './posting-rule.interface.js';
 
-
 export class LateFeeChargedRule implements PostingRuleHandler<LateFeeChargedPayload> {
   readonly eventType = 'LATE_FEE_CHARGED';
 
@@ -128,4 +127,3 @@ export class InstallmentWaivedRule implements PostingRuleHandler<InstallmentWaiv
     ];
   }
 }
-

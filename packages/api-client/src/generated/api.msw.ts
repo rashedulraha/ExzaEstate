@@ -2300,6 +2300,25 @@ export const getLocalDataControllerGetStatusResponseMock = (
   ...overrideResponse,
 });
 
+export const getAppControllerGetRootMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
 export const getHealthControllerCheckMockHandler = (
   overrideResponse?:
     | HealthControllerCheck200
@@ -6386,6 +6405,25 @@ export const getSystemLicenseControllerIssueLicenseMockHandler = (
   );
 };
 
+export const getSystemLicenseControllerListLicensesMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/system/licenses',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
 export const getProjectControllerCreateProjectMockHandler = (
   overrideResponse?:
     | void
@@ -8073,6 +8111,25 @@ export const getSystemTenantControllerListTenantsMockHandler = (
   );
 };
 
+export const getSystemTenantControllerListAuditLogsMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/system/tenants/audit-logs',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
 export const getSystemTenantControllerGetTenantByIdMockHandler = (
   overrideResponse?:
     | void
@@ -8372,6 +8429,25 @@ export const getExpenseControllerCreateVoucherMockHandler = (
         await overrideResponse(info);
       }
       return new HttpResponse(null, { status: 201 });
+    },
+    options,
+  );
+};
+
+export const getExpenseControllerListVouchersMockHandler = (
+  overrideResponse?:
+    | void
+    | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/api/v1/expenses/vouchers',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 200 });
     },
     options,
   );
@@ -9051,6 +9127,7 @@ export const getLocalDataControllerExportAllMockHandler = (
   );
 };
 export const getExzaEstateEnterpriseAPIMock = () => [
+  getAppControllerGetRootMockHandler(),
   getHealthControllerCheckMockHandler(),
   getAuditControllerExportAuditLogsMockHandler(),
   getAuditControllerExportSecurityEventsMockHandler(),
@@ -9240,6 +9317,7 @@ export const getExzaEstateEnterpriseAPIMock = () => [
   getLicenseControllerTransferLicenseMockHandler(),
   getLicenseControllerGetCurrentLicenseMockHandler(),
   getSystemLicenseControllerIssueLicenseMockHandler(),
+  getSystemLicenseControllerListLicensesMockHandler(),
   getProjectControllerCreateProjectMockHandler(),
   getProjectControllerListProjectsMockHandler(),
   getProjectControllerGetProjectSummaryMockHandler(),
@@ -9325,6 +9403,7 @@ export const getExzaEstateEnterpriseAPIMock = () => [
   getSystemAuthControllerSetupTwoFactorMockHandler(),
   getSystemTenantControllerOnboardTenantMockHandler(),
   getSystemTenantControllerListTenantsMockHandler(),
+  getSystemTenantControllerListAuditLogsMockHandler(),
   getSystemTenantControllerGetTenantByIdMockHandler(),
   getSystemTenantControllerSuspendTenantMockHandler(),
   getSystemTenantControllerReactivateTenantMockHandler(),
@@ -9341,6 +9420,7 @@ export const getExzaEstateEnterpriseAPIMock = () => [
   getExpenseControllerCreateCategoryMockHandler(),
   getExpenseControllerListCategoriesMockHandler(),
   getExpenseControllerCreateVoucherMockHandler(),
+  getExpenseControllerListVouchersMockHandler(),
   getExpenseControllerGetVoucherMockHandler(),
   getExpenseControllerSubmitVoucherMockHandler(),
   getExpenseControllerApproveVoucherMockHandler(),

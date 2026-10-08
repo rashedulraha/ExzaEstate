@@ -96,7 +96,6 @@ export class WaiverService {
         value: seq,
       });
 
-
       // 1. Create InstallmentWaiver record
       const waiver = await tx.installmentWaiver.create({
         data: {

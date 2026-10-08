@@ -8,7 +8,11 @@ import {
   type PermissionResolver,
 } from '../../common/guards/permissions.guard.js';
 import { searchCustomers, searchLeads } from './handlers/search-crm.handlers.js';
-import { searchBookings, searchProjects, searchProperties } from './handlers/search-sales.handlers.js';
+import {
+  searchBookings,
+  searchProjects,
+  searchProperties,
+} from './handlers/search-sales.handlers.js';
 import {
   searchDocuments,
   searchPayments,
@@ -62,14 +66,22 @@ const SEARCH_HANDLERS: Record<SearchEntityType, SearchHandlerFn> = {
   CUSTOMER: (db, companyId, query, userCtx, limit, blindIndex) =>
     searchCustomers(db, companyId, query, userCtx, limit, blindIndex),
   LEAD: (db, companyId, query, userCtx, limit) => searchLeads(db, companyId, query, userCtx, limit),
-  BOOKING: (db, companyId, query, userCtx, limit) => searchBookings(db, companyId, query, userCtx, limit),
-  PROPERTY: (db, companyId, query, userCtx, limit) => searchProperties(db, companyId, query, userCtx, limit),
-  PAYMENT: (db, companyId, query, userCtx, limit) => searchPayments(db, companyId, query, userCtx, limit),
-  RECEIPT: (db, companyId, query, userCtx, limit) => searchReceipts(db, companyId, query, userCtx, limit),
-  VOUCHER: (db, companyId, query, userCtx, limit) => searchVouchers(db, companyId, query, userCtx, limit),
-  DOCUMENT: (db, companyId, query, userCtx, limit) => searchDocuments(db, companyId, query, userCtx, limit),
-  VENDOR: (db, companyId, query, userCtx, limit) => searchVendors(db, companyId, query, userCtx, limit),
-  PROJECT: (db, companyId, query, userCtx, limit) => searchProjects(db, companyId, query, userCtx, limit),
+  BOOKING: (db, companyId, query, userCtx, limit) =>
+    searchBookings(db, companyId, query, userCtx, limit),
+  PROPERTY: (db, companyId, query, userCtx, limit) =>
+    searchProperties(db, companyId, query, userCtx, limit),
+  PAYMENT: (db, companyId, query, userCtx, limit) =>
+    searchPayments(db, companyId, query, userCtx, limit),
+  RECEIPT: (db, companyId, query, userCtx, limit) =>
+    searchReceipts(db, companyId, query, userCtx, limit),
+  VOUCHER: (db, companyId, query, userCtx, limit) =>
+    searchVouchers(db, companyId, query, userCtx, limit),
+  DOCUMENT: (db, companyId, query, userCtx, limit) =>
+    searchDocuments(db, companyId, query, userCtx, limit),
+  VENDOR: (db, companyId, query, userCtx, limit) =>
+    searchVendors(db, companyId, query, userCtx, limit),
+  PROJECT: (db, companyId, query, userCtx, limit) =>
+    searchProjects(db, companyId, query, userCtx, limit),
 };
 
 @Injectable()
@@ -116,14 +128,21 @@ export class SearchService {
     }
 
     const blindIndex = this.fieldCrypto.blindIndex(trimmed, companyId);
-    const targetEntities = (requestedEntities && requestedEntities.length > 0
-      ? requestedEntities
-      : ALL_ENTITIES
+    const targetEntities = (
+      requestedEntities && requestedEntities.length > 0 ? requestedEntities : ALL_ENTITIES
     ).filter((entity) => userCtx.permissions.includes(ENTITY_PERMISSIONS[entity]));
 
     const runner = async (db: TenantPrisma): Promise<GlobalSearchResponseDto> => {
       const searchPromises = targetEntities.map((entity) =>
-        this.dispatchEntitySearch(db, companyId, entity, trimmed, userCtx, effectiveLimit, blindIndex),
+        this.dispatchEntitySearch(
+          db,
+          companyId,
+          entity,
+          trimmed,
+          userCtx,
+          effectiveLimit,
+          blindIndex,
+        ),
       );
 
       const results = await Promise.allSettled(searchPromises);
@@ -161,10 +180,7 @@ export class SearchService {
     return tx ? runner(tx) : this.tenantDb.withCompany(companyId, runner);
   }
 
-  async resolveUserContext(
-    companyId: string,
-    userId: string,
-  ): Promise<UserSearchScopeContext> {
+  async resolveUserContext(companyId: string, userId: string): Promise<UserSearchScopeContext> {
     if (!this.permissionResolver) {
       return {
         userId,

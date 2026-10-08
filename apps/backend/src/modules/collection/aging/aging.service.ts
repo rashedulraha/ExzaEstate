@@ -5,11 +5,7 @@ import {
   computeTimingState,
   type InstallmentPaymentState,
 } from '../installment/domain/installment-state.js';
-import {
-  AgingBucketKey,
-  AGING_BUCKETS,
-  resolveAgingBucket,
-} from './domain/aging-buckets.js';
+import { AgingBucketKey, AGING_BUCKETS, resolveAgingBucket } from './domain/aging-buckets.js';
 import {
   AgingBucketSummaryDto,
   AgingReportResponseDto,
@@ -21,10 +17,7 @@ import {
 export class AgingService {
   constructor(private readonly tenantDb: TenantDb) {}
 
-  async getAgingReport(
-    companyId: string,
-    query?: QueryAgingDto,
-  ): Promise<AgingReportResponseDto> {
+  async getAgingReport(companyId: string, query?: QueryAgingDto): Promise<AgingReportResponseDto> {
     return this.tenantDb.withCompany(companyId, async (tx) => {
       const asOfDate = query?.asOfDate ? new Date(query.asOfDate) : new Date();
       const asOfDateStr = asOfDate.toISOString().slice(0, 10);
@@ -91,7 +84,6 @@ export class AgingService {
         const customerId = inst.booking.customerId;
         const customerName = customerNameMap.get(customerId) ?? 'Customer';
 
-
         let custRec = customerMap.get(customerId);
         if (!custRec) {
           custRec = {
@@ -124,20 +116,18 @@ export class AgingService {
       }));
 
       // 5. Map customer rows
-      const customerDtos: CustomerAgingSummaryDto[] = Array.from(customerMap.values()).map(
-        (c) => ({
-          customerId: c.customerId,
-          customerName: c.customerName,
-          currentPaisa: c.amounts.CURRENT.toString(),
-          days1to7Paisa: c.amounts.DAYS_1_7.toString(),
-          days8to30Paisa: c.amounts.DAYS_8_30.toString(),
-          days31to60Paisa: c.amounts.DAYS_31_60.toString(),
-          days61to90Paisa: c.amounts.DAYS_61_90.toString(),
-          days90PlusPaisa: c.amounts.DAYS_90_PLUS.toString(),
-          totalPaisa: c.total.toString(),
-          formattedTotal: formatMoney(c.total),
-        }),
-      );
+      const customerDtos: CustomerAgingSummaryDto[] = Array.from(customerMap.values()).map((c) => ({
+        customerId: c.customerId,
+        customerName: c.customerName,
+        currentPaisa: c.amounts.CURRENT.toString(),
+        days1to7Paisa: c.amounts.DAYS_1_7.toString(),
+        days8to30Paisa: c.amounts.DAYS_8_30.toString(),
+        days31to60Paisa: c.amounts.DAYS_31_60.toString(),
+        days61to90Paisa: c.amounts.DAYS_61_90.toString(),
+        days90PlusPaisa: c.amounts.DAYS_90_PLUS.toString(),
+        totalPaisa: c.total.toString(),
+        formattedTotal: formatMoney(c.total),
+      }));
 
       // 6. Check reconciliation with Account 1100 AR balance
       const arLines = await tx.journalLine.findMany({

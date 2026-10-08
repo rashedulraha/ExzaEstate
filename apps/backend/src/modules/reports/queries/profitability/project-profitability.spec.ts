@@ -120,13 +120,7 @@ describe('Project Profitability Report & Allocation (A8.6)', () => {
         { accountCode: '5100', debitPaisa: 200000000n, creditPaisa: 0n },
       ];
 
-      const item = aggregateProjectFinancials(
-        'proj-2',
-        'PRJ-002',
-        'Banani Lakeview',
-        lines,
-        null,
-      );
+      const item = aggregateProjectFinancials('proj-2', 'PRJ-002', 'Banani Lakeview', lines, null);
 
       expect(item.totalRevenuePaisa).toBe('0');
       expect(item.totalCostPaisa).toBe('200000000');
@@ -154,9 +148,9 @@ describe('Project Profitability Report & Allocation (A8.6)', () => {
       };
 
       mockTenantDb = {
-        withCompany: vi.fn().mockImplementation((_cid, callback) =>
-          callback(mockPrisma as unknown as TenantPrisma),
-        ),
+        withCompany: vi
+          .fn()
+          .mockImplementation((_cid, callback) => callback(mockPrisma as unknown as TenantPrisma)),
       };
 
       query = new ProjectProfitabilityQuery(mockTenantDb as TenantDb);

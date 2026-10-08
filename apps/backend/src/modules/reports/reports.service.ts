@@ -18,8 +18,14 @@ import type { ProjectProfitabilityReportDto } from './dto/profitability-response
 
 import { ManagementKpiQuery } from './queries/kpi/management-kpi.query.js';
 import { SalesReportQuery, type SalesReportResult } from './queries/kpi/sales-report.query.js';
-import { CollectionReportQuery, type CollectionReportResult } from './queries/kpi/collection-report.query.js';
-import { InventoryReportQuery, type InventoryReportResult } from './queries/kpi/inventory-report.query.js';
+import {
+  CollectionReportQuery,
+  type CollectionReportResult,
+} from './queries/kpi/collection-report.query.js';
+import {
+  InventoryReportQuery,
+  type InventoryReportResult,
+} from './queries/kpi/inventory-report.query.js';
 import type {
   ManagementKpis,
   QueryKpiFilterDto,

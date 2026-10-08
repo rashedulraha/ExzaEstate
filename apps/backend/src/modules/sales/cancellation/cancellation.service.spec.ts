@@ -45,7 +45,9 @@ describe('CancellationService & Refund (AT-08 & Phase A7.6)', () => {
         updateMany: vi.fn(),
       },
       property: {
-        findFirst: vi.fn().mockResolvedValue({ id: 'prop-at08', projectId: 'proj-001', status: 'BOOKED' }),
+        findFirst: vi
+          .fn()
+          .mockResolvedValue({ id: 'prop-at08', projectId: 'proj-001', status: 'BOOKED' }),
         update: vi.fn(),
       },
     };

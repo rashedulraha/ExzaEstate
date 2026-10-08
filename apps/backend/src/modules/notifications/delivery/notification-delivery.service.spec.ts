@@ -105,11 +105,7 @@ describe('Notification Delivery & Worker (A9.2 S1, S2)', () => {
   it('records FAILED status in notification_logs when provider fails', async () => {
     mockSmsProvider.send = vi.fn().mockRejectedValue(new Error('Gateway timeout'));
 
-    const result = await deliveryService.dispatchSms(
-      companyId,
-      '+8801711223344',
-      'Test message',
-    );
+    const result = await deliveryService.dispatchSms(companyId, '+8801711223344', 'Test message');
 
     expect(result.success).toBe(false);
     expect(result.error).toContain('Gateway timeout');

@@ -16,10 +16,6 @@ import { NotificationsController } from './notifications.controller.js';
     NotificationDeliveryService,
     NotificationDeliveryWorker,
   ],
-  exports: [
-    NotificationService,
-    NotificationDeliveryService,
-    NotificationDeliveryWorker,
-  ],
+  exports: [NotificationService, NotificationDeliveryService, NotificationDeliveryWorker],
 })
 export class NotificationsModule {}

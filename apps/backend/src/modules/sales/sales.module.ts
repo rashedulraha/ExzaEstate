@@ -86,7 +86,6 @@ import type { OnModuleInit } from '@nestjs/common';
     BookingTransferService,
   ],
 })
-
 export class SalesModule implements OnModuleInit {
   constructor(
     private readonly hookRegistry: PaymentPostedHookRegistry,

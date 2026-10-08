@@ -45,7 +45,9 @@ describe('BookingConfirmationPaymentHook (AT-12 & S4)', () => {
         update: vi.fn(),
       },
       property: {
-        findFirst: vi.fn().mockResolvedValue({ id: 'prop-1', status: 'Available', projectId: 'proj-1' }),
+        findFirst: vi
+          .fn()
+          .mockResolvedValue({ id: 'prop-1', status: 'Available', projectId: 'proj-1' }),
         update: vi.fn(),
       },
       propertyStatusHistory: {

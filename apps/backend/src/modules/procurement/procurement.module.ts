@@ -20,17 +20,7 @@ import { VendorApService } from './arap/vendor-ap.service.js';
     VendorPaymentController,
     VendorApController,
   ],
-  providers: [
-    VendorService,
-    VendorBillService,
-    VendorPaymentService,
-    VendorApService,
-  ],
-  exports: [
-    VendorService,
-    VendorBillService,
-    VendorPaymentService,
-    VendorApService,
-  ],
+  providers: [VendorService, VendorBillService, VendorPaymentService, VendorApService],
+  exports: [VendorService, VendorBillService, VendorPaymentService, VendorApService],
 })
 export class ProcurementModule {}

@@ -47,7 +47,9 @@ export class CancellationController {
   @Post()
   @HttpCode(HttpStatus.OK)
   @RequirePermission(PERMISSIONS.CANCELLATION_CREATE)
-  @ApiOperation({ summary: 'Execute booking cancellation (reverses sale, posts deduction, creates refund)' })
+  @ApiOperation({
+    summary: 'Execute booking cancellation (reverses sale, posts deduction, creates refund)',
+  })
   async cancelBooking(
     @CurrentUser('companyId') companyId: string,
     @CurrentUser('userId') userId: string,

@@ -31,12 +31,7 @@ export class VendorService {
     });
   }
 
-  async createVendor(
-    companyId: string,
-    userId: string,
-    dto: CreateVendorDto,
-    tx?: TenantPrisma,
-  ) {
+  async createVendor(companyId: string, userId: string, dto: CreateVendorDto, tx?: TenantPrisma) {
     const runner = async (db: TenantPrisma) => {
       const vendorNumber = await this.generateVendorNumber(db);
 

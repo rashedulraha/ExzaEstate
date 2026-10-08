@@ -286,7 +286,9 @@ export class MigrationService {
     });
   }
 
-  async listBatches(companyId: string): Promise<{ items: MigrationBatchResponseDto[]; total: number }> {
+  async listBatches(
+    companyId: string,
+  ): Promise<{ items: MigrationBatchResponseDto[]; total: number }> {
     return this.tenantDb.withCompany(companyId, async (tx) => {
       const batches = await tx.migrationBatch.findMany({
         where: { companyId },

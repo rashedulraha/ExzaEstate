@@ -28,8 +28,7 @@ export function evaluateBudgetThresholds(
     return { spendPercentage: 0, alertsToTrigger: [], nextState: { ...state } };
   }
 
-  const spendPercentage =
-    Number((actualSpendPaisa * 10000n) / budgetAmountPaisa) / 100;
+  const spendPercentage = Number((actualSpendPaisa * 10000n) / budgetAmountPaisa) / 100;
 
   const alertsToTrigger: BudgetAlertTrigger[] = [];
   const nextState: BudgetAlertState = { ...state };

@@ -48,9 +48,11 @@ describe('ReversalService (AT-21 & Phase A7.4)', () => {
         create: vi.fn(),
       },
       paymentReversal: {
-        create: vi.fn().mockImplementation((args: { data: Record<string, unknown> }) =>
-          Promise.resolve({ id: 'rev-rec-1', createdAt: new Date(), ...args?.data }),
-        ),
+        create: vi
+          .fn()
+          .mockImplementation((args: { data: Record<string, unknown> }) =>
+            Promise.resolve({ id: 'rev-rec-1', createdAt: new Date(), ...args?.data }),
+          ),
       },
       receiptVoid: {
         create: vi.fn().mockResolvedValue({ id: 'void-1' }),

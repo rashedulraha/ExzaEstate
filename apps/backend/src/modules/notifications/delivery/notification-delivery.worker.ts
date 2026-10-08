@@ -28,16 +28,11 @@ export class NotificationDeliveryWorker {
     let result: { success: boolean; error?: string };
 
     if (job.channel === 'SMS') {
-      result = await this.deliveryService.dispatchSms(
-        job.companyId,
-        job.destination,
-        job.body,
-        {
-          recipientId: job.recipientId,
-          templateId: job.templateId,
-          payload: job.payload,
-        },
-      );
+      result = await this.deliveryService.dispatchSms(job.companyId, job.destination, job.body, {
+        recipientId: job.recipientId,
+        templateId: job.templateId,
+        payload: job.payload,
+      });
     } else {
       result = await this.deliveryService.dispatchEmail(
         job.companyId,

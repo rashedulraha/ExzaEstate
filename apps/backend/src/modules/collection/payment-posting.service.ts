@@ -64,7 +64,14 @@ export class PaymentPostingService {
       const isCheque = payment.paymentMethod.toUpperCase() === 'CHEQUE';
 
       if (isCheque) {
-        const chequeResult = await this.handleChequeReceived(tx, companyId, userId, payment, dto, now);
+        const chequeResult = await this.handleChequeReceived(
+          tx,
+          companyId,
+          userId,
+          payment,
+          dto,
+          now,
+        );
         if (idempotencyKey) {
           await this.idempotencyService.complete(tx, {
             key: idempotencyKey,
@@ -78,14 +85,7 @@ export class PaymentPostingService {
         return chequeResult;
       }
 
-      const postedResult = await this.handleNonChequePost(
-        tx,
-        companyId,
-        userId,
-        payment,
-        dto,
-        now,
-      );
+      const postedResult = await this.handleNonChequePost(tx, companyId, userId, payment, dto, now);
 
       if (idempotencyKey) {
         await this.idempotencyService.complete(tx, {
@@ -155,8 +155,11 @@ export class PaymentPostingService {
     dto: PostPaymentDto,
     now: Date,
   ): Promise<PaymentResponseDto> {
-    const { allocation, previousDuePaisa, currentDuePaisa } =
-      await processPaymentAllocation(tx, companyId, payment);
+    const { allocation, previousDuePaisa, currentDuePaisa } = await processPaymentAllocation(
+      tx,
+      companyId,
+      payment,
+    );
 
     const { receipt, receiptNumber } = await issuePaymentReceipt(
       tx,

@@ -1,7 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsNumberString, IsOptional, IsString } from 'class-validator';
 
-
 export enum RefundStatus {
   REQUESTED = 'Requested',
   APPROVED = 'Approved',

@@ -24,10 +24,7 @@ export class DashboardController {
     summary: 'Get executive management dashboard KPIs (AT-15: identical to reports)',
   })
   @ApiResponse({ status: 200, description: 'Aggregated management KPIs' })
-  async getSummary(
-    @CurrentUser() user: AuthenticatedUser,
-    @Query() filter: QueryKpiFilterDto,
-  ) {
+  async getSummary(@CurrentUser() user: AuthenticatedUser, @Query() filter: QueryKpiFilterDto) {
     return this.dashboardService.getSummary(user.companyId, filter);
   }
 

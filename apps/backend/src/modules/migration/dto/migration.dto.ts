@@ -1,12 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import {
-  IsArray,
-  IsNumberString,
-  IsOptional,
-  IsString,
-  ValidateNested,
-} from 'class-validator';
+import { IsArray, IsNumberString, IsOptional, IsString, ValidateNested } from 'class-validator';
 
 export class CreateMigrationBatchDto {
   @ApiProperty({ example: '2026-07-01' })

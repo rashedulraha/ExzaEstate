@@ -50,10 +50,7 @@ describe('StatementService (AT-14 & Phase A7.5)', () => {
       render: vi.fn().mockResolvedValue(Buffer.from('%PDF-1.4 simulated pdf content')),
     };
 
-    service = new StatementService(
-      mockTenantDb as TenantDb,
-      mockPdfRenderer as PdfRenderer,
-    );
+    service = new StatementService(mockTenantDb as TenantDb, mockPdfRenderer as PdfRenderer);
   });
 
   it('generates customer statement with running balance and advances', async () => {
@@ -67,7 +64,6 @@ describe('StatementService (AT-14 & Phase A7.5)', () => {
       phone: '+8801711223344',
     });
 
-
     // Journal lines: 1 booking confirmed (Dr 50,00,000) and 1 payment (Cr 10,00,000)
     mockTx.journalLine.findMany.mockImplementation(
       (args: { where?: { account?: { code?: string } } }) => {
@@ -77,38 +73,39 @@ describe('StatementService (AT-14 & Phase A7.5)', () => {
             { debitPaisa: 0n, creditPaisa: 5000000n }, // ৳50,000 advance
           ]);
         }
-      // Period lines
-      return Promise.resolve([
-        {
-          id: 'line-1',
-          debitPaisa: 500000000n,
-          creditPaisa: 0n,
-          description: 'Receivable for booking BKG-001',
-          journal: {
-            journalNumber: 'JRN-001',
-            reference: 'BKG-001',
-            postingDate: new Date('2026-02-01'),
-            narration: 'Booking confirmed',
-            sourceEventType: 'BOOKING_CONFIRMED',
-            type: 'SYSTEM',
+        // Period lines
+        return Promise.resolve([
+          {
+            id: 'line-1',
+            debitPaisa: 500000000n,
+            creditPaisa: 0n,
+            description: 'Receivable for booking BKG-001',
+            journal: {
+              journalNumber: 'JRN-001',
+              reference: 'BKG-001',
+              postingDate: new Date('2026-02-01'),
+              narration: 'Booking confirmed',
+              sourceEventType: 'BOOKING_CONFIRMED',
+              type: 'SYSTEM',
+            },
           },
-        },
-        {
-          id: 'line-2',
-          debitPaisa: 0n,
-          creditPaisa: 100000000n,
-          description: 'Payment for booking BKG-001',
-          journal: {
-            journalNumber: 'JRN-002',
-            reference: 'PAY-001',
-            postingDate: new Date('2026-02-15'),
-            narration: 'Payment posted',
-            sourceEventType: 'PAYMENT_POSTED',
-            type: 'SYSTEM',
+          {
+            id: 'line-2',
+            debitPaisa: 0n,
+            creditPaisa: 100000000n,
+            description: 'Payment for booking BKG-001',
+            journal: {
+              journalNumber: 'JRN-002',
+              reference: 'PAY-001',
+              postingDate: new Date('2026-02-15'),
+              narration: 'Payment posted',
+              sourceEventType: 'PAYMENT_POSTED',
+              type: 'SYSTEM',
+            },
           },
-        },
-      ]);
-    });
+        ]);
+      },
+    );
 
     const result = await service.generateCustomerStatement(companyId, customerId, {});
 

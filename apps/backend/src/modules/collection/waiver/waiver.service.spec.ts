@@ -32,9 +32,11 @@ describe('WaiverService (AT-33 & Phase A7.7)', () => {
         update: vi.fn(),
       },
       installmentWaiver: {
-        create: vi.fn().mockImplementation((args: { data: Record<string, unknown> }) =>
-          Promise.resolve({ id: 'wvr-1', ...args?.data, createdAt: new Date() }),
-        ),
+        create: vi
+          .fn()
+          .mockImplementation((args: { data: Record<string, unknown> }) =>
+            Promise.resolve({ id: 'wvr-1', ...args?.data, createdAt: new Date() }),
+          ),
       },
     };
 

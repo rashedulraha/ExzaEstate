@@ -1,12 +1,4 @@
-import {
-  Controller,
-  Get,
-  Headers,
-  Query,
-  Req,
-  Res,
-  UseGuards,
-} from '@nestjs/common';
+import { Controller, Get, Headers, Query, Req, Res, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import type { Request, Response } from 'express';
 import { PERMISSIONS } from '@exzaestate/shared';

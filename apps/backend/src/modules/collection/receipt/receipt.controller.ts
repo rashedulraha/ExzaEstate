@@ -49,7 +49,12 @@ export class ReceiptController {
   @Get(':id/pdf')
   @RequirePermission(PERMISSIONS.PAYMENT_VIEW)
   @ApiOperation({ summary: 'Generate Money Receipt PDF in English or Bengali (AT-39)' })
-  @ApiQuery({ name: 'lang', required: false, enum: ['en', 'bn'], description: 'Language: en (default) or bn' })
+  @ApiQuery({
+    name: 'lang',
+    required: false,
+    enum: ['en', 'bn'],
+    description: 'Language: en (default) or bn',
+  })
   @ApiResponse({ status: 200, description: 'Receipt PDF buffer' })
   async downloadReceiptPdf(
     @CurrentUser('companyId') companyId: string,

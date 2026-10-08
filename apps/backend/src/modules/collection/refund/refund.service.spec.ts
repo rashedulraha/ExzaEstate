@@ -29,9 +29,11 @@ describe('RefundService (Phase A7.6)', () => {
   beforeEach(() => {
     mockTx = {
       refund: {
-        create: vi.fn().mockImplementation((args: { data: Record<string, unknown> }) =>
-          Promise.resolve({ id: 'rfd-1', ...args?.data }),
-        ),
+        create: vi
+          .fn()
+          .mockImplementation((args: { data: Record<string, unknown> }) =>
+            Promise.resolve({ id: 'rfd-1', ...args?.data }),
+          ),
         findFirst: vi.fn(),
         update: vi.fn(),
         findMany: vi.fn(),

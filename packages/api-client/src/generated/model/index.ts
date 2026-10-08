@@ -174,6 +174,7 @@ export * from './enable2FaDto';
 export * from './entityHistoryResponseDto';
 export * from './entityHistoryResponseDtoHistoryItemItem';
 export * from './expenseControllerListCategoriesParams';
+export * from './expenseControllerListVouchersParams';
 export * from './exportJobResponseDto';
 export * from './exportLedgerDto';
 export * from './exportLedgerDtoFormat';

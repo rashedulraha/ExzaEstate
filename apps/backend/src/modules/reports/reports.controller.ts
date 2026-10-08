@@ -125,16 +125,18 @@ export class ReportsController {
     @CurrentUser() user: AuthenticatedUser,
     @Body() dto: ExportReportDto,
   ): Promise<ReportExportJobResponseDto> {
-    return this.reportsService.exportReport(user.companyId, user.userId, 'PROJECT_PROFITABILITY', dto);
+    return this.reportsService.exportReport(
+      user.companyId,
+      user.userId,
+      'PROJECT_PROFITABILITY',
+      dto,
+    );
   }
 
   @Get('sales')
   @RequirePermission(PERMISSIONS.REPORT_VIEW)
   @ApiOperation({ summary: 'Generate Sales Report' })
-  async getSalesReport(
-    @CurrentUser() user: AuthenticatedUser,
-    @Query() query: QueryKpiFilterDto,
-  ) {
+  async getSalesReport(@CurrentUser() user: AuthenticatedUser, @Query() query: QueryKpiFilterDto) {
     return this.reportsService.getSalesReport(user.companyId, query);
   }
 
@@ -158,4 +160,3 @@ export class ReportsController {
     return this.reportsService.getInventoryReport(user.companyId, query);
   }
 }
-

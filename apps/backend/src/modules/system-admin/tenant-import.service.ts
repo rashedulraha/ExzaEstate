@@ -1,10 +1,5 @@
 import crypto from 'node:crypto';
-import {
-  BadRequestException,
-  ConflictException,
-  Injectable,
-  Logger,
-} from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, Logger } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { SystemPrisma } from '../../database/system-prisma.service.js';
 import type { ExzaExportBundle } from '../local-data/local-export.service.js';
@@ -31,9 +26,14 @@ export class TenantImportService {
   /**
    * Imports a standalone .exzaexport bundle into a new Cloud tenant (Task A10.4 / AT-34).
    */
-  async importTenant(bundle: ExzaExportBundle, _importedByUserId?: string): Promise<ImportTenantResult> {
+  async importTenant(
+    bundle: ExzaExportBundle,
+    _importedByUserId?: string,
+  ): Promise<ImportTenantResult> {
     const { manifest, tables } = bundle;
-    this.logger.log(`Beginning tenant import for ${manifest.company.name} (${manifest.company.code})`);
+    this.logger.log(
+      `Beginning tenant import for ${manifest.company.name} (${manifest.company.code})`,
+    );
 
     // 1. Checksum verification
     const rawData = safeStringify(tables);
@@ -100,7 +100,9 @@ export class TenantImportService {
             await client.user.create({ data: u as unknown as Prisma.UserCreateInput });
           }
           for (const s of tables.settings || []) {
-            await client.companySetting.create({ data: s as unknown as Prisma.CompanySettingCreateInput });
+            await client.companySetting.create({
+              data: s as unknown as Prisma.CompanySettingCreateInput,
+            });
           }
           for (const a of tables.accounts || []) {
             await client.account.create({ data: a as unknown as Prisma.AccountCreateInput });
@@ -115,13 +117,17 @@ export class TenantImportService {
             await client.booking.create({ data: bk as unknown as Prisma.BookingCreateInput });
           }
           for (const inst of tables.installments || []) {
-            await client.installment.create({ data: inst as unknown as Prisma.InstallmentCreateInput });
+            await client.installment.create({
+              data: inst as unknown as Prisma.InstallmentCreateInput,
+            });
           }
           for (const j of tables.journals || []) {
             await client.journal.create({ data: j as unknown as Prisma.JournalCreateInput });
           }
           for (const jl of tables.journalLines || []) {
-            await client.journalLine.create({ data: jl as unknown as Prisma.JournalLineCreateInput });
+            await client.journalLine.create({
+              data: jl as unknown as Prisma.JournalLineCreateInput,
+            });
           }
           for (const doc of tables.documents || []) {
             await client.document.create({ data: doc as unknown as Prisma.DocumentCreateInput });
@@ -209,7 +215,9 @@ export class TenantImportService {
       totalRows += rows.length;
     }
 
-    this.logger.log(`Tenant import succeeded for company ${manifest.company.code} (${totalRows} rows)`);
+    this.logger.log(
+      `Tenant import succeeded for company ${manifest.company.code} (${totalRows} rows)`,
+    );
 
     return {
       companyId: targetCompanyId,

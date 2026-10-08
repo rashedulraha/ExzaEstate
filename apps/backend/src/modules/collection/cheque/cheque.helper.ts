@@ -7,7 +7,10 @@ import type { OutboxService } from '../../../platform/outbox/outbox.service.js';
 import type { PostingService } from '../../accounting/posting/posting.service.js';
 import type { ClearChequeDto } from './dto/index.js';
 
-export function assertChequeClearable(payment: Payment | null, paymentId: string): asserts payment is Payment {
+export function assertChequeClearable(
+  payment: Payment | null,
+  paymentId: string,
+): asserts payment is Payment {
   if (!payment) {
     throw new NotFoundException({
       code: ERROR_CODES.NOT_FOUND,
@@ -28,7 +31,10 @@ export function assertChequeClearable(payment: Payment | null, paymentId: string
   }
 }
 
-export function assertChequeBouncable(payment: Payment | null, paymentId: string): asserts payment is Payment {
+export function assertChequeBouncable(
+  payment: Payment | null,
+  paymentId: string,
+): asserts payment is Payment {
   if (!payment) {
     throw new NotFoundException({
       code: ERROR_CODES.NOT_FOUND,

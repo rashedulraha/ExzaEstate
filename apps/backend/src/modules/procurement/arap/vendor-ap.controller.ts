@@ -1,10 +1,4 @@
-import {
-  Controller,
-  Get,
-  Param,
-  Query,
-  UseGuards,
-} from '@nestjs/common';
+import { Controller, Get, Param, Query, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { PERMISSIONS } from '@exzaestate/shared';
 import { CurrentUser } from '../../../common/decorators/current-user.decorator.js';
@@ -23,10 +17,7 @@ export class VendorApController {
   @Get(':id/balance')
   @RequirePermission(PERMISSIONS.ARAP_VIEW)
   @ApiOperation({ summary: 'Get vendor AP balance reconciled with Account 2100' })
-  async getBalance(
-    @CurrentUser('companyId') companyId: string,
-    @Param('id') id: string,
-  ) {
+  async getBalance(@CurrentUser('companyId') companyId: string, @Param('id') id: string) {
     return this.apService.getVendorApBalance(companyId, id);
   }
 
@@ -44,10 +35,7 @@ export class VendorApController {
   @Get(':id/ledger')
   @RequirePermission(PERMISSIONS.ARAP_VIEW)
   @ApiOperation({ summary: 'Get vendor AP journal ledger' })
-  async getLedger(
-    @CurrentUser('companyId') companyId: string,
-    @Param('id') id: string,
-  ) {
+  async getLedger(@CurrentUser('companyId') companyId: string, @Param('id') id: string) {
     return this.apService.getVendorLedger(companyId, id);
   }
 }

@@ -120,7 +120,10 @@ export class LocalBackupService {
 
   async preUpgradeBackup(): Promise<{ backupId: string; filePath: string }> {
     this.logger.log('Triggering automatic pre-upgrade backup...');
-    const result = await this.createBackup({ isPreUpgrade: true, label: 'Pre-upgrade automatic backup' });
+    const result = await this.createBackup({
+      isPreUpgrade: true,
+      label: 'Pre-upgrade automatic backup',
+    });
     return { backupId: result.backupId, filePath: result.filePath };
   }
 
@@ -131,7 +134,10 @@ export class LocalBackupService {
       await migrationRunner();
       this.logger.log('Schema migration succeeded');
     } catch (migrationErr) {
-      this.logger.error('Migration failed! Initiating automatic pre-upgrade rollback...', migrationErr);
+      this.logger.error(
+        'Migration failed! Initiating automatic pre-upgrade rollback...',
+        migrationErr,
+      );
       try {
         await this.restoreBackup(filePath);
         this.logger.log('Automatic rollback completed successfully');
@@ -188,7 +194,9 @@ export class LocalBackupService {
           await client.user.create({ data: u as unknown as Prisma.UserCreateInput });
         }
         for (const s of bundle.data.settings || []) {
-          await client.companySetting.create({ data: s as unknown as Prisma.CompanySettingCreateInput });
+          await client.companySetting.create({
+            data: s as unknown as Prisma.CompanySettingCreateInput,
+          });
         }
         for (const a of bundle.data.accounts || []) {
           await client.account.create({ data: a as unknown as Prisma.AccountCreateInput });
@@ -228,7 +236,8 @@ export class LocalBackupService {
     if (backupFiles.length === 0) {
       return {
         hasWarning: true,
-        warningMessage: 'Warning: No backup has ever been taken. Your local database is unprotected.',
+        warningMessage:
+          'Warning: No backup has ever been taken. Your local database is unprotected.',
         daysSinceLastBackup: 999,
         warnThresholdDays: this.warnThresholdDays,
         totalBackups: 0,

@@ -39,10 +39,7 @@ export class VendorBillController {
   @Get(':id')
   @RequirePermission(PERMISSIONS.VENDOR_BILL_VIEW)
   @ApiOperation({ summary: 'Get vendor bill details by ID' })
-  async getBill(
-    @CurrentUser('companyId') companyId: string,
-    @Param('id') id: string,
-  ) {
+  async getBill(@CurrentUser('companyId') companyId: string, @Param('id') id: string) {
     return this.billService.getBillById(companyId, id);
   }
 

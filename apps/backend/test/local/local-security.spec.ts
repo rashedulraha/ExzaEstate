@@ -23,7 +23,10 @@ describe('A10.2 — Local Security: Loopback Binding & Per-Launch Secret', () =>
     return new LocalSecretGuard(configService);
   }
 
-  function mockContext(headers: Record<string, string>, path: string = '/api/v1/properties'): ExecutionContext {
+  function mockContext(
+    headers: Record<string, string>,
+    path: string = '/api/v1/properties',
+  ): ExecutionContext {
     return {
       switchToHttp: () => ({
         getRequest: () => ({
@@ -58,8 +61,14 @@ describe('A10.2 — Local Security: Loopback Binding & Per-Launch Secret', () =>
 
   it('permits loopback Host headers (127.0.0.1 and localhost)', () => {
     const guard = createGuard('local', 'secret_256_bit_launch_key_12345');
-    const ctx1 = mockContext({ host: '127.0.0.1:14201', 'x-local-secret': 'secret_256_bit_launch_key_12345' });
-    const ctx2 = mockContext({ host: 'localhost:14201', 'x-local-secret': 'secret_256_bit_launch_key_12345' });
+    const ctx1 = mockContext({
+      host: '127.0.0.1:14201',
+      'x-local-secret': 'secret_256_bit_launch_key_12345',
+    });
+    const ctx2 = mockContext({
+      host: 'localhost:14201',
+      'x-local-secret': 'secret_256_bit_launch_key_12345',
+    });
 
     expect(guard.canActivate(ctx1)).toBe(true);
     expect(guard.canActivate(ctx2)).toBe(true);

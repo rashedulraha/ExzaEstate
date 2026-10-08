@@ -6,10 +6,7 @@ import type { TenantPrisma } from '../../../database/tenant-prisma.js';
 import { AuditService } from '../../../platform/audit/audit.service.js';
 import { SequenceService } from '../../../platform/sequence/sequence.service.js';
 import { PostingService } from '../../accounting/posting/posting.service.js';
-import {
-  VENDOR_BILL_STATUS,
-  VENDOR_PAYMENT_STATUS,
-} from '../domain/procurement.constants.js';
+import { VENDOR_BILL_STATUS, VENDOR_PAYMENT_STATUS } from '../domain/procurement.constants.js';
 import type { CreateVendorPaymentDto } from '../dto/index.js';
 
 @Injectable()

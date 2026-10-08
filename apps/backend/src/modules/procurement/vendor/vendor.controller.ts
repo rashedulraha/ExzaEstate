@@ -41,20 +41,14 @@ export class VendorController {
   @Get()
   @RequirePermission(PERMISSIONS.VENDOR_VIEW)
   @ApiOperation({ summary: 'List vendors with optional search filter' })
-  async listVendors(
-    @CurrentUser('companyId') companyId: string,
-    @Query() query: VendorQueryDto,
-  ) {
+  async listVendors(@CurrentUser('companyId') companyId: string, @Query() query: VendorQueryDto) {
     return this.vendorService.listVendors(companyId, query);
   }
 
   @Get(':id')
   @RequirePermission(PERMISSIONS.VENDOR_VIEW)
   @ApiOperation({ summary: 'Get vendor details by ID' })
-  async getVendor(
-    @CurrentUser('companyId') companyId: string,
-    @Param('id') id: string,
-  ) {
+  async getVendor(@CurrentUser('companyId') companyId: string, @Param('id') id: string) {
     return this.vendorService.getVendorById(companyId, id);
   }
 

@@ -209,7 +209,13 @@ export class LocalExportService {
         const csvData: Record<string, string> = {
           customers: this.toCsv(customers, ['id', 'fullName', 'phone', 'email', 'status']),
           properties: this.toCsv(properties, ['id', 'unitNumber', 'status', 'basePricePaisa']),
-          bookings: this.toCsv(bookings, ['id', 'bookingNumber', 'status', 'totalPricePaisa', 'totalPaidPaisa']),
+          bookings: this.toCsv(bookings, [
+            'id',
+            'bookingNumber',
+            'status',
+            'totalPricePaisa',
+            'totalPaidPaisa',
+          ]),
           accounts: this.toCsv(accounts, ['id', 'code', 'name', 'type', 'currency']),
         };
 

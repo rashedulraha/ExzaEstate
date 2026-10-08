@@ -66,7 +66,6 @@ export class RefundService {
       value: seq,
     });
 
-
     const refund = await tx.refund.create({
       data: {
         companyId: data.companyId,

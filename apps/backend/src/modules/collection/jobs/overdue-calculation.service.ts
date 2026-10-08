@@ -65,11 +65,7 @@ export class OverdueCalculationService {
 
         if ((DEFAULT_REMINDER_OFFSETS as readonly number[]).includes(offset)) {
           remindersTriggered++;
-          const label = getCombinedStatusLabel(
-            paymentState,
-            timingState,
-            overdueDays,
-          );
+          const label = getCombinedStatusLabel(paymentState, timingState, overdueDays);
 
           await this.outboxService.emit(tx, 'collection.reminder_due', {
             companyId,

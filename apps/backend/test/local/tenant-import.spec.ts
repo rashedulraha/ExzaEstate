@@ -54,31 +54,107 @@ describe('A10.4 — Local to Cloud Export/Import Pipeline (AT-34)', () => {
     },
     tables: {
       companies: [
-        { id: 'c0000000-0000-0000-0000-000000000001', code: 'STANDALONE01', name: 'Standalone Company Ltd', timezone: 'Asia/Dhaka' },
+        {
+          id: 'c0000000-0000-0000-0000-000000000001',
+          code: 'STANDALONE01',
+          name: 'Standalone Company Ltd',
+          timezone: 'Asia/Dhaka',
+        },
       ],
-      branches: [{ id: 'b1', companyId: 'c0000000-0000-0000-0000-000000000001', code: 'MAIN', name: 'Main' }],
-      departments: [{ id: 'd1', companyId: 'c0000000-0000-0000-0000-000000000001', code: 'SALES', name: 'Sales' }],
-      users: [{ id: 'u1', companyId: 'c0000000-0000-0000-0000-000000000001', email: 'director@standalone.internal', fullName: 'Director' }],
-      settings: [{ id: 's1', companyId: 'c0000000-0000-0000-0000-000000000001', key: 'single_user_auto_approve', value: true }],
+      branches: [
+        { id: 'b1', companyId: 'c0000000-0000-0000-0000-000000000001', code: 'MAIN', name: 'Main' },
+      ],
+      departments: [
+        {
+          id: 'd1',
+          companyId: 'c0000000-0000-0000-0000-000000000001',
+          code: 'SALES',
+          name: 'Sales',
+        },
+      ],
+      users: [
+        {
+          id: 'u1',
+          companyId: 'c0000000-0000-0000-0000-000000000001',
+          email: 'director@standalone.internal',
+          fullName: 'Director',
+        },
+      ],
+      settings: [
+        {
+          id: 's1',
+          companyId: 'c0000000-0000-0000-0000-000000000001',
+          key: 'single_user_auto_approve',
+          value: true,
+        },
+      ],
       accounts: [
-        { id: 'a1', companyId: 'c0000000-0000-0000-0000-000000000001', code: '1010', name: 'Cash', type: 'ASSET' },
-        { id: 'a2', companyId: 'c0000000-0000-0000-0000-000000000001', code: '4010', name: 'Revenue', type: 'REVENUE' },
+        {
+          id: 'a1',
+          companyId: 'c0000000-0000-0000-0000-000000000001',
+          code: '1010',
+          name: 'Cash',
+          type: 'ASSET',
+        },
+        {
+          id: 'a2',
+          companyId: 'c0000000-0000-0000-0000-000000000001',
+          code: '4010',
+          name: 'Revenue',
+          type: 'REVENUE',
+        },
       ],
       properties: [
-        { id: 'p1', companyId: 'c0000000-0000-0000-0000-000000000001', unitNumber: '101', status: 'AVAILABLE', basePricePaisa: '50000000000' },
-        { id: 'p2', companyId: 'c0000000-0000-0000-0000-000000000001', unitNumber: '102', status: 'SOLD', basePricePaisa: '50000000000' },
+        {
+          id: 'p1',
+          companyId: 'c0000000-0000-0000-0000-000000000001',
+          unitNumber: '101',
+          status: 'AVAILABLE',
+          basePricePaisa: '50000000000',
+        },
+        {
+          id: 'p2',
+          companyId: 'c0000000-0000-0000-0000-000000000001',
+          unitNumber: '102',
+          status: 'SOLD',
+          basePricePaisa: '50000000000',
+        },
       ],
-      customers: [{ id: 'cust-1', companyId: 'c0000000-0000-0000-0000-000000000001', fullName: 'Customer A' }],
+      customers: [
+        { id: 'cust-1', companyId: 'c0000000-0000-0000-0000-000000000001', fullName: 'Customer A' },
+      ],
       bookings: [
-        { id: 'bk-1', companyId: 'c0000000-0000-0000-0000-000000000001', customerId: 'cust-1', totalPricePaisa: '1000000000', totalPaidPaisa: '600000000' },
+        {
+          id: 'bk-1',
+          companyId: 'c0000000-0000-0000-0000-000000000001',
+          customerId: 'cust-1',
+          totalPricePaisa: '1000000000',
+          totalPaidPaisa: '600000000',
+        },
       ],
       installments: [],
-      journals: [{ id: 'j-1', companyId: 'c0000000-0000-0000-0000-000000000001', journalNumber: 'J-01' }],
-      journalLines: [
-        { id: 'jl-1', companyId: 'c0000000-0000-0000-0000-000000000001', journalId: 'j-1', debitPaisa: '15000000000', creditPaisa: '0' },
-        { id: 'jl-2', companyId: 'c0000000-0000-0000-0000-000000000001', journalId: 'j-1', debitPaisa: '0', creditPaisa: '15000000000' },
+      journals: [
+        { id: 'j-1', companyId: 'c0000000-0000-0000-0000-000000000001', journalNumber: 'J-01' },
       ],
-      documents: [{ id: 'doc-1', companyId: 'c0000000-0000-0000-0000-000000000001', title: 'Contract' }],
+      journalLines: [
+        {
+          id: 'jl-1',
+          companyId: 'c0000000-0000-0000-0000-000000000001',
+          journalId: 'j-1',
+          debitPaisa: '15000000000',
+          creditPaisa: '0',
+        },
+        {
+          id: 'jl-2',
+          companyId: 'c0000000-0000-0000-0000-000000000001',
+          journalId: 'j-1',
+          debitPaisa: '0',
+          creditPaisa: '15000000000',
+        },
+      ],
+      documents: [
+        { id: 'doc-1', companyId: 'c0000000-0000-0000-0000-000000000001', title: 'Contract' },
+      ],
     },
   };
 
@@ -86,10 +162,24 @@ describe('A10.4 — Local to Cloud Export/Import Pipeline (AT-34)', () => {
     const bundle = JSON.parse(JSON.stringify(sampleBundle)) as ExzaExportBundle;
     // Restore BigInts
     bundle.tables.journalLines = [
-      { id: 'jl-1', companyId: bundle.manifest.company.id, journalId: 'j-1', debitPaisa: 15000000000n, creditPaisa: 0n },
-      { id: 'jl-2', companyId: bundle.manifest.company.id, journalId: 'j-1', debitPaisa: 0n, creditPaisa: 15000000000n },
+      {
+        id: 'jl-1',
+        companyId: bundle.manifest.company.id,
+        journalId: 'j-1',
+        debitPaisa: 15000000000n,
+        creditPaisa: 0n,
+      },
+      {
+        id: 'jl-2',
+        companyId: bundle.manifest.company.id,
+        journalId: 'j-1',
+        debitPaisa: 0n,
+        creditPaisa: 15000000000n,
+      },
     ];
-    const rawData = JSON.stringify(bundle.tables, (_k, v) => (typeof v === 'bigint' ? v.toString() : v));
+    const rawData = JSON.stringify(bundle.tables, (_k, v) =>
+      typeof v === 'bigint' ? v.toString() : v,
+    );
     bundle.manifest.checksum = crypto.createHash('sha256').update(rawData).digest('hex');
     return bundle;
   }
@@ -105,14 +195,16 @@ describe('A10.4 — Local to Cloud Export/Import Pipeline (AT-34)', () => {
 
   it('pre-flight check blocks import if a user email conflicts with an existing cloud user', async () => {
     const mockPrisma = {
-      executeWithReason: vi.fn().mockImplementation(async (_reason: string, cb: (client: unknown) => Promise<unknown>) => {
-        const client = {
-          user: {
-            findMany: vi.fn().mockResolvedValue([{ email: 'director@standalone.internal' }]),
-          },
-        };
-        return cb(client);
-      }),
+      executeWithReason: vi
+        .fn()
+        .mockImplementation(async (_reason: string, cb: (client: unknown) => Promise<unknown>) => {
+          const client = {
+            user: {
+              findMany: vi.fn().mockResolvedValue([{ email: 'director@standalone.internal' }]),
+            },
+          };
+          return cb(client);
+        }),
     } as unknown as SystemPrisma;
 
     const service = new TenantImportService(mockPrisma);
@@ -171,9 +263,11 @@ describe('A10.4 — Local to Cloud Export/Import Pipeline (AT-34)', () => {
     };
 
     const mockPrisma = {
-      executeWithReason: vi.fn().mockImplementation(async (_reason: string, cb: (c: unknown) => Promise<unknown>) => {
-        return cb(client);
-      }),
+      executeWithReason: vi
+        .fn()
+        .mockImplementation(async (_reason: string, cb: (c: unknown) => Promise<unknown>) => {
+          return cb(client);
+        }),
     } as unknown as SystemPrisma;
 
     const service = new TenantImportService(mockPrisma);
@@ -183,7 +277,9 @@ describe('A10.4 — Local to Cloud Export/Import Pipeline (AT-34)', () => {
 
     expect(result.status).toBe('ACTIVE');
     expect(result.companyCode).toBe('STANDALONE01');
-    expect(client.$executeRawUnsafe).toHaveBeenCalledWith(expect.stringContaining('app.import_mode'));
+    expect(client.$executeRawUnsafe).toHaveBeenCalledWith(
+      expect.stringContaining('app.import_mode'),
+    );
     expect(client.company.update).toHaveBeenCalledWith(
       expect.objectContaining({ data: { isActive: true } }),
     );
@@ -223,9 +319,11 @@ describe('A10.4 — Local to Cloud Export/Import Pipeline (AT-34)', () => {
     };
 
     const mockPrisma = {
-      executeWithReason: vi.fn().mockImplementation(async (_reason: string, cb: (c: unknown) => Promise<unknown>) => {
-        return cb(client);
-      }),
+      executeWithReason: vi
+        .fn()
+        .mockImplementation(async (_reason: string, cb: (c: unknown) => Promise<unknown>) => {
+          return cb(client);
+        }),
     } as unknown as SystemPrisma;
 
     const service = new TenantImportService(mockPrisma);

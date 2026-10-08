@@ -13,7 +13,10 @@ export class RequestCancellationDto {
   @Max(100)
   deductionRatePct?: number;
 
-  @ApiPropertyOptional({ example: '10000000', description: 'Override deduction in paisa (৳1,00,000)' })
+  @ApiPropertyOptional({
+    example: '10000000',
+    description: 'Override deduction in paisa (৳1,00,000)',
+  })
   @IsOptional()
   @IsString()
   deductionPaisa?: string;

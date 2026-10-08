@@ -49,18 +49,13 @@ export function aggregateProjectFinancials(
   }
 
   const totalCostPaisa =
-    landCostPaisa +
-    developmentCostPaisa +
-    marketingCostPaisa +
-    adminCostPaisa +
-    otherCostPaisa;
+    landCostPaisa + developmentCostPaisa + marketingCostPaisa + adminCostPaisa + otherCostPaisa;
 
   const netProfitPaisa = totalRevenuePaisa - totalCostPaisa;
 
   let profitMarginPercent = 0;
   if (totalRevenuePaisa > 0n) {
-    profitMarginPercent =
-      Number((netProfitPaisa * 10_000n) / totalRevenuePaisa) / 100;
+    profitMarginPercent = Number((netProfitPaisa * 10_000n) / totalRevenuePaisa) / 100;
   }
 
   const costBreakdown: ProjectCostBreakdownDto = {

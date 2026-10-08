@@ -23,9 +23,10 @@ export function parseCsvLine(line: string): string[] {
   return result;
 }
 
-export function parseCsvContent(
-  csvContent: string,
-): { headers: string[]; rows: Array<{ rowNumber: number; data: Record<string, string> }> } {
+export function parseCsvContent(csvContent: string): {
+  headers: string[];
+  rows: Array<{ rowNumber: number; data: Record<string, string> }>;
+} {
   const lines = csvContent
     .split(/\r?\n/)
     .map((l) => l.trim())

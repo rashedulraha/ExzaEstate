@@ -16,12 +16,7 @@ export class BudgetService {
     private readonly outboxService: OutboxService,
   ) {}
 
-  async createBudget(
-    companyId: string,
-    userId: string,
-    dto: CreateBudgetDto,
-    tx?: TenantPrisma,
-  ) {
+  async createBudget(companyId: string, userId: string, dto: CreateBudgetDto, tx?: TenantPrisma) {
     const runner = async (db: TenantPrisma) => {
       const budgetAmountPaisa = BigInt(dto.budgetAmountPaisa);
       if (budgetAmountPaisa <= 0n) {
@@ -80,9 +75,7 @@ export class BudgetService {
 
       return budgets.map((b) => {
         const remainingPaisa =
-          b.budgetAmountPaisa > b.actualSpendPaisa
-            ? b.budgetAmountPaisa - b.actualSpendPaisa
-            : 0n;
+          b.budgetAmountPaisa > b.actualSpendPaisa ? b.budgetAmountPaisa - b.actualSpendPaisa : 0n;
         const spendPercentage =
           b.budgetAmountPaisa > 0n
             ? Number((b.actualSpendPaisa * 10000n) / b.budgetAmountPaisa) / 100

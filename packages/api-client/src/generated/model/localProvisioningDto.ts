@@ -20,4 +20,10 @@ export interface LocalProvisioningDto {
   adminPassword?: string;
   /** Company timezone */
   timezone?: string;
+  /** Company trade license number */
+  tradeLicense?: string;
+  /** License key issued on purchase */
+  licenseKey?: string;
+  /** Machine fingerprint ID */
+  machineId?: string;
 }
