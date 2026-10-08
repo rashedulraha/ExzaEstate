@@ -29,8 +29,8 @@ permissions:
   contents: write
 
 jobs:
-  build-desktop:
-    name: Build & Code-Sign (${{ matrix.platform.name }})
+  build-and-release:
+    name: Build & Release (${{ matrix.platform.name }})
     runs-on: ${{ matrix.platform.os }}
     strategy:
       fail-fast: false
@@ -86,97 +86,24 @@ jobs:
       - name: Build desktop client assets
         run: pnpm --filter @exzaestate/desktop build
 
-      - name: Build Tauri Desktop Package & Sign
+      - name: Build Tauri Desktop Package & Publish Release
         uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # Updater Minisign key (SEC-15)
           TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
-          # Apple Developer code signing & notarization (macOS)
           APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
           APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
           APPLE_SIGNING_IDENTITY: ${{ secrets.APPLE_SIGNING_IDENTITY }}
           APPLE_ID: ${{ secrets.APPLE_ID }}
           APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
-          # Microsoft Authenticode code signing (Windows)
           WINDOWS_CERTIFICATE: ${{ secrets.WINDOWS_CERTIFICATE }}
           WINDOWS_CERTIFICATE_PASSWORD: ${{ secrets.WINDOWS_CERTIFICATE_PASSWORD }}
         with:
           projectPath: './apps/desktop'
-          includeRelease: false
-          includeUpdaterJson: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY != '' }}
-          updaterJsonKeepUniversalUrl: true
-
-      - name: Upload platform artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: desktop-artifacts-${{ matrix.platform.os }}
-          path: |
-            apps/desktop/src-tauri/target/release/bundle/**/*.dmg
-            apps/desktop/src-tauri/target/release/bundle/**/*.app
-            apps/desktop/src-tauri/target/release/bundle/**/*.msi
-            apps/desktop/src-tauri/target/release/bundle/**/*.exe
-            apps/desktop/src-tauri/target/release/bundle/**/*.deb
-            apps/desktop/src-tauri/target/release/bundle/**/*.AppImage
-            apps/desktop/src-tauri/target/release/bundle/**/latest.json
-          if-no-files-found: warn
-
-  publish-release:
-    name: Publish Signed Release & Checksum Manifest
-    needs: build-desktop
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Download all installer artifacts
-        uses: actions/download-artifact@v4
-        with:
-          path: ./release-bundles
-
-      - name: Consolidate packages and generate SHA256 checksum manifest
-        id: checksums
-        run: |
-          mkdir -p ./dist-release
-          find ./release-bundles -type f \( -name "*.dmg" -o -name "*.msi" -o -name "*.exe" -o -name "*.deb" -o -name "*.AppImage" -o -name "latest.json" \) -exec cp {} ./dist-release/ \;
-          cd ./dist-release
-          sha256sum * > SHA256SUMS.txt
-          echo "Generated SHA256 Checksum Manifest:"
-          cat SHA256SUMS.txt
-
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref_name || github.event.inputs.version }}
-          name: ExzaEstate Enterprise Desktop ${{ github.ref_name || github.event.inputs.version }}
-          draft: ${{ github.event.inputs.draft || false }}
+          tagName: ${{ github.ref_name || github.event.inputs.version }}
+          releaseName: 'ExzaEstate Enterprise Desktop ${{ github.ref_name || github.event.inputs.version }}'
+          releaseBody: 'ExzaEstate Enterprise ERP Desktop Release ${{ github.ref_name || github.event.inputs.version }}'
+          releaseDraft: ${{ github.event.inputs.draft || false }}
           prerelease: ${{ github.event.inputs.prerelease || false }}
-          files: |
-            ./dist-release/*.dmg
-            ./dist-release/*.msi
-            ./dist-release/*.exe
-            ./dist-release/*.deb
-            ./dist-release/*.AppImage
-            ./dist-release/latest.json*
-            ./dist-release/SHA256SUMS.txt
-          body: |
-            ### ExzaEstate Enterprise ERP Desktop Release
-
-            **Version:** `${{ github.ref_name || github.event.inputs.version }}`
-            **Architecture:** Multi-Tenant ERP with Dual-Mode (Cloud / Local Standalone) and Hardware-Bound Licensing.
-
-            #### Security & Authenticity
-            - **Code-Signed Binaries:** Authenticode (Windows), Apple Notarized (macOS), GPG Package (Linux).
-            - **Auto-Updater:** Verified with Minisign Ed25519 signature checks. Update checks send zero business or user data.
-            - **Zero Plaintext Credentials:** Tokens stored in native OS keychain (`SecureStorage`).
-            - **Tamper Resistance:** Clock-rollback defense and deterministic hardware fingerprinting.
-
-            #### Checksum Verification
-            Verify the authenticity of your downloaded package against `SHA256SUMS.txt`:
-            ```bash
-            sha256sum -c SHA256SUMS.txt
-            ```
