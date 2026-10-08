@@ -5,11 +5,11 @@ import { fileURLToPath } from 'node:url';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 // Provide fallback environment variables so DI container can boot in isolated environments
 process.env.NODE_ENV ||= 'development';
+process.env.RUNTIME_MODE = 'local';
 process.env.DATABASE_URL ||=
   'postgresql://exza_app:exza_app_secret@localhost:5432/exzaestate?schema=public';
-process.env.REDIS_URL ||= 'redis://localhost:6379';
-process.env.JWT_ACCESS_SECRET ||= 'export_mock_jwt_access_secret_32chars_long!';
-process.env.JWT_REFRESH_SECRET ||= 'export_mock_jwt_refresh_secret_32chars_long!';
+process.env.JWT_ACCESS_SECRET ||= 'super_secret_jwt_access_export_key_32c!';
+process.env.JWT_REFRESH_SECRET ||= 'super_secret_jwt_refresh_export_key_32!';
 process.env.STORAGE_ENDPOINT ||= 'http://localhost:9000';
 process.env.STORAGE_BUCKET ||= 'exzaestate';
 process.env.STORAGE_ACCESS_KEY ||= 'minioadmin';

@@ -146,6 +146,9 @@ jobs:
         env:
           MIGRATOR_DATABASE_URL: postgresql://exza_migrator:exza_migrator_secret@localhost:5432/exzaestate?schema=public
 
+      - name: Generate Prisma Client
+        run: pnpm db:generate
+
       - name: Run baseline seed
         run: pnpm db:seed
         env:
