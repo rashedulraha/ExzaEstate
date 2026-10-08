@@ -34,6 +34,74 @@ interface CardItemProps<T> {
   onRowClick?: (row: T) => void;
 }
 
+interface CardHeaderProps<T> {
+  row: T;
+  hasSelection: boolean;
+  isSelected?: boolean;
+  id: string;
+  onSelectRow?: (id: string) => void;
+  primaryCol?: ColumnDef<T>;
+  secondaryCol?: ColumnDef<T>;
+}
+
+function CardHeader<T>({
+  row,
+  hasSelection,
+  isSelected,
+  id,
+  onSelectRow,
+  primaryCol,
+  secondaryCol,
+}: CardHeaderProps<T>) {
+  return (
+    <div className="flex items-center justify-between gap-2">
+      <div className="flex items-center gap-2 min-w-0 flex-1">
+        {hasSelection && (
+          <div className="touch-target -ml-1 -my-2 shrink-0" onClick={(e) => e.stopPropagation()}>
+            <input
+              type="checkbox"
+              checked={isSelected}
+              onChange={() => onSelectRow?.(id)}
+              aria-label={`Select row ${id}`}
+              className="w-4 h-4 rounded border-border-input cursor-pointer"
+            />
+          </div>
+        )}
+        {primaryCol && (
+          <div className="font-semibold text-text text-body truncate">
+            {renderCardCellValue(primaryCol, row)}
+          </div>
+        )}
+      </div>
+      {secondaryCol && (
+        <div
+          className={`shrink-0 text-small ${secondaryCol.isMoney ? 'font-mono font-medium' : ''}`}
+        >
+          {renderCardCellValue(secondaryCol, row)}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function CardDetailsGrid<T>({ columns, row }: { columns: ColumnDef<T>[]; row: T }) {
+  if (columns.length === 0) return null;
+  return (
+    <div className="grid grid-cols-2 gap-2 pt-2 border-t border-border/40 text-small">
+      {columns.map((col) => (
+        <div key={col.key} className="flex flex-col min-w-0">
+          <span className="text-caption text-text-muted truncate">{col.header}</span>
+          <span
+            className={`text-body text-text truncate ${col.isMoney ? 'font-mono font-medium' : ''}`}
+          >
+            {renderCardCellValue(col, row)}
+          </span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 function DataTableCardItem<T>({
   row,
   columns,
@@ -49,12 +117,9 @@ function DataTableCardItem<T>({
     ? 'border-primary ring-1 ring-primary/30 bg-primary/5'
     : 'bg-surface';
 
-  const primaryCol = columns[0];
-  const secondaryCol = columns.length > 1 ? columns[1] : undefined;
-  const otherCols = columns.slice(2);
-
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (onRowClick && (e.key === 'Enter' || e.key === ' ')) {
+    if (!onRowClick) return;
+    if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
       onRowClick(row);
     }
@@ -68,52 +133,16 @@ function DataTableCardItem<T>({
       role={onRowClick ? 'button' : undefined}
       className={`card-mobile ${selectedBorder} ${pointerClass} transition-all duration-150 flex flex-col gap-2.5`}
     >
-      {/* Card Header Row: Selection + Primary Title + Secondary / Status */}
-      <div className="flex items-center justify-between gap-2">
-        <div className="flex items-center gap-2 min-w-0 flex-1">
-          {hasSelection && (
-            <div className="touch-target -ml-1 -my-2 shrink-0" onClick={(e) => e.stopPropagation()}>
-              <input
-                type="checkbox"
-                checked={isSelected}
-                onChange={() => onSelectRow?.(id)}
-                aria-label={`Select row ${id}`}
-                className="w-4 h-4 rounded border-border-input cursor-pointer"
-              />
-            </div>
-          )}
-          {primaryCol && (
-            <div className="font-semibold text-text text-body truncate">
-              {renderCardCellValue(primaryCol, row)}
-            </div>
-          )}
-        </div>
-        {secondaryCol && (
-          <div
-            className={`shrink-0 text-small ${secondaryCol.isMoney ? 'font-mono font-medium' : ''}`}
-          >
-            {renderCardCellValue(secondaryCol, row)}
-          </div>
-        )}
-      </div>
-
-      {/* Card Details Grid */}
-      {otherCols.length > 0 && (
-        <div className="grid grid-cols-2 gap-2 pt-2 border-t border-border/40 text-small">
-          {otherCols.map((col) => (
-            <div key={col.key} className="flex flex-col min-w-0">
-              <span className="text-caption text-text-muted truncate">{col.header}</span>
-              <span
-                className={`text-body text-text truncate ${
-                  col.isMoney ? 'font-mono font-medium' : ''
-                }`}
-              >
-                {renderCardCellValue(col, row)}
-              </span>
-            </div>
-          ))}
-        </div>
-      )}
+      <CardHeader
+        row={row}
+        hasSelection={hasSelection}
+        isSelected={isSelected}
+        id={id}
+        onSelectRow={onSelectRow}
+        primaryCol={columns[0]}
+        secondaryCol={columns.length > 1 ? columns[1] : undefined}
+      />
+      <CardDetailsGrid columns={columns.slice(2)} row={row} />
     </div>
   );
 }
