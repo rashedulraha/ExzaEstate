@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Plus, Building2, Receipt } from 'lucide-react';
+import { useNavigate } from 'react-router';
+import { Plus, Building2, Receipt, ShoppingBag } from 'lucide-react';
 import { formatMoney } from '@exzaestate/shared';
 import { Button, EmptyState } from '@exzaestate/ui';
 import { useVendors } from '../hooks/useVendors.js';
@@ -97,6 +98,7 @@ function VendorBillsTab({
 }
 
 export function VendorListPage() {
+  const navigate = useNavigate();
   const [tab, setTab] = useState<'VENDORS' | 'BILLS'>('VENDORS');
   const [isVendorModalOpen, setIsVendorModalOpen] = useState(false);
   const [isBillModalOpen, setIsBillModalOpen] = useState(false);
@@ -198,6 +200,14 @@ export function VendorListPage() {
               New Bill
             </Button>
           )}
+
+          <Button
+            variant="secondary"
+            onClick={() => navigate('/operations/procurement')}
+            leftIcon={<ShoppingBag className="h-4 w-4" />}
+          >
+            Procurement Flow
+          </Button>
         </div>
       </div>
 

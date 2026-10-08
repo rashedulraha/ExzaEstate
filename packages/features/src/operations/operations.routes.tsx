@@ -4,6 +4,7 @@ import { PERMISSIONS } from '@exzaestate/shared';
 import { NoPermissionState } from '@exzaestate/ui';
 import { ExpenseListPage } from './pages/ExpenseListPage.js';
 import { VendorListPage } from './pages/VendorListPage.js';
+import { ProcurementPage } from './pages/ProcurementPage.js';
 import { CommissionPage } from './pages/CommissionPage.js';
 import { BudgetListPage } from './pages/BudgetListPage.js';
 import { BookingTransferPage } from './pages/BookingTransferPage.js';
@@ -33,6 +34,17 @@ export const operationsRoutes: RouteObject[] = [
         fallback={<NoPermissionState permission={PERMISSIONS.VENDOR_VIEW} />}
       >
         <VendorListPage />
+      </PermissionGate>
+    ),
+  },
+  {
+    path: '/operations/procurement',
+    element: (
+      <PermissionGate
+        permission={PERMISSIONS.VENDOR_VIEW}
+        fallback={<NoPermissionState permission={PERMISSIONS.VENDOR_VIEW} />}
+      >
+        <ProcurementPage />
       </PermissionGate>
     ),
   },
