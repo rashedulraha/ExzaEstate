@@ -1,0 +1,50 @@
+# ==============================================================================
+# ExzaEstate Continuous Dependency Vulnerability & Security Scanner
+# Defined in agent/security.md §16 (Item 16) and agent/task.md C5
+# ==============================================================================
+version: 2
+updates:
+  # 1. Monorepo pnpm packages & dependencies
+  - package-ecosystem: 'npm'
+    directory: '/'
+    schedule:
+      interval: 'daily'
+      time: '04:00'
+      timezone: 'Asia/Dhaka'
+    open-pull-requests-limit: 10
+    labels:
+      - 'dependencies'
+      - 'security'
+    commit-message:
+      prefix: 'chore(deps)'
+    groups:
+      production-dependencies:
+        patterns:
+          - '*'
+        dependency-type: 'production'
+
+  # 2. GitHub Actions CI/CD workflows
+  - package-ecosystem: 'github-actions'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+      time: '04:00'
+      timezone: 'Asia/Dhaka'
+    labels:
+      - 'ci'
+      - 'security'
+    commit-message:
+      prefix: 'ci(deps)'
+
+  # 3. Docker container images
+  - package-ecosystem: 'docker'
+    directory: '/docker'
+    schedule:
+      interval: 'weekly'
+      time: '04:00'
+      timezone: 'Asia/Dhaka'
+    labels:
+      - 'docker'
+      - 'security'
+    commit-message:
+      prefix: 'chore(docker)'

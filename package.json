@@ -28,6 +28,8 @@
     "check:acceptance": "node scripts/check-acceptance-matrix.mjs",
     "check:booking-index": "node scripts/check-booking-statuses-index.mjs",
     "check:openapi-breaking": "node scripts/check-openapi-breaking.mjs",
+    "check:prelaunch": "node scripts/check-prelaunch.mjs",
+    "verify:backup-drill": "node scripts/verify-backup-drill.mjs",
     "prepare": "husky"
   },
   "devDependencies": {

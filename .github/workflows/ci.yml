@@ -87,6 +87,9 @@ jobs:
       - name: Run all architectural quality checks
         run: pnpm check:all
 
+      - name: Run pre-launch security & release gate (C5)
+        run: pnpm check:prelaunch
+
   tests:
     name: Integration & Unit Tests
     runs-on: ubuntu-latest
