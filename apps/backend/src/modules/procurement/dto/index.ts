@@ -3,3 +3,7 @@ export * from './update-vendor.dto.js';
 export * from './create-vendor-bill.dto.js';
 export * from './create-vendor-payment.dto.js';
 export * from './vendor-query.dto.js';
+export * from './create-purchase-request.dto.js';
+export * from './create-purchase-order.dto.js';
+export * from './create-goods-receipt.dto.js';
+export * from './procurement-query.dto.js';
