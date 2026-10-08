@@ -2,7 +2,9 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Sidebar, type SidebarNavGroup, defaultSidebarGroups } from './Sidebar.js';
 import { Header, type HeaderProps } from './Header.js';
 import { CommandPalette, type CommandItem } from './CommandPalette.js';
+import { BottomNav, type BottomNavItem } from './BottomNav.js';
 import { useSidebarResize } from './useSidebarResize.js';
+import { useIsMobile } from './useIsMobile.js';
 
 export interface AppShellProps {
   children: React.ReactNode;
@@ -13,6 +15,9 @@ export interface AppShellProps {
   companyName?: string;
   isLocalMode?: boolean;
   onQuickAction?: () => void;
+  onNavigateRoute?: (routeId: string) => void;
+  bottomNavItems?: BottomNavItem[];
+  showBottomNav?: boolean;
 }
 
 function useSidebarPeek(setIsSidebarCollapsed: React.Dispatch<React.SetStateAction<boolean>>) {
@@ -83,7 +88,7 @@ function AppShellEdgeSensor({
     <div
       role="region"
       aria-label="Sidebar peek edge sensor"
-      className="fixed left-0 top-0 w-3.5 h-full z-40 cursor-e-resize bg-transparent hover:bg-sidebar-hover transition-colors"
+      className="fixed left-0 top-0 w-3.5 h-full z-40 cursor-e-resize bg-transparent hover:bg-sidebar-hover transition-colors hidden lg:block"
       onMouseEnter={onMouseEnter}
       title="Hover to peek sidebar"
     />
@@ -92,7 +97,14 @@ function AppShellEdgeSensor({
 
 export function AppShell(props: AppShellProps) {
   const config = resolveAppShellConfig(props);
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const isTabletOrMobile = useIsMobile(1024);
+  const isMobileScreen = useIsMobile(768);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(() => {
+    if (typeof window !== 'undefined' && typeof window.innerWidth === 'number') {
+      return window.innerWidth < 1024;
+    }
+    return false;
+  });
   const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
 
   const { isPeeking, setIsPeeking, handleMouseEnterPeek, handleMouseLeavePeek, handlePin } =
@@ -109,40 +121,93 @@ export function AppShell(props: AppShellProps) {
   const isSidebarOpen = !isSidebarCollapsed || isPeeking;
   const triggerQuickAction = resolveQuickAction(props, () => setIsCommandPaletteOpen(true));
 
+  const handleBottomNavNavigate = (id: string) => {
+    if (props.onNavigateRoute) {
+      props.onNavigateRoute(id);
+      return;
+    }
+    for (const group of config.sidebarGroups) {
+      const match = group.items.find((item) => item.id === id);
+      if (match?.onClick) {
+        match.onClick();
+        return;
+      }
+    }
+  };
+
   return (
     <div className="h-screen w-screen overflow-hidden bg-sidebar text-text flex font-sans select-none">
-      {/* Sidebar Wrapper in Layout Flow with Smooth Width Animation */}
-      <div
-        style={{ width: isSidebarOpen ? `${sidebarWidth}px` : 0 }}
-        className="h-full shrink-0 transition-[width] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] overflow-hidden relative"
-        onMouseLeave={handleMouseLeavePeek}
-      >
-        <Sidebar
-          currentRouteId={config.currentRouteId}
-          isCollapsed={!isSidebarOpen}
-          isPeek={isPeeking}
-          onClosePeek={() => setIsPeeking(false)}
-          onPin={handlePin}
-          onToggleCollapse={() => {
-            setIsPeeking(false);
-            setIsSidebarCollapsed((prev) => !prev);
-          }}
-          onQuickAction={triggerQuickAction}
-          onItemClick={() => {
-            if (isPeeking) setIsPeeking(false);
-          }}
-          groups={config.sidebarGroups}
-          companyName={config.companyName}
-          width={sidebarWidth}
-          isDragging={isDragging}
-          isHoveringResizer={isHoveringResizer}
-          setIsHoveringResizer={setIsHoveringResizer}
-          handleMouseDown={handleMouseDown}
-        />
-      </div>
+      {/* Desktop Sidebar in Layout Flow (lg+ viewports) */}
+      {!isTabletOrMobile && (
+        <div
+          style={{ width: isSidebarOpen ? `${sidebarWidth}px` : 0 }}
+          className="h-full shrink-0 transition-[width] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] overflow-hidden relative"
+          onMouseLeave={handleMouseLeavePeek}
+        >
+          <Sidebar
+            currentRouteId={config.currentRouteId}
+            isCollapsed={!isSidebarOpen}
+            isPeek={isPeeking}
+            onClosePeek={() => setIsPeeking(false)}
+            onPin={handlePin}
+            onToggleCollapse={() => {
+              setIsPeeking(false);
+              setIsSidebarCollapsed((prev) => !prev);
+            }}
+            onQuickAction={triggerQuickAction}
+            onItemClick={() => {
+              if (isPeeking) setIsPeeking(false);
+            }}
+            groups={config.sidebarGroups}
+            companyName={config.companyName}
+            width={sidebarWidth}
+            isDragging={isDragging}
+            isHoveringResizer={isHoveringResizer}
+            setIsHoveringResizer={setIsHoveringResizer}
+            handleMouseDown={handleMouseDown}
+          />
+        </div>
+      )}
 
-      {/* Edge Sensor for Left Hover Peek when Collapsed */}
-      <AppShellEdgeSensor isSidebarOpen={isSidebarOpen} onMouseEnter={handleMouseEnterPeek} />
+      {/* Mobile/Tablet Slide-Over Sidebar Drawer with Dimmed Backdrop (<1024px) */}
+      {isTabletOrMobile && isSidebarOpen && (
+        <div
+          role="presentation"
+          className="fixed inset-0 z-50 flex bg-black/60 backdrop-blur-xs animate-in fade-in duration-200"
+          onClick={() => setIsSidebarCollapsed(true)}
+        >
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-label="Navigation drawer"
+            className="h-full w-72 max-w-[85vw] bg-sidebar text-sidebar-fg shadow-2xl animate-in slide-in-from-left duration-250 flex flex-col"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <Sidebar
+              currentRouteId={config.currentRouteId}
+              isCollapsed={false}
+              isPeek={false}
+              onClosePeek={() => setIsSidebarCollapsed(true)}
+              onPin={() => {}}
+              onToggleCollapse={() => setIsSidebarCollapsed(true)}
+              onQuickAction={triggerQuickAction}
+              onItemClick={() => setIsSidebarCollapsed(true)}
+              groups={config.sidebarGroups}
+              companyName={config.companyName}
+              width={288}
+              isDragging={false}
+              isHoveringResizer={false}
+              setIsHoveringResizer={() => {}}
+              handleMouseDown={() => {}}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Edge Sensor for Left Hover Peek when Collapsed (Desktop only) */}
+      {!isTabletOrMobile && (
+        <AppShellEdgeSensor isSidebarOpen={isSidebarOpen} onMouseEnter={handleMouseEnterPeek} />
+      )}
 
       {/* Main Workspace Area in Flex Flow */}
       <div className="flex-1 flex flex-col min-w-0 bg-sidebar h-full overflow-hidden">
@@ -160,9 +225,19 @@ export function AppShell(props: AppShellProps) {
           {...props.headerProps}
         />
 
-        {/* Curved Workspace Canvas: Restored Signature Rounded Corner with Clean Single Border */}
-        <div className="flex-1 min-h-0 bg-bg rounded-tl-2xl sm:rounded-tl-[24px] border-t border-l border-sidebar-border overflow-hidden flex flex-col">
-          <main className="flex-1 min-h-0 overflow-y-auto">{props.children}</main>
+        {/* Curved Workspace Canvas */}
+        <div className="flex-1 min-h-0 bg-bg rounded-tl-2xl sm:rounded-tl-[24px] border-t border-l border-sidebar-border overflow-hidden flex flex-col relative">
+          <main className="flex-1 min-h-0 overflow-y-auto pb-16 md:pb-0">{props.children}</main>
+
+          {/* Mobile Bottom Navigation (<768px per design.md §9) */}
+          {(props.showBottomNav ?? isMobileScreen) && (
+            <BottomNav
+              currentRouteId={config.currentRouteId}
+              items={props.bottomNavItems}
+              onNavigate={handleBottomNavNavigate}
+              onOpenMenu={() => setIsSidebarCollapsed(false)}
+            />
+          )}
         </div>
       </div>
 

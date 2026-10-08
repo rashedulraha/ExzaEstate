@@ -37,6 +37,8 @@ export * from './layout/SidebarSections.js';
 export * from './layout/SidebarResizer.js';
 export * from './layout/useSidebarResize.js';
 export * from './layout/Header.js';
+export * from './layout/BottomNav.js';
+export * from './layout/useIsMobile.js';
 export * from './layout/CommandPalette.js';
 export * from './layout/AppShell.js';
 export * from './layout/StickyToolbar.js';

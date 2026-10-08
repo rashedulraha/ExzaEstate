@@ -968,3 +968,39 @@ strong,
 .font-semibold {
   font-weight: 500;
 }
+
+/* ── Responsive & Mobile Touch Utilities (design.md §9 & §10) ─────────────── */
+.touch-target {
+  min-height: 44px;
+  min-width: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.safe-area-bottom {
+  padding-bottom: max(0.75rem, env(safe-area-inset-bottom, 0.75rem));
+}
+
+.card-mobile {
+  border: 1px solid var(--color-border);
+  background-color: var(--color-surface);
+  border-radius: var(--radius-card);
+  padding: 1rem;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.card-mobile:active {
+  transform: scale(0.99);
+}
+
+@media (max-width: 767px) {
+  /* Prevent iOS Safari automatic viewport zoom while keeping accessible typography */
+  input:not([type="checkbox"]):not([type="radio"]),
+  select,
+  textarea {
+    font-size: 16px;
+  }
+}
+

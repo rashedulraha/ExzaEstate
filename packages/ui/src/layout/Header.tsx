@@ -102,21 +102,32 @@ function HeaderSearchButton({
   placeholder?: string;
 }) {
   return (
-    <div className="flex-1 max-w-md mx-4 hidden md:flex items-center gap-2">
+    <>
+      <div className="flex-1 max-w-md mx-4 hidden md:flex items-center gap-2">
+        <button
+          type="button"
+          onClick={onOpenCommandPalette}
+          className="flex-1 flex items-center justify-between px-3 py-1.5 bg-surface-sunken/50 hover:bg-surface-sunken text-sidebar-muted hover:text-sidebar-fg rounded-button border border-sidebar-border hover:border-border-strong text-small transition-colors cursor-pointer shadow-xs"
+        >
+          <div className="flex items-center gap-2 min-w-0">
+            <Search className="w-3.5 h-3.5 text-primary shrink-0" aria-hidden="true" />
+            <span className="truncate">{placeholder}</span>
+          </div>
+          <kbd className="text-caption bg-surface px-1.5 py-0.5 rounded border border-sidebar-border font-mono text-sidebar-muted shrink-0">
+            ⌘K
+          </kbd>
+        </button>
+      </div>
       <button
         type="button"
         onClick={onOpenCommandPalette}
-        className="flex-1 flex items-center justify-between px-3 py-1.5 bg-surface-sunken/50 hover:bg-surface-sunken text-sidebar-muted hover:text-sidebar-fg rounded-button border border-sidebar-border hover:border-border-strong text-small transition-colors cursor-pointer shadow-xs"
+        className="touch-target md:hidden p-2 rounded-button text-sidebar-muted hover:text-sidebar-fg hover:bg-sidebar-hover transition-colors"
+        aria-label="Open search command palette"
+        title="Search records"
       >
-        <div className="flex items-center gap-2 min-w-0">
-          <Search className="w-3.5 h-3.5 text-primary shrink-0" aria-hidden="true" />
-          <span className="truncate">{placeholder}</span>
-        </div>
-        <kbd className="text-caption bg-surface px-1.5 py-0.5 rounded border border-sidebar-border font-mono text-sidebar-muted shrink-0">
-          ⌘K
-        </kbd>
+        <Search className="w-4 h-4 text-primary" aria-hidden="true" />
       </button>
-    </div>
+    </>
   );
 }
 
@@ -137,11 +148,11 @@ function HeaderSidebarToggle({
       type="button"
       onClick={onToggleSidebar}
       onMouseEnter={onHoverSidebarToggle}
-      className="p-1.5 rounded-button text-sidebar-muted hover:text-sidebar-fg hover:bg-sidebar-hover active:scale-[0.96] cursor-pointer transition-colors"
-      title="Expand sidebar (⌘[ or Click)"
-      aria-label="Expand sidebar"
+      className="touch-target p-2 rounded-button text-sidebar-muted hover:text-sidebar-fg hover:bg-sidebar-hover active:scale-[0.96] cursor-pointer transition-colors"
+      title="Toggle sidebar menu (⌘[ or Click)"
+      aria-label="Toggle sidebar menu"
     >
-      <PanelLeftOpen className="w-4 h-4 text-sidebar-fg" />
+      <PanelLeftOpen className="w-5 h-5 text-sidebar-fg" />
     </button>
   );
 }
@@ -175,11 +186,11 @@ function HeaderNotificationButton({ onClick }: { onClick?: () => void }) {
     <button
       type="button"
       onClick={onClick}
-      className="p-1.5 rounded-button text-sidebar-muted hover:text-sidebar-fg hover:bg-sidebar-hover active:scale-[0.96] cursor-pointer transition-all relative"
+      className="touch-target p-2 rounded-button text-sidebar-muted hover:text-sidebar-fg hover:bg-sidebar-hover active:scale-[0.96] cursor-pointer transition-all relative"
       aria-label="Notifications"
     >
       <Bell className="w-4 h-4" />
-      <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-primary rounded-full ring-2 ring-sidebar" />
+      <span className="absolute top-2 right-2 w-1.5 h-1.5 bg-primary rounded-full ring-2 ring-sidebar" />
     </button>
   );
 }

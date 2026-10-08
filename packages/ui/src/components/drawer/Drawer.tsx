@@ -15,9 +15,9 @@ export interface DrawerProps {
 }
 
 const sizeClasses: Record<DrawerSize, string> = {
-  md: 'max-w-md', // ~448px
-  lg: 'max-w-xl', // ~576px
-  xl: 'max-w-2xl', // ~672px
+  md: 'w-full sm:max-w-md',
+  lg: 'w-full sm:max-w-xl',
+  xl: 'w-full sm:max-w-2xl',
 };
 
 export function Drawer({

@@ -15,10 +15,10 @@ export interface DialogProps {
 }
 
 const sizeClasses: Record<DialogSize, string> = {
-  sm: 'max-w-md', // ~448px
-  md: 'max-w-lg', // ~512px
-  lg: 'max-w-2xl', // ~672px
-  xl: 'max-w-4xl', // ~896px
+  sm: 'w-full max-w-[calc(100vw-2rem)] sm:max-w-md',
+  md: 'w-full max-w-[calc(100vw-2rem)] sm:max-w-lg',
+  lg: 'w-full max-w-[calc(100vw-2rem)] sm:max-w-2xl',
+  xl: 'w-full max-w-[calc(100vw-2rem)] sm:max-w-4xl',
 };
 
 export function Dialog({

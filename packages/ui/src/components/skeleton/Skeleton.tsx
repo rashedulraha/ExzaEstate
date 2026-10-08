@@ -39,7 +39,48 @@ export function StatCardSkeleton() {
   );
 }
 
-export function DataTableSkeleton({ rows = 6, cols = 5 }: { rows?: number; cols?: number }) {
+import { useIsMobile } from '../../layout/useIsMobile.js';
+
+export function DataTableSkeleton({
+  rows = 6,
+  cols = 5,
+  variant = 'auto',
+}: {
+  rows?: number;
+  cols?: number;
+  variant?: 'table' | 'cards' | 'auto';
+}) {
+  const isMobile = useIsMobile(768);
+  const shouldRenderCards = variant === 'cards' || (variant === 'auto' && isMobile);
+
+  if (shouldRenderCards) {
+    return (
+      <div className="space-y-3 w-full" aria-label="Loading records" role="status">
+        {Array.from({ length: rows }).map((_, r) => (
+          <div
+            key={r}
+            className="card-mobile border border-border bg-surface p-4 space-y-3 animate-skeleton-breathe"
+          >
+            <div className="flex items-center justify-between">
+              <Skeleton className="h-5 w-32" />
+              <Skeleton className="h-4 w-20" />
+            </div>
+            <div className="grid grid-cols-2 gap-2 pt-2 border-t border-border/40">
+              <div className="space-y-1">
+                <Skeleton className="h-3 w-16" />
+                <Skeleton className="h-4 w-24" />
+              </div>
+              <div className="space-y-1">
+                <Skeleton className="h-3 w-16" />
+                <Skeleton className="h-4 w-24" />
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  }
+
   const widths = ['w-24', 'w-36', 'w-28', 'w-48', 'w-20'];
   return (
     <div className="w-full card-workspace border border-border">
