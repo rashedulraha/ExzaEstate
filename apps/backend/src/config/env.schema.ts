@@ -8,10 +8,7 @@ const baseEnvSchema = z.object({
   // Database configuration (PostgreSQL 18 + RLS)
   DATABASE_URL: z.string().min(1, 'DATABASE_URL is required'),
   MIGRATOR_DATABASE_URL: z.string().min(1).optional(),
-  SYSTEM_DATABASE_URL: z
-    .string()
-    .min(1)
-    .default('postgresql://exza_system:exza_system_secret@localhost:5432/exzaestate?schema=public'),
+  SYSTEM_DATABASE_URL: z.string().min(1).optional(),
 
   // Redis configuration (BullMQ + Cache; required in cloud mode)
   REDIS_URL: z.string().optional(),
@@ -223,8 +220,15 @@ export const envSchema = baseEnvSchema
     const swaggerEnabled =
       data.SWAGGER_ENABLED !== undefined ? data.SWAGGER_ENABLED : data.NODE_ENV !== 'production';
 
+    const systemDatabaseUrl =
+      data.SYSTEM_DATABASE_URL ||
+      (data.NODE_ENV !== 'production'
+        ? 'postgresql://exza_system:exza_system_secret@localhost:5432/exzaestate?schema=public'
+        : undefined);
+
     return {
       ...data,
+      SYSTEM_DATABASE_URL: systemDatabaseUrl,
       REDIS_URL: data.REDIS_URL || 'redis://localhost:6379',
       SWAGGER_ENABLED: swaggerEnabled,
     };

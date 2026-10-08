@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
+import { PERMISSIONS } from '@exzaestate/shared';
 import { ProvisioningContext, ProvisioningStep } from '../provisioning-step.interface.js';
 import { DEFAULT_TENANT_ROLES } from './default-roles.data.js';
 
@@ -9,6 +10,21 @@ export class RolesPermissionsStep implements ProvisioningStep {
   readonly order = 20;
 
   async execute(ctx: ProvisioningContext, tx: Prisma.TransactionClient): Promise<void> {
+    for (const code of Object.values(PERMISSIONS)) {
+      try {
+        await tx.systemPermission.upsert({
+          where: { code },
+          update: {},
+          create: {
+            code,
+            module: code.split(':')[0] || 'general',
+            description: `${code} permission`,
+          },
+        });
+      } catch {
+        // If already inserted concurrently by another transaction, proceed safely
+      }
+    }
     for (const roleDef of DEFAULT_TENANT_ROLES) {
       const role = await tx.role.upsert({
         where: {

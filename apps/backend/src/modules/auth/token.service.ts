@@ -21,6 +21,7 @@ export interface TokenPairResult {
   accessToken: string;
   refreshToken: string;
   sessionId: string;
+  refreshTokenId?: string;
 }
 
 function isEligibleForGracePeriod(
@@ -177,6 +178,7 @@ export class TokenService {
       accessToken,
       refreshToken: newRawToken,
       sessionId: found.session_id,
+      refreshTokenId: newRefreshTokenId,
     };
   }
 
@@ -261,7 +263,7 @@ export class TokenService {
       `UPDATE refresh_tokens
        SET revoked_at = now(), replaced_by_id = $1::uuid
        WHERE id = $2::uuid`,
-      result.refreshToken,
+      result.refreshTokenId,
       found.id,
     );
 

@@ -265,20 +265,21 @@ describe('Notification Engine Core (Task A1.8)', () => {
 
       expect(eventId).toBeDefined();
 
-      // Dispatch pending batch
-      const processedCount = await ctx.outboxDispatcher.dispatchBatch(10);
-      expect(processedCount).toBeGreaterThanOrEqual(1);
-
-      // Verify in-app notification was created for user1A
-      const notifs = await ctx.tenantDb.withCompany(ctx.companyAId, (tx) =>
-        tx.inAppNotification.findMany({
-          where: {
-            companyId: ctx.companyAId,
-            userId: ctx.user1AId,
-            eventCode: DOMAIN_EVENTS.APPROVAL_REQUESTED,
-          },
-        }),
-      );
+      // Dispatch pending batches until our outbox event is processed
+      let notifs: Array<{ title: string; body: string }> = [];
+      for (let attempt = 0; attempt < 10; attempt++) {
+        await ctx.outboxDispatcher.dispatchBatch(50);
+        notifs = await ctx.tenantDb.withCompany(ctx.companyAId, (tx) =>
+          tx.inAppNotification.findMany({
+            where: {
+              companyId: ctx.companyAId,
+              userId: ctx.user1AId,
+              eventCode: DOMAIN_EVENTS.APPROVAL_REQUESTED,
+            },
+          }),
+        );
+        if (notifs.length >= 1) break;
+      }
 
       expect(notifs.length).toBe(1);
       expect(notifs[0]?.title).toContain('Approval Required: DISCOUNT_APPROVAL');

@@ -214,7 +214,15 @@ export class JwtAuthGuard implements CanActivate {
         this.configService.jwt.accessSecret,
       ) as unknown as JwtAccessTokenPayload;
 
-      if (!payload.sub || !payload.companyId || !payload.sid) {
+      if (!payload.sub || !payload.sid) {
+        throw new UnauthorizedException('Malformed token payload');
+      }
+
+      if (payload.realm === 'system') {
+        throw new ForbiddenException('Super Admin tokens cannot access tenant business endpoints');
+      }
+
+      if (!payload.companyId) {
         throw new UnauthorizedException('Malformed token payload');
       }
 

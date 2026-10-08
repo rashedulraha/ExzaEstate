@@ -87,7 +87,10 @@ describe('API Response Envelope, HttpExceptionFilter & Swagger Gating', () => {
     expect(res.status).toBe(200);
     expect(res.body).toEqual({
       success: true,
-      data: { status: 'ok' },
+      data: {
+        status: 'ok',
+        minSupportedClientVersion: '0.1.0',
+      },
     });
     expect(res.headers['x-request-id']).toBeDefined();
   });
@@ -137,10 +140,16 @@ describe('API Response Envelope, HttpExceptionFilter & Swagger Gating', () => {
     });
   });
 
+  const validProdEnv = {
+    ...validTestEnv,
+    NODE_ENV: 'production' as const,
+    STORAGE_ACCESS_KEY: 'prod_cloud_access_key',
+    STORAGE_SECRET_KEY: 'prod_cloud_secret_key_secure',
+  };
+
   it('suppresses internal details/stack in production mode for unexpected errors', async () => {
     const prodEnv = validateEnv({
-      ...validTestEnv,
-      NODE_ENV: 'production',
+      ...validProdEnv,
       SWAGGER_ENABLED: false,
     });
 
@@ -171,8 +180,7 @@ describe('API Response Envelope, HttpExceptionFilter & Swagger Gating', () => {
 
   it('disables Swagger at /api/docs in production by default (not reachable anonymously)', async () => {
     const prodEnv = validateEnv({
-      ...validTestEnv,
-      NODE_ENV: 'production',
+      ...validProdEnv,
       SWAGGER_ENABLED: false,
     });
 
@@ -196,8 +204,7 @@ describe('API Response Envelope, HttpExceptionFilter & Swagger Gating', () => {
 
   it('gates Swagger behind basic auth in production when auth credentials are configured', async () => {
     const prodAuthEnv = validateEnv({
-      ...validTestEnv,
-      NODE_ENV: 'production',
+      ...validProdEnv,
       SWAGGER_ENABLED: true,
       SWAGGER_USER: 'swagger_admin',
       SWAGGER_PASSWORD: 'swagger_password_123',

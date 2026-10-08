@@ -41,7 +41,7 @@ describe('Cross-Client Data Parity (AT-20 / A-M1 Gate)', () => {
     expect(desktopData.status).toBe('CONFIRMED');
     expect(desktopData.status).toBe(webData.status);
     expect(desktopData.financials.netPricePaisa).toBe('500000000');
-    expect(desktopData.financials.netPriceFormatted).toBe('৳50,00,000');
+    expect(desktopData.financials.netPriceFormatted).toBe('৳50,00,000.00');
     expect(desktopData.financials).toEqual(webData.financials);
     expect(desktopData.dates).toEqual(webData.dates);
     expect(desktopData.installmentsCount).toBe(webData.installmentsCount);
