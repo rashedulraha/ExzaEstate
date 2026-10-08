@@ -118,7 +118,11 @@ function validateHsts(source, name) {
     errors.push(`${name} is missing Strict-Transport-Security (HSTS).`);
     return;
   }
-  if (!hsts.includes('max-age=') || !hsts.includes('includeSubDomains') || !hsts.includes('preload')) {
+  if (
+    !hsts.includes('max-age=') ||
+    !hsts.includes('includeSubDomains') ||
+    !hsts.includes('preload')
+  ) {
     errors.push(`${name} HSTS must include max-age, includeSubDomains, and preload.`);
   }
   const maxAgeMatch = hsts.match(/max-age=(\d+)/);
@@ -200,7 +204,9 @@ const forbiddenCdns = [
 const webIndexHtml = fs.readFileSync(webIndexHtmlPath, 'utf-8');
 for (const cdn of forbiddenCdns) {
   if (webIndexHtml.includes(cdn)) {
-    errors.push(`apps/web/index.html references external CDN: ${cdn}. Fonts and assets must be self-hosted.`);
+    errors.push(
+      `apps/web/index.html references external CDN: ${cdn}. Fonts and assets must be self-hosted.`,
+    );
   }
 }
 
@@ -232,12 +238,16 @@ if (fs.existsSync(distPath)) {
 
 // Report findings
 if (errors.length > 0) {
-  console.error('\n\x1b[31m[FAILED]\x1b[0m Web Security Headers check failed with following issues:');
+  console.error(
+    '\n\x1b[31m[FAILED]\x1b[0m Web Security Headers check failed with following issues:',
+  );
   for (const err of errors) {
     console.error(`  \x1b[31m✗\x1b[0m ${err}`);
   }
   process.exit(1);
 }
 
-console.log('✓ All Web deployment security headers, CSP, caching rules, and self-hosted asset rules pass.');
+console.log(
+  '✓ All Web deployment security headers, CSP, caching rules, and self-hosted asset rules pass.',
+);
 process.exit(0);

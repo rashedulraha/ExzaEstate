@@ -988,7 +988,9 @@ strong,
   border-radius: var(--radius-card);
   padding: 1rem;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+  transition:
+    transform 0.15s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.15s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .card-mobile:active {
@@ -997,10 +999,9 @@ strong,
 
 @media (max-width: 767px) {
   /* Prevent iOS Safari automatic viewport zoom while keeping accessible typography */
-  input:not([type="checkbox"]):not([type="radio"]),
+  input:not([type='checkbox']):not([type='radio']),
   select,
   textarea {
     font-size: 16px;
   }
 }
-
