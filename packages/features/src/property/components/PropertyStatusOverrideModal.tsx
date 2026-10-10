@@ -87,8 +87,8 @@ export function PropertyStatusOverrideModal({
               <strong className="font-semibold">Elevated Administrative Action</strong>
               <p className="text-caption mt-0.5 text-warning/90">
                 Current status is <span className="font-bold">{property.status}</span>. Overriding
-                will bypass normal booking/cancellation workflows and emit a security audit event
-                under rule <code className="font-mono text-caption">RULE-PROPERTY-STATUS</code>.
+                will bypass normal booking/cancellation workflows and record an executive audit
+                event under company inventory policy.
               </p>
             </div>
           </div>

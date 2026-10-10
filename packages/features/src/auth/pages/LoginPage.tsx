@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { t } from '@exzaestate/shared';
-import { useAuth } from '@exzaestate/app-core';
+import { useAuth, usePlatform } from '@exzaestate/app-core';
 import { useAuthFlow } from '../hooks/useAuthFlow.js';
 import { loginSchema, type LoginFormData } from '../schemas/auth.schema.js';
 import { TotpEnrollmentModal } from '../components/TotpEnrollmentModal.js';
@@ -192,6 +192,8 @@ function LoginFormFields({ register, errors, isSubmitting, onSubmit }: LoginForm
 
 export function LoginPage({ onSuccess, defaultEmail, defaultPassword }: LoginPageProps) {
   const navigate = useNavigate();
+  const platform = usePlatform();
+  const isDesktop = platform.apiConfig.clientType === 'desktop';
   const { isAuthenticated } = useAuth();
   const { handleLogin, isSubmitting, errorMessage, errorCode } = useAuthFlow();
   const [showTotpEnrollment, setShowTotpEnrollment] = useState(false);
@@ -280,17 +282,19 @@ export function LoginPage({ onSuccess, defaultEmail, defaultPassword }: LoginPag
           onSubmit={handleSubmit(onSubmit)}
         />
 
-        <div className="pt-1 text-center">
-          <Link
-            to="/setup/first-launch"
-            className="inline-flex items-center justify-center gap-1.5 text-caption font-semibold text-primary hover:text-primary-light transition-colors cursor-pointer group whitespace-nowrap"
-          >
-            <span>First time setup? Activate License & Register Organization</span>
-            <span className="transition-transform group-hover:translate-x-0.5" aria-hidden="true">
-              →
-            </span>
-          </Link>
-        </div>
+        {isDesktop && (
+          <div className="pt-1 text-center">
+            <Link
+              to="/setup/first-launch"
+              className="inline-flex items-center justify-center gap-1.5 text-caption font-semibold text-primary hover:text-primary-light transition-colors cursor-pointer group whitespace-nowrap"
+            >
+              <span>First time setup? Activate License & Register Organization</span>
+              <span className="transition-transform group-hover:translate-x-0.5" aria-hidden="true">
+                →
+              </span>
+            </Link>
+          </div>
+        )}
 
         <div className="border-t border-border pt-4 text-center">
           <div className="inline-flex items-center justify-center gap-2 text-caption text-text-muted whitespace-nowrap">

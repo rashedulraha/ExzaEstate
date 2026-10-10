@@ -95,7 +95,7 @@ describe('Property Forms & Detail Pages', () => {
       });
 
       expect(screen.getByText(/Elevated Administrative Action/i)).toBeDefined();
-      expect(screen.getByText(/RULE-PROPERTY-STATUS/i)).toBeDefined();
+      expect(screen.getByText(/company inventory policy/i)).toBeDefined();
 
       const overrideBtn = screen.getByRole('button', { name: /Override Status/i });
       await act(async () => {

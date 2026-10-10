@@ -116,7 +116,7 @@ export function Step1PropertySelect({
             <ChevronDown className="w-3.5 h-3.5" />
           )}
           <span>
-            {showManualInput ? 'Hide manual UUID input' : 'Or enter unit ID / code manually'}
+            {showManualInput ? 'Hide manual unit ID input' : 'Or enter unit ID / code manually'}
           </span>
         </button>
 
@@ -124,13 +124,13 @@ export function Step1PropertySelect({
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3 p-3 bg-surface-sunken/30 rounded-card border border-border">
             <FormField
               id="booking-propertyId"
-              label="Property Unit UUID"
+              label="Property Unit ID / Code"
               required
               error={errors.propertyId?.message}
             >
               <Input
                 id="booking-propertyId"
-                placeholder="e.g. 550e8400-e29b-41d4-a716-446655440000"
+                placeholder="e.g. FLAT-3A or unit ID"
                 {...register('propertyId')}
               />
             </FormField>

@@ -85,20 +85,7 @@ export function IncomeStatementReportPage() {
         </div>
       </div>
 
-      {/* Tier 2: Filter Toolbar */}
-      <ReportFiltersBar
-        mode="range"
-        startDate={startDate}
-        endDate={endDate}
-        onStartDateChange={setStartDate}
-        onEndDateChange={setEndDate}
-        projectId={projectId}
-        onProjectIdChange={setProjectId}
-        onRefresh={() => void query.refetch()}
-        onOpenExport={() => setIsExportOpen(true)}
-      />
-
-      {/* Tier 3: Content Workspace Card */}
+      {/* Tier 2: Unified Income Statement Workspace Card */}
       <ReportStateWrapper
         isLoading={query.isLoading}
         isError={query.isError}
@@ -107,133 +94,148 @@ export function IncomeStatementReportPage() {
         onRetry={() => void query.refetch()}
         hasData={Boolean(report)}
       >
-        {report && (
-          <div className="rounded-card border border-border bg-surface shadow-xs p-6 space-y-6 max-w-4xl mx-auto">
-            {/* Header */}
-            <div className="flex items-center justify-between text-caption text-text-muted border-b border-border pb-3">
-              <span>
-                Period:{' '}
-                <strong className="text-text font-mono">
-                  {report.startDate} to {report.endDate}
-                </strong>
-              </span>
-              <span>
-                Currency: <strong className="text-text">BDT</strong>
-              </span>
-            </div>
-
-            {/* Revenue */}
-            <div className="space-y-3">
-              <h3 className="text-small font-bold text-text uppercase tracking-wider">
-                Revenues & Sales
-              </h3>
-              <div className="divide-y divide-border/60">
-                {report.revenues.map((item) => (
-                  <div
-                    key={item.accountId}
-                    className="py-2.5 flex items-center justify-between text-small hover:bg-surface-sunken/30 px-1 rounded transition-colors"
-                  >
-                    <div>
-                      <span className="font-mono text-caption text-text-muted mr-2">
-                        {item.accountCode}
-                      </span>
-                      <span className="text-text font-medium">{item.accountName}</span>
-                    </div>
-                    <span className="font-mono tabular-nums font-semibold text-text">
-                      {formatMoney(BigInt(item.amountPaisa))}
-                    </span>
-                  </div>
-                ))}
+        <div className="rounded-card border border-border bg-surface shadow-xs">
+          <ReportFiltersBar
+            mode="range"
+            startDate={startDate}
+            endDate={endDate}
+            onStartDateChange={setStartDate}
+            onEndDateChange={setEndDate}
+            projectId={projectId}
+            onProjectIdChange={setProjectId}
+            onRefresh={() => void query.refetch()}
+            onOpenExport={() => setIsExportOpen(true)}
+          />
+          {report && (
+            <div className="p-6 space-y-6 max-w-4xl mx-auto">
+              {/* Header */}
+              <div className="flex items-center justify-between text-caption text-text-muted border-b border-border pb-3">
+                <span>
+                  Period:{' '}
+                  <strong className="text-text font-mono">
+                    {report.startDate} to {report.endDate}
+                  </strong>
+                </span>
+                <span>
+                  Currency: <strong className="text-text">BDT</strong>
+                </span>
               </div>
-              <div className="pt-2 border-t border-border flex items-center justify-between font-semibold text-small">
-                <span>Total Revenue</span>
-                <span className="font-mono tabular-nums text-text font-bold">
-                  {formatMoney(BigInt(report.totalRevenuePaisa))}
+
+              {/* Revenue */}
+              <div className="space-y-3">
+                <h3 className="text-small font-bold text-text uppercase tracking-wider">
+                  Revenues & Sales
+                </h3>
+                <div className="divide-y divide-border/60">
+                  {report.revenues.map((item) => (
+                    <div
+                      key={item.accountId}
+                      className="py-2.5 flex items-center justify-between text-small hover:bg-surface-sunken/30 px-1 rounded transition-colors"
+                    >
+                      <div>
+                        <span className="font-mono text-caption text-text-muted mr-2">
+                          {item.accountCode}
+                        </span>
+                        <span className="text-text font-medium">{item.accountName}</span>
+                      </div>
+                      <span className="font-mono tabular-nums font-semibold text-text">
+                        {formatMoney(BigInt(item.amountPaisa))}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+                <div className="pt-2 border-t border-border flex items-center justify-between font-semibold text-small">
+                  <span>Total Revenue</span>
+                  <span className="font-mono tabular-nums text-text font-bold">
+                    {formatMoney(BigInt(report.totalRevenuePaisa))}
+                  </span>
+                </div>
+              </div>
+
+              {/* Cost of Sales */}
+              <div className="space-y-3 pt-4 border-t border-border">
+                <h3 className="text-small font-bold text-text uppercase tracking-wider">
+                  Cost of Sales (Direct Costs)
+                </h3>
+                <div className="divide-y divide-border/60">
+                  {report.costOfSales.map((item) => (
+                    <div
+                      key={item.accountId}
+                      className="py-2.5 flex items-center justify-between text-small hover:bg-surface-sunken/30 px-1 rounded transition-colors"
+                    >
+                      <div>
+                        <span className="font-mono text-caption text-text-muted mr-2">
+                          {item.accountCode}
+                        </span>
+                        <span className="text-text font-medium">{item.accountName}</span>
+                      </div>
+                      <span className="font-mono tabular-nums font-semibold text-text">
+                        {formatMoney(BigInt(item.amountPaisa))}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+                <div className="pt-2 border-t border-border flex items-center justify-between font-semibold text-small">
+                  <span>Total Cost of Sales</span>
+                  <span className="font-mono tabular-nums text-text font-bold">
+                    {formatMoney(BigInt(report.totalCostOfSalesPaisa))}
+                  </span>
+                </div>
+              </div>
+
+              {/* Gross Profit */}
+              <div className="p-3 bg-surface-sunken/60 rounded-button flex items-center justify-between font-bold text-body border border-border">
+                <span className="uppercase text-caption tracking-wider text-text">
+                  Gross Profit
+                </span>
+                <span className="font-mono tabular-nums text-text">
+                  {formatMoney(BigInt(report.grossProfitPaisa))}
+                </span>
+              </div>
+
+              {/* Operating Expenses */}
+              <div className="space-y-3 pt-4 border-t border-border">
+                <h3 className="text-small font-bold text-text uppercase tracking-wider">
+                  Operating & Administrative Expenses
+                </h3>
+                <div className="divide-y divide-border/60">
+                  {report.operatingExpenses.map((item) => (
+                    <div
+                      key={item.accountId}
+                      className="py-2.5 flex items-center justify-between text-small hover:bg-surface-sunken/30 px-1 rounded transition-colors"
+                    >
+                      <div>
+                        <span className="font-mono text-caption text-text-muted mr-2">
+                          {item.accountCode}
+                        </span>
+                        <span className="text-text font-medium">{item.accountName}</span>
+                      </div>
+                      <span className="font-mono tabular-nums font-semibold text-text">
+                        {formatMoney(BigInt(item.amountPaisa))}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+                <div className="pt-2 border-t border-border flex items-center justify-between font-semibold text-small">
+                  <span>Total Operating Expenses</span>
+                  <span className="font-mono tabular-nums text-text font-bold">
+                    {formatMoney(BigInt(report.totalOperatingExpensesPaisa))}
+                  </span>
+                </div>
+              </div>
+
+              {/* Net Income / Profit */}
+              <div className="pt-4 border-t-2 border-b-4 border-double border-border-strong flex items-center justify-between font-bold">
+                <span className="text-text uppercase text-caption tracking-wider">
+                  Net Income (P&L)
+                </span>
+                <span className="font-mono tabular-nums text-heading-3 text-success">
+                  {formatMoney(BigInt(report.netProfitPaisa))}
                 </span>
               </div>
             </div>
-
-            {/* Cost of Sales */}
-            <div className="space-y-3 pt-4 border-t border-border">
-              <h3 className="text-small font-bold text-text uppercase tracking-wider">
-                Cost of Sales (Direct Costs)
-              </h3>
-              <div className="divide-y divide-border/60">
-                {report.costOfSales.map((item) => (
-                  <div
-                    key={item.accountId}
-                    className="py-2.5 flex items-center justify-between text-small hover:bg-surface-sunken/30 px-1 rounded transition-colors"
-                  >
-                    <div>
-                      <span className="font-mono text-caption text-text-muted mr-2">
-                        {item.accountCode}
-                      </span>
-                      <span className="text-text font-medium">{item.accountName}</span>
-                    </div>
-                    <span className="font-mono tabular-nums font-semibold text-text">
-                      {formatMoney(BigInt(item.amountPaisa))}
-                    </span>
-                  </div>
-                ))}
-              </div>
-              <div className="pt-2 border-t border-border flex items-center justify-between font-semibold text-small">
-                <span>Total Cost of Sales</span>
-                <span className="font-mono tabular-nums text-text font-bold">
-                  {formatMoney(BigInt(report.totalCostOfSalesPaisa))}
-                </span>
-              </div>
-            </div>
-
-            {/* Gross Profit */}
-            <div className="p-3 bg-surface-sunken/60 rounded-button flex items-center justify-between font-bold text-body border border-border">
-              <span className="uppercase text-caption tracking-wider text-text">Gross Profit</span>
-              <span className="font-mono tabular-nums text-text">
-                {formatMoney(BigInt(report.grossProfitPaisa))}
-              </span>
-            </div>
-
-            {/* Operating Expenses */}
-            <div className="space-y-3 pt-4 border-t border-border">
-              <h3 className="text-small font-bold text-text uppercase tracking-wider">
-                Operating & Administrative Expenses
-              </h3>
-              <div className="divide-y divide-border/60">
-                {report.operatingExpenses.map((item) => (
-                  <div
-                    key={item.accountId}
-                    className="py-2.5 flex items-center justify-between text-small hover:bg-surface-sunken/30 px-1 rounded transition-colors"
-                  >
-                    <div>
-                      <span className="font-mono text-caption text-text-muted mr-2">
-                        {item.accountCode}
-                      </span>
-                      <span className="text-text font-medium">{item.accountName}</span>
-                    </div>
-                    <span className="font-mono tabular-nums font-semibold text-text">
-                      {formatMoney(BigInt(item.amountPaisa))}
-                    </span>
-                  </div>
-                ))}
-              </div>
-              <div className="pt-2 border-t border-border flex items-center justify-between font-semibold text-small">
-                <span>Total Operating Expenses</span>
-                <span className="font-mono tabular-nums text-text font-bold">
-                  {formatMoney(BigInt(report.totalOperatingExpensesPaisa))}
-                </span>
-              </div>
-            </div>
-
-            {/* Net Income / Profit */}
-            <div className="pt-4 border-t-2 border-b-4 border-double border-border-strong flex items-center justify-between font-bold">
-              <span className="text-text uppercase text-caption tracking-wider">
-                Net Income (P&L)
-              </span>
-              <span className="font-mono tabular-nums text-heading-3 text-success">
-                {formatMoney(BigInt(report.netProfitPaisa))}
-              </span>
-            </div>
-          </div>
-        )}
+          )}
+        </div>
       </ReportStateWrapper>
 
       {/* Export Modal */}

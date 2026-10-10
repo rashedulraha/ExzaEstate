@@ -134,7 +134,9 @@ export function ReconciliationGateCard({
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center space-x-3">
-            <h3 className="text-h3 font-semibold text-text">Step 4: Reconciliation Gate (AT-29)</h3>
+            <h3 className="text-h3 font-semibold text-text">
+              Step 4: Opening Balance Reconciliation Gate
+            </h3>
             <StatusBadge value={isReconciled ? 'CONFIRMED' : 'REJECTED'} />
           </div>
           <p className="text-body-sm text-text-muted mt-0.5">

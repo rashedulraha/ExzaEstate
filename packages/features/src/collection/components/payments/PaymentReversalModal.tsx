@@ -81,7 +81,7 @@ export function PaymentReversalModal({
         <div className="flex items-start gap-3 p-3.5 rounded-card bg-danger/10 border border-danger/20 text-danger">
           <AlertTriangle className="w-5 h-5 shrink-0 mt-0.5" />
           <div className="text-small space-y-1">
-            <p className="font-semibold">Irreversible Financial Action (RULE-IMMUTABLE)</p>
+            <p className="font-semibold">Irreversible Financial Action: Audit Trail Protected</p>
             <p className="text-danger/90">
               Posted payments and receipts cannot be edited or deleted. Proceeding will generate an
               immutable reversal journal, mark the receipt as VOID, and restore customer dues.

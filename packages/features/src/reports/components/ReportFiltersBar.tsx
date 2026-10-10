@@ -129,8 +129,8 @@ export function ReportFiltersBar({
   showProjectFilter = true,
 }: ReportFiltersBarProps) {
   return (
-    <StickyToolbar>
-      <div className="shadow-xs rounded-card border border-border bg-surface p-4 flex flex-wrap items-center justify-between gap-3">
+    <StickyToolbar className="p-4">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         {/* Left: Filter Controls */}
         <div className="flex flex-wrap items-center gap-3">
           <DateFilterControls
@@ -148,7 +148,7 @@ export function ReportFiltersBar({
               <span className="text-text-muted font-medium flex items-center gap-1.5 shrink-0">
                 <Filter className="w-4 h-4 text-text-muted" /> Project:
               </span>
-              <div className="min-w-[170px]">
+              <div className="min-w-[190px]">
                 <Select
                   id="report-project-filter"
                   options={PROJECT_OPTIONS}

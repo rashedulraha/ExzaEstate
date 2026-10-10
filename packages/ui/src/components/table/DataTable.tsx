@@ -42,6 +42,7 @@ interface DataTableDesktopProps<T> {
   emptyState?: React.ReactNode;
   totalsRow?: React.ReactNode;
   className?: string;
+  embedded?: boolean;
   sortKey: string | null;
   sortOrder: 'asc' | 'desc';
   onSort: (key: string) => void;
@@ -61,12 +62,18 @@ function DataTableDesktop<T>({
   emptyState,
   totalsRow,
   className,
+  embedded,
   sortKey,
   sortOrder,
   onSort,
 }: DataTableDesktopProps<T>) {
+  const isPlain = embedded || className?.includes('border-none') || className?.includes('border-0');
+  const containerClasses = isPlain
+    ? `w-full ${className ?? ''}`
+    : `w-full card-workspace border border-border bg-surface ${className ?? ''}`;
+
   return (
-    <div className={`w-full card-workspace border border-border bg-surface ${className}`}>
+    <div className={containerClasses}>
       <div className="overflow-x-auto">
         <table className="w-full text-left border-collapse" role="table">
           <DataTableHead
@@ -167,6 +174,7 @@ export function DataTable<T>(props: DataTableProps<T>) {
       emptyState={props.emptyState}
       totalsRow={props.totalsRow}
       className={props.className ?? ''}
+      embedded={props.embedded}
       sortKey={sortKey}
       sortOrder={sortOrder}
       onSort={handleSort}

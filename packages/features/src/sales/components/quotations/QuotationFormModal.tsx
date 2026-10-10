@@ -74,25 +74,25 @@ export function QuotationFormModal({
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <FormField
             id="quotation-propertyId"
-            label="Property Unit UUID"
+            label="Property Unit ID / Code"
             required
             error={errors.propertyId?.message}
           >
             <Input
               id="quotation-propertyId"
-              placeholder="Enter property UUID..."
+              placeholder="Enter property unit code (e.g. FLAT-3A)..."
               {...register('propertyId')}
             />
           </FormField>
 
           <FormField
             id="quotation-customerId"
-            label="Customer UUID (Optional)"
+            label="Customer ID / Code (Optional)"
             error={errors.customerId?.message}
           >
             <Input
               id="quotation-customerId"
-              placeholder="Enter customer UUID..."
+              placeholder="Enter customer code or ID..."
               {...register('customerId')}
             />
           </FormField>

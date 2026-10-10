@@ -25,7 +25,7 @@ function DiscountNotice({ discountPct }: { discountPct: number }) {
   if (discountPct <= 0) return null;
   return (
     <div className="p-3 bg-warning/12 border border-warning/20 rounded-card text-caption text-warning">
-      <strong>Approval Notice (AT-24):</strong> Bookings with discounts require maker-checker
+      <strong>Management Approval Notice:</strong> Bookings with discounts require maker-checker
       executive sign-off before agreement issuance.
     </div>
   );

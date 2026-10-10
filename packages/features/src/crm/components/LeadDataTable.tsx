@@ -117,6 +117,7 @@ export function LeadDataTable({
       isLoading={isLoading}
       onRowClick={onSelectLead}
       columns={columns}
+      embedded
     />
   );
 }

@@ -129,8 +129,7 @@ export function PostingSeal({
         <span className="flex items-center gap-1.5">
           <ShieldCheck className="w-3.5 h-3.5 text-primary shrink-0" />
           <span>
-            Financial records are append-only. Corrections require an offsetting reversal
-            (RULE-IMMUTABLE).
+            Financial records are permanent. Corrections require an offsetting reversal journal.
           </span>
         </span>
         <span className="hidden md:inline font-mono">EXZA-SEAL-VERIFIED</span>

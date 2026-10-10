@@ -150,4 +150,22 @@ describe('PropertyListPage — 3-Tier Standard & Acceptance Checks', () => {
 
     expect(availablePill.className).toContain('bg-primary');
   });
+
+  it('renders canonical dashed EmptyState and hides filter toolbar when no properties exist', async () => {
+    setupTestAdapter({ properties: [] });
+
+    await act(async () => {
+      renderWithProviders(<PropertyListPage />, { queryClient, mockSecureStorage });
+    });
+
+    await waitFor(() => {
+      expect(screen.getByText('No properties found in project')).toBeDefined();
+      expect(screen.getByText(/Your project has no property units yet/i)).toBeDefined();
+      expect(screen.getAllByRole('button', { name: /Add Property/i })).toHaveLength(2);
+    });
+
+    // Quick filter toolbar should NOT be visible when there are 0 units
+    expect(screen.queryByText('Quick Filter:')).toBeNull();
+    expect(screen.queryByPlaceholderText('Search unit code or title...')).toBeNull();
+  });
 });

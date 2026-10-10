@@ -23,6 +23,7 @@ interface RenderTableProps {
   agreements: AgreementItem[];
   onRetry: () => void;
   onSelect: (a: AgreementItem) => void;
+  isEmbedded?: boolean;
 }
 
 function renderTableContent({
@@ -32,6 +33,7 @@ function renderTableContent({
   agreements,
   onRetry,
   onSelect,
+  isEmbedded = false,
 }: RenderTableProps): ReactElement {
   if (isLoading) {
     return <LoadingState variant="table" />;
@@ -46,9 +48,22 @@ function renderTableContent({
   }
   if (agreements.length === 0) {
     return (
-      <EmptyState
-        title="No agreements found"
-        description="Agreements are generated automatically upon booking confirmation."
+      <div className="p-6">
+        <EmptyState
+          dashedBorder
+          title="No agreements found"
+          description="Agreements are generated automatically upon booking confirmation."
+        />
+      </div>
+    );
+  }
+  if (isEmbedded) {
+    return (
+      <AgreementDataTable
+        agreements={agreements}
+        isLoading={isLoading}
+        onViewAgreement={onSelect}
+        onSignAndLock={onSelect}
       />
     );
   }
@@ -120,9 +135,9 @@ export function AgreementListPage(): ReactElement {
         </div>
       </div>
 
-      {/* Tier 3: Search and Filters */}
-      <StickyToolbar>
-        <div className="shadow-xs flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 p-2.5 bg-surface rounded-card border border-border">
+      {/* Tier 3: Main Agreements Workspace */}
+      <div className="rounded-card border border-border bg-surface shadow-xs">
+        <StickyToolbar className="p-2.5 sm:p-3">
           <div className="flex flex-wrap items-center gap-2.5 flex-1">
             <div className="relative w-full sm:w-80">
               <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-text-muted pointer-events-none" />
@@ -164,17 +179,18 @@ export function AgreementListPage(): ReactElement {
               </button>
             )}
           </div>
-        </div>
-      </StickyToolbar>
+        </StickyToolbar>
 
-      {renderTableContent({
-        isLoading,
-        isError,
-        error,
-        agreements,
-        onRetry: () => void refetch(),
-        onSelect: (a) => setSelectedAgreement(a),
-      })}
+        {renderTableContent({
+          isLoading,
+          isError,
+          error,
+          agreements,
+          onRetry: () => void refetch(),
+          onSelect: (a) => setSelectedAgreement(a),
+          isEmbedded: true,
+        })}
+      </div>
 
       <AgreementViewerModal
         isOpen={Boolean(selectedAgreement)}

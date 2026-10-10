@@ -9,6 +9,8 @@ interface BookingDataTableProps {
   isLoading: boolean;
   onSelectBooking: (item: BookingItem) => void;
   onGenerateAgreement?: (item: BookingItem) => void;
+  embedded?: boolean;
+  className?: string;
 }
 
 export function BookingDataTable({
@@ -16,6 +18,8 @@ export function BookingDataTable({
   isLoading,
   onSelectBooking,
   onGenerateAgreement,
+  embedded,
+  className,
 }: BookingDataTableProps): ReactElement {
   const columns: ColumnDef<BookingItem>[] = [
     {
@@ -111,6 +115,8 @@ export function BookingDataTable({
       columns={columns}
       isLoading={isLoading}
       keyExtractor={(item) => item.id}
+      embedded={embedded}
+      className={className}
     />
   );
 }

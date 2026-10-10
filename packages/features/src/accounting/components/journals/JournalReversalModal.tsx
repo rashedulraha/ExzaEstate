@@ -82,7 +82,7 @@ export function JournalReversalModal({
           <AlertTriangle className="w-5 h-5 text-warning shrink-0 mt-0.5" />
           <div className="text-body text-text">
             <span className="font-semibold block">
-              Append-Only Financial Ledger (RULE-IMMUTABLE)
+              Permanent Audit Ledger: Offsetting Reversal Entry
             </span>
             <p className="text-caption text-text-muted mt-0.5">
               Financial records cannot be deleted. This operation creates an exact offsetting

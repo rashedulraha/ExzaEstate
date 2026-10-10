@@ -106,8 +106,8 @@ describe('RouteErrorBoundary', () => {
     render(<RouteErrorBoundary />);
 
     expect(screen.getByText('Network / Connection Failed')).toBeDefined();
-    expect(screen.getByText('Backend Disconnected')).toBeDefined();
-    expect(screen.getByText(/Unable to reach the backend API server/)).toBeDefined();
+    expect(screen.getByText('Server Disconnected')).toBeDefined();
+    expect(screen.getByText(/Unable to connect to the estate server/)).toBeDefined();
   });
 
   it('renders Frontend Client Runtime Exception gracefully', () => {

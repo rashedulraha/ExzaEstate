@@ -93,9 +93,9 @@ export function QuotationListPage(): ReactElement {
         </div>
       </div>
 
-      {/* Tier 3: Search and Filters */}
-      <StickyToolbar>
-        <div className="shadow-xs flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 p-2.5 bg-surface rounded-card border border-border">
+      {/* Tier 3: Main Quotations Workspace */}
+      <div className="rounded-card border border-border bg-surface shadow-xs">
+        <StickyToolbar className="p-2.5 sm:p-3">
           <div className="flex flex-wrap items-center gap-2.5 flex-1">
             <div className="relative w-full sm:w-80">
               <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-text-muted pointer-events-none" />
@@ -140,37 +140,36 @@ export function QuotationListPage(): ReactElement {
               </button>
             )}
           </div>
-        </div>
-      </StickyToolbar>
+        </StickyToolbar>
 
-      {/* Main Content Area */}
-      {(() => {
-        if (isLoading) {
-          return <LoadingState variant="table" />;
-        }
-        if (isError) {
+        {(() => {
+          if (isLoading) {
+            return <LoadingState variant="table" />;
+          }
+          if (isError) {
+            return (
+              <ErrorState
+                message={error instanceof Error ? error.message : 'Failed to load quotations'}
+                onRetry={() => void refetch()}
+              />
+            );
+          }
+          if (quotations.length === 0) {
+            return (
+              <div className="p-6">
+                <EmptyState
+                  dashedBorder
+                  title="No quotations found"
+                  description="Create your first commercial quotation to start the sales cycle."
+                  actionLabel="Create Quotation"
+                  actionVariant="secondary"
+                  actionIcon={<Plus className="w-4 h-4" />}
+                  onAction={() => setIsFormOpen(true)}
+                />
+              </div>
+            );
+          }
           return (
-            <ErrorState
-              message={error instanceof Error ? error.message : 'Failed to load quotations'}
-              onRetry={() => void refetch()}
-            />
-          );
-        }
-        if (quotations.length === 0) {
-          return (
-            <EmptyState
-              dashedBorder
-              title="No quotations found"
-              description="Create your first commercial quotation to start the sales cycle."
-              actionLabel="Create Quotation"
-              actionVariant="secondary"
-              actionIcon={<Plus className="w-4 h-4" />}
-              onAction={() => setIsFormOpen(true)}
-            />
-          );
-        }
-        return (
-          <div className="bg-surface rounded-card border border-border overflow-hidden">
             <QuotationDataTable
               quotations={quotations}
               isLoading={isLoading}
@@ -180,9 +179,9 @@ export function QuotationListPage(): ReactElement {
                 setPreviewQuotation(q);
               }}
             />
-          </div>
-        );
-      })()}
+          );
+        })()}
+      </div>
 
       <QuotationFormModal
         isOpen={isFormOpen}

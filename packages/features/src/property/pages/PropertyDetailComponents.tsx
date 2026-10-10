@@ -151,7 +151,7 @@ export function PropertyOverviewTab({ property }: { property: PropertyItem }) {
             </div>
             <div className="flex items-center gap-2">
               <Layers className="w-4 h-4 text-text-muted" />
-              <span className="text-text-muted">Project UUID:</span>
+              <span className="text-text-muted">Project ID:</span>
               <span className="font-mono text-caption text-text-2">{property.projectId}</span>
             </div>
           </div>

@@ -84,9 +84,9 @@ export function classifyApiError(error: ApiError): ClassifiedError {
     return {
       category: 'NETWORK_ERROR',
       title: 'Network / Connection Failed',
-      badge: { label: 'Backend Disconnected', variant: 'danger' },
+      badge: { label: 'Server Disconnected', variant: 'danger' },
       message:
-        'Unable to reach the backend API server. Please check your network connection or verify that the server is online.',
+        'Unable to connect to the estate server. Please check your internet connection or verify that the server is online.',
       details: error.message,
     };
   }

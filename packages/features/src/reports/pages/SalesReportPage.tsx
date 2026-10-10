@@ -140,7 +140,7 @@ export function SalesReportPage() {
               </span>
             </div>
             <p className="text-small text-text-muted mt-1">
-              Confirmed sales, allotment contracts, and revenue booking register (AT-15 verified)
+              Confirmed sales, allotment contracts, and revenue booking register
             </p>
           </div>
 
@@ -163,20 +163,7 @@ export function SalesReportPage() {
         </div>
       </div>
 
-      {/* Tier 2: Filter Toolbar */}
-      <ReportFiltersBar
-        mode="range"
-        startDate={startDate}
-        endDate={endDate}
-        onStartDateChange={setStartDate}
-        onEndDateChange={setEndDate}
-        projectId={projectId}
-        onProjectIdChange={setProjectId}
-        onRefresh={() => void query.refetch()}
-        onOpenExport={() => setIsExportOpen(true)}
-      />
-
-      {/* Tier 3: Content Workspace Card */}
+      {/* Tier 2: Unified Sales Register Workspace Card */}
       <ReportStateWrapper
         isLoading={query.isLoading}
         isError={query.isError}
@@ -185,11 +172,27 @@ export function SalesReportPage() {
         onRetry={() => void query.refetch()}
         hasData={Boolean(report)}
       >
-        {report && (
-          <div className="rounded-card border border-border bg-surface shadow-xs overflow-hidden">
-            <DataTable data={report.rows} columns={columns} keyExtractor={(r) => r.bookingId} />
-          </div>
-        )}
+        <div className="rounded-card border border-border bg-surface shadow-xs">
+          <ReportFiltersBar
+            mode="range"
+            startDate={startDate}
+            endDate={endDate}
+            onStartDateChange={setStartDate}
+            onEndDateChange={setEndDate}
+            projectId={projectId}
+            onProjectIdChange={setProjectId}
+            onRefresh={() => void query.refetch()}
+            onOpenExport={() => setIsExportOpen(true)}
+          />
+          {report && (
+            <DataTable
+              embedded
+              data={report.rows}
+              columns={columns}
+              keyExtractor={(r) => r.bookingId}
+            />
+          )}
+        </div>
       </ReportStateWrapper>
 
       {/* Export Modal */}

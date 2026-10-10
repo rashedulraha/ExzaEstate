@@ -16,7 +16,22 @@ export function configureApp(app: INestApplication, configService: ConfigService
 
   // Enable CORS for frontend and desktop clients
   app.enableCors({
-    origin: configService.corsOrigins.length > 0 ? configService.corsOrigins : true,
+    origin: (
+      origin: string | undefined,
+      callback: (err: Error | null, allow?: boolean) => void,
+    ) => {
+      if (
+        !origin ||
+        !configService.isProduction ||
+        configService.corsOrigins.includes(origin) ||
+        /^https?:\/\/localhost(:\d+)?$/.test(origin) ||
+        origin.startsWith('tauri://')
+      ) {
+        callback(null, true);
+      } else {
+        callback(new Error(`Origin ${origin} not allowed by CORS`));
+      }
+    },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: [

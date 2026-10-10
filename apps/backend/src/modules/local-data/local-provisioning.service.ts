@@ -224,7 +224,7 @@ export class LocalProvisioningService {
       'Administrator email is required for provisioning',
     );
     const fullName = assertRequiredString(
-      input.adminName,
+      input.adminName || input.adminFullName,
       'Administrator full name is required for provisioning',
     );
     const rawPassword = assertPassword(input.adminPassword);

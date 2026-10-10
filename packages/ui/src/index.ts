@@ -15,6 +15,7 @@ export * from './components/dialog/Dialog.js';
 export * from './components/drawer/Drawer.js';
 export * from './components/table/DataTable.js';
 export * from './components/badge/StatusBadge.js';
+export * from './components/card/StatCard.js';
 export * from './components/skeleton/Skeleton.js';
 export * from './components/toast/Toast.js';
 

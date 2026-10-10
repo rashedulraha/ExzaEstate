@@ -7,9 +7,10 @@ import {
   Input,
   Breadcrumbs,
   EmptyState,
+  FilteredEmptyState,
   StickyToolbar,
 } from '@exzaestate/ui';
-import { Search, Users } from 'lucide-react';
+import { Search, Users, Calendar } from 'lucide-react';
 import { useAgingDashboard } from '../hooks/useAgingDashboard.js';
 import { AgingStrip } from '../components/aging/AgingStrip.js';
 import type { CustomerAgingRow } from '../schemas/collection.schema.js';
@@ -118,6 +119,21 @@ export function AgingDashboardPage() {
     },
   ];
 
+  const emptyState = searchQuery.trim() ? (
+    <FilteredEmptyState
+      title="No matching customer dues"
+      description="No customer accounts match your active search criteria. Try clearing your search."
+      onResetFilters={() => setSearchQuery('')}
+    />
+  ) : (
+    <EmptyState
+      icon={<Users className="w-6 h-6" />}
+      title="All Customer Accounts Current"
+      description="No outstanding customer dues or overdue installments recorded as of this date."
+      dashedBorder
+    />
+  );
+
   return (
     <div className="container-page space-y-6" data-testid="aging-dashboard-page">
       {/* Tier 1: Page Shell & Clean Header */}
@@ -126,7 +142,7 @@ export function AgingDashboardPage() {
           <Breadcrumbs
             items={[
               { label: 'Overview', href: '/dashboard', onClick: () => navigate('/dashboard') },
-              { label: 'Finance & Accounts' },
+              { label: 'Finance & Treasury' },
               { label: 'Due & Overdue Collections' },
             ]}
           />
@@ -149,8 +165,9 @@ export function AgingDashboardPage() {
         </div>
 
         {/* Date Filter Control */}
-        <div className="flex items-center gap-2 px-3 py-1.5 rounded-button border border-border bg-surface shadow-xs">
-          <span className="text-caption font-semibold uppercase tracking-wider text-text-muted">
+        <div className="flex items-center gap-2.5 px-3 py-1.5 rounded-card border border-border bg-surface">
+          <Calendar className="w-4 h-4 text-text-muted shrink-0" aria-hidden="true" />
+          <span className="text-caption font-semibold uppercase tracking-wider text-text-muted whitespace-nowrap">
             As Of Date:
           </span>
           <Input
@@ -158,7 +175,7 @@ export function AgingDashboardPage() {
             type="date"
             value={asOfDate}
             onChange={(e) => setAsOfDate(e.target.value)}
-            className="py-1 px-2 text-small border border-border rounded-button bg-surface-sunken"
+            className="py-1 px-2 text-small border-border bg-surface-sunken"
           />
         </div>
       </div>
@@ -182,63 +199,58 @@ export function AgingDashboardPage() {
           </div>
         </div>
 
-        <AgingStrip buckets={buckets} totalReceivablePaisa={totalReceivablePaisa} />
+        <AgingStrip
+          buckets={buckets}
+          totalReceivablePaisa={totalReceivablePaisa}
+          isLoading={isLoading}
+        />
       </div>
 
-      {/* Tier 3: Sticky Customer Receivables Ledger Toolbar */}
-      <StickyToolbar>
-        <div className="p-4 rounded-card border border-border bg-surface shadow-xs flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
-          <div className="flex items-center gap-3">
-            <h3 className="text-h3 font-bold text-text">Customer Dues & Overdue List</h3>
-            <span className="text-caption font-semibold px-2 py-0.5 rounded-full bg-surface-sunken text-text-2 border border-border">
-              {filteredCustomerRows.length}{' '}
-              {filteredCustomerRows.length === 1 ? 'Customer' : 'Customers'}
-            </span>
-          </div>
-
-          <div className="relative w-full md:w-72">
-            <Search className="w-4 h-4 text-text-muted absolute left-3 top-1/2 -translate-y-1/2" />
-            <Input
-              id="customerSearch"
-              placeholder="Search by customer name or ID..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-9"
-            />
-          </div>
-        </div>
-      </StickyToolbar>
-
-      {/* Tier 4: Data Table Card */}
+      {/* Tier 3: Unified Customer Receivables Ledger Workspace */}
       <div className="rounded-card border border-border bg-surface shadow-xs">
-        {/* Data Table */}
-        <DataTable
-          columns={columns}
-          data={filteredCustomerRows}
-          keyExtractor={(row) => row.customerId}
-          isLoading={isLoading}
-          className="border-none shadow-none"
-          totalsRow={
-            <div className="flex items-center justify-between px-4 py-3 font-bold text-text border-t-2 border-b border-border bg-surface-sunken">
-              <span>Total Across All Buckets:</span>
-              <span className="text-h3 tabular-nums font-extrabold">
-                {totalReceivableFormatted || formatMoney(totalReceivablePaisa)}
+        <StickyToolbar className="p-4">
+          <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <h3 className="text-h3 font-bold text-text">Customer Dues & Overdue List</h3>
+              <span className="text-caption font-semibold px-2 py-0.5 rounded-full bg-surface-sunken text-text-2 border border-border">
+                {filteredCustomerRows.length}{' '}
+                {filteredCustomerRows.length === 1 ? 'Customer' : 'Customers'}
               </span>
             </div>
-          }
-          emptyState={
-            <EmptyState
-              icon={<Users className="w-6 h-6" />}
-              title="No Customer Dues Found"
-              description={
-                searchQuery
-                  ? 'No customers match your search criteria.'
-                  : 'No outstanding customer dues recorded as of this date.'
-              }
-              dashedBorder
-            />
-          }
-        />
+
+            <div className="relative w-full md:w-72">
+              <Search className="w-4 h-4 text-text-muted absolute left-3 top-1/2 -translate-y-1/2" />
+              <Input
+                id="customerSearch"
+                placeholder="Search by customer name or ID..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-9"
+              />
+            </div>
+          </div>
+        </StickyToolbar>
+
+        {filteredCustomerRows.length === 0 && !isLoading ? (
+          <div className="p-6">{emptyState}</div>
+        ) : (
+          <DataTable
+            columns={columns}
+            data={filteredCustomerRows}
+            keyExtractor={(row) => row.customerId}
+            isLoading={isLoading}
+            embedded
+            className="border-none shadow-none"
+            totalsRow={
+              <div className="flex items-center justify-between px-4 py-3 font-bold text-text border-t-2 border-b border-border bg-surface-sunken">
+                <span>Total Across All Buckets:</span>
+                <span className="text-h3 tabular-nums font-extrabold">
+                  {totalReceivableFormatted || formatMoney(totalReceivablePaisa)}
+                </span>
+              </div>
+            }
+          />
+        )}
       </div>
     </div>
   );

@@ -7,6 +7,7 @@ import { useTheme } from '@exzaestate/ui';
 import { SignOutModal } from '../../auth/components/SignOutModal.js';
 import {
   ProfileIdentityCard,
+  DisplayModeCard,
   ThemeSelectorCard,
   AccountSecurityCard,
 } from './AccountProfileComponents.js';
@@ -72,7 +73,7 @@ function SessionActionsCard({
 
 export function AccountProfileSettings() {
   const { user, logout, logoutAll } = useAuth();
-  const { palette, setPalette } = useTheme();
+  const { theme, setTheme, palette, setPalette } = useTheme();
   const navigate = useNavigate();
 
   const [isSignOutModalOpen, setIsSignOutModalOpen] = useState(false);
@@ -134,6 +135,8 @@ export function AccountProfileSettings() {
         displayCompany={displayCompany}
         initials={initials}
       />
+
+      <DisplayModeCard currentTheme={theme} onSelectTheme={setTheme} />
 
       <ThemeSelectorCard currentPalette={palette} onSelectPalette={setPalette} />
 

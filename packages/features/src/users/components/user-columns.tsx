@@ -16,6 +16,19 @@ export function isUserActive(u: UserItem): boolean {
   return u.status === 'ACTIVE' || (u as unknown as { isActive?: boolean }).isActive === true;
 }
 
+export function isPrimaryOwner(u: UserItem): boolean {
+  return Boolean(
+    u.roles?.some(
+      (r) =>
+        r.code === 'MANAGING_DIRECTOR' ||
+        r.code === 'OWNER' ||
+        r.code === 'SUPER_ADMIN' ||
+        r.name === 'MANAGING_DIRECTOR' ||
+        r.name === 'Owner',
+    ),
+  );
+}
+
 export function useUserColumns({
   onEditUser,
   onToggleStatus,
@@ -33,6 +46,7 @@ export function useUserColumns({
         sortable: true,
         render: (u) => {
           const initials = getUserInitials(u.fullName);
+          const isOwner = isPrimaryOwner(u);
           return (
             <div className="flex items-center gap-3">
               <div
@@ -42,7 +56,14 @@ export function useUserColumns({
                 {initials}
               </div>
               <div className="flex flex-col min-w-0">
-                <span className="text-body font-semibold text-text truncate">{u.fullName}</span>
+                <div className="flex items-center gap-2">
+                  <span className="text-body font-semibold text-text truncate">{u.fullName}</span>
+                  {isOwner && (
+                    <span className="text-caption font-semibold px-2 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/25">
+                      Owner
+                    </span>
+                  )}
+                </div>
                 <span className="text-caption text-text-muted truncate">{u.email}</span>
               </div>
             </div>
@@ -136,6 +157,21 @@ export function useUserColumns({
         header: 'Actions',
         align: 'right',
         render: (u) => {
+          const isOwner = isPrimaryOwner(u);
+          if (isOwner) {
+            return (
+              <div className="flex items-center justify-end" onClick={(e) => e.stopPropagation()}>
+                <span
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-caption font-semibold bg-surface-sunken text-primary border border-primary/25"
+                  title="Organization Owner account is permanently protected"
+                >
+                  <ShieldCheck className="w-3.5 h-3.5 text-primary" />
+                  Account Owner
+                </span>
+              </div>
+            );
+          }
+
           const active = isUserActive(u);
           return (
             <div

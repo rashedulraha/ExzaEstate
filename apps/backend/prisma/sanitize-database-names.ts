@@ -81,10 +81,28 @@ async function sanitizeCompanies(prisma: PrismaClient) {
   }
 }
 
+import path from 'node:path';
+
 async function main() {
+  if (typeof process.loadEnvFile === 'function') {
+    try {
+      process.loadEnvFile(path.resolve(process.cwd(), '.env'));
+    } catch {}
+    try {
+      process.loadEnvFile(path.resolve(process.cwd(), '../../.env'));
+    } catch {}
+  }
+
   const connectionString =
     process.env.MIGRATOR_DATABASE_URL ||
-    'postgresql://exza_migrator:exza_migrator_secret@localhost:5432/exzaestate?schema=public';
+    process.env.SYSTEM_DATABASE_URL ||
+    process.env.DATABASE_URL;
+
+  if (!connectionString) {
+    throw new Error(
+      'FATAL: Database connection URL is missing. Please define MIGRATOR_DATABASE_URL or DATABASE_URL in your .env file.',
+    );
+  }
   const pool = new pg.Pool({ connectionString });
   const adapter = new PrismaPg(pool);
   const prisma = new PrismaClient({ adapter });

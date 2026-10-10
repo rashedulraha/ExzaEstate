@@ -87,12 +87,11 @@ export function AgreementViewerModal({
 
         {isSigning ? (
           <div className="p-4 border border-warning/30 bg-warning/12 rounded-card space-y-4">
-            <h4 className="text-h3 font-bold text-text">
-              Execute & Lock Agreement (RULE-IMMUTABLE)
-            </h4>
+            <h4 className="text-h3 font-bold text-text">Execute & Lock Agreement Permanently</h4>
             <p className="text-caption text-text-muted">
-              Once locked, this agreement becomes an immutable historical document. Any subsequent
-              modifications will mint version {agreement.version + 1} with full diff tracking.
+              Once locked, this agreement becomes a permanent legal record. Any subsequent
+              modifications will generate version {agreement.version + 1} with complete revision
+              tracking.
             </p>
             <FormField id="signing-notes" label="Execution & Signing Remarks" required>
               <Input

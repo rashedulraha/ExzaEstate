@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react';
-import { LoadingState, ErrorState } from '@exzaestate/ui';
+import { ListChecks } from 'lucide-react';
+import { LoadingState, ErrorState, EmptyState } from '@exzaestate/ui';
 import { useSetupChecklist } from '../hooks/useSetupChecklist.js';
 import type { SetupChecklistItem } from '../schemas/setup.schema.js';
 import { SetupProgressBar } from '../components/SetupProgressBar.js';
@@ -108,11 +109,25 @@ export function SetupChecklistPage() {
           </div>
         </div>
 
-        <div className="space-y-3">
-          {filteredItems.map((item) => (
-            <ChecklistCard key={item.key} item={item} />
-          ))}
-        </div>
+        {filteredItems.length === 0 ? (
+          <div className="p-6">
+            <EmptyState
+              icon={<ListChecks className="w-8 h-8" />}
+              title="No Checklist Items Found"
+              description="No onboarding items match the selected filter criteria."
+              dashedBorder
+              actionLabel="Show All Items"
+              actionVariant="secondary"
+              onAction={() => setFilter('ALL')}
+            />
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {filteredItems.map((item) => (
+              <ChecklistCard key={item.key} item={item} />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

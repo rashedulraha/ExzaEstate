@@ -122,6 +122,8 @@ export function JournalDataTable({
       data={journals}
       keyExtractor={(row) => row.id}
       isLoading={isLoading}
+      embedded
+      className="border-none shadow-none"
       emptyState={
         <div className="py-12 text-center text-text-muted">
           No journal entries found matching current criteria.

@@ -2344,3 +2344,160 @@ Tick a box only after the verification rules above are met. Dependencies are def
    - `pnpm --filter @exzaestate/features test`: 37 test files, 187/187 tests green.
 4. Open questions: None. Owner release sign-off certified.
 5. Next task ID: Core v1.0 Complete — Ready for Production Deployment.
+
+### [2026-10-10] Resolution: Property Inventory & Unit Initial Empty State Design System Alignment
+
+1. User Request:
+   - User provided audio instruction and two comparison screenshots.
+   - Screenshot 1 (Target style): Canonical dashed-border empty container with centered inbox icon, title ("No prospects found"), guidance text, and subtle outline/ghost button (`+ Add Lead`). No redundant filter/search toolbar.
+   - Screenshot 2 (Reported issue): Property Inventory view showing search input, status dropdown, type dropdown, 7 quick filter chips (`All Units`, `Available`, `Reserved`, `Booked`, `Sold`, `Hold`, `Blocked`) above a solid-border card containing bright orange button `+ Add First Property`.
+   - Goal: Align Property Inventory to render the clean canonical empty state (matching Screenshot 1) when no units exist in the project (`total === 0 && !hasActiveFilters`).
+2. Architecture & Design Fix:
+   - [packages/features/src/property/pages/PropertyListComponents.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/property/pages/PropertyListComponents.tsx):
+     - Added `dashedBorder` to `<EmptyState>`.
+     - Added `actionVariant="secondary"` and `actionIcon={<Plus className="w-4 h-4" />}`.
+     - Normalized action button label to `Add Property` (rendered as `+ Add Property`).
+   - [packages/features/src/property/pages/PropertyListPage.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/property/pages/PropertyListPage.tsx):
+     - Added `isInitialEmpty = !isLoading && !isError && total === 0 && !hasActiveFilters`.
+     - Suppressed `StickyToolbar` (`PropertyListFilters`) when `isInitialEmpty` (search input, status dropdowns, and quick filter chips only render when units exist or when active filters are engaged).
+     - Bypassed the outer `.card-workspace` wrapper when `isInitialEmpty`, allowing the dashed `<EmptyState>` container to render directly without double card framing.
+     - Disabled `Filters` and `Export` buttons in the Tier 1 header when `isInitialEmpty`.
+   - [packages/features/src/property/property-list.spec.tsx](file:///Users/rashedulraha/Developer/ExzaEstate/packages/features/src/property/property-list.spec.tsx):
+     - Added unit test asserting canonical dashed EmptyState renders and search/filter toolbar is hidden when `total === 0`.
+3. Verification Command & Result:
+   - `pnpm --filter @exzaestate/features test run src/property/property-list.spec.tsx`: 7/7 tests passed.
+   - `pnpm lint`: 0 errors across 1,840 files.
+   - Zero circular dependencies.
+
+### [2026-10-10] Resolution: Approvals Empty State & Cross-App Unified Sticky Toolbar Workspace Card Migration
+
+1. User Request (Audio & Screenshots):
+   - Issue 1: Pending Approvals (`/approvals`) empty state ("Inbox is clear") was rendered inside an awkward solid card with dark background and rounded borders. User requested matching the canonical dashed EmptyState pattern without redundant card framing when there are no pending requests and no active filters.
+   - Issue 2: In Reports Hub (`/reports`) and all list/navigation tables, the searchbar/filter toolbar was floating as a separate sibling card above the data table with a 24px gap (`space-y-6`). When scrolling, table rows scrolled behind the floating rounded bottom corners of the toolbar with mismatched corners. User requested merging the searchbar and table into one unified card workspace without gaps or corner mismatches, keeping the toolbar seamlessly sticky.
+2. Architecture & Design Fix:
+   - UI Primitives:
+     - `packages/ui/src/layout/StickyToolbar.tsx`: Updated to render `sticky top-0 z-20 bg-surface border-b border-border rounded-t-card ${className}`, eliminating detached card margins (`-mt-3.5 pt-3.5 pb-0 -mx-1.5 px-1.5 bg-bg`).
+     - `packages/ui/src/components/table/table.types.ts` & `DataTable.tsx`: Added `embedded?: boolean` prop to suppress redundant outer `.card-workspace` borders when rendered inside a unified card.
+     - `packages/ui/src/styles/theme.css`: Removed `overflow: hidden` from `.card-workspace` so that child sticky headers are not trapped by parent overflow clipping when the page scroll container (`<main>`) scrolls.
+   - Pending Approvals (`/approvals`):
+     - `ApprovalInboxContent.tsx`: Added `hasActiveFilters` support and `dashedBorder` to both initial `Inbox is clear` and filtered `No Matching Approvals` states.
+     - `ApprovalInboxPage.tsx`: Bypasses outer solid card when `isInitialEmpty`, rendering the canonical dashed empty state directly. When items exist or filters active, renders unified card containing both `ApprovalInboxFilters` and `ApprovalInboxContent`.
+     - `ApprovalDataTable.tsx`: Passed `embedded` to `DataTable`.
+   - Reports Hub & Statements (`/reports`, `/reports/*`):
+     - `ReportsFilterBar.tsx`: Converted to `<StickyToolbar className="p-4 space-y-3.5">` with nested card framing removed.
+     - `ReportsHubPage.tsx`: Merged `ReportsFilterBar` and `ReportsDirectoryView` into unified card (`rounded-card border border-border bg-surface shadow-xs`).
+     - `ReportsTableView.tsx`: Added `rounded-b-card` to table wrapper.
+     - Unified card workspace pattern applied to all statement reports: `SalesReportPage.tsx`, `CollectionReportPage.tsx`, `InventoryReportPage.tsx`, `TrialBalanceReportPage.tsx`, `IncomeStatementReportPage.tsx`, `BalanceSheetReportPage.tsx`.
+   - Feature List Pages Merged:
+     - Property Inventory (`/properties`): Merged `StickyToolbar` filters and main content into unified card workspace.
+     - Customer Directory (`/customers`): Merged `StickyToolbar` and `CustomerListContent` with `isEmbedded` support into unified card.
+     - CRM Lead Pipeline (`/crm/leads`): Merged `StickyToolbar` filters and table/kanban view into unified card; bypasses card on `isInitialEmpty`.
+     - Sales Bookings, Agreements, Quotations (`/sales/*`): Merged `StickyToolbar` and tables into unified card.
+     - Collections & Accounting (`/collections/*`, `/accounting/*`): Merged `StickyToolbar` and `DataTable embedded` into unified card.
+     - User & Role Management (`/users`, `/roles`): Merged `StickyToolbar` and `DataTable embedded` into unified card.
+     - Audit & Security Logs (`/audit`): Merged `StickyToolbar` and `DataTable embedded` into unified card inside `AuditTrailPanel` and `SecurityEventsPanel`.
+3. Verification Command & Result:
+   - `pnpm --filter @exzaestate/ui test`: 7/7 test files passed (47/47 tests).
+   - `pnpm --filter @exzaestate/features test`: 37/37 test files passed (191/191 tests).
+   - `pnpm oxlint`: 0 warnings, 0 errors across 1,840 files.
+   - `pnpm lint`: 0 errors, 0 dependency violations, 0 circular dependencies.
+
+### [2026-10-10] Resolution: Freeze-Pane Table Scroll Architecture & Searchbar Top Data Leakage Fix
+
+1. User Request (Audio & Screenshot 1, 2, 3):
+   - Reported issue: When scrolling Reports Hub (`/reports`), the search bar / navbar became detached and shifted into the middle of the table, while table rows (`FIN-05`, `SLS-03`, etc.) scrolled past and emerged ABOVE the search bar in the top gap.
+   - User expectation: Interface must match Screenshot 1 at all times. Search bar and category filters must remain locked at the top of the card workspace. Data rows must scroll exclusively underneath the table header, never leaking or being visible above the search bar.
+2. Architecture & Design Fix:
+   - `packages/features/src/reports/components/ReportsFilterBar.tsx`: Removed detached floating `StickyToolbar` and converted to fixed integrated card workspace header (`shrink-0 border-b border-border bg-surface`).
+   - `packages/features/src/reports/pages/ReportsHubPage.tsx`: Ensured card wrapper has `overflow-hidden flex flex-col`.
+   - `packages/features/src/reports/components/ReportsTableView.tsx`:
+     - Implemented internal scroll container (`overflow-x-auto overflow-y-auto max-h-[calc(100vh-21rem)] min-h-[420px]`) and sticky column header (`<thead className="sticky top-0 z-10 bg-surface-sunken">`).
+     - Fixed responsive line breaking: Enforced `whitespace-nowrap shrink-0` across `PIN`, `CODE`, `CATEGORY`, `FREQUENCY`, `FORMATS`, and `ACTIONS` columns.
+     - `FREQUENCY` badge set to `whitespace-nowrap inline-flex items-center` preventing multi-line badge wrapping (e.g. `MONTHLY CLOSE`).
+     - `REPORT NAME & SCOPE`: Added `truncate` with responsive `max-w` to both title and description so smaller viewports truncate cleanly with ellipsis (`...`) without pushing or breaking adjacent action columns.
+   - `packages/ui/src/layout/StickyToolbar.tsx`: Set to `sticky top-0 z-20 overflow-hidden` so no data peeks through top gaps.
+3. Verification Command & Result:
+   - `pnpm --filter @exzaestate/features test run src/reports/reports-hub.spec.tsx`: 8/8 tests passed.
+   - `pnpm oxlint`: 0 warnings, 0 errors across 1,840 files.
+   - `pnpm lint`: 0 errors, 0 circular dependencies.
+4. Next task ID: Await user review.
+
+### [2026-10-10] Resolution: Sales Pipeline Empty State Breathing Room & Filter Dropdown Width Alignment
+
+1. User Request (Audio & Screenshots 1, 2, 3, 4):
+   - Customer Directory (`/customers` - Screenshot 1): The KYC verification status dropdown menu broke/squished because its width was too narrow. Search bar was fine, but the dropdown width needed to be larger so "All Verification Statuses" displays properly.
+   - Design Benchmark (`/sales/quotations` - Screenshot 2): Price Quotations was highlighted as the target benchmark design where the dashed empty state has proper breathing room and padding inside the workspace card.
+   - Bookings & Sales (`/sales/bookings` - Screenshot 3): The dashed empty state was directly hugging the card border and toolbar ("গায়ের সাথে লেগে গেছে"). Needs to match the spacious, padded design of Screenshot 2.
+   - Pending Approvals (`/approvals` - Screenshot 4): Filtered empty state also needed consistent breathing room and clean card integration.
+   - Audio instruction 2: Make UI/UX clean, simple, and easily maintainable without complex or irregular layout shifts.
+2. Architecture & Design Fix:
+   - `packages/ui/src/components/select/Select.tsx`:
+     - Added `min-w-0` to the trigger button.
+     - Added `truncate mr-2` unconditionally to the trigger `span` so selected labels truncate gracefully with ellipsis (`...`) instead of wrapping or overflowing.
+     - Added `shrink-0` to the `ChevronDown` icon so it is never squished or deformed by text content.
+   - `packages/features/src/customer/pages/CustomerListPage.tsx`:
+     - Expanded KYC filter container from `w-40 sm:w-44` to `w-56 sm:w-60` (224px - 240px), allowing "All Verification Statuses" to display comfortably on one line without breaking.
+     - Wrapped `<EmptyState>` in `<div className="p-6">` inside `CustomerListContent`.
+   - `packages/features/src/sales/pages/BookingListPage.tsx`:
+     - Wrapped `<EmptyState>` in `<div className="p-6">` inside `renderBookingTableContent`, eliminating the cramped border-hugging issue and matching Screenshot 2.
+   - `packages/features/src/sales/pages/AgreementListPage.tsx`:
+     - Wrapped `<EmptyState>` in `<div className="p-6">`.
+   - `packages/features/src/approvals/components/ApprovalInboxContent.tsx`:
+     - Wrapped both filtered and initial empty states in `<div className="p-6">`.
+   - `packages/features/src/approvals/pages/ApprovalInboxPage.tsx`:
+     - Unified into consistent card workspace with sticky filters and padded content.
+   - `packages/features/src/crm/pages/LeadListComponents.tsx`:
+     - Wrapped `<EmptyState>` in `<div className="p-6">`.
+   - `packages/features/src/crm/pages/LeadListPage.tsx`:
+     - Unified into consistent card workspace with sticky filters and padded content.
+3. Verification Command & Result:
+   - `pnpm oxlint`: 0 warnings, 0 errors across 1,840 files.
+   - `pnpm typecheck`: 9/9 packages successful (zero TypeScript errors).
+   - `pnpm --filter @exzaestate/features test`: 37/37 test files passed (192/192 tests).
+4. Next task ID: Await user review.
+
+### [2026-10-10] Resolution: Fix Dropdown Clipping & Disappearing Filter Bar on Select Click
+
+1. User Request (Audio 1 & 2, Screenshots 1-4):
+   - Report & Analytics (`/reports/trial-balance`, etc. - Screenshot 2): When opening the project filter dropdown (`Project: All Projects`), the dropdown options were cut off / hidden under the bottom border ("নিচের দিকে চলে যাচ্ছে মানে নিচের দিকে উঠতেছে সো এটা উপরে নিয়ে আসেন").
+   - Lead Pipeline (`/crm/leads` - Screenshots 3 & 4): Clicking "All Stages" or "All Sources" caused the filter bar to disappear, leaving only a small `[Search...]` input box with an orange ring.
+2. Root Cause Analysis:
+   - `StickyToolbar.tsx` had `overflow-hidden` added to it, which clipped any dropdown expanding vertically outside the toolbar border (causing the Project dropdown to be cut off).
+   - In `Select.tsx`, `showSearch` had a low threshold (`options.length > 7`). Clicking an 8-option dropdown rendered an internal search box with `autoFocus`. Because `StickyToolbar` had `overflow-hidden`, autoFocus caused browser horizontal scroll-jumping that scrolled the main search input off-screen, and vertically clipped all options below the search box—leaving only the tiny `[Search...]` input box visible.
+3. Architecture & Design Fix:
+   - `packages/ui/src/layout/StickyToolbar.tsx`:
+     - Removed `overflow-hidden` so dropdowns (`z-50`) float freely without being clipped.
+   - `packages/ui/src/components/select/Select.tsx`:
+     - Raised `showSearch` threshold from `> 7` to `> 15`, so standard dropdowns (Stages, Sources, Projects, Frequencies) directly display their clean option list without an unwanted search box.
+     - Removed `autoFocus` from `SelectOptionsList` input to prevent browser viewport/container scroll jumps.
+     - Added `min-w-full w-max max-w-xs` and `shadow-xl overflow-y-auto` to `SelectOptionsList` for elevated overlay presentation.
+   - `packages/features/src/reports/components/ReportFiltersBar.tsx`:
+     - Increased project filter container `min-w-[170px]` to `min-w-[190px]` so long project titles fit comfortably.
+   - `packages/features/src/crm/pages/LeadListComponents.tsx`:
+     - Set `w-40 sm:w-44` on `filter-lead-source` matching `filter-lead-status`.
+4. Verification Command & Result:
+   - `pnpm oxlint`: 0 warnings, 0 errors across 1,840 files.
+   - `pnpm typecheck`: 9/9 packages successful (zero TypeScript errors).
+   - `pnpm --filter @exzaestate/features test`: 37/37 test files passed (192/192 tests).
+5. Next task ID: Await user review.
+
+### [2026-10-10] Resolution: Fix Pending Approvals Initial Filter State & Redundant Reset Button
+
+1. User Request (Audio & Screenshots 1-2):
+   - When navigating to Pending Approvals (`/approvals`), the page immediately showed `Pending` status selected, the `x Reset` button in the toolbar, and an empty state stating "No Matching Approvals: No pending approval requests match your active search and filter criteria" with a `Clear Filters` button—even though the user had not searched or filtered anything.
+   - Clicking `Reset` changed the page to `All Statuses` with "Inbox is clear", causing an unintended dual empty state and confusing UX.
+2. Root Cause:
+   - `useApprovalList.ts` initialized `filters.status` to `'PENDING'`. Because `'PENDING' !== 'ALL'`, `hasActiveFilters` evaluated to `true` on initial page load, causing the toolbar to display `Reset` and rendering the filtered empty state.
+3. Architecture & Design Fix:
+   - `packages/features/src/approvals/hooks/useApprovalList.ts`:
+     - Changed default `status` from `'PENDING'` to `'ALL'`, matching all other modules in the application (`BookingListPage`, `QuotationListPage`, `AgreementListPage`, `CustomerListPage`, `LeadListPage`).
+   - `packages/features/src/approvals/components/ApprovalInboxContent.tsx`:
+     - Cleaned up empty state wording: Initial empty state shows "Inbox is clear — There are currently no approval requests requiring review." without any `Clear Filters` button.
+     - Filtered empty state (shown only when the user actively filters) displays "No Matching Approvals" with `Clear Filters`.
+   - `packages/features/src/approvals/approvals.spec.tsx`:
+     - Added test verifying initial load has `hasActiveFilters: false`, renders no `Reset` or `Clear Filters` button, and displays "Inbox is clear".
+4. Verification Command & Result:
+   - `pnpm oxlint`: 0 warnings, 0 errors across 1,840 files.
+   - `pnpm typecheck`: 9/9 packages successful (zero TypeScript errors).
+   - `pnpm --filter @exzaestate/features test`: 37/37 test files passed (193/193 tests).
+5. Next task ID: Ready for user visual review.

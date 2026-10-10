@@ -84,57 +84,55 @@ export function LeadListFilters({
   const hasActiveFilters = Boolean(filters.search || filters.status || filters.source);
 
   return (
-    <StickyToolbar>
-      <div className="shadow-xs flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 p-2.5 bg-surface rounded-card border border-border">
-        <div className="flex flex-wrap items-center gap-2.5 flex-1">
-          <div className="relative w-full sm:w-72 md:w-80">
-            <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-text-muted pointer-events-none" />
-            <Input
-              id="search-leads"
-              inputSize="md"
-              value={filters.search ?? ''}
-              onChange={(e) => onFilterChange({ ...filters, search: e.target.value })}
-              placeholder="Search by prospect name, phone, or email..."
-              className="pl-9 text-small"
-            />
-          </div>
-          <div className="w-40 sm:w-44">
-            <Select
-              id="filter-lead-status"
-              inputSize="md"
-              value={filters.status ?? ''}
-              onChange={(val) => onFilterChange({ ...filters, status: val as LeadStatusEnum | '' })}
-              options={[
-                { label: 'All Stages', value: '' },
-                ...LEAD_STATUSES.map((s) => ({ label: STAGE_LABELS[s] || s, value: s })),
-              ]}
-            />
-          </div>
-          <div className="w-36 sm:w-40">
-            <Select
-              id="filter-lead-source"
-              inputSize="md"
-              value={filters.source ?? ''}
-              onChange={(val) =>
-                onFilterChange({ ...filters, source: val as CreateLeadInput['source'] | '' })
-              }
-              options={[
-                { label: 'All Sources', value: '' },
-                ...LEAD_SOURCES.map((s) => ({ label: SOURCE_LABELS[s] || s, value: s })),
-              ]}
-            />
-          </div>
-          {hasActiveFilters && (
-            <button
-              type="button"
-              onClick={() => onFilterChange({ ...filters, search: '', status: '', source: '' })}
-              className="flex items-center gap-1 px-2.5 py-1.5 text-small text-text-muted hover:text-text rounded-button hover:bg-surface-sunken transition-colors cursor-pointer"
-            >
-              <X className="w-3.5 h-3.5" />
-              <span>Clear</span>
-            </button>
-          )}
+    <StickyToolbar className="p-2.5 sm:p-3">
+      <div className="flex flex-wrap items-center gap-2.5 flex-1">
+        <div className="relative w-full sm:w-72 md:w-80">
+          <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-text-muted pointer-events-none" />
+          <Input
+            id="search-leads"
+            inputSize="md"
+            value={filters.search ?? ''}
+            onChange={(e) => onFilterChange({ ...filters, search: e.target.value })}
+            placeholder="Search by prospect name, phone, or email..."
+            className="pl-9 text-small"
+          />
         </div>
+        <div className="w-40 sm:w-44">
+          <Select
+            id="filter-lead-status"
+            inputSize="md"
+            value={filters.status ?? ''}
+            onChange={(val) => onFilterChange({ ...filters, status: val as LeadStatusEnum | '' })}
+            options={[
+              { label: 'All Stages', value: '' },
+              ...LEAD_STATUSES.map((s) => ({ label: STAGE_LABELS[s] || s, value: s })),
+            ]}
+          />
+        </div>
+        <div className="w-40 sm:w-44">
+          <Select
+            id="filter-lead-source"
+            inputSize="md"
+            value={filters.source ?? ''}
+            onChange={(val) =>
+              onFilterChange({ ...filters, source: val as CreateLeadInput['source'] | '' })
+            }
+            options={[
+              { label: 'All Sources', value: '' },
+              ...LEAD_SOURCES.map((s) => ({ label: SOURCE_LABELS[s] || s, value: s })),
+            ]}
+          />
+        </div>
+        {hasActiveFilters && (
+          <button
+            type="button"
+            onClick={() => onFilterChange({ ...filters, search: '', status: '', source: '' })}
+            className="flex items-center gap-1 px-2.5 py-1.5 text-small text-text-muted hover:text-text rounded-button hover:bg-surface-sunken transition-colors cursor-pointer"
+          >
+            <X className="w-3.5 h-3.5" />
+            <span>Clear</span>
+          </button>
+        )}
       </div>
     </StickyToolbar>
   );
@@ -180,15 +178,17 @@ export function LeadListContent({
 
   if (leads.length === 0) {
     return (
-      <EmptyState
-        dashedBorder
-        title="No prospects found"
-        description="Capture incoming inquiries or add your first sales lead to begin tracking."
-        actionLabel="Add Lead"
-        actionVariant="secondary"
-        actionIcon={<Plus className="w-4 h-4" />}
-        onAction={onOpenAddModal}
-      />
+      <div className="p-6">
+        <EmptyState
+          dashedBorder
+          title="No prospects found"
+          description="Capture incoming inquiries or add your first sales lead to begin tracking."
+          actionLabel="Add Lead"
+          actionVariant="secondary"
+          actionIcon={<Plus className="w-4 h-4" />}
+          onAction={onOpenAddModal}
+        />
+      </div>
     );
   }
 

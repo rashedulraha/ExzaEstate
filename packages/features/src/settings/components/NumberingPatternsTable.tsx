@@ -170,22 +170,26 @@ export function NumberingPatternsTable({
           </div>
         </div>
 
-        <DataTable<NumberingPatternItem>
-          columns={columns}
-          data={filteredPatterns}
-          keyExtractor={(item) => item.id || item.documentType}
-          className="border-none shadow-none"
-          emptyState={
+        {filteredPatterns.length === 0 ? (
+          <div className="p-6">
             <EmptyState
-              icon={<Search className="w-6 h-6" />}
+              icon={<Search className="w-8 h-8" />}
               title="No Document Series Found"
               description="No numbering patterns match your current search criteria."
               dashedBorder
               actionLabel="Clear Search"
+              actionVariant="secondary"
               onAction={() => setSearchTerm('')}
             />
-          }
-        />
+          </div>
+        ) : (
+          <DataTable<NumberingPatternItem>
+            columns={columns}
+            data={filteredPatterns}
+            keyExtractor={(item) => item.id || item.documentType}
+            className="border-none shadow-none"
+          />
+        )}
       </div>
 
       <NumberingPatternModal

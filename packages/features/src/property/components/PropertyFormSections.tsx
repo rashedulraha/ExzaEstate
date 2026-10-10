@@ -127,7 +127,7 @@ export function PropertyLocationFields({
           <Input
             id="property-block-id"
             {...register('blockId')}
-            placeholder="Optional Block UUID"
+            placeholder="Optional Block ID / Code"
             aria-invalid={!!errors.blockId}
           />
         </FormField>
@@ -136,7 +136,7 @@ export function PropertyLocationFields({
           <Input
             id="property-floor-id"
             {...register('floorId')}
-            placeholder="Optional Floor UUID"
+            placeholder="Optional Floor ID / Number"
             aria-invalid={!!errors.floorId}
           />
         </FormField>

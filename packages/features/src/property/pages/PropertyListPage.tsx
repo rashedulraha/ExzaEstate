@@ -68,6 +68,37 @@ export function PropertyListPage() {
   };
 
   const hasActiveFilters = Boolean(search || statusFilter || typeFilter);
+  const isInitialEmpty = !isLoading && !isError && total === 0 && !hasActiveFilters;
+
+  const mainContent = (
+    <PropertyListContent
+      isLoading={isLoading}
+      isError={isError}
+      properties={properties}
+      hasActiveFilters={hasActiveFilters}
+      viewMode={viewMode}
+      canCreate={canCreate}
+      selectedPropertyId={selectedProperty?.id}
+      onRetry={() => void refetch()}
+      onClearFilters={handleClearFilters}
+      onCreateProperty={() => {
+        setEditingProperty(null);
+        setIsFormModalOpen(true);
+      }}
+      onSelectProperty={(prop) => {
+        setSelectedProperty(prop);
+        setIsDrawerOpen(true);
+      }}
+      onEditProperty={(prop) => {
+        setEditingProperty(prop);
+        setIsFormModalOpen(true);
+      }}
+      onOverrideStatus={(prop) => {
+        setOverrideTargetProperty(prop);
+        setIsOverrideModalOpen(true);
+      }}
+    />
+  );
 
   return (
     <div className="container-page space-y-6">
@@ -131,6 +162,7 @@ export function PropertyListPage() {
             size="md"
             leftIcon={<Download className="w-4 h-4 text-text-muted" />}
             onClick={() => exportPropertiesToCsv(properties)}
+            disabled={total === 0}
           >
             <span className="hidden sm:inline">Export</span>
           </Button>
@@ -140,6 +172,7 @@ export function PropertyListPage() {
             size="md"
             leftIcon={<Filter className="w-4 h-4 text-text-muted" />}
             onClick={() => setShowFilters((prev) => !prev)}
+            disabled={isInitialEmpty}
           >
             <span className="hidden sm:inline">Filters</span>
           </Button>
@@ -163,69 +196,46 @@ export function PropertyListPage() {
       {/* TIER 2: KPI METRIC SUMMARY CARDS */}
       <PropertyKpiCards kpis={kpis} />
 
-      {/* TIER 3: STICKY SEARCH & FILTER TOOLBAR */}
-      {showFilters && (
-        <StickyToolbar>
-          <PropertyListFilters
-            search={search}
-            onSearchChange={(val) => {
-              setSearch(val);
-              setPage(1);
-            }}
-            statusFilter={statusFilter}
-            onStatusChange={(val) => {
-              setStatusFilter(val);
-              setPage(1);
-            }}
-            typeFilter={typeFilter}
-            onTypeChange={(val) => {
-              setTypeFilter(val);
-              setPage(1);
-            }}
-            hasActiveFilters={hasActiveFilters}
-            onClearFilters={handleClearFilters}
+      {/* TIER 3: MAIN DATA WORKSPACE (SEARCH TOOLBAR + TABLE / PLAN VIEW + PAGINATION) */}
+      {isInitialEmpty ? (
+        mainContent
+      ) : (
+        <div className="rounded-card border border-border bg-surface shadow-xs">
+          {showFilters && (
+            <StickyToolbar>
+              <PropertyListFilters
+                search={search}
+                onSearchChange={(val) => {
+                  setSearch(val);
+                  setPage(1);
+                }}
+                statusFilter={statusFilter}
+                onStatusChange={(val) => {
+                  setStatusFilter(val);
+                  setPage(1);
+                }}
+                typeFilter={typeFilter}
+                onTypeChange={(val) => {
+                  setTypeFilter(val);
+                  setPage(1);
+                }}
+                hasActiveFilters={hasActiveFilters}
+                onClearFilters={handleClearFilters}
+              />
+            </StickyToolbar>
+          )}
+
+          {mainContent}
+
+          <PaginationBar
+            page={page}
+            limit={limit}
+            total={total}
+            totalPages={totalPages}
+            onPageChange={setPage}
           />
-        </StickyToolbar>
+        </div>
       )}
-
-      {/* TIER 4: MAIN DATA WORKSPACE (DATA TABLE / PLAN VIEW + PAGINATION) */}
-      <div className="card-workspace">
-        <PropertyListContent
-          isLoading={isLoading}
-          isError={isError}
-          properties={properties}
-          hasActiveFilters={hasActiveFilters}
-          viewMode={viewMode}
-          canCreate={canCreate}
-          selectedPropertyId={selectedProperty?.id}
-          onRetry={() => void refetch()}
-          onClearFilters={handleClearFilters}
-          onCreateProperty={() => {
-            setEditingProperty(null);
-            setIsFormModalOpen(true);
-          }}
-          onSelectProperty={(prop) => {
-            setSelectedProperty(prop);
-            setIsDrawerOpen(true);
-          }}
-          onEditProperty={(prop) => {
-            setEditingProperty(prop);
-            setIsFormModalOpen(true);
-          }}
-          onOverrideStatus={(prop) => {
-            setOverrideTargetProperty(prop);
-            setIsOverrideModalOpen(true);
-          }}
-        />
-
-        <PaginationBar
-          page={page}
-          limit={limit}
-          total={total}
-          totalPages={totalPages}
-          onPageChange={setPage}
-        />
-      </div>
 
       {/* Quick Slide-Over Property Drawer */}
       <PropertyDrawer

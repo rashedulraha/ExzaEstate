@@ -59,7 +59,7 @@ function LicenseActionButtons({
     <div className="flex items-center gap-2 flex-wrap">
       {canExport && (
         <Button type="button" variant="secondary" size="sm" onClick={onExportData}>
-          Export All Data (BR-20)
+          Export All Data
         </Button>
       )}
 
@@ -70,7 +70,7 @@ function LicenseActionButtons({
         onClick={onOpenTransfer}
         disabled={!license}
       >
-        Transfer Hardware (Gate D-15)
+        Transfer Device License
       </Button>
 
       {license ? (
@@ -128,11 +128,11 @@ function HardwareSection({ fingerprint }: { fingerprint: MachineFingerprint | nu
   return (
     <div className="bg-surface-sunken border border-border rounded-card p-4 space-y-2">
       <h4 className="text-caption font-semibold uppercase tracking-wider text-text-muted">
-        Bound Hardware Identifiers (MachineFingerprint)
+        Licensed Hardware Device Information
       </h4>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-small">
         <div>
-          <span className="text-caption text-text-muted">Motherboard UUID:</span>
+          <span className="text-caption text-text-muted">Hardware UUID / Motherboard:</span>
           <p className="font-mono text-text truncate">
             {fingerprint?.motherboardUuid ?? 'Detecting...'}
           </p>

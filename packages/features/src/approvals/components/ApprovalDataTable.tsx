@@ -121,6 +121,7 @@ export function ApprovalDataTable({
       columns={columns}
       isLoading={isLoading}
       keyExtractor={(item) => item.id}
+      embedded
       className={className || 'border-none shadow-none'}
       emptyState={
         <EmptyState

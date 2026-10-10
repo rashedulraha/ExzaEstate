@@ -15,7 +15,14 @@ if (typeof process.loadEnvFile === 'function') {
 async function main() {
   const connectionString =
     process.env.MIGRATOR_DATABASE_URL ||
-    'postgresql://exza_migrator:exza_migrator_secret@localhost:5432/exzaestate?schema=public';
+    process.env.SYSTEM_DATABASE_URL ||
+    process.env.DATABASE_URL;
+
+  if (!connectionString) {
+    throw new Error(
+      'FATAL: Database connection URL is missing. Please define MIGRATOR_DATABASE_URL or DATABASE_URL in your .env file.',
+    );
+  }
 
   console.log('Connecting to PostgreSQL database via migrator role...');
   const pool = new pg.Pool({ connectionString });

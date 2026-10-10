@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { Calendar, BookOpen, Receipt, CheckCircle2, AlertCircle } from 'lucide-react';
-import { Breadcrumbs } from '@exzaestate/ui';
+import { Breadcrumbs, StatCard } from '@exzaestate/ui';
 import { useMigration } from '../hooks/useMigration.js';
 import { MigrationBatchHeader } from '../components/MigrationBatchHeader.js';
 import { OpeningBalancesStep } from '../components/OpeningBalancesStep.js';
@@ -24,25 +24,14 @@ function MigrationReconciliationKpi({
 }) {
   const canFinalize = Boolean(reconciliation?.canFinalize);
   return (
-    <div className="card-stat">
-      <div className="flex items-center justify-between">
-        <span className="text-caption font-semibold uppercase tracking-wider text-text-muted">
-          AT-29 Reconciliation
-        </span>
-        {canFinalize ? (
-          <CheckCircle2 className="w-4 h-4 text-success" />
-        ) : (
-          <AlertCircle className="w-4 h-4 text-warning" />
-        )}
-      </div>
-      <span
-        className={`text-hero-num font-bold mt-1.5 block tabular-nums ${
-          canFinalize ? 'text-success' : 'text-warning'
-        }`}
-      >
-        {canFinalize ? 'Zero Variance' : reconciliation?.differenceFormatted || 'Pending'}
-      </span>
-    </div>
+    <StatCard
+      label="Ledger Reconciliation"
+      value={canFinalize ? 'Zero Variance' : reconciliation?.differenceFormatted || 'Pending'}
+      variant={canFinalize ? 'success' : 'warning'}
+      icon={
+        canFinalize ? <CheckCircle2 className="w-4 h-4" /> : <AlertCircle className="w-4 h-4" />
+      }
+    />
   );
 }
 
@@ -103,42 +92,22 @@ function MigrationKpiCards({
 }) {
   return (
     <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-      <div className="card-stat">
-        <div className="flex items-center justify-between">
-          <span className="text-caption font-semibold uppercase tracking-wider text-text-muted">
-            Cut-Over Date
-          </span>
-          <Calendar className="w-4 h-4 text-text-muted" />
-        </div>
-        <span className="text-hero-num font-bold text-text mt-1.5 block tabular-nums">
-          {activeBatch?.goLiveDate || 'Pending Init'}
-        </span>
-      </div>
-
-      <div className="card-stat">
-        <div className="flex items-center justify-between">
-          <span className="text-caption font-semibold uppercase tracking-wider text-text-muted">
-            Opening AR (1200)
-          </span>
-          <BookOpen className="w-4 h-4 text-primary" />
-        </div>
-        <span className="text-hero-num font-bold text-primary mt-1.5 block tabular-nums">
-          {reconciliation?.totalOpeningArFormatted || 'BDT 0.00'}
-        </span>
-      </div>
-
-      <div className="card-stat">
-        <div className="flex items-center justify-between">
-          <span className="text-caption font-semibold uppercase tracking-wider text-text-muted">
-            Legacy Receivables
-          </span>
-          <Receipt className="w-4 h-4 text-text-muted" />
-        </div>
-        <span className="text-hero-num font-bold text-text mt-1.5 block tabular-nums">
-          {reconciliation?.totalLegacyOutstandingFormatted || 'BDT 0.00'}
-        </span>
-      </div>
-
+      <StatCard
+        label="Cut-Over Date"
+        value={activeBatch?.goLiveDate || 'Pending Init'}
+        icon={<Calendar className="w-4 h-4" />}
+      />
+      <StatCard
+        label="Opening AR (1200)"
+        value={reconciliation?.totalOpeningArFormatted || 'BDT 0.00'}
+        variant="brand"
+        icon={<BookOpen className="w-4 h-4" />}
+      />
+      <StatCard
+        label="Legacy Receivables"
+        value={reconciliation?.totalLegacyOutstandingFormatted || 'BDT 0.00'}
+        icon={<Receipt className="w-4 h-4" />}
+      />
       <MigrationReconciliationKpi reconciliation={reconciliation} />
     </div>
   );
@@ -181,7 +150,7 @@ export function MigrationWizardPage() {
           <Breadcrumbs
             items={[
               { label: 'Overview', href: '/dashboard', onClick: () => navigate('/dashboard') },
-              { label: 'System & Admin' },
+              { label: 'Workspace & Admin' },
               { label: 'Data Migration' },
             ]}
           />

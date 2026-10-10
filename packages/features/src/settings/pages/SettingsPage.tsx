@@ -69,7 +69,7 @@ export function SettingsPage() {
           <Breadcrumbs
             items={[
               { label: 'Overview', href: '/dashboard', onClick: () => navigate('/dashboard') },
-              { label: 'System & Admin' },
+              { label: 'Workspace & Admin' },
               { label: 'Company Settings' },
             ]}
           />

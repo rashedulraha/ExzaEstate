@@ -23,10 +23,14 @@ describe('Auth Feature Screens & Modals', () => {
     vi.clearAllMocks();
   });
 
-  function renderWithProviders(ui: React.ReactElement) {
+  function renderWithProviders(
+    ui: React.ReactElement,
+    customAdapters?: Partial<typeof defaultPlatformAdapters>,
+  ) {
     const adapters = {
       ...defaultPlatformAdapters,
       secureStorage: mockSecureStorage,
+      ...customAdapters,
     };
     return render(
       <PlatformProvider adapters={adapters}>
@@ -38,6 +42,38 @@ describe('Auth Feature Screens & Modals', () => {
   }
 
   describe('LoginPage', () => {
+    it('hides first-time setup link on web client and displays it on desktop client', async () => {
+      let unmountFn: () => void = () => {};
+      await act(async () => {
+        const { unmount } = renderWithProviders(<LoginPage />, {
+          apiConfig: {
+            ...defaultPlatformAdapters.apiConfig,
+            clientType: 'web',
+          },
+        });
+        unmountFn = unmount;
+      });
+
+      expect(
+        screen.queryByText(/First time setup\? Activate License & Register Organization/i),
+      ).toBeNull();
+
+      unmountFn();
+
+      await act(async () => {
+        renderWithProviders(<LoginPage />, {
+          apiConfig: {
+            ...defaultPlatformAdapters.apiConfig,
+            clientType: 'desktop',
+          },
+        });
+      });
+
+      expect(
+        screen.getByText(/First time setup\? Activate License & Register Organization/i),
+      ).toBeDefined();
+    });
+
     it('renders login form with branded header and accessible inputs', async () => {
       await act(async () => {
         renderWithProviders(<LoginPage />);

@@ -27,8 +27,8 @@ export function MigrationBatchHeader({
         <div>
           <h3 className="text-h3 font-semibold text-text">Initialize Go-Live Migration Batch</h3>
           <p className="text-body-sm text-text-muted mt-0.5">
-            Set the enterprise cut-over date per FLOW-03. All historical postings prior to this date
-            will be locked upon finalization.
+            Set the enterprise cut-over date. All historical postings prior to this date will be
+            locked upon finalization.
           </p>
         </div>
 

@@ -107,7 +107,7 @@ function extractRawList(rawData: unknown): unknown[] {
 
 export function useApprovalList() {
   const [filters, setFilters] = useState<ApprovalFilters>({
-    status: 'PENDING',
+    status: 'ALL',
     type: 'ALL',
     search: '',
     page: 1,

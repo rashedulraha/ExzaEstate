@@ -3,6 +3,8 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { computeApprovalKpis } from './hooks/useApprovalList.js';
 import { ApprovalDataTable } from './components/ApprovalDataTable.js';
 import { ApprovalDecisionModal } from './components/ApprovalDecisionModal.js';
+import { ApprovalInboxFilters } from './components/ApprovalInboxFilters.js';
+import { ApprovalInboxContent } from './components/ApprovalInboxContent.js';
 import type { ApprovalItem } from './schemas/approval.schema.js';
 
 const mockApprovals: ApprovalItem[] = [
@@ -114,5 +116,38 @@ describe('Approvals Module', () => {
     fireEvent.click(confirmButton);
 
     expect(onConfirm).toHaveBeenCalledWith('Exceeds maximum allowable margin for this quadrant');
+  });
+
+  it('renders initial empty state without Reset or Clear Filters button when no active filters', () => {
+    const defaultFilters = {
+      status: 'ALL' as const,
+      type: 'ALL',
+      search: '',
+      page: 1,
+    };
+
+    const { queryByRole } = render(
+      <ApprovalInboxFilters filters={defaultFilters} onChange={vi.fn()} />,
+    );
+
+    // Initial load must NOT render Reset button
+    expect(queryByRole('button', { name: /Reset/i })).toBeNull();
+
+    // Initial empty state must render "Inbox is clear" and NOT "Clear Filters"
+    const { getByText, queryByText } = render(
+      <ApprovalInboxContent
+        isLoading={false}
+        isError={false}
+        error={null}
+        approvals={[]}
+        refetch={vi.fn()}
+        onSelectApproval={vi.fn()}
+        onOpenDecision={vi.fn()}
+        hasActiveFilters={false}
+      />,
+    );
+
+    expect(getByText('Inbox is clear')).toBeDefined();
+    expect(queryByText('Clear Filters')).toBeNull();
   });
 });

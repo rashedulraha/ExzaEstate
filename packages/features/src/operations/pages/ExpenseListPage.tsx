@@ -1,6 +1,8 @@
 import { useState, useMemo } from 'react';
-import { Plus, Receipt } from 'lucide-react';
-import { Button, Select, EmptyState, FilteredEmptyState, DataTableSkeleton } from '@exzaestate/ui';
+import { useNavigate } from 'react-router';
+import { formatMoney } from '@exzaestate/shared';
+import { Plus, Search, X } from 'lucide-react';
+import { Button, Input, Select, Breadcrumbs, StickyToolbar, StatCard } from '@exzaestate/ui';
 import { useProjectControllerListProjects } from '@exzaestate/api-client';
 import { useExpenses } from '../hooks/useExpenses.js';
 import { ExpenseDataTable } from '../components/expenses/ExpenseDataTable.js';
@@ -14,10 +16,12 @@ import type {
 } from '../schemas/operations.schema.js';
 
 export function ExpenseListPage() {
+  const navigate = useNavigate();
   const [selectedVoucher, setSelectedVoucher] = useState<ExpenseVoucherItem | null>(null);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [isPayOpen, setIsPayOpen] = useState(false);
   const [statusFilter, setStatusFilter] = useState<string>('ALL');
+  const [searchQuery, setSearchQuery] = useState<string>('');
 
   const {
     vouchers = [],
@@ -39,10 +43,81 @@ export function ExpenseListPage() {
     return rawProjects.map((p) => ({ id: p.id, name: p.name }));
   }, [rawProjects]);
 
-  const filteredVouchers = vouchers.filter((v: ExpenseVoucherItem) => {
-    if (statusFilter === 'ALL') return true;
-    return v.status === statusFilter;
-  });
+  const kpiStats = useMemo(() => {
+    let totalPaidPaisa = 0n;
+    let pendingApprovalPaisa = 0n;
+    let countPending = 0;
+    let approvedPaisa = 0n;
+    let countApproved = 0;
+    let countDraft = 0;
+
+    for (const v of vouchers) {
+      let amount = 0n;
+      try {
+        amount = BigInt(v.amountPaisa || '0');
+      } catch {
+        amount = 0n;
+      }
+
+      if (v.status === 'PAID') {
+        totalPaidPaisa += amount;
+      } else if (v.status === 'APPROVED') {
+        approvedPaisa += amount;
+        countApproved++;
+      } else if (v.status === 'SUBMITTED' || v.status === 'VERIFIED') {
+        pendingApprovalPaisa += amount;
+        countPending++;
+      } else if (v.status === 'DRAFT') {
+        countDraft++;
+      }
+    }
+
+    return {
+      totalPaidPaisa: totalPaidPaisa.toString(),
+      pendingApprovalPaisa: pendingApprovalPaisa.toString(),
+      countPending,
+      approvedPaisa: approvedPaisa.toString(),
+      countApproved,
+      countDraft,
+    };
+  }, [vouchers]);
+
+  const filteredVouchers = useMemo(() => {
+    const q = searchQuery.toLowerCase().trim();
+
+    return vouchers.filter((v: ExpenseVoucherItem) => {
+      if (statusFilter !== 'ALL' && v.status !== statusFilter) {
+        return false;
+      }
+
+      if (q) {
+        const matchesVoucher = v.voucherNumber?.toLowerCase().includes(q);
+        const matchesPayee = v.payeeName?.toLowerCase().includes(q);
+        const matchesDesc = v.description?.toLowerCase().includes(q);
+        const matchesCategory = v.categoryName?.toLowerCase().includes(q);
+        const matchesProject = v.projectName?.toLowerCase().includes(q);
+
+        if (
+          !matchesVoucher &&
+          !matchesPayee &&
+          !matchesDesc &&
+          !matchesCategory &&
+          !matchesProject
+        ) {
+          return false;
+        }
+      }
+
+      return true;
+    });
+  }, [vouchers, statusFilter, searchQuery]);
+
+  const hasActiveFilters = Boolean(searchQuery.trim() || statusFilter !== 'ALL');
+
+  const handleResetFilters = () => {
+    setSearchQuery('');
+    setStatusFilter('ALL');
+  };
 
   const handleCreated = async (input: CreateExpenseInput) => {
     await createVoucher(input);
@@ -91,74 +166,123 @@ export function ExpenseListPage() {
   ];
 
   return (
-    <div className="container-page space-y-6">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+    <div className="container-page space-y-6" data-testid="expense-list-page">
+      {/* Tier 1: Page Shell & Clean Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2">
-            <Receipt className="h-6 w-6 text-primary" />
-            <h1 className="text-h1 font-semibold text-text">Office & Project Expenses</h1>
+          <Breadcrumbs
+            items={[
+              { label: 'Overview', href: '/dashboard', onClick: () => navigate('/dashboard') },
+              { label: 'Finance & Treasury' },
+              { label: 'Office & Project Expenses' },
+            ]}
+          />
+          <div className="flex items-center gap-3 mt-1.5">
+            <h1 className="text-h1 font-bold text-text">Office & Project Expenses</h1>
+            <span className="text-caption font-semibold px-2.5 py-0.5 rounded-full bg-surface-sunken text-text-2 border border-border">
+              {vouchers.length} {vouchers.length === 1 ? 'Record' : 'Records'}
+            </span>
           </div>
-          <p className="mt-1 text-caption text-text-muted">
+          <p className="text-small text-text-muted mt-1">
             Track expenses, bills, and manager approvals (GM up to BDT 5,00,000 / MD above BDT
             5,00,000).
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
-          <div className="w-36">
-            <Select
-              value={statusFilter}
-              onChange={(val) => setStatusFilter(val)}
-              options={statusOptions}
-            />
-          </div>
-
-          <Button
-            variant="primary"
-            onClick={() => setIsCreateOpen(true)}
-            leftIcon={<Plus className="h-4 w-4" />}
-          >
-            New Voucher
-          </Button>
-        </div>
+        <Button
+          variant="primary"
+          onClick={() => setIsCreateOpen(true)}
+          leftIcon={<Plus className="w-4 h-4" />}
+          data-testid="create-expense-btn"
+        >
+          New Voucher
+        </Button>
       </div>
 
-      {(() => {
-        if (isLoading) {
-          return <DataTableSkeleton rows={6} cols={6} />;
-        }
-        if (vouchers.length === 0) {
-          return (
-            <EmptyState
-              dashedBorder
-              title="No expense vouchers recorded"
-              description="Record operational expenses, vendor bills, or utility disbursements to initiate approval governance."
-              actionLabel="New Voucher"
-              actionVariant="secondary"
-              actionIcon={<Plus className="w-4 h-4" />}
-              onAction={() => setIsCreateOpen(true)}
-            />
-          );
-        }
-        if (filteredVouchers.length === 0) {
-          return (
-            <div className="card-workspace border border-border bg-surface p-6">
-              <FilteredEmptyState
-                title="No matching vouchers found"
-                description="No expense vouchers match your selected filter criteria. Try resetting your filter."
-                onResetFilters={() => setStatusFilter('ALL')}
+      {/* Tier 2: Responsive KPI Cards Strip using reusable StatCard */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+        <StatCard
+          label="Total Settled"
+          value={formatMoney(kpiStats.totalPaidPaisa)}
+          description="Paid and disbursed expenses"
+          badge={{ text: 'Settled', variant: 'success' }}
+          valueColor="success"
+          isLoading={isLoading}
+        />
+        <StatCard
+          label="Pending Review"
+          value={formatMoney(kpiStats.pendingApprovalPaisa)}
+          description={`${kpiStats.countPending} vouchers awaiting approval`}
+          badge={{ text: 'In Review', variant: 'warning' }}
+          valueColor="warning"
+          isLoading={isLoading}
+        />
+        <StatCard
+          label="Ready to Pay"
+          value={formatMoney(kpiStats.approvedPaisa)}
+          description={`${kpiStats.countApproved} approved disbursements`}
+          badge={{ text: 'Payable', variant: 'info' }}
+          valueColor="info"
+          isLoading={isLoading}
+        />
+        <StatCard
+          label="Total Vouchers"
+          value={vouchers.length}
+          description={`${kpiStats.countDraft} drafts in preparation`}
+          badge={{ text: 'All Records', variant: 'neutral' }}
+          isLoading={isLoading}
+        />
+      </div>
+
+      {/* Tier 3: Unified Expenses Workspace Card */}
+      <div className="rounded-card border border-border bg-surface shadow-xs">
+        <StickyToolbar className="p-4">
+          <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
+            <div className="relative flex-1">
+              <Search className="w-4 h-4 text-text-muted absolute left-3 top-1/2 -translate-y-1/2" />
+              <Input
+                id="expenseSearch"
+                placeholder="Search by voucher #, payee / vendor, description, project..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-9"
               />
             </div>
-          );
-        }
-        return (
-          <ExpenseDataTable
-            vouchers={filteredVouchers}
-            onSelectVoucher={(v) => setSelectedVoucher(v)}
-            onCreateVoucher={() => setIsCreateOpen(true)}
-          />
-        );
-      })()}
+
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+              <div className="w-full sm:w-48">
+                <Select
+                  id="expenseStatusFilter"
+                  value={statusFilter}
+                  onChange={(val) => setStatusFilter(val)}
+                  options={statusOptions}
+                />
+              </div>
+
+              {hasActiveFilters && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleResetFilters}
+                  className="text-text-muted hover:text-text text-small whitespace-nowrap"
+                >
+                  <X className="w-3.5 h-3.5 mr-1" />
+                  Reset
+                </Button>
+              )}
+            </div>
+          </div>
+        </StickyToolbar>
+
+        <ExpenseDataTable
+          vouchers={filteredVouchers}
+          isLoading={isLoading}
+          hasActiveFilters={hasActiveFilters}
+          onResetFilters={handleResetFilters}
+          onSelectVoucher={(v) => setSelectedVoucher(v)}
+          onCreateVoucher={() => setIsCreateOpen(true)}
+        />
+      </div>
 
       <ExpenseCreateModal
         isOpen={isCreateOpen}

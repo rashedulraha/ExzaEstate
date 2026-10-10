@@ -261,9 +261,9 @@ describe('Commercial Licensing Frontend Feature (B10)', () => {
         expect(screen.getByText('Commercial Workstation Licensing')).toBeDefined();
       });
 
-      expect(screen.getByText('AT-31 License Grace Period')).toBeDefined();
-      expect(screen.getByText('BR-20 Data Retention Rule')).toBeDefined();
-      expect(screen.getByText('Gate D-15 Hardware Tolerance')).toBeDefined();
+      expect(screen.getByText('License Grace Period')).toBeDefined();
+      expect(screen.getByText('Data Retention & Accessibility Guarantee')).toBeDefined();
+      expect(screen.getByText('Hardware Flexibility Policy')).toBeDefined();
     });
   });
 });

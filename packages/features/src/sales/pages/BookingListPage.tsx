@@ -1,5 +1,5 @@
-import { type ReactElement, useState } from 'react';
-import { useNavigate } from 'react-router';
+import { type ReactElement, useState, useEffect } from 'react';
+import { useNavigate, useSearchParams, useLocation } from 'react-router';
 import {
   Breadcrumbs,
   Button,
@@ -28,6 +28,7 @@ interface RenderBookingTableProps {
   onRetry: () => void;
   onSelect: (b: BookingItem) => void;
   onOpenWizard: () => void;
+  isEmbedded?: boolean;
 }
 
 function renderBookingTableContent({
@@ -38,6 +39,7 @@ function renderBookingTableContent({
   onRetry,
   onSelect,
   onOpenWizard,
+  isEmbedded = false,
 }: RenderBookingTableProps): ReactElement {
   if (isLoading) {
     return <LoadingState variant="table" />;
@@ -52,14 +54,27 @@ function renderBookingTableContent({
   }
   if (bookings.length === 0) {
     return (
-      <EmptyState
-        dashedBorder
-        title="No bookings recorded"
-        description="Start by launching the 7-step booking wizard to reserve a property unit."
-        actionLabel="New Booking Wizard"
-        actionVariant="secondary"
-        actionIcon={<Plus className="w-4 h-4" />}
-        onAction={onOpenWizard}
+      <div className="p-6">
+        <EmptyState
+          dashedBorder
+          title="No bookings recorded"
+          description="Start by launching the 7-step booking wizard to reserve a property unit."
+          actionLabel="New Booking Wizard"
+          actionVariant="secondary"
+          actionIcon={<Plus className="w-4 h-4" />}
+          onAction={onOpenWizard}
+        />
+      </div>
+    );
+  }
+  if (isEmbedded) {
+    return (
+      <BookingDataTable
+        bookings={bookings}
+        isLoading={isLoading}
+        onSelectBooking={onSelect}
+        embedded
+        className="border-none shadow-none"
       />
     );
   }
@@ -72,13 +87,46 @@ function renderBookingTableContent({
 
 export function BookingListPage(): ReactElement {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const location = useLocation();
+
   const { bookings, kpis, filters, setFilters, isLoading, isError, error, refetch } =
     useBookingList();
   const { createBooking, cancelBooking } = useBookingActions();
 
-  const [isWizardOpen, setIsWizardOpen] = useState(false);
+  const isNewRequested =
+    searchParams.get('new') === 'true' ||
+    searchParams.get('action') === 'new' ||
+    Boolean((location.state as { openWizard?: boolean } | null)?.openWizard);
+
+  const [isWizardOpen, setIsWizardOpen] = useState(isNewRequested);
   const [selectedBooking, setSelectedBooking] = useState<BookingItem | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    if (
+      searchParams.get('new') === 'true' ||
+      searchParams.get('action') === 'new' ||
+      Boolean((location.state as { openWizard?: boolean } | null)?.openWizard)
+    ) {
+      setIsWizardOpen(true);
+    }
+  }, [searchParams, location.state]);
+
+  const handleCloseWizard = () => {
+    setIsWizardOpen(false);
+    if (searchParams.get('new') || searchParams.get('action')) {
+      setSearchParams(
+        (prev) => {
+          const next = new URLSearchParams(prev);
+          next.delete('new');
+          next.delete('action');
+          return next;
+        },
+        { replace: true },
+      );
+    }
+  };
 
   const hasActiveFilters = Boolean(filters.search || (filters.status && filters.status !== 'ALL'));
 
@@ -144,9 +192,9 @@ export function BookingListPage(): ReactElement {
         </div>
       </div>
 
-      {/* Tier 3: Search and Filters */}
-      <StickyToolbar>
-        <div className="shadow-xs flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 p-2.5 bg-surface rounded-card border border-border">
+      {/* Tier 3: Main Bookings Workspace */}
+      <div className="rounded-card border border-border bg-surface shadow-xs">
+        <StickyToolbar className="p-2.5 sm:p-3">
           <div className="flex flex-wrap items-center gap-2.5 flex-1">
             <div className="relative w-full sm:w-80">
               <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-text-muted pointer-events-none" />
@@ -191,26 +239,30 @@ export function BookingListPage(): ReactElement {
               </button>
             )}
           </div>
-        </div>
-      </StickyToolbar>
+        </StickyToolbar>
 
-      {renderBookingTableContent({
-        isLoading,
-        isError,
-        error,
-        bookings,
-        onRetry: () => void refetch(),
-        onSelect: (b) => setSelectedBooking(b),
-        onOpenWizard: () => setIsWizardOpen(true),
-      })}
+        {renderBookingTableContent({
+          isLoading,
+          isError,
+          error,
+          bookings,
+          onRetry: () => void refetch(),
+          onSelect: (b) => setSelectedBooking(b),
+          onOpenWizard: () => setIsWizardOpen(true),
+          isEmbedded: true,
+        })}
+      </div>
 
       <BookingWizardModal
         isOpen={isWizardOpen}
-        onClose={() => setIsWizardOpen(false)}
+        onClose={handleCloseWizard}
+        initialPropertyId={searchParams.get('propertyId') ?? undefined}
+        initialCustomerId={searchParams.get('customerId') ?? undefined}
         onSubmit={async (data) => {
           setIsSubmitting(true);
           try {
             await createBooking(data);
+            handleCloseWizard();
           } finally {
             setIsSubmitting(false);
           }

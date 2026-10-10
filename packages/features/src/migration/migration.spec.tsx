@@ -139,7 +139,7 @@ describe('Go-Live Migration Wizard (FLOW-03 & AT-29)', () => {
         />,
       );
 
-      expect(screen.getByText('Step 4: Reconciliation Gate (AT-29)')).toBeDefined();
+      expect(screen.getByText('Step 4: Opening Balance Reconciliation Gate')).toBeDefined();
       expect(screen.getByText('CONFIRMED')).toBeDefined();
       expect(screen.getAllByText('BDT 50,00,000.00')[0]).toBeDefined();
       expect(screen.getAllByText('BDT 0.00')[0]).toBeDefined();

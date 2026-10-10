@@ -96,18 +96,7 @@ export function BalanceSheetReportPage() {
         </div>
       </div>
 
-      {/* Tier 2: Filter Toolbar */}
-      <ReportFiltersBar
-        mode="asOf"
-        asOfDate={asOfDate}
-        onAsOfDateChange={setAsOfDate}
-        projectId={projectId}
-        onProjectIdChange={setProjectId}
-        onRefresh={() => void query.refetch()}
-        onOpenExport={() => setIsExportOpen(true)}
-      />
-
-      {/* Tier 3: Content Cards */}
+      {/* Tier 2: Unified Balance Sheet Workspace Card */}
       <ReportStateWrapper
         isLoading={query.isLoading}
         isError={query.isError}
@@ -116,149 +105,164 @@ export function BalanceSheetReportPage() {
         onRetry={() => void query.refetch()}
         hasData={Boolean(report)}
       >
-        {report && (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Left Column: Assets */}
-            <div className="rounded-card border border-border bg-surface shadow-xs p-6 space-y-4">
-              <div className="border-b border-border pb-3 flex items-center justify-between">
-                <h3 className="text-body font-bold text-text uppercase tracking-wide">Assets</h3>
-                <span className="text-caption text-text-muted">Current & Non-Current</span>
-              </div>
+        <div className="rounded-card border border-border bg-surface shadow-xs">
+          <ReportFiltersBar
+            mode="asOf"
+            asOfDate={asOfDate}
+            onAsOfDateChange={setAsOfDate}
+            projectId={projectId}
+            onProjectIdChange={setProjectId}
+            onRefresh={() => void query.refetch()}
+            onOpenExport={() => setIsExportOpen(true)}
+          />
+          {report && (
+            <div className="p-6">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {/* Left Column: Assets */}
+                <div className="rounded-card border border-border bg-surface shadow-xs p-6 space-y-4">
+                  <div className="border-b border-border pb-3 flex items-center justify-between">
+                    <h3 className="text-body font-bold text-text uppercase tracking-wide">
+                      Assets
+                    </h3>
+                    <span className="text-caption text-text-muted">Current & Non-Current</span>
+                  </div>
 
-              {/* Current Assets */}
-              <div className="space-y-2">
-                <h4 className="text-small font-semibold text-text-muted uppercase text-caption">
-                  Current Assets
-                </h4>
-                <div className="divide-y divide-border/60">
-                  {report.assets.currentAssets.map((a) => (
-                    <div
-                      key={a.accountId}
-                      className="py-2.5 flex items-center justify-between text-small hover:bg-surface-sunken/30 px-1 rounded transition-colors"
-                    >
-                      <div>
-                        <span className="font-mono text-caption text-text-muted mr-2">
-                          {a.accountCode}
-                        </span>
-                        <span className="text-text font-medium">{a.accountName}</span>
-                      </div>
-                      <span className="font-mono tabular-nums font-semibold text-text">
-                        {formatMoney(BigInt(a.balancePaisa))}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Non-Current Assets */}
-              {report.assets.nonCurrentAssets.length > 0 && (
-                <div className="space-y-2 pt-3 border-t border-border">
-                  <h4 className="text-small font-semibold text-text-muted uppercase text-caption">
-                    Non-Current Assets
-                  </h4>
-                  <div className="divide-y divide-border/60">
-                    {report.assets.nonCurrentAssets.map((a) => (
-                      <div
-                        key={a.accountId}
-                        className="py-2.5 flex items-center justify-between text-small hover:bg-surface-sunken/30 px-1 rounded transition-colors"
-                      >
-                        <div>
-                          <span className="font-mono text-caption text-text-muted mr-2">
-                            {a.accountCode}
+                  {/* Current Assets */}
+                  <div className="space-y-2">
+                    <h4 className="text-small font-semibold text-text-muted uppercase text-caption">
+                      Current Assets
+                    </h4>
+                    <div className="divide-y divide-border/60">
+                      {report.assets.currentAssets.map((a) => (
+                        <div
+                          key={a.accountId}
+                          className="py-2.5 flex items-center justify-between text-small hover:bg-surface-sunken/30 px-1 rounded transition-colors"
+                        >
+                          <div>
+                            <span className="font-mono text-caption text-text-muted mr-2">
+                              {a.accountCode}
+                            </span>
+                            <span className="text-text font-medium">{a.accountName}</span>
+                          </div>
+                          <span className="font-mono tabular-nums font-semibold text-text">
+                            {formatMoney(BigInt(a.balancePaisa))}
                           </span>
-                          <span className="text-text font-medium">{a.accountName}</span>
                         </div>
-                        <span className="font-mono tabular-nums font-semibold text-text">
-                          {formatMoney(BigInt(a.balancePaisa))}
-                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Non-Current Assets */}
+                  {report.assets.nonCurrentAssets.length > 0 && (
+                    <div className="space-y-2 pt-3 border-t border-border">
+                      <h4 className="text-small font-semibold text-text-muted uppercase text-caption">
+                        Non-Current Assets
+                      </h4>
+                      <div className="divide-y divide-border/60">
+                        {report.assets.nonCurrentAssets.map((a) => (
+                          <div
+                            key={a.accountId}
+                            className="py-2.5 flex items-center justify-between text-small hover:bg-surface-sunken/30 px-1 rounded transition-colors"
+                          >
+                            <div>
+                              <span className="font-mono text-caption text-text-muted mr-2">
+                                {a.accountCode}
+                              </span>
+                              <span className="text-text font-medium">{a.accountName}</span>
+                            </div>
+                            <span className="font-mono tabular-nums font-semibold text-text">
+                              {formatMoney(BigInt(a.balancePaisa))}
+                            </span>
+                          </div>
+                        ))}
                       </div>
-                    ))}
+                    </div>
+                  )}
+
+                  {/* Total Assets */}
+                  <div className="pt-4 border-t-2 border-b-4 border-double border-border-strong flex items-center justify-between font-bold">
+                    <span className="text-text uppercase text-caption tracking-wider">
+                      Total Assets
+                    </span>
+                    <span className="font-mono tabular-nums text-heading-3 text-text">
+                      {formatMoney(BigInt(report.assets.totalAssetsPaisa))}
+                    </span>
                   </div>
                 </div>
-              )}
 
-              {/* Total Assets */}
-              <div className="pt-4 border-t-2 border-b-4 border-double border-border-strong flex items-center justify-between font-bold">
-                <span className="text-text uppercase text-caption tracking-wider">
-                  Total Assets
-                </span>
-                <span className="font-mono tabular-nums text-heading-3 text-text">
-                  {formatMoney(BigInt(report.assets.totalAssetsPaisa))}
-                </span>
-              </div>
-            </div>
+                {/* Right Column: Liabilities & Equity */}
+                <div className="rounded-card border border-border bg-surface shadow-xs p-6 space-y-4">
+                  <div className="border-b border-border pb-3 flex items-center justify-between">
+                    <h3 className="text-body font-bold text-text uppercase tracking-wide">
+                      Liabilities & Equity
+                    </h3>
+                    <span className="text-caption text-text-muted">Obligations & Net Worth</span>
+                  </div>
 
-            {/* Right Column: Liabilities & Equity */}
-            <div className="rounded-card border border-border bg-surface shadow-xs p-6 space-y-4">
-              <div className="border-b border-border pb-3 flex items-center justify-between">
-                <h3 className="text-body font-bold text-text uppercase tracking-wide">
-                  Liabilities & Equity
-                </h3>
-                <span className="text-caption text-text-muted">Obligations & Net Worth</span>
-              </div>
-
-              {/* Current Liabilities */}
-              <div className="space-y-2">
-                <h4 className="text-small font-semibold text-text-muted uppercase text-caption">
-                  Current Liabilities
-                </h4>
-                <div className="divide-y divide-border/60">
-                  {report.liabilities.currentLiabilities.map((l) => (
-                    <div
-                      key={l.accountId}
-                      className="py-2.5 flex items-center justify-between text-small hover:bg-surface-sunken/30 px-1 rounded transition-colors"
-                    >
-                      <div>
-                        <span className="font-mono text-caption text-text-muted mr-2">
-                          {l.accountCode}
-                        </span>
-                        <span className="text-text font-medium">{l.accountName}</span>
-                      </div>
-                      <span className="font-mono tabular-nums font-semibold text-text">
-                        {formatMoney(BigInt(l.balancePaisa))}
-                      </span>
+                  {/* Current Liabilities */}
+                  <div className="space-y-2">
+                    <h4 className="text-small font-semibold text-text-muted uppercase text-caption">
+                      Current Liabilities
+                    </h4>
+                    <div className="divide-y divide-border/60">
+                      {report.liabilities.currentLiabilities.map((l) => (
+                        <div
+                          key={l.accountId}
+                          className="py-2.5 flex items-center justify-between text-small hover:bg-surface-sunken/30 px-1 rounded transition-colors"
+                        >
+                          <div>
+                            <span className="font-mono text-caption text-text-muted mr-2">
+                              {l.accountCode}
+                            </span>
+                            <span className="text-text font-medium">{l.accountName}</span>
+                          </div>
+                          <span className="font-mono tabular-nums font-semibold text-text">
+                            {formatMoney(BigInt(l.balancePaisa))}
+                          </span>
+                        </div>
+                      ))}
                     </div>
-                  ))}
+                  </div>
+
+                  {/* Equity */}
+                  <div className="space-y-2 pt-3 border-t border-border">
+                    <h4 className="text-small font-semibold text-text-muted uppercase text-caption">
+                      Shareholders Equity
+                    </h4>
+                    <div className="divide-y divide-border/60">
+                      {report.equity.items.map((eq) => (
+                        <div
+                          key={eq.accountId}
+                          className="py-2.5 flex items-center justify-between text-small hover:bg-surface-sunken/30 px-1 rounded transition-colors"
+                        >
+                          <div>
+                            <span className="font-mono text-caption text-text-muted mr-2">
+                              {eq.accountCode}
+                            </span>
+                            <span className="text-text font-medium">{eq.accountName}</span>
+                          </div>
+                          <span className="font-mono tabular-nums font-semibold text-text">
+                            {formatMoney(BigInt(eq.balancePaisa))}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Total Liabilities & Equity */}
+                  <div className="pt-4 border-t-2 border-b-4 border-double border-border-strong flex items-center justify-between font-bold">
+                    <span className="text-text uppercase text-caption tracking-wider">
+                      Total Liabilities & Equity
+                    </span>
+                    <span className="font-mono tabular-nums text-heading-3 text-text">
+                      {formatMoney(BigInt(report.totalLiabilitiesAndEquityPaisa))}
+                    </span>
+                  </div>
                 </div>
               </div>
-
-              {/* Equity */}
-              <div className="space-y-2 pt-3 border-t border-border">
-                <h4 className="text-small font-semibold text-text-muted uppercase text-caption">
-                  Shareholders Equity
-                </h4>
-                <div className="divide-y divide-border/60">
-                  {report.equity.items.map((eq) => (
-                    <div
-                      key={eq.accountId}
-                      className="py-2.5 flex items-center justify-between text-small hover:bg-surface-sunken/30 px-1 rounded transition-colors"
-                    >
-                      <div>
-                        <span className="font-mono text-caption text-text-muted mr-2">
-                          {eq.accountCode}
-                        </span>
-                        <span className="text-text font-medium">{eq.accountName}</span>
-                      </div>
-                      <span className="font-mono tabular-nums font-semibold text-text">
-                        {formatMoney(BigInt(eq.balancePaisa))}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Total Liabilities & Equity */}
-              <div className="pt-4 border-t-2 border-b-4 border-double border-border-strong flex items-center justify-between font-bold">
-                <span className="text-text uppercase text-caption tracking-wider">
-                  Total Liabilities & Equity
-                </span>
-                <span className="font-mono tabular-nums text-heading-3 text-text">
-                  {formatMoney(BigInt(report.totalLiabilitiesAndEquityPaisa))}
-                </span>
-              </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </ReportStateWrapper>
 
       {/* Export Modal */}

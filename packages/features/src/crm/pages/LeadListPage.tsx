@@ -100,22 +100,22 @@ export function LeadListPage(): ReactElement {
       {/* Tier 2: KPI Summary Strip */}
       <LeadKpiStrip kpis={kpis} />
 
-      {/* Tier 3: Filters Row */}
-      <LeadListFilters filters={filters} onFilterChange={setFilters} />
-
-      {/* Main Content Area */}
-      <LeadListContent
-        leads={leads}
-        viewMode={viewMode}
-        isLoading={isLoading}
-        isError={isError}
-        error={error}
-        onRetry={refetch}
-        onSelectLead={handleRowClick}
-        onConvertLead={(lead) => setConvertingLead(lead)}
-        onAddFollowUp={(lead) => setFollowUpLead(lead)}
-        onOpenAddModal={() => setIsAddModalOpen(true)}
-      />
+      {/* Tier 3: Main Lead Pipeline Workspace */}
+      <div className="rounded-card border border-border bg-surface shadow-xs">
+        <LeadListFilters filters={filters} onFilterChange={setFilters} />
+        <LeadListContent
+          leads={leads}
+          viewMode={viewMode}
+          isLoading={isLoading}
+          isError={isError}
+          error={error}
+          onRetry={refetch}
+          onSelectLead={handleRowClick}
+          onConvertLead={(lead) => setConvertingLead(lead)}
+          onAddFollowUp={(lead) => setFollowUpLead(lead)}
+          onOpenAddModal={() => setIsAddModalOpen(true)}
+        />
+      </div>
 
       {/* Inspection Drawer */}
       <LeadDrawer

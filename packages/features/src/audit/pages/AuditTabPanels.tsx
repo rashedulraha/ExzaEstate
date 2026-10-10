@@ -34,24 +34,26 @@ export function AuditTrailPanel({
   }
 
   return (
-    <div className="space-y-4">
+    <div className="rounded-card border border-border bg-surface shadow-xs">
       {toolbar}
-      <div className="rounded-card border border-border bg-surface shadow-xs">
+      {data.length === 0 ? (
+        <div className="p-6">
+          <EmptyState
+            icon={<ShieldCheck className="w-8 h-8 text-text-muted" />}
+            title="No Audit Records Found"
+            description="No state mutations match your selected filters or action criteria."
+            dashedBorder
+          />
+        </div>
+      ) : (
         <DataTable
           data={data}
           columns={columns}
           keyExtractor={(r) => r.id}
-          className="border-none shadow-none"
-          emptyState={
-            <EmptyState
-              icon={<ShieldCheck className="w-6 h-6 text-text-muted" />}
-              title="No Audit Records Found"
-              description="No state mutations match your selected filters or action criteria."
-              dashedBorder
-            />
-          }
+          embedded
+          className="border-none shadow-none rounded-b-card"
         />
-      </div>
+      )}
     </div>
   );
 }
@@ -88,24 +90,26 @@ export function SecurityEventsPanel({
   }
 
   return (
-    <div className="space-y-4">
+    <div className="rounded-card border border-border bg-surface shadow-xs">
       {toolbar}
-      <div className="rounded-card border border-border bg-surface shadow-xs">
+      {data.length === 0 ? (
+        <div className="p-6">
+          <EmptyState
+            icon={<ShieldAlert className="w-8 h-8 text-text-muted" />}
+            title="No Security Events Found"
+            description="No authentication or authorization security events recorded for the current scope."
+            dashedBorder
+          />
+        </div>
+      ) : (
         <DataTable
           data={data}
           columns={columns}
           keyExtractor={(r) => r.id}
-          className="border-none shadow-none"
-          emptyState={
-            <EmptyState
-              icon={<ShieldAlert className="w-6 h-6 text-text-muted" />}
-              title="No Security Events Found"
-              description="No authentication or authorization security events recorded for the current scope."
-              dashedBorder
-            />
-          }
+          embedded
+          className="border-none shadow-none rounded-b-card"
         />
-      </div>
+      )}
     </div>
   );
 }

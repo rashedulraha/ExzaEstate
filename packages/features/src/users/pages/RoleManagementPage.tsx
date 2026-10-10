@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router';
 import { Plus, Users, ShieldCheck, Shield, Sliders, KeyRound } from 'lucide-react';
-import { Button, Breadcrumbs, LoadingState, ErrorState } from '@exzaestate/ui';
+import { Button, Breadcrumbs, LoadingState, ErrorState, StatCard } from '@exzaestate/ui';
 import { useRoles } from '../hooks/useRoles.js';
 import { RoleListTable } from '../components/RoleListTable.js';
 import { RoleModal } from '../components/RoleModal.js';
@@ -77,7 +77,7 @@ export function RoleManagementPage() {
           <Breadcrumbs
             items={[
               { label: 'Overview', href: '/dashboard', onClick: () => navigate('/dashboard') },
-              { label: 'System & Admin' },
+              { label: 'Workspace & Admin' },
               { label: 'Security Roles' },
             ]}
           />
@@ -127,53 +127,19 @@ export function RoleManagementPage() {
 
       {/* Tier 2: 4 KPI Summary Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-        <div className="card-stat">
-          <div className="flex items-center justify-between">
-            <span className="text-caption font-semibold uppercase tracking-wider text-text-muted">
-              Total Roles
-            </span>
-            <Shield className="w-4 h-4 text-text-muted" />
-          </div>
-          <span className="text-hero-num font-bold text-text mt-1.5 block tabular-nums">
-            {kpis.total}
-          </span>
-        </div>
-
-        <div className="card-stat">
-          <div className="flex items-center justify-between">
-            <span className="text-caption font-semibold uppercase tracking-wider text-text-muted">
-              System Protected
-            </span>
-            <ShieldCheck className="w-4 h-4 text-primary" />
-          </div>
-          <span className="text-hero-num font-bold text-primary mt-1.5 block tabular-nums">
-            {kpis.system}
-          </span>
-        </div>
-
-        <div className="card-stat">
-          <div className="flex items-center justify-between">
-            <span className="text-caption font-semibold uppercase tracking-wider text-text-muted">
-              Custom Roles
-            </span>
-            <Sliders className="w-4 h-4 text-text-muted" />
-          </div>
-          <span className="text-hero-num font-bold text-text mt-1.5 block tabular-nums">
-            {kpis.custom}
-          </span>
-        </div>
-
-        <div className="card-stat">
-          <div className="flex items-center justify-between">
-            <span className="text-caption font-semibold uppercase tracking-wider text-text-muted">
-              Active Grants
-            </span>
-            <KeyRound className="w-4 h-4 text-text-muted" />
-          </div>
-          <span className="text-hero-num font-bold text-text-2 mt-1.5 block tabular-nums">
-            {kpis.totalGrants}
-          </span>
-        </div>
+        <StatCard label="Total Roles" value={kpis.total} icon={<Shield className="w-4 h-4" />} />
+        <StatCard
+          label="System Protected"
+          value={kpis.system}
+          variant="brand"
+          icon={<ShieldCheck className="w-4 h-4" />}
+        />
+        <StatCard label="Custom Roles" value={kpis.custom} icon={<Sliders className="w-4 h-4" />} />
+        <StatCard
+          label="Active Grants"
+          value={kpis.totalGrants}
+          icon={<KeyRound className="w-4 h-4" />}
+        />
       </div>
 
       {/* Tier 3: Roles Table with Search and Type Filters */}

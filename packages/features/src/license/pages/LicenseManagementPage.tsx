@@ -70,7 +70,7 @@ export function LicenseManagementPage() {
       {/* Architectural Policy Reference */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-small">
         <div className="bg-surface border border-border rounded-card p-4 space-y-1">
-          <h4 className="font-semibold text-text">AT-31 License Grace Period</h4>
+          <h4 className="font-semibold text-text">License Grace Period</h4>
           <p className="text-caption text-text-muted">
             Upon expiration, a 7-day grace period maintains write operations with prompt alerts
             before transitioning to read-only mode.
@@ -78,7 +78,7 @@ export function LicenseManagementPage() {
         </div>
 
         <div className="bg-surface border border-border rounded-card p-4 space-y-1">
-          <h4 className="font-semibold text-text">BR-20 Data Retention Rule</h4>
+          <h4 className="font-semibold text-text">Data Retention & Accessibility Guarantee</h4>
           <p className="text-caption text-text-muted">
             Financial records are never held hostage. Even with an expired or locked license, users
             retain full export and reporting capabilities.
@@ -86,7 +86,7 @@ export function LicenseManagementPage() {
         </div>
 
         <div className="bg-surface border border-border rounded-card p-4 space-y-1">
-          <h4 className="font-semibold text-text">Gate D-15 Hardware Tolerance</h4>
+          <h4 className="font-semibold text-text">Hardware Flexibility Policy</h4>
           <p className="text-caption text-text-muted">
             Component matching tolerates single hardware replacements (≥ 2 of 3 matching) and
             permits up to 2 transfer reassignments per year.

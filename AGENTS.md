@@ -67,6 +67,7 @@ All core architectural decisions are locked. **Do not substitute, replace, or de
 7. **Bangladeshi Localization:** All currency displays must use `formatMoney` from `packages/shared` with lakh/crore grouping and **`BDT `** prefix (`BDT 5,00,000` / `BDT 1,50,00,000`). Never use the `৳` symbol. Dates are displayed in `Asia/Dhaka` timezone. Primary font is **Inter** (`@fontsource/inter`).
 8. **Layering & Repository Rule:** There is **NO repository layer**. Controllers handle HTTP validation and DTOs; Services own business logic and query `TenantPrisma` directly.
 9. **One-Task Execution Discipline:** Agents execute strictly **one** task at a time from `task.md`. Log completion in `agent/PROGRESS.md` before stopping.
+10. **Zero Hardcoded Secrets & DB URLs:** Never hardcode database connection strings, credentials, or fallback database URLs (e.g., `postgresql://...`) in source code, configuration files, or scripts. Database URLs must strictly be loaded from environment variables (`DATABASE_URL`, `MIGRATOR_DATABASE_URL`, `SYSTEM_DATABASE_URL`). If missing, code must fail-fast and throw an explicit `Error` instructing the user to configure the variable in `.env`.
 
 ---
 

@@ -1,4 +1,4 @@
-import { Search, X, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Search, X, ChevronLeft, ChevronRight, Plus } from 'lucide-react';
 import {
   Button,
   IconButton,
@@ -114,7 +114,7 @@ export function PropertyListFilters({
   onClearFilters,
 }: PropertyListFiltersProps) {
   return (
-    <div className="p-3.5 bg-surface rounded-card border border-border shadow-xs space-y-3">
+    <div className="p-3.5 space-y-3">
       {/* Top Filter Row: Search & Dropdowns */}
       <div className="flex flex-wrap items-center gap-3">
         <div className="relative flex-1 min-w-56">
@@ -243,9 +243,12 @@ export function PropertyListContent({
     }
     return (
       <EmptyState
+        dashedBorder
         title="No properties found in project"
         description="Your project has no property units yet. Add your first plot, flat, shop, or commercial office unit to begin building quotations."
-        actionLabel={canCreate ? '+ Add First Property' : undefined}
+        actionLabel={canCreate ? 'Add Property' : undefined}
+        actionVariant="secondary"
+        actionIcon={<Plus className="w-4 h-4" />}
         onAction={canCreate ? onCreateProperty : undefined}
       />
     );

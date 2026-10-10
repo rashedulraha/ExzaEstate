@@ -11,6 +11,17 @@ export class DefaultTemplatesStep implements ProvisioningStep {
 
   async execute(ctx: ProvisioningContext, tx: Prisma.TransactionClient): Promise<void> {
     for (const tpl of DEFAULT_NOTIFICATION_TEMPLATES) {
+      await tx.notificationEventCatalog.upsert({
+        where: { code: tpl.eventCode },
+        update: {},
+        create: {
+          code: tpl.eventCode,
+          name: tpl.title.split(':')[0] || tpl.eventCode,
+          module: tpl.eventCode.split('.')[0] || 'general',
+          defaultChannels: [tpl.channel],
+        },
+      });
+
       await tx.notificationTemplate.upsert({
         where: {
           companyId_eventCode_channel: {

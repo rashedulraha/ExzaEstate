@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { Button, Input, Select, EmptyState } from '@exzaestate/ui';
+import { Button, Input, Select, EmptyState, FilteredEmptyState, Skeleton } from '@exzaestate/ui';
 import { Plus, Search, X, Folder } from 'lucide-react';
 import type { AccountTreeItem } from '../../schemas/accounting.schema.js';
 import { TreeNode } from './CoaTreeNode.js';
@@ -60,20 +60,46 @@ export function CoaTreeView({
 
   if (isLoading) {
     return (
-      <div className="p-12 text-center text-text-muted rounded-card border border-border bg-surface">
-        Loading chart of accounts structure...
+      <div className="rounded-card border border-border bg-surface p-5 space-y-4 shadow-xs">
+        <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 pb-3 border-b border-border">
+          <Skeleton className="h-9 w-64 rounded-button" />
+          <div className="flex items-center gap-2">
+            <Skeleton className="h-9 w-40 rounded-button" />
+            <Skeleton className="h-9 w-20 rounded-button" />
+            <Skeleton className="h-9 w-20 rounded-button" />
+          </div>
+        </div>
+        <div className="space-y-2 pt-1">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div
+              key={i}
+              className="flex items-center justify-between p-2.5 rounded-button bg-surface-sunken/40"
+              style={{ marginLeft: `${(i % 3) * 20}px` }}
+            >
+              <div className="flex items-center gap-3">
+                <Skeleton className="w-4 h-4 rounded-button" />
+                <Skeleton className="w-12 h-4" />
+                <Skeleton className="w-36 h-4" />
+                <Skeleton className="w-16 h-4 rounded-full" />
+              </div>
+              <Skeleton className="w-24 h-4" />
+            </div>
+          ))}
+        </div>
       </div>
     );
   }
 
   if (tree.length === 0) {
     return (
-      <div className="rounded-card border border-border bg-surface p-12">
+      <div className="rounded-card border border-border bg-surface p-6 shadow-xs">
         <EmptyState
           icon={<Folder className="w-6 h-6" />}
-          title="No Chart of Accounts Loaded"
-          description="Initialize or create your enterprise chart of accounts to configure ledgers."
-          actionLabel="Create First Account"
+          title="No accounts recorded"
+          description="Create your first general ledger account to establish the chart of accounts structure."
+          actionLabel={onAddAccount ? 'Add Account' : undefined}
+          actionVariant="secondary"
+          actionIcon={onAddAccount ? <Plus className="w-4 h-4" /> : undefined}
           onAction={onAddAccount ? () => onAddAccount() : undefined}
           dashedBorder
         />
@@ -168,16 +194,13 @@ export function CoaTreeView({
       <div className="p-3 flex flex-col space-y-0.5">
         {filteredTree.length === 0 ? (
           <div className="py-10">
-            <EmptyState
-              icon={<Search className="w-6 h-6" />}
-              title="No Accounts Match Filter"
-              description="No accounts match your current code, name, or category filter."
-              actionLabel="Clear Filters"
-              onAction={() => {
+            <FilteredEmptyState
+              title="No matching accounts found"
+              description="No accounts match your current code, name, or category filter criteria."
+              onResetFilters={() => {
                 setSearchQuery('');
                 setSelectedType('');
               }}
-              dashedBorder
             />
           </div>
         ) : (

@@ -27,4 +27,5 @@ export interface DataTableProps<T> {
   onSelectAll?: () => void;
   totalsRow?: ReactNode;
   className?: string;
+  embedded?: boolean;
 }

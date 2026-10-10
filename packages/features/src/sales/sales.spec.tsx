@@ -1,5 +1,9 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
+import { QueryClient } from '@tanstack/react-query';
+import { InMemorySecureStorage } from '@exzaestate/app-core';
+import { renderWithProviders } from '../property/test-utils.js';
+import { BookingListPage } from './pages/BookingListPage.js';
 import { computeQuotationKpis } from './hooks/useQuotationList.js';
 import { computeBookingKpis } from './hooks/useBookingList.js';
 import { computeAgreementKpis } from './hooks/useAgreementList.js';
@@ -263,5 +267,22 @@ describe('Sales Feature Module (B3)', () => {
     expect(screen.getByText('Nominee')).toBeDefined();
     expect(screen.getByText('Attribution')).toBeDefined();
     expect(screen.getByText('Review')).toBeDefined();
+  });
+
+  it('automatically opens BookingWizardModal when query param new=true is passed', async () => {
+    const queryClient = new QueryClient({
+      defaultOptions: { queries: { retry: false, staleTime: 0 } },
+    });
+    const mockSecureStorage = new InMemorySecureStorage();
+    await mockSecureStorage.setItem('refresh_token', 'mock-token');
+
+    renderWithProviders(<BookingListPage />, {
+      queryClient,
+      mockSecureStorage,
+      initialRoute: '/sales/bookings?new=true',
+    });
+
+    expect(screen.getByText('Property Allotment & Booking Wizard')).toBeDefined();
+    expect(screen.getByText('Step 1: Property Unit Selection')).toBeDefined();
   });
 });

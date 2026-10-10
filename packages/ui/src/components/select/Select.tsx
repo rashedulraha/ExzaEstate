@@ -50,7 +50,7 @@ function SelectOptionsList<T extends string>({
   return (
     <div
       role="listbox"
-      className="absolute z-50 mt-1 w-full bg-surface border border-border rounded-button shadow-lg py-1 max-h-60 overflow-auto focus:outline-none"
+      className="absolute z-50 mt-1 min-w-full w-max max-w-xs bg-surface border border-border rounded-button shadow-xl py-1 max-h-60 overflow-y-auto focus:outline-none"
     >
       {showSearch && (
         <div className="p-2 border-b border-border sticky top-0 bg-surface">
@@ -62,7 +62,6 @@ function SelectOptionsList<T extends string>({
               onChange={(e) => onSearchChange(e.target.value)}
               placeholder="Search..."
               className="w-full pl-8 pr-2 py-1 text-small bg-surface-sunken rounded border border-border outline-none focus:border-focus"
-              autoFocus
             />
           </div>
         </div>
@@ -133,13 +132,13 @@ function SelectTrigger({
       aria-expanded={isOpen}
       aria-describedby={describedBy}
       onClick={onClick}
-      className={`w-full flex items-center justify-between px-3 bg-surface text-text rounded-button border ${textClass} text-left outline-none transition-colors focus-visible:ring-2 focus-visible:ring-offset-0 disabled:bg-surface-sunken disabled:cursor-not-allowed ${heightClass} ${borderClass}`}
+      className={`w-full flex items-center justify-between min-w-0 px-3 bg-surface text-text rounded-button border ${textClass} text-left outline-none transition-colors focus-visible:ring-2 focus-visible:ring-offset-0 disabled:bg-surface-sunken disabled:cursor-not-allowed ${heightClass} ${borderClass}`}
     >
-      <span className={selectedLabel ? 'text-text' : 'text-text-muted truncate'}>
+      <span className={`truncate mr-2 ${selectedLabel ? 'text-text' : 'text-text-muted'}`}>
         {selectedLabel ?? placeholder}
       </span>
       <ChevronDown
-        className={`w-4 h-4 text-text-muted transition-transform duration-150 ${isOpen ? 'rotate-180' : ''}`}
+        className={`w-4 h-4 shrink-0 text-text-muted transition-transform duration-150 ${isOpen ? 'rotate-180' : ''}`}
         aria-hidden="true"
       />
     </button>
@@ -163,7 +162,7 @@ export function Select<T extends string = string>({
   const containerRef = useRef<HTMLDivElement>(null);
 
   const selectedOption = options.find((opt) => opt.value === value);
-  const showSearch = options.length > 7;
+  const showSearch = options.length > 15;
 
   const filteredOptions = showSearch
     ? options.filter((opt) => opt.label.toLowerCase().includes(searchQuery.toLowerCase()))

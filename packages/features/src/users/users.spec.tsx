@@ -190,6 +190,24 @@ describe('Users & Roles Management Module', () => {
       expect(screen.getByText('Full Name')).toBeDefined();
       expect(screen.getByText('Corporate Email')).toBeDefined();
     });
+
+    it('protects the primary account owner and displays Account Owner badge', () => {
+      renderWithClient(<UserManagementPage />);
+
+      expect(screen.getByText('Account Owner')).toBeDefined();
+      expect(screen.getByText('Edit Access')).toBeDefined();
+      expect(screen.getByText('Deactivate')).toBeDefined();
+    });
+
+    it('opens confirmation modal before deactivating an employee', () => {
+      renderWithClient(<UserManagementPage />);
+
+      const deactivateBtn = screen.getByText('Deactivate');
+      fireEvent.click(deactivateBtn);
+
+      expect(screen.getByText('Deactivate Employee Account')).toBeDefined();
+      expect(screen.getByText(/Are you sure you want to deactivate Farhana Akter/i)).toBeDefined();
+    });
   });
 
   describe('RoleManagementPage', () => {

@@ -1,5 +1,5 @@
 import { formatMoney } from '@exzaestate/shared';
-import { DataTable, type ColumnDef, Button } from '@exzaestate/ui';
+import { DataTable, type ColumnDef, Button, EmptyState } from '@exzaestate/ui';
 import { ArrowLeftRight, CheckCircle2, Landmark, Wallet } from 'lucide-react';
 import type { CashBankAccountItem } from '../../schemas/accounting.schema.js';
 
@@ -127,10 +127,13 @@ export function CashBankLedgerView({
   ];
 
   return (
-    <div className="space-y-4" data-testid="cash-bank-view">
-      <div className="p-4 rounded-card border border-border bg-surface flex flex-wrap items-center justify-between gap-4">
+    <div
+      className="rounded-card border border-border bg-surface shadow-xs"
+      data-testid="cash-bank-view"
+    >
+      <div className="p-4 border-b border-border flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h3 className="text-h3 font-bold text-text">Cash & Bank Accounts</h3>
+          <h3 className="text-body font-bold text-text">Cash & Bank Accounts</h3>
           <p className="text-caption text-text-muted">
             Liquid asset accounts, bank statements, and internal fund transfers.
           </p>
@@ -149,18 +152,25 @@ export function CashBankLedgerView({
         data={accounts}
         keyExtractor={(row) => row.id}
         isLoading={isLoading}
+        embedded
+        className="border-none shadow-none rounded-b-card"
         totalsRow={
-          <div className="flex items-center justify-between px-4 py-3 font-extrabold text-text border-t-2 border-b border-border bg-surface-sunken/40">
-            <span>Total Liquid Treasury:</span>
-            <span className="text-h3 tabular-nums">
+          <div className="flex items-center justify-between px-4 py-3 font-extrabold text-text border-t-2 border-border bg-surface-sunken/40 rounded-b-card">
+            <span className="text-caption uppercase tracking-wider text-text-muted font-bold">
+              Total Liquid Treasury:
+            </span>
+            <span className="text-h4 tabular-nums text-text font-bold">
               {formatMoney(totalBalancePaisa.toString())}
             </span>
           </div>
         }
         emptyState={
-          <div className="py-12 text-center text-text-muted">
-            No bank or cash accounts configured.
-          </div>
+          <EmptyState
+            icon={<Landmark className="w-6 h-6 text-text-muted" />}
+            title="No Bank or Cash Accounts Configured"
+            description="Create or link liquid asset accounts under Chart of Accounts to track treasury."
+            dashedBorder={false}
+          />
         }
       />
     </div>

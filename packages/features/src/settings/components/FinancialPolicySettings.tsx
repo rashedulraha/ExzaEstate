@@ -64,7 +64,7 @@ export function FinancialPolicySettings({
           <FormField
             label="Revenue Recognition Policy"
             id="revenue-recognition"
-            helperText="Milestone at which revenue journal is created (AT-04 / AT-04b)"
+            helperText="Milestone at which revenue journal is recognized"
           >
             <Select
               id="revenue-recognition"
@@ -81,7 +81,7 @@ export function FinancialPolicySettings({
           <FormField
             label="Cheque Posting Timing"
             id="cheque-post-on"
-            helperText="When receipts and accounting entries are posted for cheques (AT-13)"
+            helperText="When receipts and accounting entries are posted for cheques"
           >
             <Select
               id="cheque-post-on"
@@ -108,7 +108,7 @@ export function FinancialPolicySettings({
           <FormField
             label="Expense MD Threshold (BDT)"
             id="expense-md-threshold"
-            helperText="Expenses above this amount require MD approval (AT-07)"
+            helperText="Expenses above this amount require MD approval"
           >
             <Input
               id="expense-md-threshold"
@@ -138,7 +138,7 @@ export function FinancialPolicySettings({
           <FormField
             label="Cancellation Deduction %"
             id="cancellation-pct"
-            helperText="Percentage retained on booking cancellation (AT-08)"
+            helperText="Percentage retained on booking cancellation"
           >
             <Input
               id="cancellation-pct"

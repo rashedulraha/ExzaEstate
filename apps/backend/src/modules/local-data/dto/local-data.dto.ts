@@ -29,6 +29,14 @@ export class LocalProvisioningDto {
   adminName?: string;
 
   @ApiPropertyOptional({
+    description: 'Administrator full name alias',
+    example: 'Local Administrator',
+  })
+  @IsOptional()
+  @IsString()
+  adminFullName?: string;
+
+  @ApiPropertyOptional({
     description: 'Administrator initial password',
     example: 'AdminLocal1234!',
   })

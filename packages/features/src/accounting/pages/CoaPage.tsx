@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router';
 import { formatMoney } from '@exzaestate/shared';
-import { Button, Breadcrumbs } from '@exzaestate/ui';
+import { Button, Breadcrumbs, StatCard } from '@exzaestate/ui';
 import { Plus } from 'lucide-react';
 import { useCoaTree } from '../hooks/useCoaTree.js';
 import { CoaTreeView } from '../components/coa/CoaTreeView.js';
@@ -109,7 +109,7 @@ export function CoaPage() {
           <Breadcrumbs
             items={[
               { label: 'Overview', href: '/dashboard', onClick: () => navigate('/dashboard') },
-              { label: 'Finance & Accounts' },
+              { label: 'Finance & Treasury' },
               { label: 'Chart of Accounts' },
             ]}
           />
@@ -137,75 +137,38 @@ export function CoaPage() {
         </Button>
       </div>
 
-      {/* Tier 2: Responsive KPI Metrics Strip */}
+      {/* Tier 2: Responsive KPI Metrics Strip using reusable StatCard */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-        <div className="card-stat">
-          <div className="flex items-center justify-between">
-            <span className="text-caption font-semibold uppercase tracking-wider text-text-muted">
-              Total Accounts
-            </span>
-            <span className="text-caption font-medium px-2 py-0.5 rounded-full bg-surface-sunken text-text-muted">
-              Active
-            </span>
-          </div>
-          <span className="text-hero-num font-bold text-text mt-1.5 block tabular-nums">
-            {stats.total}
-          </span>
-          <span className="text-caption text-text-muted mt-1 block">
-            {stats.terminals} posting accounts
-          </span>
-        </div>
-
-        <div className="card-stat">
-          <div className="flex items-center justify-between">
-            <span className="text-caption font-semibold uppercase tracking-wider text-text-muted">
-              Account Groups
-            </span>
-            <span className="text-caption font-medium px-2 py-0.5 rounded-full bg-primary/10 text-primary">
-              Hierarchy
-            </span>
-          </div>
-          <span className="text-hero-num font-bold text-primary mt-1.5 block tabular-nums">
-            {stats.groups}
-          </span>
-          <span className="text-caption text-text-muted mt-1 block">
-            Main categories & head groups
-          </span>
-        </div>
-
-        <div className="card-stat">
-          <div className="flex items-center justify-between">
-            <span className="text-caption font-semibold uppercase tracking-wider text-text-muted">
-              Total Assets
-            </span>
-            <span className="text-caption font-medium px-2 py-0.5 rounded-full bg-info/10 text-info">
-              Assets
-            </span>
-          </div>
-          <span className="text-hero-num font-bold text-info mt-1.5 block tabular-nums">
-            {formatMoney(stats.assetsPaisa.toString())}
-          </span>
-          <span className="text-caption text-text-muted mt-1 block">
-            Cash, bank balances, and company assets
-          </span>
-        </div>
-
-        <div className="card-stat">
-          <div className="flex items-center justify-between">
-            <span className="text-caption font-semibold uppercase tracking-wider text-text-muted">
-              Total Liabilities
-            </span>
-            <span className="text-caption font-medium px-2 py-0.5 rounded-full bg-warning/10 text-warning">
-              Liabilities
-            </span>
-          </div>
-          <span className="text-hero-num font-bold text-text mt-1.5 block tabular-nums">
-            {formatMoney(stats.liabilitiesPaisa.toString())}
-          </span>
-          <span className="text-caption text-text-muted mt-1 block">
-            Vendor bills, dues, and advances
-          </span>
-        </div>
+        <StatCard
+          label="Total Accounts"
+          value={stats.total}
+          description={`${stats.terminals} posting accounts`}
+          badge={{ text: 'Active', variant: 'neutral' }}
+          isLoading={isLoading}
+        />
+        <StatCard
+          label="Account Groups"
+          value={stats.groups}
+          description="Main categories & head groups"
+          badge={{ text: 'Hierarchy', variant: 'primary' }}
+          valueColor="primary"
+          isLoading={isLoading}
+        />
+        <StatCard
+          label="Total Assets"
+          value={formatMoney(stats.assetsPaisa.toString())}
+          description="Cash, bank balances, and company assets"
+          badge={{ text: 'Assets', variant: 'info' }}
+          valueColor="info"
+          isLoading={isLoading}
+        />
+        <StatCard
+          label="Total Liabilities"
+          value={formatMoney(stats.liabilitiesPaisa.toString())}
+          description="Vendor bills, dues, and advances"
+          badge={{ text: 'Liabilities', variant: 'warning' }}
+          isLoading={isLoading}
+        />
       </div>
 
       {/* Tier 3: Unified COA Tree View Workspace Card */}

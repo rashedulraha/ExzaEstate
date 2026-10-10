@@ -1,4 +1,5 @@
 import { Hash, Calendar, Layers, Clock } from 'lucide-react';
+import { StatCard } from '@exzaestate/ui';
 import type { NumberingPatternItem, NumberingPatternFormData } from '../schemas/settings.schema.js';
 import type { SettingsTabId } from '../components/SettingsNavTabs.js';
 import { GeneralPolicySettings } from '../components/GeneralPolicySettings.js';
@@ -36,55 +37,32 @@ export function SettingsKpiCards({
   fiscalMonthName: string;
   nightlyJobTime?: unknown;
 }) {
+  const formattedTime =
+    typeof nightlyJobTime === 'string' && nightlyJobTime ? nightlyJobTime : '00:30';
+
   return (
     <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-      <div className="card-stat">
-        <div className="flex items-center justify-between">
-          <span className="text-caption font-semibold uppercase tracking-wider text-text-muted">
-            Document Series
-          </span>
-          <Hash className="w-4 h-4 text-text-muted" />
-        </div>
-        <span className="text-hero-num font-bold text-text mt-1.5 block tabular-nums">
-          {patternsCount} Active
-        </span>
-      </div>
-
-      <div className="card-stat">
-        <div className="flex items-center justify-between">
-          <span className="text-caption font-semibold uppercase tracking-wider text-text-muted">
-            Fiscal Period
-          </span>
-          <Calendar className="w-4 h-4 text-primary" />
-        </div>
-        <span className="text-hero-num font-bold text-primary mt-1.5 block tabular-nums">
-          {fiscalMonthName} 1
-        </span>
-      </div>
-
-      <div className="card-stat">
-        <div className="flex items-center justify-between">
-          <span className="text-caption font-semibold uppercase tracking-wider text-text-muted">
-            Land Conversion
-          </span>
-          <Layers className="w-4 h-4 text-text-muted" />
-        </div>
-        <span className="text-hero-num font-bold text-text mt-1.5 block tabular-nums">
-          4 Units (BD)
-        </span>
-      </div>
-
-      <div className="card-stat">
-        <div className="flex items-center justify-between">
-          <span className="text-caption font-semibold uppercase tracking-wider text-text-muted">
-            Nightly Job Time
-          </span>
-          <Clock className="w-4 h-4 text-text-muted" />
-        </div>
-        <span className="text-hero-num font-bold text-text-2 mt-1.5 block tabular-nums">
-          {typeof nightlyJobTime === 'string' && nightlyJobTime ? nightlyJobTime : '00:30'} BST
-        </span>
-      </div>
+      <StatCard
+        label="Document Series"
+        value={`${patternsCount} Active`}
+        icon={<Hash className="w-4 h-4" />}
+      />
+      <StatCard
+        label="Fiscal Period"
+        value={`${fiscalMonthName} 1`}
+        variant="brand"
+        icon={<Calendar className="w-4 h-4" />}
+      />
+      <StatCard
+        label="Land Conversion"
+        value="4 Units (BD)"
+        icon={<Layers className="w-4 h-4" />}
+      />
+      <StatCard
+        label="Nightly Job Time"
+        value={`${formattedTime} BST`}
+        icon={<Clock className="w-4 h-4" />}
+      />
     </div>
   );
 }

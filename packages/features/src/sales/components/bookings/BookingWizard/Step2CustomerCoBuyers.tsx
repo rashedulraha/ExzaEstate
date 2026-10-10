@@ -81,13 +81,13 @@ export function Step2CustomerCoBuyers({
 
         <FormField
           id="booking-customerId"
-          label="Primary Customer UUID"
+          label="Primary Customer ID / Reference"
           required
           error={errors.customerId?.message}
         >
           <Input
             id="booking-customerId"
-            placeholder="Enter customer UUID..."
+            placeholder="Enter customer ID or select customer..."
             {...register('customerId')}
           />
         </FormField>
@@ -123,10 +123,14 @@ export function Step2CustomerCoBuyers({
                 className="p-3 border border-border rounded-card bg-surface flex flex-col sm:flex-row gap-3 items-end"
               >
                 <div className="flex-1">
-                  <FormField id={`cobuyer-id-${idx}`} label={`Co-Buyer #${idx + 1} UUID`} required>
+                  <FormField
+                    id={`cobuyer-id-${idx}`}
+                    label={`Co-Buyer #${idx + 1} Customer ID`}
+                    required
+                  >
                     <Input
                       id={`cobuyer-id-${idx}`}
-                      placeholder="Customer UUID..."
+                      placeholder="Customer ID or code..."
                       {...register(`coBuyers.${idx}.customerId`)}
                     />
                   </FormField>

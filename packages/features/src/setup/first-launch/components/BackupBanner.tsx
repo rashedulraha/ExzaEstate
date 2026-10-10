@@ -40,7 +40,7 @@ export function BackupBanner({
             ⚠
           </div>
           <div>
-            <h4 className="text-h5 font-semibold text-text">Database Backup Recommended (AT-34)</h4>
+            <h4 className="text-h5 font-semibold text-text">Database Backup Recommended</h4>
             <p className="text-caption text-text-muted mt-0.5">{message}</p>
           </div>
         </div>

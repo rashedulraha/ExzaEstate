@@ -146,4 +146,57 @@ describe('ReportsHubPage & Executive Directory', () => {
     expect(categories.has('PROCUREMENT')).toBe(true);
     expect(categories.has('AUDIT')).toBe(true);
   });
+
+  it('toggles collapse and expand on Favorite Reports section', () => {
+    renderWithProviders(<ReportsHubPage />);
+
+    // Initially expanded in default grid view
+    expect(screen.getByText('Favorite Reports')).toBeDefined();
+    expect(screen.getByText('Grid View')).toBeDefined();
+    expect(screen.getByText('Collapse')).toBeDefined();
+
+    // Click collapse toggle header
+    const toggleHeader = screen.getByRole('button', { name: /Favorite Reports/i });
+    fireEvent.click(toggleHeader);
+
+    // Section body is collapsed
+    expect(screen.getByText('Expand')).toBeDefined();
+    expect(screen.getByText('Click to expand frequently viewed reports')).toBeDefined();
+
+    // Click again to expand
+    fireEvent.click(toggleHeader);
+    expect(screen.getByText('Collapse')).toBeDefined();
+  });
+
+  it('maintains independent and disconnected view modes for Favorite Reports and Directory catalog', () => {
+    renderWithProviders(<ReportsHubPage />);
+
+    // Initially: Directory is in table view, Favorite Reports is in grid view
+    expect(screen.getByText('Report Name & Scope')).toBeDefined();
+    expect(screen.getByText('Grid View')).toBeDefined();
+
+    // Switch Favorite Reports to list/table view
+    const switchListBtn = screen.getByRole('button', { name: 'Switch to list view' });
+    fireEvent.click(switchListBtn);
+
+    // Favorite Reports switches to table view; Directory is unaffected and remains in table view
+    expect(screen.getByText('Favorite Report & Scope')).toBeDefined();
+    expect(screen.getByText('Report Name & Scope')).toBeDefined();
+
+    // Switch Directory catalog to grid view via the main filter bar
+    const directoryGridViewBtn = screen.getByLabelText('Grid view');
+    fireEvent.click(directoryGridViewBtn);
+
+    // Directory switches to grid (Report Name & Scope is removed), while Favorite Reports remains in table view
+    expect(screen.queryByText('Report Name & Scope')).toBeNull();
+    expect(screen.getByText('Favorite Report & Scope')).toBeDefined();
+
+    // Switch Favorite Reports back to box/grid view
+    const switchBoxBtn = screen.getByRole('button', { name: 'Switch to box view' });
+    fireEvent.click(switchBoxBtn);
+
+    // Now Favorite Reports is in grid view (Favorite Report & Scope is removed)
+    expect(screen.queryByText('Favorite Report & Scope')).toBeNull();
+    expect(screen.queryByText('Report Name & Scope')).toBeNull();
+  });
 });

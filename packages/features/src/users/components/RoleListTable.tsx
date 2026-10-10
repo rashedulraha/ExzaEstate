@@ -6,6 +6,7 @@ import {
   Button,
   Select,
   EmptyState,
+  FilteredEmptyState,
   StickyToolbar,
 } from '@exzaestate/ui';
 import type { RoleItem } from '../schemas/role.schema.js';
@@ -158,10 +159,10 @@ export function RoleListTable({
   );
 
   return (
-    <div className="space-y-4">
+    <div className="rounded-card border border-border bg-surface shadow-xs">
       {/* Tier 3 Toolbar: Live Search & Type Filter */}
-      <StickyToolbar>
-        <div className="p-3.5 border border-border bg-surface rounded-card shadow-xs flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+      <StickyToolbar className="p-3.5">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
           <div className="relative flex-1 min-w-56">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
             <input
@@ -210,37 +211,36 @@ export function RoleListTable({
         </div>
       </StickyToolbar>
 
-      {/* Main DataTable */}
-      <div className="card-workspace">
+      {filteredRoles.length === 0 ? (
+        <div className="p-6">
+          {hasActiveFilters ? (
+            <FilteredEmptyState
+              title="No Matching Roles Found"
+              description="No security roles match your current search and type filters."
+              onResetFilters={handleClearFilters}
+            />
+          ) : (
+            <EmptyState
+              icon={<Shield className="w-8 h-8" />}
+              title="No Custom Roles Provisioned"
+              description="Define custom operational roles to delegate granular permissions across modules."
+              dashedBorder
+              actionLabel="Create Custom Role"
+              actionVariant="secondary"
+              actionIcon={<Plus className="w-4 h-4" />}
+              onAction={onCreateRole}
+            />
+          )}
+        </div>
+      ) : (
         <DataTable<RoleItem>
           columns={columns}
           data={filteredRoles}
           keyExtractor={(r) => r.id}
+          embedded
           className="border-none shadow-none"
-          emptyState={
-            hasActiveFilters ? (
-              <EmptyState
-                icon={<Search className="w-6 h-6" />}
-                title="No Matching Roles Found"
-                description="No security roles match your current search and type filters."
-                dashedBorder
-                actionLabel="Clear Filters"
-                onAction={handleClearFilters}
-              />
-            ) : (
-              <EmptyState
-                icon={<Shield className="w-6 h-6" />}
-                title="No Custom Roles Provisioned"
-                description="Define custom operational roles to delegate granular permissions across modules."
-                dashedBorder
-                actionLabel="Create Custom Role"
-                actionIcon={<Plus className="w-4 h-4" />}
-                onAction={onCreateRole}
-              />
-            )
-          }
         />
-      </div>
+      )}
     </div>
   );
 }

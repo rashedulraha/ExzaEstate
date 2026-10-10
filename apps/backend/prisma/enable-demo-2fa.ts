@@ -2,10 +2,22 @@ import { PrismaClient } from '@prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
 import pg from 'pg';
 
+import path from 'node:path';
+
+if (typeof process.loadEnvFile === 'function') {
+  try {
+    process.loadEnvFile(path.resolve(process.cwd(), '.env'));
+  } catch {}
+  try {
+    process.loadEnvFile(path.resolve(process.cwd(), '../../.env'));
+  } catch {}
+}
+
 async function main() {
-  const connectionString =
-    process.env.DATABASE_URL ||
-    'postgresql://exza_app:exza_app_secret@localhost:5432/exzaestate?schema=public';
+  const connectionString = process.env.SYSTEM_DATABASE_URL || process.env.DATABASE_URL;
+  if (!connectionString) {
+    throw new Error('FATAL: DATABASE_URL is missing. Please define it in your .env file.');
+  }
   const pool = new pg.Pool({ connectionString });
   const adapter = new PrismaPg(pool);
   const prisma = new PrismaClient({ adapter });

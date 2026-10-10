@@ -62,9 +62,9 @@ describe('Operations Module (B6) - S5: Booking Transfers & Project Profitability
     expect(screen.getByText('Step 3 of 4: Atomic Ownership Succession')).toBeDefined();
     fireEvent.click(screen.getByText('Next'));
 
-    // Step 4: Summary & Invariant AT-35
+    // Step 4: Summary & Transfer Policy
     expect(screen.getByText('Step 4 of 4: Atomic Ownership Succession')).toBeDefined();
-    expect(screen.getByText(/Invariant AT-35:/)).toBeDefined();
+    expect(screen.getByText(/Transfer Policy:/)).toBeDefined();
 
     // Confirm & Execute
     const executeBtn = screen.getByText('Confirm & Execute Transfer');

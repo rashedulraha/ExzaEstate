@@ -7,10 +7,13 @@ import {
   Palette,
   Check,
   Globe,
+  Sun,
+  Moon,
+  Monitor,
 } from 'lucide-react';
 import type { User as AuthUser } from '@exzaestate/app-core';
 import { cleanEnglishText } from '@exzaestate/shared';
-import { THEME_PALETTES, type ThemePalette } from '@exzaestate/ui';
+import { THEME_PALETTES, type ThemePalette, type Theme } from '@exzaestate/ui';
 
 export interface ProfileIdentityCardProps {
   user: AuthUser | null;
@@ -130,6 +133,71 @@ export function ThemeSelectorCard({ currentPalette, onSelectPalette }: ThemeSele
             </button>
           );
         })}
+      </div>
+    </div>
+  );
+}
+
+export interface DisplayModeCardProps {
+  currentTheme: Theme;
+  onSelectTheme: (theme: Theme) => void;
+}
+
+export function DisplayModeCard({ currentTheme, onSelectTheme }: DisplayModeCardProps) {
+  return (
+    <div className="rounded-card border border-border bg-surface p-6 shadow-xs space-y-4">
+      <div className="flex items-center justify-between border-b border-border pb-3">
+        <div className="flex items-center gap-2">
+          <Sun className="w-4 h-4 text-primary" />
+          <div>
+            <h3 className="text-label font-semibold text-text">Display Mode & Interface Theme</h3>
+            <p className="text-caption text-text-muted mt-0.5">
+              Toggle between daylight light mode, obsidian dark mode, or follow your computer&apos;s
+              system default.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
+        <button
+          type="button"
+          onClick={() => onSelectTheme('light')}
+          className={`p-3 rounded-card border flex items-center justify-center gap-2.5 cursor-pointer transition ${
+            currentTheme === 'light'
+              ? 'border-primary bg-primary/10 text-primary font-semibold ring-1 ring-primary/30'
+              : 'border-border bg-surface-sunken/40 text-text hover:bg-surface-sunken'
+          }`}
+        >
+          <Sun className="w-4 h-4" />
+          <span className="text-caption font-medium">Light Mode</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => onSelectTheme('dark')}
+          className={`p-3 rounded-card border flex items-center justify-center gap-2.5 cursor-pointer transition ${
+            currentTheme === 'dark'
+              ? 'border-primary bg-primary/10 text-primary font-semibold ring-1 ring-primary/30'
+              : 'border-border bg-surface-sunken/40 text-text hover:bg-surface-sunken'
+          }`}
+        >
+          <Moon className="w-4 h-4" />
+          <span className="text-caption font-medium">Dark Mode</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => onSelectTheme('system')}
+          className={`p-3 rounded-card border flex items-center justify-center gap-2.5 cursor-pointer transition ${
+            currentTheme === 'system'
+              ? 'border-primary bg-primary/10 text-primary font-semibold ring-1 ring-primary/30'
+              : 'border-border bg-surface-sunken/40 text-text hover:bg-surface-sunken'
+          }`}
+        >
+          <Monitor className="w-4 h-4" />
+          <span className="text-caption font-medium">System (Auto Follow OS)</span>
+        </button>
       </div>
     </div>
   );

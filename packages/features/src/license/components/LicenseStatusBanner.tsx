@@ -36,9 +36,9 @@ function resolveBannerContent(
   }
   if (status === 'EXPIRED') {
     return {
-      title: 'License Expired — Read-Only Mode (AT-31)',
+      title: 'License Expired — Read-Only Mode',
       description:
-        'Your subscription period has ended. New transactions are locked. Data is never held hostage (BR-20) — all ledgers and export tools remain fully accessible.',
+        'Your subscription period has ended. New transactions are locked. Your financial records and export tools remain fully accessible.',
       containerClasses: 'bg-danger/12 border border-danger/30 text-danger',
       badgeClasses: 'bg-danger/20',
       icon: '🔒',
@@ -108,7 +108,7 @@ export function LicenseStatusBanner({
             onClick={onExportData}
             aria-label="Export All Business Data"
           >
-            Export All Data (BR-20)
+            Export All Data
           </Button>
         )}
 

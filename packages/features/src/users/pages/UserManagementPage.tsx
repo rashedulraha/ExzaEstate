@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router';
 import { Plus, Users, ShieldCheck, UserX, UserCheck } from 'lucide-react';
-import { Button, Breadcrumbs, LoadingState, ErrorState } from '@exzaestate/ui';
+import { Button, Breadcrumbs, LoadingState, ErrorState, StatCard } from '@exzaestate/ui';
 import { useUsers } from '../hooks/useUsers.js';
 import { useRoles } from '../hooks/useRoles.js';
 import { UserListTable } from '../components/UserListTable.js';
@@ -82,7 +82,7 @@ export function UserManagementPage() {
           <Breadcrumbs
             items={[
               { label: 'Overview', href: '/dashboard', onClick: () => navigate('/dashboard') },
-              { label: 'System & Admin' },
+              { label: 'Workspace & Admin' },
               { label: 'Users & Roles' },
             ]}
           />
@@ -118,61 +118,33 @@ export function UserManagementPage() {
             variant="primary"
             leftIcon={<Plus className="w-4 h-4" />}
             onClick={() => setIsCreateOpen(true)}
+            aria-label="Create User / Add Employee"
           >
-            Create User
+            Add Employee
           </Button>
         </div>
       </div>
 
       {/* Tier 2: 4 KPI Summary Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-        <div className="card-stat">
-          <div className="flex items-center justify-between">
-            <span className="text-caption font-semibold uppercase tracking-wider text-text-muted">
-              Total Employees
-            </span>
-            <Users className="w-4 h-4 text-text-muted" />
-          </div>
-          <span className="text-hero-num font-bold text-text mt-1.5 block tabular-nums">
-            {kpis.total}
-          </span>
-        </div>
-
-        <div className="card-stat">
-          <div className="flex items-center justify-between">
-            <span className="text-caption font-semibold uppercase tracking-wider text-text-muted">
-              Active Users
-            </span>
-            <UserCheck className="w-4 h-4 text-success" />
-          </div>
-          <span className="text-hero-num font-bold text-success mt-1.5 block tabular-nums">
-            {kpis.active}
-          </span>
-        </div>
-
-        <div className="card-stat">
-          <div className="flex items-center justify-between">
-            <span className="text-caption font-semibold uppercase tracking-wider text-text-muted">
-              Inactive Users
-            </span>
-            <UserX className="w-4 h-4 text-text-muted" />
-          </div>
-          <span className="text-hero-num font-bold text-text-muted mt-1.5 block tabular-nums">
-            {kpis.inactive}
-          </span>
-        </div>
-
-        <div className="card-stat">
-          <div className="flex items-center justify-between">
-            <span className="text-caption font-semibold uppercase tracking-wider text-text-muted">
-              Two-Factor Secured
-            </span>
-            <ShieldCheck className="w-4 h-4 text-primary" />
-          </div>
-          <span className="text-hero-num font-bold text-primary mt-1.5 block tabular-nums">
-            {kpis.twoFa}
-          </span>
-        </div>
+        <StatCard label="Total Employees" value={kpis.total} icon={<Users className="w-4 h-4" />} />
+        <StatCard
+          label="Active Users"
+          value={kpis.active}
+          variant="success"
+          icon={<UserCheck className="w-4 h-4" />}
+        />
+        <StatCard
+          label="Inactive Users"
+          value={kpis.inactive}
+          icon={<UserX className="w-4 h-4" />}
+        />
+        <StatCard
+          label="Two-Factor Secured"
+          value={kpis.twoFa}
+          variant="brand"
+          icon={<ShieldCheck className="w-4 h-4" />}
+        />
       </div>
 
       {/* Tier 3: Users Table with Filters and Actions */}

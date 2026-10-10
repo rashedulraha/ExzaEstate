@@ -255,9 +255,9 @@ export function Step4Summary({
         <span className="font-semibold text-primary tabular-nums">{formatMoney(feePaisa)}</span>
       </div>
       <div className="pt-1 text-caption text-text-muted">
-        <strong>Invariant AT-35:</strong> Original booking will be marked as{' '}
-        <code className="text-primary font-mono">TRANSFERRED</code>, and successor booking created
-        atomically.
+        <strong>Transfer Policy:</strong> Original booking will be marked as{' '}
+        <span className="text-primary font-semibold">Transferred</span>, and successor booking
+        created seamlessly.
       </div>
     </div>
   );

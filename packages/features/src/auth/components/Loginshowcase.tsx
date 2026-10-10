@@ -306,10 +306,10 @@ export function LoginShowcase({ side = 'left' }: LoginShowcaseProps) {
                 <span className="h-2 w-2 rounded-full bg-accent shadow-[0_0_10px] shadow-accent" />
                 <div>
                   <p className="text-caption font-semibold text-text-inverse">
-                    PostgreSQL RLS enforced
+                    Enterprise Data Isolation
                   </p>
                   <p className="text-caption text-text-muted">
-                    Every tenant isolated at the database
+                    Multi-tenant organization security guaranteed
                   </p>
                 </div>
               </div>

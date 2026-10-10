@@ -194,7 +194,7 @@ Comments explain _why_. Non-obvious business rules link to `prd.md` / `accountin
 
 ## 9. Environment & secrets
 
-`.env` never committed; `.env.example` per app. Read config only through the typed, zod-validated `ConfigService`; never `process.env` in business code. Different secrets per environment.
+`.env` never committed; `.env.example` per app. Read config only through the typed, zod-validated `ConfigService`; never `process.env` in business code. Different secrets per environment. **Zero Hardcoded Secrets & DB URLs:** Never hardcode database connection strings, credentials, or fallback database URLs (e.g., `postgresql://...`) in source code, configuration files, or scripts. Database URLs must strictly be loaded from environment variables (`DATABASE_URL`, `MIGRATOR_DATABASE_URL`, `SYSTEM_DATABASE_URL`). If missing, code must fail-fast and throw an explicit `Error` instructing the user to configure the variable in `.env`.
 
 ## 10. Dependencies
 

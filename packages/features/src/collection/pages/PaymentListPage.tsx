@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router';
 import { formatMoney } from '@exzaestate/shared';
 import { PERMISSIONS } from '@exzaestate/shared';
 import { usePermission } from '@exzaestate/app-core';
-import { Button, Input, Select, Breadcrumbs, StickyToolbar } from '@exzaestate/ui';
+import { Button, Input, Select, Breadcrumbs, StickyToolbar, StatCard } from '@exzaestate/ui';
 import { Plus, Search, X } from 'lucide-react';
 import { usePaymentList } from '../hooks/usePaymentList.js';
 import { usePaymentActions } from '../hooks/usePaymentActions.js';
@@ -54,7 +54,7 @@ export function PaymentListPage() {
           <Breadcrumbs
             items={[
               { label: 'Overview', href: '/dashboard', onClick: () => navigate('/dashboard') },
-              { label: 'Finance & Accounts' },
+              { label: 'Finance & Treasury' },
               { label: 'Payments & Receipts' },
             ]}
           />
@@ -81,148 +81,118 @@ export function PaymentListPage() {
         )}
       </div>
 
-      {/* Tier 2: Responsive KPI Cards Strip */}
+      {/* Tier 2: Responsive KPI Cards Strip using reusable StatCard */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-        <div className="card-stat">
-          <div className="flex items-center justify-between">
-            <span className="text-caption font-semibold uppercase tracking-wider text-text-muted">
-              Total Collected
-            </span>
-            <span className="text-caption font-medium px-2 py-0.5 rounded-full bg-success/12 text-success">
-              Received
-            </span>
-          </div>
-          <span className="text-hero-num font-bold text-success mt-1.5 block tabular-nums">
-            {formatMoney(kpis.totalCollectedPaisa)}
-          </span>
-          <span className="text-caption text-text-muted mt-1 block">
-            Total confirmed collections received
-          </span>
-        </div>
-
-        <div className="card-stat">
-          <div className="flex items-center justify-between">
-            <span className="text-caption font-semibold uppercase tracking-wider text-text-muted">
-              Pending Confirmation
-            </span>
-            <span className="text-caption font-medium px-2 py-0.5 rounded-full bg-warning/12 text-warning">
-              Pending
-            </span>
-          </div>
-          <span className="text-hero-num font-bold text-warning mt-1.5 block tabular-nums">
-            {formatMoney(kpis.totalDraftPaisa)}
-          </span>
-          <span className="text-caption text-text-muted mt-1 block">
-            Draft payments awaiting review
-          </span>
-        </div>
-
-        <div className="card-stat">
-          <div className="flex items-center justify-between">
-            <span className="text-caption font-semibold uppercase tracking-wider text-text-muted">
-              Confirmed Receipts
-            </span>
-            <span className="text-caption font-medium px-2 py-0.5 rounded-full bg-surface-sunken text-text-muted">
-              Receipts
-            </span>
-          </div>
-          <span className="text-hero-num font-bold text-text mt-1.5 block tabular-nums">
-            {kpis.countPosted}
-          </span>
-          <span className="text-caption text-text-muted mt-1 block">Issued money receipts</span>
-        </div>
-
-        <div className="card-stat">
-          <div className="flex items-center justify-between">
-            <span className="text-caption font-semibold uppercase tracking-wider text-text-muted">
-              Pending Cheques
-            </span>
-            <span className="text-caption font-medium px-2 py-0.5 rounded-full bg-surface-sunken text-text-muted">
-              Clearing
-            </span>
-          </div>
-          <span className="text-hero-num font-bold text-text mt-1.5 block tabular-nums">
-            {kpis.countChequePending}
-          </span>
-          <span className="text-caption text-text-muted mt-1 block">Cheques in bank clearing</span>
-        </div>
+        <StatCard
+          label="Total Collected"
+          value={formatMoney(kpis.totalCollectedPaisa)}
+          description="Total confirmed collections received"
+          badge={{ text: 'Received', variant: 'success' }}
+          valueColor="success"
+          isLoading={isLoading}
+        />
+        <StatCard
+          label="Pending Confirmation"
+          value={formatMoney(kpis.totalDraftPaisa)}
+          description="Draft payments awaiting review"
+          badge={{ text: 'Pending', variant: 'warning' }}
+          valueColor="warning"
+          isLoading={isLoading}
+        />
+        <StatCard
+          label="Confirmed Receipts"
+          value={kpis.countPosted}
+          description="Issued money receipts"
+          badge={{ text: 'Receipts', variant: 'neutral' }}
+          isLoading={isLoading}
+        />
+        <StatCard
+          label="Pending Cheques"
+          value={kpis.countChequePending}
+          description="Cheques in bank clearing"
+          badge={{ text: 'Clearing', variant: 'neutral' }}
+          isLoading={isLoading}
+        />
       </div>
 
-      {/* Tier 3: Sticky Filter Toolbar */}
-      <StickyToolbar>
-        <div className="p-4 rounded-card border border-border bg-surface shadow-xs flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
-          <div className="relative flex-1">
-            <Search className="w-4 h-4 text-text-muted absolute left-3 top-1/2 -translate-y-1/2" />
-            <Input
-              id="paymentSearch"
-              placeholder="Search by receipt #, customer name, cheque number..."
-              value={filters.search}
-              onChange={(e) => setFilters({ ...filters, search: e.target.value, page: 1 })}
-              className="pl-9"
-            />
-          </div>
-
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-            <div className="w-full sm:w-48">
-              <Select
-                id="statusFilter"
-                value={filters.status}
-                options={[
-                  { value: 'ALL', label: 'All Statuses' },
-                  { value: 'DRAFT', label: 'Draft' },
-                  { value: 'POSTED', label: 'Posted' },
-                  { value: 'REVERSED', label: 'Reversed' },
-                  { value: 'CANCELLED', label: 'Cancelled' },
-                ]}
-                onChange={(val) =>
-                  setFilters({ ...filters, status: val as PaymentStatusEnum | 'ALL', page: 1 })
-                }
-              />
-            </div>
-
-            <div className="w-full sm:w-48">
-              <Select
-                id="methodFilter"
-                value={filters.paymentMethod}
-                options={[
-                  { value: 'ALL', label: 'All Methods' },
-                  { value: 'CASH', label: 'Cash' },
-                  { value: 'BANK_TRANSFER', label: 'Bank Transfer' },
-                  { value: 'CHEQUE', label: 'Cheque' },
-                  { value: 'BKASH', label: 'bKash' },
-                  { value: 'NAGAD', label: 'Nagad' },
-                  { value: 'CARD', label: 'Card' },
-                ]}
-                onChange={(val) =>
-                  setFilters({
-                    ...filters,
-                    paymentMethod: val as PaymentMethodEnum | 'ALL',
-                    page: 1,
-                  })
-                }
-              />
-            </div>
-
-            {hasActiveFilters && (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleClearFilters}
-                className="text-text-muted hover:text-text text-small whitespace-nowrap"
-              >
-                <X className="w-3.5 h-3.5 mr-1" />
-                Reset
-              </Button>
-            )}
-          </div>
-        </div>
-      </StickyToolbar>
-
-      {/* Tier 4: Main Payments Data Table */}
+      {/* Tier 3: Unified Payments Workspace */}
       <div className="rounded-card border border-border bg-surface shadow-xs">
+        <StickyToolbar className="p-4">
+          <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
+            <div className="relative flex-1">
+              <Search className="w-4 h-4 text-text-muted absolute left-3 top-1/2 -translate-y-1/2" />
+              <Input
+                id="paymentSearch"
+                placeholder="Search by receipt #, customer name, cheque number..."
+                value={filters.search}
+                onChange={(e) => setFilters({ ...filters, search: e.target.value, page: 1 })}
+                className="pl-9"
+              />
+            </div>
+
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+              <div className="w-full sm:w-48">
+                <Select
+                  id="statusFilter"
+                  value={filters.status}
+                  options={[
+                    { value: 'ALL', label: 'All Statuses' },
+                    { value: 'DRAFT', label: 'Draft' },
+                    { value: 'POSTED', label: 'Posted' },
+                    { value: 'REVERSED', label: 'Reversed' },
+                    { value: 'CANCELLED', label: 'Cancelled' },
+                  ]}
+                  onChange={(val) =>
+                    setFilters({ ...filters, status: val as PaymentStatusEnum | 'ALL', page: 1 })
+                  }
+                />
+              </div>
+
+              <div className="w-full sm:w-48">
+                <Select
+                  id="methodFilter"
+                  value={filters.paymentMethod}
+                  options={[
+                    { value: 'ALL', label: 'All Methods' },
+                    { value: 'CASH', label: 'Cash' },
+                    { value: 'BANK_TRANSFER', label: 'Bank Transfer' },
+                    { value: 'CHEQUE', label: 'Cheque' },
+                    { value: 'BKASH', label: 'bKash' },
+                    { value: 'NAGAD', label: 'Nagad' },
+                    { value: 'CARD', label: 'Card' },
+                  ]}
+                  onChange={(val) =>
+                    setFilters({
+                      ...filters,
+                      paymentMethod: val as PaymentMethodEnum | 'ALL',
+                      page: 1,
+                    })
+                  }
+                />
+              </div>
+
+              {hasActiveFilters && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleClearFilters}
+                  className="text-text-muted hover:text-text text-small whitespace-nowrap"
+                >
+                  <X className="w-3.5 h-3.5 mr-1" />
+                  Reset
+                </Button>
+              )}
+            </div>
+          </div>
+        </StickyToolbar>
+
         <PaymentDataTable
           payments={payments}
           isLoading={isLoading}
+          hasActiveFilters={hasActiveFilters}
+          onResetFilters={handleClearFilters}
+          canCreateDraft={canCreateDraft}
+          onRecordPayment={() => setIsEntryModalOpen(true)}
           onViewReceipt={(p) => setReceiptTarget(p)}
           onPostPayment={handlePost}
           onReversePayment={(p) => setReversalTarget(p)}

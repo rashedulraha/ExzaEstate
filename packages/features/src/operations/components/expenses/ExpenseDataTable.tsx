@@ -1,38 +1,30 @@
 import { useMemo } from 'react';
-import { formatMoney } from '@exzaestate/shared';
-import { DataTable, type ColumnDef, Button, EmptyState } from '@exzaestate/ui';
+import { formatMoney, formatDate } from '@exzaestate/shared';
+import {
+  DataTable,
+  type ColumnDef,
+  Button,
+  EmptyState,
+  FilteredEmptyState,
+  StatusBadge,
+} from '@exzaestate/ui';
 import { Eye, Plus, Receipt } from 'lucide-react';
 import type { ExpenseVoucherItem, ExpenseStatusEnum } from '../../schemas/operations.schema.js';
 
 export interface ExpenseDataTableProps {
   vouchers: ExpenseVoucherItem[];
   isLoading?: boolean;
+  hasActiveFilters?: boolean;
+  onResetFilters?: () => void;
   onSelectVoucher: (voucher: ExpenseVoucherItem) => void;
   onCreateVoucher?: () => void;
   emptyState?: React.ReactNode;
 }
 
 export function getExpenseStatusBadge(status: ExpenseStatusEnum) {
-  const styles: Record<ExpenseStatusEnum, { label: string; cls: string }> = {
-    DRAFT: { label: 'DRAFT', cls: 'bg-surface-sunken text-text-muted border-border' },
-    SUBMITTED: { label: 'SUBMITTED', cls: 'bg-info/12 text-info border-info/20' },
-    APPROVED: { label: 'APPROVED', cls: 'bg-primary/12 text-primary border-primary/20' },
-    VERIFIED: { label: 'VERIFIED', cls: 'bg-accent-subtle text-accent-text border-accent-text/20' },
-    PAID: { label: 'PAID', cls: 'bg-success/12 text-success border-success/20' },
-    REJECTED: { label: 'REJECTED', cls: 'bg-danger/12 text-danger border-danger/20' },
-    CANCELLED: {
-      label: 'CANCELLED',
-      cls: 'bg-surface-sunken text-text-disabled border-border line-through',
-    },
-  };
-
-  const current = styles[status] || styles.DRAFT;
   return (
-    <span
-      data-testid="expense-status-badge"
-      className={`inline-flex items-center px-2 py-0.5 rounded-full text-caption font-semibold border ${current.cls}`}
-    >
-      {current.label}
+    <span data-testid="expense-status-badge" className="inline-flex">
+      <StatusBadge domain="expense" value={status} />
     </span>
   );
 }
@@ -47,6 +39,14 @@ function createExpenseColumns(
       width: '140px',
       render: (row) => (
         <span className="font-mono font-semibold text-text">{row.voucherNumber}</span>
+      ),
+    },
+    {
+      key: 'expenseDate',
+      header: 'Date',
+      width: '110px',
+      render: (row) => (
+        <span className="text-text tabular-nums text-small">{formatDate(row.expenseDate)}</span>
       ),
     },
     {
@@ -95,12 +95,13 @@ function createExpenseColumns(
       key: 'actions',
       header: '',
       align: 'right',
-      width: '100px',
+      width: '90px',
       render: (row) => (
         <Button
           variant="ghost"
           size="sm"
           title="View Voucher Details"
+          aria-label={`View voucher details for ${row.voucherNumber}`}
           onClick={() => onSelectVoucher(row)}
           data-testid={`view-expense-${row.id}`}
         >
@@ -136,38 +137,41 @@ function ExpenseEmptyState({
 export function ExpenseDataTable({
   vouchers,
   isLoading = false,
+  hasActiveFilters = false,
+  onResetFilters,
   onSelectVoucher,
   onCreateVoucher,
   emptyState,
 }: ExpenseDataTableProps) {
   const columns = useMemo(() => createExpenseColumns(onSelectVoucher), [onSelectVoucher]);
 
+  const defaultEmpty =
+    emptyState ??
+    (hasActiveFilters ? (
+      <FilteredEmptyState
+        title="No matching vouchers found"
+        description="No expense vouchers match your active search and filter criteria. Try resetting your filter."
+        onResetFilters={onResetFilters}
+      />
+    ) : (
+      <ExpenseEmptyState onCreateVoucher={onCreateVoucher} icon={<Receipt className="w-6 h-6" />} />
+    ));
+
   if (vouchers.length === 0 && !isLoading) {
-    if (emptyState) return <>{emptyState}</>;
-    return <ExpenseEmptyState onCreateVoucher={onCreateVoucher} />;
+    return (
+      <div className="p-6" data-testid="expense-data-table">
+        {defaultEmpty}
+      </div>
+    );
   }
 
-  const defaultEmpty = emptyState ?? (
-    <ExpenseEmptyState onCreateVoucher={onCreateVoucher} icon={<Receipt className="w-6 h-6" />} />
-  );
-
   return (
-    <div className="space-y-4" data-testid="expense-data-table">
-      {onCreateVoucher && (
-        <div className="flex justify-end">
-          <Button variant="primary" onClick={onCreateVoucher} data-testid="create-expense-btn">
-            <Plus className="w-4 h-4 mr-1.5" />
-            New Expense Voucher
-          </Button>
-        </div>
-      )}
-
+    <div className="space-y-0" data-testid="expense-data-table">
       <DataTable
         data={vouchers}
         columns={columns}
         isLoading={isLoading}
         keyExtractor={(item) => item.id}
-        emptyState={defaultEmpty}
         className="border-none shadow-none"
       />
     </div>

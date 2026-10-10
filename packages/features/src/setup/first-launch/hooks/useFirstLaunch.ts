@@ -1,13 +1,6 @@
 import { useState, useCallback, useEffect } from 'react';
 import { http } from '@exzaestate/api-client';
-import {
-  usePlatform,
-  useAuth,
-  initApiClient,
-  getEnvApiBaseUrl,
-  getEnvInitialLicenseKey,
-  type MachineFingerprint,
-} from '@exzaestate/app-core';
+import { usePlatform, useAuth, initApiClient, type MachineFingerprint } from '@exzaestate/app-core';
 import type {
   RuntimeModeChoice,
   CreateLocalCompanyInput,
@@ -16,6 +9,7 @@ import type {
 import {
   buildProvisionPayload,
   establishProvisionedSession,
+  parseCloudConfig,
   postProvisionRequest,
   saveLocalOfflineLicense,
 } from './useFirstLaunch.helpers.js';
@@ -36,15 +30,17 @@ export interface FirstLaunchState {
 export function useFirstLaunch() {
   const platform = usePlatform();
   const { setSession } = useAuth();
-  const currentStep = useOnboardingStore((s) => s.currentStep);
-  const selectedMode = useOnboardingStore((s) => s.selectedMode);
-  const provisionedDetails = useOnboardingStore((s) => s.provisionedDetails);
-  const setCurrentStep = useOnboardingStore((s) => s.setStep);
-  const nextStep = useOnboardingStore((s) => s.nextStep);
-  const prevStep = useOnboardingStore((s) => s.prevStep);
-  const setMode = useOnboardingStore((s) => s.setMode);
-  const setProvisionedDetails = useOnboardingStore((s) => s.setProvisionedDetails);
-  const updateCompanyData = useOnboardingStore((s) => s.updateCompanyData);
+  const {
+    currentStep,
+    selectedMode,
+    provisionedDetails,
+    setStep: setCurrentStep,
+    nextStep,
+    prevStep,
+    setMode,
+    setProvisionedDetails,
+    updateCompanyData,
+  } = useOnboardingStore();
 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -151,28 +147,6 @@ export function useFirstLaunch() {
     },
     [activeCode],
   );
-
-  function getValidString(val?: string, fallback = ''): string {
-    if (val && val.trim()) return val.trim();
-    return fallback;
-  }
-
-  function parseCloudConfig(config: CloudConfigInput | string) {
-    if (typeof config === 'string') {
-      const baseUrl = getValidString(config, getEnvApiBaseUrl());
-      if (!baseUrl) throw new Error('Server URL is required');
-      return { baseUrl, companyName: '', licenseKey: getEnvInitialLicenseKey() };
-    }
-    const baseUrl = getValidString(config.baseUrl, getEnvApiBaseUrl());
-    const companyName = getValidString(config.companyName);
-    if (!baseUrl) throw new Error('Server URL is required');
-    if (!companyName) throw new Error('Organization name is required');
-    return {
-      baseUrl,
-      companyName,
-      licenseKey: getValidString(config.licenseKey, getEnvInitialLicenseKey()),
-    };
-  }
 
   const configureCloud = useCallback(
     async (config: CloudConfigInput | string) => {

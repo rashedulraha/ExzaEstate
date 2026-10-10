@@ -60,13 +60,13 @@ export function LegacyBookingModal({
           <FormField
             label="Customer Identifier"
             id="legacy-customer-id"
-            helperText="Customer UUID or legacy code"
+            helperText="Customer code or ID"
           >
             <Input
               id="legacy-customer-id"
               value={customerId}
               onChange={(e) => setCustomerId(e.target.value)}
-              placeholder="e.g. CUST-001 or UUID"
+              placeholder="e.g. CUST-001"
               required
             />
           </FormField>
@@ -76,7 +76,7 @@ export function LegacyBookingModal({
               id="legacy-property-id"
               value={propertyId}
               onChange={(e) => setPropertyId(e.target.value)}
-              placeholder="e.g. Flat 4A or UUID"
+              placeholder="e.g. FLAT-4A or unit ID"
             />
           </FormField>
         </div>

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { formatMoney } from '@exzaestate/shared';
+import { formatMoney, formatDate } from '@exzaestate/shared';
 import { Drawer, Button, FormField, Input } from '@exzaestate/ui';
 import { usePermission } from '@exzaestate/app-core';
 import { PERMISSIONS } from '@exzaestate/shared';
@@ -51,7 +51,7 @@ function ExpenseThresholdBanner({ exceedsMdThreshold }: { exceedsMdThreshold: bo
         </span>
         <span className="text-caption text-text-muted mt-0.5 block">
           {exceedsMdThreshold
-            ? 'Amount exceeds BDT 5,00,000 threshold (FLOW-11). Only Managing Director role may approve.'
+            ? 'Amount exceeds company BDT 5,00,000 policy threshold. Only Managing Director may approve.'
             : 'Amount is within standard BDT 5,00,000 limit. General Manager or Managing Director can approve.'}
         </span>
       </div>
@@ -92,7 +92,9 @@ function ExpenseMetadataSection({ voucher }: { voucher: ExpenseVoucherItem }) {
         </div>
         <div>
           <span className="text-caption text-text-muted block">Expense Date</span>
-          <span className="font-medium text-text">{voucher.expenseDate}</span>
+          <span className="font-medium text-text tabular-nums">
+            {formatDate(voucher.expenseDate)}
+          </span>
         </div>
         <div>
           <span className="text-caption text-text-muted block">Payment Method</span>

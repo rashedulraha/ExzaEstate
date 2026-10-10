@@ -130,7 +130,7 @@ export function CollectionReportPage() {
               </span>
             </div>
             <p className="text-small text-text-muted mt-1">
-              Cleared installment collections and customer receipts (AT-15 verified)
+              Cleared installment collections and customer receipts across all projects
             </p>
           </div>
 
@@ -153,20 +153,7 @@ export function CollectionReportPage() {
         </div>
       </div>
 
-      {/* Tier 2: Filter Toolbar */}
-      <ReportFiltersBar
-        mode="range"
-        startDate={startDate}
-        endDate={endDate}
-        onStartDateChange={setStartDate}
-        onEndDateChange={setEndDate}
-        projectId={projectId}
-        onProjectIdChange={setProjectId}
-        onRefresh={() => void query.refetch()}
-        onOpenExport={() => setIsExportOpen(true)}
-      />
-
-      {/* Tier 3: Content Workspace Card */}
+      {/* Tier 2: Unified Collection Register Workspace Card */}
       <ReportStateWrapper
         isLoading={query.isLoading}
         isError={query.isError}
@@ -175,11 +162,27 @@ export function CollectionReportPage() {
         onRetry={() => void query.refetch()}
         hasData={Boolean(report)}
       >
-        {report && (
-          <div className="rounded-card border border-border bg-surface shadow-xs overflow-hidden">
-            <DataTable data={report.rows} columns={columns} keyExtractor={(r) => r.paymentId} />
-          </div>
-        )}
+        <div className="rounded-card border border-border bg-surface shadow-xs">
+          <ReportFiltersBar
+            mode="range"
+            startDate={startDate}
+            endDate={endDate}
+            onStartDateChange={setStartDate}
+            onEndDateChange={setEndDate}
+            projectId={projectId}
+            onProjectIdChange={setProjectId}
+            onRefresh={() => void query.refetch()}
+            onOpenExport={() => setIsExportOpen(true)}
+          />
+          {report && (
+            <DataTable
+              embedded
+              data={report.rows}
+              columns={columns}
+              keyExtractor={(r) => r.paymentId}
+            />
+          )}
+        </div>
       </ReportStateWrapper>
 
       {/* Export Modal */}

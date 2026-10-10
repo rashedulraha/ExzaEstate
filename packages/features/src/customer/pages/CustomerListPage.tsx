@@ -63,6 +63,7 @@ function CustomerListContent({
   customers,
   onSelectCustomer,
   onOpenAddModal,
+  isEmbedded = false,
 }: {
   isLoading: boolean;
   isError: boolean;
@@ -71,6 +72,7 @@ function CustomerListContent({
   customers: CustomerItem[];
   onSelectCustomer: (c: CustomerItem) => void;
   onOpenAddModal: () => void;
+  isEmbedded?: boolean;
 }): ReactElement {
   if (isLoading) {
     return <LoadingState variant="table" />;
@@ -87,14 +89,26 @@ function CustomerListContent({
 
   if (customers.length === 0) {
     return (
-      <EmptyState
-        dashedBorder
-        title="No Customers Registered"
-        description="Register property buyers or convert inquiries from your sales leads."
-        actionLabel="Register Customer"
-        actionVariant="secondary"
-        actionIcon={<Plus className="w-4 h-4" />}
-        onAction={onOpenAddModal}
+      <div className="p-6">
+        <EmptyState
+          dashedBorder
+          title="No Customers Registered"
+          description="Register property buyers or convert inquiries from your sales leads."
+          actionLabel="Register Customer"
+          actionVariant="secondary"
+          actionIcon={<Plus className="w-4 h-4" />}
+          onAction={onOpenAddModal}
+        />
+      </div>
+    );
+  }
+
+  if (isEmbedded) {
+    return (
+      <CustomerDataTable
+        customers={customers}
+        isLoading={isLoading}
+        onSelectCustomer={onSelectCustomer}
       />
     );
   }
@@ -150,9 +164,9 @@ export function CustomerListPage(): ReactElement {
       {/* Tier 2: KPI Summary Strip */}
       <CustomerKpiStrip kpis={kpis} />
 
-      {/* Tier 3: Search and Filters */}
-      <StickyToolbar>
-        <div className="shadow-xs flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 p-2.5 bg-surface rounded-card border border-border">
+      {/* Tier 3: Main Customer Workspace */}
+      <div className="rounded-card border border-border bg-surface shadow-xs">
+        <StickyToolbar className="p-2.5 sm:p-3">
           <div className="flex flex-wrap items-center gap-2.5 flex-1">
             <div className="relative w-full sm:w-80">
               <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-text-muted pointer-events-none" />
@@ -165,7 +179,7 @@ export function CustomerListPage(): ReactElement {
                 className="pl-9 text-small"
               />
             </div>
-            <div className="w-40 sm:w-44">
+            <div className="w-56 sm:w-60">
               <Select
                 id="filter-kyc-status"
                 inputSize="md"
@@ -190,19 +204,19 @@ export function CustomerListPage(): ReactElement {
               </button>
             )}
           </div>
-        </div>
-      </StickyToolbar>
+        </StickyToolbar>
 
-      {/* Main Content Area */}
-      <CustomerListContent
-        isLoading={isLoading}
-        isError={isError}
-        error={error}
-        onRetry={refetch}
-        customers={customers}
-        onSelectCustomer={(c: CustomerItem) => navigate(`/customers/${c.id}`)}
-        onOpenAddModal={() => setIsAddModalOpen(true)}
-      />
+        <CustomerListContent
+          isLoading={isLoading}
+          isError={isError}
+          error={error}
+          onRetry={refetch}
+          customers={customers}
+          onSelectCustomer={(c: CustomerItem) => navigate(`/customers/${c.id}`)}
+          onOpenAddModal={() => setIsAddModalOpen(true)}
+          isEmbedded
+        />
+      </div>
 
       {/* Modal */}
       <CustomerFormModal

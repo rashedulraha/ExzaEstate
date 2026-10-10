@@ -80,7 +80,7 @@ export function BankTransferModal({
       isOpen={isOpen}
       onClose={onClose}
       title="Internal Treasury & Bank Transfer"
-      description="Transfer funds between liquid company accounts with automatic balanced posting (RULE-DOUBLE-ENTRY)"
+      description="Transfer funds between liquid company accounts with automatic balanced ledger entries"
       size="md"
       footer={
         <div className="flex items-center justify-end gap-3 w-full">

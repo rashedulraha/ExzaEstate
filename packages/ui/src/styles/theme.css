@@ -806,7 +806,6 @@
     background-color: var(--color-surface);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-card);
-    overflow: hidden;
     box-shadow: none;
     transition: border-color 0.15s ease;
   }

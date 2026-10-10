@@ -113,6 +113,55 @@ describe('First-Launch Wizard & Local Standalone (Task B9)', () => {
 
       expect(onCreate).not.toHaveBeenCalled();
     });
+
+    it('disables company code input until legal company name is typed, and auto-generates code on button click', async () => {
+      render(<LocalSetupSection onCreateCompany={vi.fn()} isLoading={false} />);
+
+      const companyCodeInput = screen.getByLabelText(/Company Code/i) as HTMLInputElement;
+      const generateBtn = screen.getByRole('button', {
+        name: /Auto Generate/i,
+      }) as HTMLButtonElement;
+
+      // Initially disabled
+      expect(companyCodeInput.disabled).toBe(true);
+      expect(generateBtn.disabled).toBe(true);
+
+      // Type company name
+      const companyNameInput = screen.getByLabelText(/Legal Company Name/i);
+      fireEvent.change(companyNameInput, { target: { value: 'Navana Real Estate Ltd.' } });
+
+      // Code input and button become enabled
+      await waitFor(() => {
+        expect(companyCodeInput.disabled).toBe(false);
+        expect(generateBtn.disabled).toBe(false);
+      });
+
+      // Click Auto Generate
+      fireEvent.click(generateBtn);
+      await waitFor(() => {
+        expect(companyCodeInput.value).toBe('NAVANA');
+      });
+    });
+
+    it('uses non-individual role placeholder for admin and auto-generates matching master/confirm password', async () => {
+      render(<LocalSetupSection onCreateCompany={vi.fn()} isLoading={false} />);
+
+      const adminNameInput = screen.getByLabelText(/Administrator Full Name/i) as HTMLInputElement;
+      expect(adminNameInput.placeholder).toContain('Managing Director');
+      expect(adminNameInput.placeholder).not.toContain('Tariq');
+
+      const masterPasswordInput = screen.getByLabelText(/Master Password/i) as HTMLInputElement;
+      const confirmPasswordInput = screen.getByLabelText(/Confirm Password/i) as HTMLInputElement;
+      const autoGenBtn = screen.getByRole('button', { name: /Auto-Generate/i });
+
+      // Click Auto-Generate
+      fireEvent.click(autoGenBtn);
+
+      await waitFor(() => {
+        expect(masterPasswordInput.value.length).toBeGreaterThanOrEqual(12);
+        expect(confirmPasswordInput.value).toBe(masterPasswordInput.value);
+      });
+    });
   });
 
   describe('BackupBanner', () => {

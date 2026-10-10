@@ -12,6 +12,8 @@ interface ApprovalInboxContentProps {
   onSelectApproval: (item: ApprovalItem) => void;
   onOpenDecision: (item: ApprovalItem, decision: 'APPROVE' | 'REJECT' | 'OVERRIDE') => void;
   currentUserId?: string;
+  hasActiveFilters?: boolean;
+  onClearFilters?: () => void;
 }
 
 export function ApprovalInboxContent({
@@ -23,6 +25,8 @@ export function ApprovalInboxContent({
   onSelectApproval,
   onOpenDecision,
   currentUserId,
+  hasActiveFilters = false,
+  onClearFilters,
 }: ApprovalInboxContentProps): ReactElement {
   if (isLoading) {
     return <LoadingState variant="table" />;
@@ -38,11 +42,27 @@ export function ApprovalInboxContent({
   }
 
   if (approvals.length === 0) {
+    if (hasActiveFilters) {
+      return (
+        <div className="p-6">
+          <EmptyState
+            title="No Matching Approvals"
+            description="No approval requests match your active search and filter criteria."
+            dashedBorder
+            actionLabel="Clear Filters"
+            onAction={onClearFilters}
+          />
+        </div>
+      );
+    }
     return (
-      <EmptyState
-        title="Inbox is clear"
-        description="There are no pending approval requests matching your criteria."
-      />
+      <div className="p-6">
+        <EmptyState
+          title="Inbox is clear"
+          description="There are currently no approval requests requiring review."
+          dashedBorder
+        />
+      </div>
     );
   }
 

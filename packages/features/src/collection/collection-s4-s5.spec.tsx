@@ -124,7 +124,7 @@ describe('Collection Module B4: S4 & S5', () => {
         />,
       );
 
-      expect(screen.getByText(/RULE-IMMUTABLE/i)).toBeDefined();
+      expect(screen.getByText(/Irreversible Financial Action/i)).toBeDefined();
 
       const reverseBtn = screen.getByTestId('confirm-reverse-button');
       fireEvent.click(reverseBtn);
@@ -219,7 +219,7 @@ describe('Collection Module B4: S4 & S5', () => {
 
       expect(screen.getByTestId('customer-statement-viewer')).toBeDefined();
       expect(screen.getByTestId('reconciliation-seal-success')).toBeDefined();
-      expect(screen.getByText('Reconciled with AR Ledger (AT-14)')).toBeDefined();
+      expect(screen.getByText('Reconciled with AR Ledger')).toBeDefined();
       expect(screen.getByText('Flat 3A Sale Allotment')).toBeDefined();
       expect(screen.getByText('Booking Money Collection')).toBeDefined();
     });

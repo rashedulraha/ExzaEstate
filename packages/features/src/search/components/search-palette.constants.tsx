@@ -42,7 +42,7 @@ export const ALL_NAV_COMMANDS: NavCommand[] = [
     id: 'tx-booking',
     title: '+ New Booking & Agreement (Plot / Flat Sale)',
     category: 'Quick Transactions',
-    path: '/sales/bookings',
+    path: '/sales/bookings?new=true',
     keywords: ['new', 'booking', 'sale', 'agreement', 'allotment', 'buyer'],
     icon: <PlusCircle className="w-4 h-4 text-accent" />,
   },

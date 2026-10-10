@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Outlet, Navigate, useNavigate, useLocation, type RouteObject } from 'react-router';
-import { useAuth } from '@exzaestate/app-core';
+import { useAuth, usePlatform } from '@exzaestate/app-core';
 import { http } from '@exzaestate/api-client';
 import { AppShell, ThemeProvider, ToastProvider } from '@exzaestate/ui';
 import { authRoutes } from './auth/auth.routes.js';
@@ -49,8 +49,7 @@ export function RootLayout() {
   );
 }
 
-export function AppRootRedirect() {
-  const { isAuthenticated, isLoading, user } = useAuth();
+function useProvisionStatus(): boolean | null {
   const [isProvisioned, setIsProvisioned] = useState<boolean | null>(() => {
     if (typeof window !== 'undefined') {
       const stored = window.localStorage.getItem('exzaestate_workspace_provisioned');
@@ -67,9 +66,7 @@ export function AppRootRedirect() {
         const data = await http.get<{
           provisioned?: boolean;
           data?: { provisioned?: boolean };
-        }>('/api/v1/local-data/is-provisioned', {
-          signal: AbortSignal.timeout(3000),
-        });
+        }>('/api/v1/local-data/is-provisioned', { signal: AbortSignal.timeout(3000) });
         const flag = Boolean(data.provisioned || data.data?.provisioned);
         if (active) {
           setIsProvisioned(flag);
@@ -87,6 +84,23 @@ export function AppRootRedirect() {
     };
   }, [isProvisioned]);
 
+  return isProvisioned;
+}
+
+function resolveAuthDestination(companyId?: string, permissions?: string[]): string {
+  return isUserSuperAdmin(companyId, permissions) ? '/system/dashboard' : '/dashboard';
+}
+
+function isDesktopClient(clientType?: string): boolean {
+  if (clientType === 'desktop') return true;
+  return typeof window !== 'undefined' && '__TAURI_INTERNALS__' in window;
+}
+
+export function AppRootRedirect() {
+  const { isAuthenticated, isLoading, user } = useAuth();
+  const platform = usePlatform();
+  const isProvisioned = useProvisionStatus();
+
   if (isLoading || isProvisioned === null) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-bg text-text">
@@ -96,13 +110,11 @@ export function AppRootRedirect() {
   }
 
   if (isAuthenticated) {
-    if (isUserSuperAdmin(user?.companyId, user?.permissions)) {
-      return <Navigate to="/system/dashboard" replace />;
-    }
-    return <Navigate to="/dashboard" replace />;
+    return <Navigate to={resolveAuthDestination(user?.companyId, user?.permissions)} replace />;
   }
 
-  if (!isProvisioned) {
+  // Web clients ALWAYS land on Login. Desktop app launches Onboarding Wizard on fresh install.
+  if (isDesktopClient(platform.apiConfig.clientType) && isProvisioned === false) {
     return <Navigate to="/setup/first-launch" replace />;
   }
 

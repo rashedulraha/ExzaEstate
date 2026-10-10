@@ -78,16 +78,15 @@ export function Step7ReviewSubmit({ watch }: Step7ReviewSubmitProps): ReactEleme
       {Number(values.discountPercentage) > 0 && (
         <div className="p-3 bg-warning/12 border border-warning/20 rounded-card text-caption text-warning">
           <strong>Notice:</strong> This booking includes a {values.discountPercentage}% discount and
-          will transition into <code>PENDING_APPROVAL</code> status upon submission.
+          will require management approval before confirmation.
         </div>
       )}
 
       <div className="p-4 border border-border rounded-card bg-surface space-y-2 text-caption text-text-muted">
-        <div className="font-semibold text-text">Idempotency & Concurrency Guarantee</div>
+        <div className="font-semibold text-text">Instant Unit Reservation Guarantee</div>
         <p>
-          Submitting this wizard acquires an exclusive pessimistic lock on the target unit in
-          PostgreSQL, preventing simultaneous double-booking across all cloud and local desktop
-          instances.
+          Submitting this booking immediately reserves the target unit in real-time, preventing
+          simultaneous double-booking across all sales desks, branches, and devices.
         </p>
       </div>
     </div>

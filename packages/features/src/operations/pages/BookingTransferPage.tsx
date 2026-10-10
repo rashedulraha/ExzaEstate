@@ -40,8 +40,8 @@ export function BookingTransferPage({ bookings = [], customers = [] }: BookingTr
           </h1>
         </div>
         <p className="mt-1 text-caption text-text-muted">
-          Enforces Invariant AT-35 (Original marked TRANSFERRED before successor created). Customer
-          installments & ledger history preserved.
+          Ensures original booking is marked Transferred before reissuing to successor. Customer
+          installments & ledger history are preserved.
         </p>
       </div>
 

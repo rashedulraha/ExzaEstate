@@ -245,4 +245,56 @@ describe('Customer 360 Module (B2)', () => {
       expect(screen.getByText(/100% Share/i)).toBeDefined();
     });
   });
+
+  it('renders customer directory empty state with p-6 container and wide verification status filter dropdown', async () => {
+    const emptyAdapterFn = async (config: AdapterConfig) => {
+      const url = config.url ?? '';
+      if (url.includes('/api/v1/auth/me')) {
+        return {
+          data: { success: true, data: getAuthMeResponse(false) },
+          status: 200,
+          statusText: 'OK',
+          headers: {},
+          config,
+        };
+      }
+      if (url.includes('/api/v1/crm/customers')) {
+        return {
+          data: { success: true, data: { items: [], total: 0, totalPages: 0 } },
+          status: 200,
+          statusText: 'OK',
+          headers: {},
+          config,
+        };
+      }
+      return {
+        data: { success: true, data: {} },
+        status: 200,
+        statusText: 'OK',
+        headers: {},
+        config,
+      };
+    };
+    Object.assign(apiClient.apiClient.defaults, { adapter: emptyAdapterFn });
+
+    const { container } = renderWithProviders(<CustomerListPage />, {
+      queryClient,
+      mockSecureStorage,
+      initialRoute: '/customers',
+    });
+
+    await waitFor(() => {
+      expect(screen.getByText('No Customers Registered')).toBeDefined();
+      expect(screen.getByText('All Verification Statuses')).toBeDefined();
+    });
+
+    // Verify empty state is wrapped in p-6 breathing room matching benchmark
+    const p6Wrapper = container.querySelector('.p-6');
+    expect(p6Wrapper).not.toBeNull();
+    expect(p6Wrapper?.textContent).toContain('No Customers Registered');
+
+    // Verify filter dropdown container has w-56 sm:w-60
+    const filterContainer = container.querySelector('.w-56');
+    expect(filterContainer).not.toBeNull();
+  });
 });

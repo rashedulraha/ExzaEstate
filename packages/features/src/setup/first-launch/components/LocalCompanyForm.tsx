@@ -6,6 +6,7 @@ import {
   createLocalCompanySchema,
   type CreateLocalCompanyInput,
 } from '../schemas/first-launch.schema.js';
+import { generateCompanyCode, generateStrongPassword } from './LocalCompanyForm.helpers.js';
 import { OrgDetailsStep, AdminCredentialsStep, LicensingStep } from './LocalCompanySections.js';
 import { StepIndicatorBar, LocalFormFooterActions } from './LocalCompanyControls.js';
 
@@ -33,6 +34,8 @@ export function LocalCompanyForm({
     register,
     handleSubmit,
     trigger,
+    watch,
+    setValue,
     formState: { errors },
   } = useForm<CreateLocalCompanyInput>({
     resolver: zodResolver(createLocalCompanySchema),
@@ -46,6 +49,22 @@ export function LocalCompanyForm({
       licenseKey: '',
     },
   });
+
+  const companyNameValue = watch('companyName');
+  const adminPasswordValue = watch('adminPassword');
+  const [generateVariant, setGenerateVariant] = useState(0);
+
+  const handleGenerateCode = () => {
+    const code = generateCompanyCode(companyNameValue, generateVariant);
+    setValue('companyCode', code, { shouldValidate: true, shouldDirty: true });
+    setGenerateVariant((prev) => prev + 1);
+  };
+
+  const handleGeneratePassword = () => {
+    const pwd = generateStrongPassword(12);
+    setValue('adminPassword', pwd, { shouldValidate: true, shouldDirty: true });
+    setValue('confirmPassword', pwd, { shouldValidate: true, shouldDirty: true });
+  };
 
   const handleNextToAdmin = async () => {
     const isValid = await trigger(['companyName', 'companyCode']);
@@ -92,8 +111,20 @@ export function LocalCompanyForm({
       />
 
       <div className="flex-1 space-y-4 pt-1">
-        <OrgDetailsStep register={register} errors={errors} isActive={subStep === 1} />
-        <AdminCredentialsStep register={register} errors={errors} isActive={subStep === 2} />
+        <OrgDetailsStep
+          register={register}
+          errors={errors}
+          isActive={subStep === 1}
+          companyName={companyNameValue}
+          onGenerateCode={handleGenerateCode}
+        />
+        <AdminCredentialsStep
+          register={register}
+          errors={errors}
+          isActive={subStep === 2}
+          adminPasswordValue={adminPasswordValue}
+          onGeneratePassword={handleGeneratePassword}
+        />
         <LicensingStep register={register} errors={errors} isActive={subStep === 3} />
       </div>
 

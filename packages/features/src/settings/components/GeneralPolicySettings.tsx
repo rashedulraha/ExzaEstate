@@ -91,7 +91,7 @@ export function GeneralPolicySettings({ settings, onSave, isSaving }: GeneralPol
             Bangladeshi Land Unit Conversion Factors
           </h3>
           <p className="text-body-sm text-text-muted mt-1">
-            Define square feet (sq ft) multipliers per Bangladeshi traditional unit (AT-27).
+            Define square feet (sq ft) multipliers per traditional land unit.
           </p>
         </div>
 

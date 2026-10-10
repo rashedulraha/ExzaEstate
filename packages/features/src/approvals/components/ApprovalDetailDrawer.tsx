@@ -58,7 +58,7 @@ export function ApprovalDetailDrawer({
                 variant="primary"
                 size="sm"
                 disabled={Boolean(isSelf)}
-                title={isSelf ? 'Self-approval blocked (AT-24)' : undefined}
+                title={isSelf ? 'Self-approval is blocked by maker-checker policy' : undefined}
                 onClick={() => {
                   onClose();
                   onOpenDecision(approval, 'APPROVE');

@@ -48,6 +48,20 @@ export function ApprovalInboxPage(): ReactElement {
     }
   };
 
+  const hasActiveFilters = Boolean(
+    filters.search || filters.status !== 'ALL' || filters.type !== 'ALL',
+  );
+
+  const handleClearFilters = () => {
+    setFilters((prev) => ({
+      ...prev,
+      search: '',
+      status: 'ALL',
+      type: 'ALL',
+      page: 1,
+    }));
+  };
+
   return (
     <div className="container-page space-y-6" data-testid="approval-inbox-page">
       {/* Tier 1: Page Shell & Clean Header */}
@@ -78,11 +92,13 @@ export function ApprovalInboxPage(): ReactElement {
       {/* Tier 2: Responsive KPI Cards Strip */}
       <ApprovalKpiStrip kpis={kpis} />
 
-      {/* Tier 3: Sticky Filters */}
-      <ApprovalInboxFilters filters={filters} onChange={setFilters} totalCount={approvals.length} />
-
-      {/* Tier 4: Approval Inbox Content Card */}
+      {/* Tier 3: Main Approvals Workspace (Merged Filter Bar & Data Table) */}
       <div className="rounded-card border border-border bg-surface shadow-xs">
+        <ApprovalInboxFilters
+          filters={filters}
+          onChange={setFilters}
+          totalCount={approvals.length}
+        />
         <ApprovalInboxContent
           isLoading={isLoading}
           isError={isError}
@@ -92,6 +108,8 @@ export function ApprovalInboxPage(): ReactElement {
           onSelectApproval={(item) => setSelectedApproval(item)}
           onOpenDecision={handleOpenDecision}
           currentUserId={user?.id}
+          hasActiveFilters={hasActiveFilters}
+          onClearFilters={handleClearFilters}
         />
       </div>
 

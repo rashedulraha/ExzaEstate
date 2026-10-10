@@ -29,8 +29,8 @@ export function ApprovalInboxFilters({
   };
 
   return (
-    <StickyToolbar>
-      <div className="p-4 rounded-card border border-border bg-surface shadow-xs flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
+    <StickyToolbar className="p-4">
+      <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
         <div className="relative flex-1">
           <Search className="w-4 h-4 text-text-muted absolute left-3 top-1/2 -translate-y-1/2" />
           <Input

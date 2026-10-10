@@ -12,7 +12,14 @@ import {
   Download,
   History,
 } from 'lucide-react';
-import { Button, Select, Breadcrumbs, type SelectOption, StickyToolbar } from '@exzaestate/ui';
+import {
+  Button,
+  Select,
+  Breadcrumbs,
+  type SelectOption,
+  StickyToolbar,
+  StatCard,
+} from '@exzaestate/ui';
 import type { AuditLogRecord, SecurityEventRecord } from '../types.js';
 
 export function AuditPageHeader({
@@ -29,8 +36,8 @@ export function AuditPageHeader({
         <Breadcrumbs
           items={[
             { label: 'Overview', href: '/dashboard', onClick: () => navigate('/dashboard') },
-            { label: 'System & Admin' },
-            { label: 'Audit & Security' },
+            { label: 'Workspace & Admin' },
+            { label: 'Activity & Audit Log' },
           ]}
         />
         <div className="flex items-center gap-3 mt-1.5">
@@ -115,55 +122,24 @@ export function AuditKpiCards({ stats }: { stats: AuditKpiStats }) {
   const isCritical = stats.criticalCount > 0;
   return (
     <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-      <div className="card-stat">
-        <div className="flex items-center justify-between">
-          <span className="text-caption font-semibold uppercase tracking-wider text-text-muted">
-            Total Mutations
-          </span>
-          <Activity className="w-4 h-4 text-text-muted" />
-        </div>
-        <span className="text-hero-num font-bold text-text mt-1.5 block tabular-nums">
-          {stats.totalMutations} Logged
-        </span>
-      </div>
-
-      <div className="card-stat">
-        <div className="flex items-center justify-between">
-          <span className="text-caption font-semibold uppercase tracking-wider text-text-muted">
-            Security Events
-          </span>
-          <ShieldCheck className="w-4 h-4 text-primary" />
-        </div>
-        <span className="text-hero-num font-bold text-primary mt-1.5 block tabular-nums">
-          {stats.totalSecurity} Recorded
-        </span>
-      </div>
-
-      <div className="card-stat">
-        <div className="flex items-center justify-between">
-          <span className="text-caption font-semibold uppercase tracking-wider text-text-muted">
-            Critical Alerts
-          </span>
-          <AlertTriangle className={`w-4 h-4 ${isCritical ? 'text-danger' : 'text-success'}`} />
-        </div>
-        <span
-          className={`text-hero-num font-bold mt-1.5 block tabular-nums ${
-            isCritical ? 'text-danger' : 'text-success'
-          }`}
-        >
-          {stats.criticalCount}
-        </span>
-      </div>
-
-      <div className="card-stat">
-        <div className="flex items-center justify-between">
-          <span className="text-caption font-semibold uppercase tracking-wider text-text-muted">
-            Log Retention
-          </span>
-          <Lock className="w-4 h-4 text-text-muted" />
-        </div>
-        <span className="text-hero-num font-bold text-text-2 mt-1.5 block">7 Years (WORM)</span>
-      </div>
+      <StatCard
+        label="Total Mutations"
+        value={`${stats.totalMutations} Logged`}
+        icon={<Activity className="w-4 h-4" />}
+      />
+      <StatCard
+        label="Security Events"
+        value={`${stats.totalSecurity} Recorded`}
+        variant="brand"
+        icon={<ShieldCheck className="w-4 h-4" />}
+      />
+      <StatCard
+        label="Critical Alerts"
+        value={stats.criticalCount}
+        variant={isCritical ? 'danger' : 'success'}
+        icon={<AlertTriangle className="w-4 h-4" />}
+      />
+      <StatCard label="Log Retention" value="7 Years (WORM)" icon={<Lock className="w-4 h-4" />} />
     </div>
   );
 }
@@ -204,8 +180,8 @@ export function AuditToolbar(props: AuditToolbarProps): ReactNode {
   } = props;
 
   return (
-    <StickyToolbar>
-      <div className="p-3.5 rounded-card border border-border bg-surface shadow-xs flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+    <StickyToolbar className="p-3.5">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
         <div className="relative flex-1 min-w-56">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
           <input

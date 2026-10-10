@@ -150,7 +150,7 @@ export function BalanceBeam({
         </span>
 
         <span className="text-caption text-text-muted">
-          Rule: Double-entry requires Dr = Cr (RULE-DOUBLE-ENTRY)
+          Statutory requirement: Total Debits must equal Total Credits
         </span>
       </div>
     </div>

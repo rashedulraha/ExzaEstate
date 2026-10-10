@@ -29,7 +29,7 @@ export function StickyToolbar({
     <div
       id={id}
       data-testid={testId}
-      className={`sticky top-0 z-20 -mt-3.5 pt-3.5 pb-0 -mx-1.5 px-1.5 bg-bg ${className}`}
+      className={`sticky top-0 z-20 bg-surface border-b border-border rounded-t-card ${className}`}
     >
       {children}
     </div>

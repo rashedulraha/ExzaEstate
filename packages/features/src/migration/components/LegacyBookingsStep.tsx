@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Button } from '@exzaestate/ui';
+import { Plus, Receipt } from 'lucide-react';
+import { Button, EmptyState } from '@exzaestate/ui';
 import { formatMoney } from '@exzaestate/shared';
 import type { LegacyBookingFormData } from '../schemas/migration.schema.js';
 import { LegacyBookingModal } from './LegacyBookingModal.js';
@@ -28,36 +29,44 @@ export function LegacyBookingsStep({ batchId, onAddBooking, isAdding }: LegacyBo
           </h3>
           <p className="text-body-sm text-text-muted mt-0.5">
             Record pre-existing customer bookings. System tracks old receipt references without
-            posting duplicate revenue (FLOW-03).
+            posting duplicate revenue during historical cutover.
           </p>
         </div>
-        <Button variant="primary" onClick={() => setIsModalOpen(true)}>
+        <Button
+          variant="primary"
+          leftIcon={<Plus className="w-4 h-4" />}
+          onClick={() => setIsModalOpen(true)}
+        >
           Add Legacy Booking
         </Button>
       </div>
 
-      <div className="overflow-x-auto border border-border rounded-card">
-        <table className="w-full text-left border-collapse">
-          <thead>
-            <tr className="border-b border-border bg-surface-sunken/40 text-caption font-semibold text-text-muted uppercase">
-              <th className="py-2.5 px-3">Agreement No</th>
-              <th className="py-2.5 px-3">Customer ID</th>
-              <th className="py-2.5 px-3">Booking Date</th>
-              <th className="py-2.5 px-3 text-right">Net Price</th>
-              <th className="py-2.5 px-3 text-right">Total Paid</th>
-              <th className="py-2.5 px-3 text-right">Outstanding AR</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-border text-body-sm">
-            {localBookings.length === 0 ? (
-              <tr>
-                <td colSpan={6} className="py-8 text-center text-text-muted">
-                  No legacy bookings added to this batch yet. Use manual entry above or bulk CSV
-                  import below.
-                </td>
+      {localBookings.length === 0 ? (
+        <EmptyState
+          icon={<Receipt className="w-8 h-8" />}
+          title="No Legacy Bookings Added"
+          description="No pre-existing customer bookings have been recorded in this cutover batch. Add historical records individually or upload in bulk via CSV."
+          dashedBorder
+          actionLabel="Add Legacy Booking"
+          actionVariant="secondary"
+          actionIcon={<Plus className="w-4 h-4" />}
+          onAction={() => setIsModalOpen(true)}
+        />
+      ) : (
+        <div className="overflow-x-auto border border-border rounded-card">
+          <table className="w-full text-left border-collapse">
+            <thead>
+              <tr className="border-b border-border bg-surface-sunken/40 text-caption font-semibold text-text-muted uppercase">
+                <th className="py-2.5 px-3">Agreement No</th>
+                <th className="py-2.5 px-3">Customer ID</th>
+                <th className="py-2.5 px-3">Booking Date</th>
+                <th className="py-2.5 px-3 text-right">Net Price</th>
+                <th className="py-2.5 px-3 text-right">Total Paid</th>
+                <th className="py-2.5 px-3 text-right">Outstanding AR</th>
               </tr>
-            ) : (
-              localBookings.map((b) => {
+            </thead>
+            <tbody className="divide-y divide-border text-body-sm">
+              {localBookings.map((b) => {
                 const net = BigInt(b.netPricePaisa);
                 const paid = BigInt(b.totalPaidPaisa);
                 const outstanding = net - paid;
@@ -78,11 +87,11 @@ export function LegacyBookingsStep({ batchId, onAddBooking, isAdding }: LegacyBo
                     </td>
                   </tr>
                 );
-              })
-            )}
-          </tbody>
-        </table>
-      </div>
+              })}
+            </tbody>
+          </table>
+        </div>
+      )}
 
       <LegacyBookingModal
         isOpen={isModalOpen}

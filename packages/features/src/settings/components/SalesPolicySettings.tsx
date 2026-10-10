@@ -56,7 +56,7 @@ export function SalesPolicySettings({ settings, onSave, isSaving }: SalesPolicyS
           <FormField
             label="Minimum Booking %"
             id="min-booking-pct"
-            helperText="Minimum net price paid to confirm booking (AT-12, default 10%)"
+            helperText="Minimum net price paid to confirm booking (default 10%)"
           >
             <Input
               id="min-booking-pct"
@@ -72,7 +72,7 @@ export function SalesPolicySettings({ settings, onSave, isSaving }: SalesPolicyS
           <FormField
             label="Reservation Hold Hours"
             id="hold-hours"
-            helperText="Hours before unfunded booking auto-cancels (AT-11, default 72h)"
+            helperText="Hours before unfunded booking auto-cancels (default 72h)"
           >
             <Input
               id="hold-hours"
@@ -173,7 +173,7 @@ export function SalesPolicySettings({ settings, onSave, isSaving }: SalesPolicyS
                 Single-Operator Auto Approval
               </span>
               <p className="text-caption text-text-muted">
-                Automatically approve discount requests in single-user standalone companies (AT-24).
+                Automatically approve discount requests in single-user standalone companies.
               </p>
             </div>
           </label>

@@ -220,11 +220,7 @@ export const envSchema = baseEnvSchema
     const swaggerEnabled =
       data.SWAGGER_ENABLED !== undefined ? data.SWAGGER_ENABLED : data.NODE_ENV !== 'production';
 
-    const systemDatabaseUrl =
-      data.SYSTEM_DATABASE_URL ||
-      (data.NODE_ENV !== 'production'
-        ? 'postgresql://exza_system:exza_system_secret@localhost:5432/exzaestate?schema=public'
-        : undefined);
+    const systemDatabaseUrl = data.SYSTEM_DATABASE_URL;
 
     return {
       ...data,

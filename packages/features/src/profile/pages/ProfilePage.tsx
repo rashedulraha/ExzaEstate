@@ -12,7 +12,7 @@ export function ProfilePage() {
         <Breadcrumbs
           items={[
             { label: 'Overview', href: '/dashboard', onClick: () => navigate('/dashboard') },
-            { label: 'System & Admin' },
+            { label: 'Workspace & Admin' },
             { label: 'My Profile & Account' },
           ]}
         />

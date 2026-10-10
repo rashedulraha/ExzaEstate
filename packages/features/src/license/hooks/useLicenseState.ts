@@ -187,7 +187,7 @@ export function useLicenseState(): LicenseHookResult {
 
       return {
         success: true,
-        message: 'Hardware transfer recorded under Gate D-15 tolerance.',
+        message: 'Device license successfully transferred to new hardware.',
       };
     },
     [storedLicense, notifier],
@@ -196,7 +196,7 @@ export function useLicenseState(): LicenseHookResult {
   const exportData = useCallback(async () => {
     try {
       const dest = await fileDialog.save({
-        title: 'Export Full Database Snapshot (BR-20)',
+        title: 'Export Full Organization Database Snapshot',
         defaultPath: `exza_export_${new Date().toISOString().slice(0, 10)}.exzabackup`,
         filters: [{ name: 'ExzaEstate Backup', extensions: ['exzabackup'] }],
       });

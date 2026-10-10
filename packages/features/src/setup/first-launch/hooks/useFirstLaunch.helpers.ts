@@ -1,6 +1,11 @@
-import { getEnvInitialLicenseKey, type DesktopLicensing, type User } from '@exzaestate/app-core';
+import {
+  getEnvApiBaseUrl,
+  getEnvInitialLicenseKey,
+  type DesktopLicensing,
+  type User,
+} from '@exzaestate/app-core';
 import { http } from '@exzaestate/api-client';
-import type { CreateLocalCompanyInput } from '../schemas/first-launch.schema.js';
+import type { CreateLocalCompanyInput, CloudConfigInput } from '../schemas/first-launch.schema.js';
 
 export interface ProvisionResponse {
   companyId?: string;
@@ -47,6 +52,28 @@ function resolveLicenseKey(licenseKey?: string): string {
   return key;
 }
 
+export function parseCloudConfig(config: CloudConfigInput | string) {
+  function getValidString(val?: string, fallback = ''): string {
+    if (val && val.trim()) return val.trim();
+    return fallback;
+  }
+
+  if (typeof config === 'string') {
+    const baseUrl = getValidString(config, getEnvApiBaseUrl());
+    if (!baseUrl) throw new Error('Server URL is required');
+    return { baseUrl, companyName: '', licenseKey: getEnvInitialLicenseKey() };
+  }
+  const baseUrl = getValidString(config.baseUrl, getEnvApiBaseUrl());
+  const companyName = getValidString(config.companyName);
+  if (!baseUrl) throw new Error('Server URL is required');
+  if (!companyName) throw new Error('Organization name is required');
+  return {
+    baseUrl,
+    companyName,
+    licenseKey: getValidString(config.licenseKey, getEnvInitialLicenseKey()),
+  };
+}
+
 export function buildProvisionPayload(data: CreateLocalCompanyInput, machineId?: string) {
   const companyName = data.companyName?.trim();
   if (!companyName) {
@@ -63,6 +90,7 @@ export function buildProvisionPayload(data: CreateLocalCompanyInput, machineId?:
     companyName,
     companyCode: code,
     tradeLicense: data.tradeLicense?.trim() || undefined,
+    adminName,
     adminFullName: adminName,
     adminEmail,
     adminPassword: data.adminPassword,

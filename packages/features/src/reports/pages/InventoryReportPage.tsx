@@ -127,8 +127,7 @@ export function InventoryReportPage() {
               </span>
             </div>
             <p className="text-small text-text-muted mt-1">
-              Live unit breakdown by availability, hold, reservation, and booking states (AT-15
-              verified)
+              Live unit breakdown by availability, hold, reservation, and booking states
             </p>
           </div>
 
@@ -150,15 +149,6 @@ export function InventoryReportPage() {
           )}
         </div>
       </div>
-
-      {/* Tier 2: Filter Toolbar */}
-      <ReportFiltersBar
-        mode="asOf"
-        projectId={projectId}
-        onProjectIdChange={setProjectId}
-        onRefresh={() => void query.refetch()}
-        onOpenExport={() => setIsExportOpen(true)}
-      />
 
       {/* KPI Units Strip */}
       {report && (
@@ -202,7 +192,7 @@ export function InventoryReportPage() {
         </div>
       )}
 
-      {/* Tier 3: Content Workspace Card */}
+      {/* Tier 2: Unified Inventory Workspace Card */}
       <ReportStateWrapper
         isLoading={query.isLoading}
         isError={query.isError}
@@ -211,11 +201,23 @@ export function InventoryReportPage() {
         onRetry={() => void query.refetch()}
         hasData={Boolean(report)}
       >
-        {report && (
-          <div className="rounded-card border border-border bg-surface shadow-xs overflow-hidden">
-            <DataTable data={report.rows} columns={columns} keyExtractor={(r) => r.propertyId} />
-          </div>
-        )}
+        <div className="rounded-card border border-border bg-surface shadow-xs">
+          <ReportFiltersBar
+            mode="asOf"
+            projectId={projectId}
+            onProjectIdChange={setProjectId}
+            onRefresh={() => void query.refetch()}
+            onOpenExport={() => setIsExportOpen(true)}
+          />
+          {report && (
+            <DataTable
+              embedded
+              data={report.rows}
+              columns={columns}
+              keyExtractor={(r) => r.propertyId}
+            />
+          )}
+        </div>
       </ReportStateWrapper>
 
       {/* Export Modal */}

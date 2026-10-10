@@ -1,21 +1,13 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
-import {
-  User,
-  ShieldCheck,
-  KeyRound,
-  LogOut,
-  LogIn,
-  Sun,
-  Moon,
-  Monitor,
-  CheckCircle2,
-  Lock,
-} from 'lucide-react';
+import { User, ShieldCheck, KeyRound, LogOut, LogIn, CheckCircle2, Lock } from 'lucide-react';
 import { useAuth } from '@exzaestate/app-core';
 import { useTheme, useToast, Breadcrumbs, Button } from '@exzaestate/ui';
 import { SignOutModal } from '../../auth/components/SignOutModal.js';
-import { ThemeSelectorCard } from '../../settings/components/AccountProfileComponents.js';
+import {
+  ThemeSelectorCard,
+  DisplayModeCard,
+} from '../../settings/components/AccountProfileComponents.js';
 
 export function PlatformProfilePage() {
   const navigate = useNavigate();
@@ -180,57 +172,7 @@ export function PlatformProfilePage() {
       {/* Grid: Theme Appearance & Session Controls */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Card 3: Meridian Display Mode */}
-        <div className="rounded-card border border-border bg-surface p-5 shadow-xs space-y-4">
-          <div className="flex items-center gap-2 border-b border-border pb-3">
-            <Sun className="w-4 h-4 text-primary" />
-            <h2 className="text-h3 font-semibold text-text">Display Mode</h2>
-          </div>
-
-          <p className="text-caption text-text-muted">
-            Toggle between daylight light mode, obsidian dark mode, or system default.
-          </p>
-
-          <div className="grid grid-cols-3 gap-2.5">
-            <button
-              type="button"
-              onClick={() => setTheme('light')}
-              className={`p-2.5 rounded-card border flex flex-col items-center justify-center gap-1.5 cursor-pointer transition ${
-                theme === 'light'
-                  ? 'border-primary bg-primary/10 text-primary font-semibold ring-1 ring-primary/30'
-                  : 'border-border bg-surface-sunken/40 text-text hover:bg-surface-sunken'
-              }`}
-            >
-              <Sun className="w-4 h-4" />
-              <span className="text-caption">Light</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setTheme('dark')}
-              className={`p-2.5 rounded-card border flex flex-col items-center justify-center gap-1.5 cursor-pointer transition ${
-                theme === 'dark'
-                  ? 'border-primary bg-primary/10 text-primary font-semibold ring-1 ring-primary/30'
-                  : 'border-border bg-surface-sunken/40 text-text hover:bg-surface-sunken'
-              }`}
-            >
-              <Moon className="w-4 h-4" />
-              <span className="text-caption">Dark</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setTheme('system')}
-              className={`p-2.5 rounded-card border flex flex-col items-center justify-center gap-1.5 cursor-pointer transition ${
-                theme === 'system'
-                  ? 'border-primary bg-primary/10 text-primary font-semibold ring-1 ring-primary/30'
-                  : 'border-border bg-surface-sunken/40 text-text hover:bg-surface-sunken'
-              }`}
-            >
-              <Monitor className="w-4 h-4" />
-              <span className="text-caption">System</span>
-            </button>
-          </div>
-        </div>
+        <DisplayModeCard currentTheme={theme} onSelectTheme={setTheme} />
 
         {/* Card 4: Session Controls */}
         <div className="rounded-card border border-border bg-surface p-5 shadow-xs space-y-4">

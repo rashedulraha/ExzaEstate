@@ -9,6 +9,8 @@ export interface ReportsTableViewProps {
   onOpenReport: (report: ReportItem) => void;
   onQuickExport: (report: ReportItem) => void;
   className?: string;
+  compact?: boolean;
+  nameColumnTitle?: string;
 }
 
 export function ReportsTableView({
@@ -18,6 +20,8 @@ export function ReportsTableView({
   onOpenReport,
   onQuickExport,
   className,
+  compact = false,
+  nameColumnTitle,
 }: ReportsTableViewProps) {
   if (reports.length === 0) {
     return (
@@ -33,30 +37,45 @@ export function ReportsTableView({
   }
 
   return (
-    <div className={`overflow-hidden ${className || 'bg-surface'}`}>
-      <div className="overflow-x-auto">
+    <div
+      className={`overflow-hidden ${compact ? '' : 'rounded-b-card'} ${className || 'bg-surface'}`}
+    >
+      <div
+        className={`overflow-x-auto ${
+          compact ? '' : 'overflow-y-auto max-h-[calc(100vh-21rem)] min-h-[420px]'
+        }`}
+      >
         <table className="w-full text-left text-small">
-          <thead className="bg-surface-sunken/80 text-text-muted border-b border-border text-th font-semibold">
+          <thead className="sticky top-0 z-10 bg-surface-sunken text-text-muted border-b border-border text-th font-semibold shadow-xs">
             <tr>
-              <th className="w-10 px-3 py-3 text-center">Pin</th>
-              <th className="w-24 px-4 py-3 font-mono">Code</th>
-              <th className="px-4 py-3">Report Name & Scope</th>
-              <th className="px-4 py-3">Category</th>
-              <th className="px-4 py-3">Frequency</th>
-              <th className="px-4 py-3">Formats</th>
-              <th className="px-4 py-3 text-right">Actions</th>
+              <th className="w-10 px-3 py-3 text-center shrink-0">Pin</th>
+              <th className="w-20 px-3 py-3 font-mono shrink-0 whitespace-nowrap">Code</th>
+              <th className="min-w-[180px] px-4 py-3">
+                {nameColumnTitle ?? 'Report Name & Scope'}
+              </th>
+              <th className="w-28 px-3 py-3 whitespace-nowrap shrink-0">Category</th>
+              <th className="w-36 px-3 py-3 whitespace-nowrap shrink-0">Frequency</th>
+              <th className="w-36 px-3 py-3 whitespace-nowrap shrink-0">Formats</th>
+              <th className="w-40 px-3 py-3 text-right whitespace-nowrap shrink-0">Actions</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-border/60">
             {reports.map((r) => {
               const isPinned = pinnedReportIds.includes(r.id);
               return (
-                <tr key={r.id} className="hover:bg-surface-sunken/50 transition-colors group">
+                <tr
+                  key={r.id}
+                  onClick={() => onOpenReport(r)}
+                  className="hover:bg-surface-sunken/60 transition-colors group cursor-pointer"
+                >
                   {/* Pin Column */}
-                  <td className="px-3 py-3 text-center">
+                  <td className="w-10 px-3 py-3 text-center shrink-0">
                     <button
                       type="button"
-                      onClick={() => onTogglePin(r.id)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onTogglePin(r.id);
+                      }}
                       aria-label={isPinned ? 'Unpin report' : 'Pin report'}
                       className={`p-1 rounded-button transition-colors cursor-pointer ${
                         isPinned ? 'text-primary' : 'text-text-muted/40 hover:text-text-muted'
@@ -67,54 +86,60 @@ export function ReportsTableView({
                   </td>
 
                   {/* Code */}
-                  <td className="px-4 py-3 font-mono text-caption font-bold text-text">{r.code}</td>
+                  <td className="w-20 px-3 py-3 font-mono text-caption font-bold text-text whitespace-nowrap shrink-0">
+                    {r.code}
+                  </td>
 
                   {/* Title & Description */}
-                  <td className="px-4 py-3">
-                    <button
-                      type="button"
-                      onClick={() => onOpenReport(r)}
-                      className="font-medium text-text hover:text-primary transition-colors text-left font-sans block cursor-pointer"
-                    >
+                  <td className="min-w-0 px-4 py-3">
+                    <span className="font-medium text-text group-hover:text-primary transition-colors text-left font-sans block truncate max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl">
                       {r.title}
-                    </button>
-                    <span className="text-caption text-text-muted line-clamp-1 mt-0.5">
+                    </span>
+                    <span className="text-caption text-text-muted mt-0.5 truncate block max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl">
                       {r.description}
                     </span>
                   </td>
 
                   {/* Category */}
-                  <td className="px-4 py-3">
-                    <span className="text-caption font-medium text-text-muted">{r.category}</span>
+                  <td className="w-28 px-3 py-3 whitespace-nowrap shrink-0">
+                    <span className="text-caption font-medium text-text-muted whitespace-nowrap">
+                      {r.category}
+                    </span>
                   </td>
 
                   {/* Frequency */}
-                  <td className="px-4 py-3">
-                    <span className="text-caption px-2 py-0.5 rounded-full bg-surface-sunken text-text-muted border border-border">
+                  <td className="w-36 px-3 py-3 whitespace-nowrap shrink-0">
+                    <span className="text-caption px-2.5 py-0.5 rounded-full bg-surface-sunken text-text-muted border border-border whitespace-nowrap inline-flex items-center">
                       {r.frequency.replace('_', ' ')}
                     </span>
                   </td>
 
                   {/* Formats */}
-                  <td className="px-4 py-3 font-mono text-caption text-text-muted">
+                  <td className="w-36 px-3 py-3 font-mono text-caption text-text-muted whitespace-nowrap shrink-0">
                     {r.formats.join(' / ')}
                   </td>
 
                   {/* Actions */}
-                  <td className="px-4 py-3 text-right">
-                    <div className="flex items-center justify-end gap-2">
+                  <td className="w-40 px-3 py-3 text-right whitespace-nowrap shrink-0">
+                    <div className="flex items-center justify-end gap-2 whitespace-nowrap">
                       <button
                         type="button"
-                        onClick={() => onQuickExport(r)}
-                        className="inline-flex items-center gap-1 px-2.5 py-1 text-caption font-medium text-text-muted hover:text-text hover:bg-surface-sunken rounded-button border border-border transition-colors cursor-pointer"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onQuickExport(r);
+                        }}
+                        className="inline-flex items-center gap-1 px-2.5 py-1 text-caption font-medium text-text-muted hover:text-text hover:bg-surface-sunken rounded-button border border-border transition-colors cursor-pointer shrink-0"
                       >
                         <Download className="w-3 h-3" />
                         <span>Export</span>
                       </button>
                       <button
                         type="button"
-                        onClick={() => onOpenReport(r)}
-                        className="inline-flex items-center gap-1 px-2.5 py-1 text-caption font-semibold text-primary hover:text-primary-deep transition-colors cursor-pointer"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onOpenReport(r);
+                        }}
+                        className="inline-flex items-center gap-1 px-2.5 py-1 text-caption font-semibold text-primary hover:text-primary-deep transition-colors cursor-pointer shrink-0"
                       >
                         <span>View</span>
                         <ArrowRight className="w-3 h-3" />

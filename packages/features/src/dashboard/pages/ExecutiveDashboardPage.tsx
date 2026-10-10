@@ -91,7 +91,7 @@ function ExecutiveHeader({ isLoading, onRefresh, onNavigate }: ExecutiveHeaderPr
         <Button
           variant="primary"
           size="sm"
-          onClick={() => onNavigate('/sales/bookings')}
+          onClick={() => onNavigate('/sales/bookings?new=true')}
           leftIcon={<Plus className="w-3.5 h-3.5" />}
         >
           New Booking

@@ -188,7 +188,12 @@ function handlePropertyMutations(url: string, method: string, config: AdapterReq
   return null;
 }
 
-function handlePropertyQueries(url: string, method: string, config: AdapterRequestConfig) {
+function handlePropertyQueries(
+  url: string,
+  method: string,
+  config: AdapterRequestConfig,
+  properties: PropertyItem[] = mockProperties,
+) {
   if (url.includes('/history')) {
     return {
       data: { success: true, data: mockStatusHistory },
@@ -200,7 +205,7 @@ function handlePropertyQueries(url: string, method: string, config: AdapterReque
   }
   if (url.includes('/api/v1/properties/prop-uuid-1') && method === 'GET') {
     return {
-      data: { success: true, data: mockProperties[0] },
+      data: { success: true, data: properties[0] ?? mockProperties[0] },
       status: 200,
       statusText: 'OK',
       headers: {},
@@ -212,11 +217,11 @@ function handlePropertyQueries(url: string, method: string, config: AdapterReque
       data: {
         success: true,
         data: {
-          items: mockProperties,
-          total: mockProperties.length,
+          items: properties,
+          total: properties.length,
           page: 1,
           limit: 25,
-          totalPages: 1,
+          totalPages: properties.length > 0 ? 1 : 0,
         },
       },
       status: 200,
@@ -228,7 +233,8 @@ function handlePropertyQueries(url: string, method: string, config: AdapterReque
   return null;
 }
 
-export function setupTestAdapter(): void {
+export function setupTestAdapter(options?: { properties?: PropertyItem[] }): void {
+  const propertyItems = options?.properties ?? mockProperties;
   type AxiosAdapterFn = (config: AdapterRequestConfig) => Promise<unknown>;
   const adapterFn: AxiosAdapterFn = async (config) => {
     const url = config.url ?? '';
@@ -240,7 +246,7 @@ export function setupTestAdapter(): void {
     const mutationRes = handlePropertyMutations(url, method, config);
     if (mutationRes) return mutationRes;
 
-    const queryRes = handlePropertyQueries(url, method, config);
+    const queryRes = handlePropertyQueries(url, method, config, propertyItems);
     if (queryRes) return queryRes;
 
     return {

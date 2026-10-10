@@ -18,7 +18,7 @@ export function ReconciliationSeal({
         className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-caption font-medium text-success bg-success/12 border border-success/20"
       >
         <ShieldCheck className="w-4 h-4" />
-        <span>Reconciled with AR Ledger (AT-14)</span>
+        <span>Reconciled with AR Ledger</span>
       </div>
     );
   }
