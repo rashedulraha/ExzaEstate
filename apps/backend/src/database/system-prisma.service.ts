@@ -11,7 +11,15 @@ export class SystemPrisma implements OnModuleInit, OnModuleDestroy {
   private readonly client: PrismaClient;
 
   constructor(configService: ConfigService) {
-    const rawUrl = configService.systemDatabaseUrl || process.env.SYSTEM_DATABASE_URL;
+    const rawUrl =
+      configService.systemDatabaseUrl ||
+      process.env.SYSTEM_DATABASE_URL ||
+      (configService.databaseUrl?.includes('exza_app:exza_app_secret')
+        ? configService.databaseUrl.replace(
+            'exza_app:exza_app_secret',
+            'exza_system:exza_system_secret',
+          )
+        : undefined);
 
     if (!rawUrl) {
       throw new Error(
