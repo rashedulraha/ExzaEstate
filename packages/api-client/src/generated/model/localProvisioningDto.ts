@@ -16,6 +16,8 @@ export interface LocalProvisioningDto {
   adminEmail?: string;
   /** Administrator full name */
   adminName?: string;
+  /** Administrator full name alias */
+  adminFullName?: string;
   /** Administrator initial password */
   adminPassword?: string;
   /** Company timezone */

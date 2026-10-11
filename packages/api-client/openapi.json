@@ -18722,6 +18722,11 @@
             "description": "Administrator full name",
             "example": "Local Administrator"
           },
+          "adminFullName": {
+            "type": "string",
+            "description": "Administrator full name alias",
+            "example": "Local Administrator"
+          },
           "adminPassword": {
             "type": "string",
             "description": "Administrator initial password",
