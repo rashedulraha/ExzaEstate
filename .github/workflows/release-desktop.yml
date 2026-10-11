@@ -28,6 +28,11 @@ concurrency:
 permissions:
   contents: write
 
+env:
+  DATABASE_URL: postgresql://exza_app:exza_app_secret@localhost:5432/exzaestate?schema=public
+  MIGRATOR_DATABASE_URL: postgresql://exza_migrator:exza_migrator_secret@localhost:5432/exzaestate?schema=public
+  SYSTEM_DATABASE_URL: postgresql://exza_system:exza_system_secret@localhost:5432/exzaestate?schema=public
+
 jobs:
   build-and-release:
     name: Build & Release (${{ matrix.platform.name }})

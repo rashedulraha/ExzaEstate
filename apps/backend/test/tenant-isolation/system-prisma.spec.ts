@@ -26,6 +26,9 @@ describe('S4: SystemPrisma & GLOBAL_TABLES', () => {
       MIGRATOR_DATABASE_URL:
         process.env.MIGRATOR_DATABASE_URL ||
         'postgresql://exza_migrator:exza_migrator_secret@localhost:5432/exzaestate?schema=public',
+      SYSTEM_DATABASE_URL:
+        process.env.SYSTEM_DATABASE_URL ||
+        'postgresql://exza_system:exza_system_secret@localhost:5432/exzaestate?schema=public',
       REDIS_URL: process.env.REDIS_URL || 'redis://localhost:6379',
       JWT_ACCESS_SECRET: 'super_secret_jwt_access_token_key_at_least_32_chars',
       JWT_REFRESH_SECRET: 'super_secret_jwt_refresh_token_key_at_least_32_chars',

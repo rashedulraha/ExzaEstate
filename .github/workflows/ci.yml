@@ -14,6 +14,15 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  DATABASE_URL: postgresql://exza_app:exza_app_secret@localhost:5432/exzaestate?schema=public
+  MIGRATOR_DATABASE_URL: postgresql://exza_migrator:exza_migrator_secret@localhost:5432/exzaestate?schema=public
+  SYSTEM_DATABASE_URL: postgresql://exza_system:exza_system_secret@localhost:5432/exzaestate?schema=public
+  JWT_ACCESS_SECRET: super_secret_jwt_access_secret_min_32_characters_long!
+  JWT_REFRESH_SECRET: super_secret_jwt_refresh_secret_min_32_characters_long!
+  LOCAL_API_SECRET: super_secret_local_launch_token_32chars!
+  REDIS_URL: redis://localhost:6379
+
 jobs:
   lint-and-typecheck:
     name: Lint, Boundaries & Typecheck

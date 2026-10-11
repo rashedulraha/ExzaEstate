@@ -1,20 +1,62 @@
 {
   "$schema": "https://turbo.build/schema.json",
+  "globalPassThroughEnv": [
+    "NODE_ENV",
+    "DATABASE_URL",
+    "MIGRATOR_DATABASE_URL",
+    "SYSTEM_DATABASE_URL",
+    "REDIS_URL",
+    "JWT_ACCESS_SECRET",
+    "JWT_REFRESH_SECRET",
+    "LOCAL_API_SECRET",
+    "STORAGE_ENDPOINT",
+    "STORAGE_REGION",
+    "STORAGE_BUCKET",
+    "STORAGE_ACCESS_KEY",
+    "STORAGE_SECRET_KEY",
+    "CORS_ORIGIN",
+    "CI"
+  ],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": ["dist/**"]
+      "outputs": ["dist/**"],
+      "passThroughEnv": [
+        "DATABASE_URL",
+        "MIGRATOR_DATABASE_URL",
+        "SYSTEM_DATABASE_URL",
+        "REDIS_URL",
+        "CI"
+      ]
     },
     "typecheck": {
       "dependsOn": ["^build"],
-      "outputs": []
+      "outputs": [],
+      "passThroughEnv": ["DATABASE_URL", "MIGRATOR_DATABASE_URL", "SYSTEM_DATABASE_URL"]
     },
     "lint": {
       "outputs": []
     },
     "test": {
       "dependsOn": ["^build"],
-      "outputs": []
+      "outputs": [],
+      "passThroughEnv": [
+        "NODE_ENV",
+        "DATABASE_URL",
+        "MIGRATOR_DATABASE_URL",
+        "SYSTEM_DATABASE_URL",
+        "REDIS_URL",
+        "JWT_ACCESS_SECRET",
+        "JWT_REFRESH_SECRET",
+        "LOCAL_API_SECRET",
+        "STORAGE_ENDPOINT",
+        "STORAGE_REGION",
+        "STORAGE_BUCKET",
+        "STORAGE_ACCESS_KEY",
+        "STORAGE_SECRET_KEY",
+        "CORS_ORIGIN",
+        "CI"
+      ]
     }
   }
 }

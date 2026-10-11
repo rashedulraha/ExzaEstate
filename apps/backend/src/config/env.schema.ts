@@ -233,7 +233,22 @@ export const envSchema = baseEnvSchema
 export type EnvConfig = z.infer<typeof envSchema>;
 
 export function validateEnv(env: Record<string, unknown> = process.env): EnvConfig {
-  const result = envSchema.safeParse(env);
+  const mergedEnv: Record<string, unknown> =
+    env === process.env ? { ...process.env } : { ...process.env, ...env };
+
+  if (
+    !mergedEnv.SYSTEM_DATABASE_URL &&
+    mergedEnv.NODE_ENV === 'test' &&
+    typeof mergedEnv.DATABASE_URL === 'string' &&
+    mergedEnv.DATABASE_URL.includes('exza_app:exza_app_secret')
+  ) {
+    mergedEnv.SYSTEM_DATABASE_URL = mergedEnv.DATABASE_URL.replace(
+      'exza_app:exza_app_secret',
+      'exza_system:exza_system_secret',
+    );
+  }
+
+  const result = envSchema.safeParse(mergedEnv);
   if (!result.success) {
     const errorDetails = result.error.issues
       .map((issue) => {
