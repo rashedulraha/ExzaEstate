@@ -62,6 +62,9 @@ export class StorageService implements OnModuleInit {
   }
 
   async onModuleInit(): Promise<void> {
+    if (this.config.runtimeMode === 'local') {
+      return;
+    }
     await this.ensureBucketExists();
   }
 

@@ -6,9 +6,7 @@ import { logger } from './common/logging/logger.js';
 import { ConfigService } from './config/config.service.js';
 
 async function bootstrap(): Promise<void> {
-  const app = await NestFactory.create(AppModule, {
-    bufferLogs: true,
-  });
+  const app = await NestFactory.create(AppModule);
 
   const configService = app.get(ConfigService);
   configureApp(app, configService);

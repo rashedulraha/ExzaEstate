@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { t } from '@exzaestate/shared';
+import { Sparkles } from 'lucide-react';
+import { t, PERMISSIONS } from '@exzaestate/shared';
 import { useAuth, usePlatform } from '@exzaestate/app-core';
 import { useAuthFlow } from '../hooks/useAuthFlow.js';
 import { loginSchema, type LoginFormData } from '../schemas/auth.schema.js';
@@ -194,9 +195,32 @@ export function LoginPage({ onSuccess, defaultEmail, defaultPassword }: LoginPag
   const navigate = useNavigate();
   const platform = usePlatform();
   const isDesktop = platform.apiConfig.clientType === 'desktop';
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, setSession } = useAuth();
   const { handleLogin, isSubmitting, errorMessage, errorCode } = useAuthFlow();
   const [showTotpEnrollment, setShowTotpEnrollment] = useState(false);
+
+  const handleExploreDemo = () => {
+    const allPermissions = Object.values(PERMISSIONS);
+    const allScopes = Object.fromEntries(allPermissions.map((p) => [p, 'ALL']));
+
+    void setSession('demo-token-preview', undefined, {
+      id: '01a13b09-65df-704a-8ac4-040486cc587b',
+      email: 'md@exzaestate.com',
+      fullName: 'Anwar Hossain (Managing Director)',
+      companyId: '0ff0a78d-a07d-468f-8bc4-06f69f822eb8',
+      companyName: 'ExzaEstate Development Ltd.',
+      isTwoFactorEnabled: false,
+      permissions: allPermissions,
+      scopes: allScopes,
+      branchIds: ['01a13b09-6492-759c-9182-feb0a57401ef'],
+    });
+
+    if (onSuccess) {
+      onSuccess();
+    } else {
+      navigate('/dashboard', { replace: true });
+    }
+  };
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -281,6 +305,24 @@ export function LoginPage({ onSuccess, defaultEmail, defaultPassword }: LoginPag
           isSubmitting={isSubmitting}
           onSubmit={handleSubmit(onSubmit)}
         />
+
+        <div className="relative my-2 flex items-center justify-center">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-border" />
+          </div>
+          <div className="relative bg-surface px-3 text-caption text-text-muted uppercase tracking-wider font-medium">
+            or
+          </div>
+        </div>
+
+        <button
+          type="button"
+          onClick={handleExploreDemo}
+          className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-button border border-border bg-surface-sunken/60 px-4 py-2.5 text-small font-semibold text-text hover:bg-surface-sunken hover:border-border-strong transition active:scale-[0.98]"
+        >
+          <Sparkles className="w-4 h-4 text-primary" />
+          <span>Explore UI (কাঠামো দেখুন)</span>
+        </button>
 
         {isDesktop && (
           <div className="pt-1 text-center">
