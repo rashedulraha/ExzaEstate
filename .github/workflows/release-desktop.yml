@@ -92,7 +92,7 @@ jobs:
         run: pnpm --filter @exzaestate/desktop build
 
       - name: Build Tauri Desktop Package & Publish Release
-        uses: tauri-apps/tauri-action@v0
+        uses: tauri-apps/tauri-action@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
