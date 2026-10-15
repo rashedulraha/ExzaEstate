@@ -8,7 +8,7 @@
 # ------------------------------------------------------------------------------
 # 1. Base Stage: Node.js 24 LTS Bookworm Slim with pnpm
 # ------------------------------------------------------------------------------
-FROM node:24-bookworm-slim AS base
+FROM node:25-bookworm-slim AS base
 
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
